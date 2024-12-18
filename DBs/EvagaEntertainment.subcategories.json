@@ -1,0 +1,544 @@
+[{
+  "_id": {
+    "$oid": "6746eaa5f90793fb2a414946"
+  },
+  "name": "Event Venues",
+  "categoryId": {
+    "$oid": "674408efe18c7aa84fb42a89"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:47:17.149Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:47:17.149Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ead2f90793fb2a414949"
+  },
+  "name": "Catering",
+  "categoryId": {
+    "$oid": "67440b62e18c7aa84fb42a8b"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:48:02.734Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:48:02.734Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746eaf3f90793fb2a41494f"
+  },
+  "name": "Food Trucks",
+  "categoryId": {
+    "$oid": "67440b62e18c7aa84fb42a8b"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:48:35.122Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:48:35.122Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746eaf8f90793fb2a414952"
+  },
+  "name": "Beverage Services",
+  "categoryId": {
+    "$oid": "67440b62e18c7aa84fb42a8b"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:48:40.065Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:48:40.065Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746eb25f90793fb2a414955"
+  },
+  "name": "Beverage Stations (Juice Bars, Coffee Stalls)",
+  "categoryId": {
+    "$oid": "67440b62e18c7aa84fb42a8b"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:49:25.148Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:49:25.148Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746eb43f90793fb2a414958"
+  },
+  "name": "Specialty Treats",
+  "categoryId": {
+    "$oid": "67440b62e18c7aa84fb42a8b"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:49:55.231Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:49:55.231Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746eb85f90793fb2a41495b"
+  },
+  "name": "Photography Services",
+  "categoryId": {
+    "$oid": "67440b6ee18c7aa84fb42a8d"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:51:01.373Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:51:01.373Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746eb9ef90793fb2a41495e"
+  },
+  "name": "Videography Services",
+  "categoryId": {
+    "$oid": "67440b6ee18c7aa84fb42a8d"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:51:26.879Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:51:26.879Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ebdaf90793fb2a414961"
+  },
+  "name": "Live Entertainment",
+  "categoryId": {
+    "$oid": "67440b79e18c7aa84fb42a8f"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:52:26.891Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:52:26.891Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ebecf90793fb2a414964"
+  },
+  "name": "Unique Acts",
+  "categoryId": {
+    "$oid": "67440b79e18c7aa84fb42a8f"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:52:44.293Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:52:44.293Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ec00f90793fb2a414967"
+  },
+  "name": "Traditional Musicians ( Tabla , Dhol, Sitar, Shenai )",
+  "categoryId": {
+    "$oid": "67440b79e18c7aa84fb42a8f"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:53:04.239Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:53:04.239Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ec30f90793fb2a41496b"
+  },
+  "name": "Floral Decor",
+  "categoryId": {
+    "$oid": "67440b82e18c7aa84fb42a91"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:53:52.600Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:53:52.600Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ec3cf90793fb2a41496e"
+  },
+  "name": "Stage & Backdrops",
+  "categoryId": {
+    "$oid": "67440b82e18c7aa84fb42a91"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:54:04.984Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:54:04.984Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ec57f90793fb2a414971"
+  },
+  "name": "Draping & Fabric Decor",
+  "categoryId": {
+    "$oid": "67440b82e18c7aa84fb42a91"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:54:31.756Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:54:31.756Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ec66f90793fb2a414974"
+  },
+  "name": "Balloon Decorations",
+  "categoryId": {
+    "$oid": "67440b82e18c7aa84fb42a91"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:54:46.567Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:54:46.567Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ec77f90793fb2a414977"
+  },
+  "name": "Special Effects Decor",
+  "categoryId": {
+    "$oid": "67440b82e18c7aa84fb42a91"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:55:03.121Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:55:03.121Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ec92f90793fb2a41497a"
+  },
+  "name": "Customary Decor",
+  "categoryId": {
+    "$oid": "67440b82e18c7aa84fb42a91"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:55:30.199Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:55:30.199Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ecd7f90793fb2a41497e"
+  },
+  "name": "Audio-Visual Equipment Rental & Technical Rider",
+  "categoryId": {
+    "$oid": "67440b8ae18c7aa84fb42a93"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:56:39.942Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:56:39.942Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ece6f90793fb2a414981"
+  },
+  "name": "Conference and Event Technology",
+  "categoryId": {
+    "$oid": "67440b8ae18c7aa84fb42a93"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:56:54.463Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:56:54.463Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ecf0f90793fb2a414984"
+  },
+  "name": "Stage and Venue Lighting",
+  "categoryId": {
+    "$oid": "67440b8ae18c7aa84fb42a93"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:57:04.357Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:57:04.357Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ed1af90793fb2a414988"
+  },
+  "name": "Rental Jewelry",
+  "categoryId": {
+    "$oid": "67440ba1e18c7aa84fb42a95"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:57:46.330Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:57:46.330Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ed2ef90793fb2a41498b"
+  },
+  "name": "Beauty Services",
+  "categoryId": {
+    "$oid": "67440ba1e18c7aa84fb42a95"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:58:06.164Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:58:06.164Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ed67f90793fb2a41498f"
+  },
+  "name": "Electronic Devices",
+  "categoryId": {
+    "$oid": "67440babe18c7aa84fb42a97"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:59:03.816Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:59:03.816Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ed7bf90793fb2a414992"
+  },
+  "name": "Event Essentials",
+  "categoryId": {
+    "$oid": "67440babe18c7aa84fb42a97"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:59:23.198Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:59:23.198Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ed8df90793fb2a414995"
+  },
+  "name": "Entertainment Rentals",
+  "categoryId": {
+    "$oid": "67440babe18c7aa84fb42a97"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T09:59:41.940Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T09:59:41.940Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746edc2f90793fb2a414999"
+  },
+  "name": "Management Services",
+  "categoryId": {
+    "$oid": "67440bb4e18c7aa84fb42a99"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T10:00:34.233Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T10:00:34.233Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ee04f90793fb2a41499f"
+  },
+  "name": "Yoga & Meditation Instructors",
+  "categoryId": {
+    "$oid": "67440bbde18c7aa84fb42a9b"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T10:01:40.130Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T10:01:40.130Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ee08f90793fb2a4149a2"
+  },
+  "name": "Wellness Services",
+  "categoryId": {
+    "$oid": "67440bbde18c7aa84fb42a9b"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T10:01:44.094Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T10:01:44.094Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ee44f90793fb2a4149a5"
+  },
+  "name": "Ceremony Services",
+  "categoryId": {
+    "$oid": "67440bc6e18c7aa84fb42a9d"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T10:02:44.967Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T10:02:44.967Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ee49f90793fb2a4149a8"
+  },
+  "name": "Cultural Experiences",
+  "categoryId": {
+    "$oid": "67440bc6e18c7aa84fb42a9d"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T10:02:49.104Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T10:02:49.104Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ee79f90793fb2a4149ac"
+  },
+  "name": "Gift Services",
+  "categoryId": {
+    "$oid": "67440bd5e18c7aa84fb42a9f"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T10:03:37.359Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T10:03:37.359Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746eec5f90793fb2a4149af"
+  },
+  "name": "Kids Entertainment",
+  "categoryId": {
+    "$oid": "67440bdfe18c7aa84fb42aa1"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T10:04:53.398Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T10:04:53.398Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746eef3f90793fb2a4149b2"
+  },
+  "name": "Transportation Services",
+  "categoryId": {
+    "$oid": "67440be9e18c7aa84fb42aa3"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T10:05:39.896Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T10:05:39.896Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6746ef00f90793fb2a4149b5"
+  },
+  "name": "Drivers",
+  "categoryId": {
+    "$oid": "67440be9e18c7aa84fb42aa3"
+  },
+  "createdAt": {
+    "$date": "2024-11-27T10:05:52.196Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-27T10:05:52.196Z"
+  },
+  "__v": 0
+}]

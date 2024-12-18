@@ -1,0 +1,196 @@
+[{
+  "_id": {
+    "$oid": "674408efe18c7aa84fb42a89"
+  },
+  "name": "Venue & Location",
+  "icon": "images/20241125_104943-Vector.png",
+  "createdAt": {
+    "$date": "2024-11-25T05:19:43.217Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-25T05:19:43.217Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67440b62e18c7aa84fb42a8b"
+  },
+  "name": "Catering & Beverage",
+  "icon": "images/20241125_110010-Vector.png",
+  "createdAt": {
+    "$date": "2024-11-25T05:30:10.321Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-25T05:30:10.321Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67440b6ee18c7aa84fb42a8d"
+  },
+  "name": "Photography & Videography",
+  "icon": "images/20241125_110022-Vector.png",
+  "createdAt": {
+    "$date": "2024-11-25T05:30:22.516Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-25T05:30:22.516Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67440b79e18c7aa84fb42a8f"
+  },
+  "name": "Entertaiment & Performances",
+  "icon": "images/20241125_110033-Vector.png",
+  "createdAt": {
+    "$date": "2024-11-25T05:30:33.242Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-25T05:30:33.242Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67440b82e18c7aa84fb42a91"
+  },
+  "name": "Decor & Design",
+  "icon": "images/20241125_110042-Vector.png",
+  "createdAt": {
+    "$date": "2024-11-25T05:30:42.782Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-25T05:30:42.782Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67440b8ae18c7aa84fb42a93"
+  },
+  "name": "Audio Visual Equipment",
+  "icon": "images/20241125_110050-Vector.png",
+  "createdAt": {
+    "$date": "2024-11-25T05:30:50.948Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-25T05:30:50.948Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67440ba1e18c7aa84fb42a95"
+  },
+  "name": "Fashion & Beauty",
+  "icon": "images/20241125_110113-Vector.png",
+  "createdAt": {
+    "$date": "2024-11-25T05:31:13.073Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-25T05:31:13.073Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67440babe18c7aa84fb42a97"
+  },
+  "name": "Event Essentials & Rentals",
+  "icon": "images/20241125_110123-Vector.png",
+  "createdAt": {
+    "$date": "2024-11-25T05:31:23.130Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-25T05:31:23.130Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67440bb4e18c7aa84fb42a99"
+  },
+  "name": "Event Staffing & Management",
+  "icon": "images/20241125_110132-Vector.png",
+  "createdAt": {
+    "$date": "2024-11-25T05:31:32.583Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-25T05:31:32.583Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67440bbde18c7aa84fb42a9b"
+  },
+  "name": "Health & Wellness",
+  "icon": "images/20241125_110141-Vector.png",
+  "createdAt": {
+    "$date": "2024-11-25T05:31:41.607Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-25T05:31:41.607Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67440bc6e18c7aa84fb42a9d"
+  },
+  "name": "Religious & Traditional",
+  "icon": "images/20241125_110150-Vector.png",
+  "createdAt": {
+    "$date": "2024-11-25T05:31:50.565Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-25T05:31:50.565Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67440bd5e18c7aa84fb42a9f"
+  },
+  "name": "Gifts & Memorablia",
+  "icon": "images/20241125_110205-Vector.png",
+  "createdAt": {
+    "$date": "2024-11-25T05:32:05.448Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-25T05:32:05.448Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67440bdfe18c7aa84fb42aa1"
+  },
+  "name": "Kids & family Entertaiment",
+  "icon": "images/20241125_110215-Vector.png",
+  "createdAt": {
+    "$date": "2024-11-25T05:32:15.411Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-25T05:32:15.411Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67440be9e18c7aa84fb42aa3"
+  },
+  "name": "Transportation & Logistics",
+  "icon": "images/20241125_110225-Vector.png",
+  "createdAt": {
+    "$date": "2024-11-25T05:32:25.576Z"
+  },
+  "updatedAt": {
+    "$date": "2024-11-25T05:32:25.576Z"
+  },
+  "__v": 0
+}]

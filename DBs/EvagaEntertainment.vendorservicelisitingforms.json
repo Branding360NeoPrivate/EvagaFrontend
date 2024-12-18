@@ -1,0 +1,81 @@
+[{
+  "_id": {
+    "$oid": "67596251402d668f0690ce6c"
+  },
+  "vendorId": {
+    "$oid": "672b05505b4f12fc6d6de290"
+  },
+  "formTemplateId": {
+    "$oid": "674d811269b95b0c7e0a712e"
+  },
+  "Category": {
+    "$oid": "6746eb85f90793fb2a41495b"
+  },
+  "SubCategory": {
+    "$oid": "67440b6ee18c7aa84fb42a8d"
+  },
+  "AbouttheService": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took",
+  "YearofExperience": "5",
+  "services": [
+    {
+      "menuTemplateId": null,
+      "values": {
+        "Title": "Wedding Photography",
+        "Price": "100000",
+        "EventType": [
+          "Weddings",
+          "Engagement"
+        ],
+        "Inclusions": [
+          "Posed Photos",
+          "Bridal Portraits",
+          "Reception Highlights"
+        ],
+        "Deliverables": [
+          "5 Instagram reels",
+          "100 Photo  Album Book",
+          "2hr Wedding Film",
+          "500 Edited Photos"
+        ],
+        "AddOns": null,
+        "TravelCharges": [
+          {
+            "Free Upto": "6",
+            "thereon": "20"
+          }
+        ],
+        "CoverImage": [
+          "service/20241211_152841-image.png"
+        ],
+        "Portfolio": {
+          "photos": [
+            "service/20241211_152841-pexels-deesha-chandra-4156-35981.jpg",
+            "service/20241211_152841-pexels-asadphoto-169211.jpg",
+            "service/20241211_152841-pexels-kumar-saurabh-625146-1456613.jpg",
+            "service/20241211_152841-pexels-minan1398-758898.jpg",
+            "service/20241211_152841-image (1).png"
+          ],
+          "videos": [
+            "service/20241211_152841-4286576-hd_1920_1080_25fps.mp4"
+          ]
+        },
+        "Terms&Conditions": "<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. </p><p>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </p><p> </p><ul><li>when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.</li><li>Lorem Ipsum is simply dummy text of the printing and typesetting industry. </li></ul>"
+      },
+      "menu": {},
+      "status": false,
+      "verifiedAt": null,
+      "verifiedBy": null,
+      "remarks": "",
+      "_id": {
+        "$oid": "67596251402d668f0690ce6d"
+      }
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-12-11T09:58:41.609Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-11T09:58:41.609Z"
+  },
+  "__v": 0
+}]

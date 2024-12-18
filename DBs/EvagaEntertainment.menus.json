@@ -1,0 +1,559 @@
+[{
+  "_id": {
+    "$oid": "67495ba0ed71a1972f87ef23"
+  },
+  "associatedEntity": null,
+  "entityModel": "Venue",
+  "fields": [
+    {
+      "key": "VenueFeatures",
+      "label": "Venue Features",
+      "type": "array",
+      "items": [],
+      "isRequired": false,
+      "_id": {
+        "$oid": "67495ba0ed71a1972f87ef24"
+      }
+    },
+    {
+      "key": "VenueAddress",
+      "label": "Venue Address",
+      "type": "text",
+      "items": "",
+      "isRequired": false,
+      "_id": {
+        "$oid": "67495ba0ed71a1972f87ef25"
+      }
+    },
+    {
+      "key": "Accessibility&SafetyFeatures",
+      "label": "Accessibility & Safety Features",
+      "type": "array",
+      "items": [],
+      "isRequired": false,
+      "_id": {
+        "$oid": "67495ba0ed71a1972f87ef26"
+      }
+    },
+    {
+      "key": "Equipment",
+      "label": "Equipment",
+      "type": "array",
+      "items": [],
+      "isRequired": false,
+      "_id": {
+        "$oid": "67495ba0ed71a1972f87ef27"
+      }
+    },
+    {
+      "key": "VenueType",
+      "label": "Venue Type",
+      "type": "array",
+      "items": [],
+      "isRequired": false,
+      "_id": {
+        "$oid": "67495ba0ed71a1972f87ef28"
+      }
+    },
+    {
+      "key": "NoofRooms",
+      "label": "No of Rooms",
+      "type": "array",
+      "items": [],
+      "isRequired": false,
+      "_id": {
+        "$oid": "67495ba0ed71a1972f87ef29"
+      }
+    },
+    {
+      "key": "CateringPolicy",
+      "label": "Catering Policy",
+      "type": "radio",
+      "items": [
+        {
+          "label": "IN-house",
+          "value": "IN-house"
+        },
+        {
+          "label": "Outside allowed",
+          "value": "Outside allowed"
+        },
+        {
+          "label": "Both",
+          "value": "Both"
+        }
+      ],
+      "isRequired": false,
+      "_id": {
+        "$oid": "67495ba0ed71a1972f87ef2a"
+      }
+    },
+    {
+      "key": "DecoratorPolicy",
+      "label": "Decorator Policy",
+      "type": "radio",
+      "items": [
+        {
+          "label": "IN-house",
+          "value": "IN-house"
+        },
+        {
+          "label": "Outside allowed",
+          "value": "Outside allowed"
+        },
+        {
+          "label": "Both",
+          "value": "Both"
+        }
+      ],
+      "isRequired": false,
+      "_id": {
+        "$oid": "67495ba0ed71a1972f87ef2b"
+      }
+    },
+    {
+      "key": "DJPolicy",
+      "label": "DJ Policy",
+      "type": "radio",
+      "items": [
+        {
+          "label": "IN-house",
+          "value": "IN-house"
+        },
+        {
+          "label": "Outside allowed",
+          "value": "Outside allowed"
+        },
+        {
+          "label": "Both",
+          "value": "Both"
+        }
+      ],
+      "isRequired": false,
+      "_id": {
+        "$oid": "67495ba0ed71a1972f87ef2c"
+      }
+    },
+    {
+      "key": "AlcoholPolicy",
+      "label": "Alcohol Policy",
+      "type": "radio",
+      "items": [
+        {
+          "label": "IN-house",
+          "value": "IN-house"
+        },
+        {
+          "label": "Outside allowed",
+          "value": "Outside allowed"
+        },
+        {
+          "label": "Both",
+          "value": "Both"
+        }
+      ],
+      "isRequired": false,
+      "_id": {
+        "$oid": "67495ba0ed71a1972f87ef2d"
+      }
+    },
+    {
+      "key": "Seasons",
+      "label": "Seasons",
+      "type": "array",
+      "items": {
+        "lowSeason": {
+          "type": "array",
+          "values": []
+        },
+        "shoulderSeason": {
+          "type": "array",
+          "values": []
+        },
+        "highSeason": {
+          "type": "array",
+          "values": []
+        }
+      },
+      "isRequired": false,
+      "_id": {
+        "$oid": "67495ba0ed71a1972f87ef2e"
+      }
+    },
+    {
+      "key": "DistanceFrom",
+      "label": "Distance From",
+      "type": "array",
+      "items": [
+        {
+          "Landmark": {
+            "type": "string",
+            "value": ""
+          },
+          "DistanceInKms": {
+            "type": "number",
+            "value": null
+          }
+        }
+      ],
+      "isRequired": false,
+      "_id": {
+        "$oid": "67495ba0ed71a1972f87ef2f"
+      }
+    },
+    {
+      "key": "NoCarParking",
+      "label": "No Car Parking",
+      "type": "number",
+      "items": "",
+      "isRequired": false,
+      "_id": {
+        "$oid": "67495ba0ed71a1972f87ef30"
+      }
+    },
+    {
+      "key": "Spaces",
+      "label": "Spaces",
+      "type": "array",
+      "items": [],
+      "isRequired": false,
+      "_id": {
+        "$oid": "67495ba0ed71a1972f87ef31"
+      }
+    },
+    {
+      "key": "AboutTheVenue",
+      "label": "About The Venue",
+      "type": "text",
+      "items": "",
+      "isRequired": false,
+      "_id": {
+        "$oid": "67495ba0ed71a1972f87ef32"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "67371b8139ada1b6e8db38e3"
+  },
+  "createdAt": {
+    "$date": "2024-11-29T06:13:52.928Z"
+  },
+  "__v": 0,
+  "Category": {
+    "$oid": "674408efe18c7aa84fb42a89"
+  },
+  "SubCategory": {
+    "$oid": "6746eaa5f90793fb2a414946"
+  }
+},
+{
+  "_id": {
+    "$oid": "6749618ab1055aa66c8eba71"
+  },
+  "associatedEntity": null,
+  "entityModel": "Catering",
+  "fields": [
+    {
+      "key": "ChooseType",
+      "label": "Choose Type",
+      "type": "array",
+      "items": [
+        {
+          "label": "Veg",
+          "value": "Veg"
+        },
+        {
+          "label": "Non Veg ",
+          "value": "Non Veg "
+        },
+        {
+          "label": "Both",
+          "value": "Both"
+        }
+      ],
+      "isRequired": false,
+      "_id": {
+        "$oid": "6749618ab1055aa66c8eba72"
+      }
+    },
+    {
+      "key": "ChooseCuisinesAvailable",
+      "label": "Choose Cuisines Available",
+      "type": "array",
+      "items": [],
+      "isRequired": false,
+      "_id": {
+        "$oid": "6749618ab1055aa66c8eba73"
+      }
+    },
+    {
+      "key": "AddListofBeverages",
+      "label": "Add List of Beverages",
+      "type": "array",
+      "items": [],
+      "isRequired": false,
+      "_id": {
+        "$oid": "6749618ab1055aa66c8eba74"
+      }
+    },
+    {
+      "key": "AddListofSides(Veg)",
+      "label": "Add List of Sides (Veg)",
+      "type": "array",
+      "items": [],
+      "isRequired": false,
+      "_id": {
+        "$oid": "6749618ab1055aa66c8eba75"
+      }
+    },
+    {
+      "key": "AddListofSides(Non-Veg)",
+      "label": "Add List of Sides (Non-Veg)",
+      "type": "array",
+      "items": [],
+      "isRequired": false,
+      "_id": {
+        "$oid": "6749618ab1055aa66c8eba76"
+      }
+    },
+    {
+      "key": "AddListofAppetizers(Veg)",
+      "label": "Add List of Appetizers (Veg)",
+      "type": "array",
+      "items": [],
+      "isRequired": false,
+      "_id": {
+        "$oid": "6749618ab1055aa66c8eba77"
+      }
+    },
+    {
+      "key": "AddListofAppetizers(non-Veg)",
+      "label": "Add List of Appetizers(non-Veg)",
+      "type": "array",
+      "items": [],
+      "isRequired": false,
+      "_id": {
+        "$oid": "6749618ab1055aa66c8eba78"
+      }
+    },
+    {
+      "key": "MainCourse",
+      "label": "Main Course",
+      "type": "section",
+      "items": [
+        {
+          "label": "North India",
+          "key": "NorthIndia",
+          "type": "section",
+          "items": [
+            {
+              "label": "Veg",
+              "key": "Veg",
+              "type": "array",
+              "items": []
+            },
+            {
+              "label": "Non-Veg",
+              "key": "NonVeg",
+              "type": "array",
+              "items": []
+            }
+          ]
+        },
+        {
+          "label": "South India",
+          "key": "SouthIndia",
+          "type": "section",
+          "items": [
+            {
+              "label": "Veg",
+              "key": "Veg",
+              "type": "array",
+              "items": []
+            },
+            {
+              "label": "Non-Veg",
+              "key": "NonVeg",
+              "type": "array",
+              "items": []
+            }
+          ]
+        }
+      ],
+      "isRequired": false,
+      "_id": {
+        "$oid": "6749618ab1055aa66c8eba79"
+      }
+    },
+    {
+      "key": "Bread&Rice",
+      "label": "Bread & Rice",
+      "type": "section",
+      "items": [
+        {
+          "label": "North India",
+          "key": "NorthIndia",
+          "type": "section",
+          "items": [
+            {
+              "label": "Veg",
+              "key": "Veg",
+              "type": "array",
+              "items": []
+            },
+            {
+              "label": "Non-Veg",
+              "key": "NonVeg",
+              "type": "array",
+              "items": []
+            }
+          ]
+        },
+        {
+          "label": "South India",
+          "key": "SouthIndia",
+          "type": "section",
+          "items": [
+            {
+              "label": "Veg",
+              "key": "Veg",
+              "type": "array",
+              "items": []
+            },
+            {
+              "label": "Non-Veg",
+              "key": "NonVeg",
+              "type": "array",
+              "items": []
+            }
+          ]
+        }
+      ],
+      "isRequired": false,
+      "_id": {
+        "$oid": "6749618ab1055aa66c8eba7a"
+      }
+    },
+    {
+      "key": "Desserts",
+      "label": "Desserts",
+      "type": "section",
+      "items": [
+        {
+          "label": "North India",
+          "key": "NorthIndia",
+          "type": "section",
+          "items": [
+            {
+              "label": "Veg",
+              "key": "Veg",
+              "type": "array",
+              "items": []
+            },
+            {
+              "label": "Non-Veg",
+              "key": "NonVeg",
+              "type": "array",
+              "items": []
+            }
+          ]
+        },
+        {
+          "label": "South India",
+          "key": "SouthIndia",
+          "type": "section",
+          "items": [
+            {
+              "label": "Veg",
+              "key": "Veg",
+              "type": "array",
+              "items": []
+            },
+            {
+              "label": "Non-Veg",
+              "key": "NonVeg",
+              "type": "array",
+              "items": []
+            }
+          ]
+        }
+      ],
+      "isRequired": false,
+      "_id": {
+        "$oid": "6749618ab1055aa66c8eba7b"
+      }
+    },
+    {
+      "key": "Soups",
+      "label": "Soups",
+      "type": "section",
+      "items": [
+        {
+          "label": "North India",
+          "key": "NorthIndia",
+          "type": "section",
+          "items": [
+            {
+              "label": "Veg",
+              "key": "Veg",
+              "type": "array",
+              "items": []
+            },
+            {
+              "label": "Non-Veg",
+              "key": "NonVeg",
+              "type": "array",
+              "items": []
+            }
+          ]
+        },
+        {
+          "label": "South India",
+          "key": "SouthIndia",
+          "type": "section",
+          "items": [
+            {
+              "label": "Veg",
+              "key": "Veg",
+              "type": "array",
+              "items": []
+            },
+            {
+              "label": "Non-Veg",
+              "key": "NonVeg",
+              "type": "array",
+              "items": []
+            }
+          ]
+        }
+      ],
+      "isRequired": false,
+      "_id": {
+        "$oid": "6749618ab1055aa66c8eba7c"
+      }
+    },
+    {
+      "key": "Alcohol",
+      "label": "Alcohol",
+      "type": "array",
+      "items": [],
+      "isRequired": false,
+      "_id": {
+        "$oid": "6749618ab1055aa66c8eba7d"
+      }
+    }
+  ],
+  "createdBy": {
+    "$oid": "67371b8139ada1b6e8db38e3"
+  },
+  "createdAt": {
+    "$date": "2024-11-29T06:39:06.048Z"
+  },
+  "__v": 0,
+  "Category": {
+    "$oid": "67440b62e18c7aa84fb42a8b"
+  },
+  "SubCategory": {
+    "$oid": "6746ead2f90793fb2a414949"
+  }
+}]

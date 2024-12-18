@@ -1,0 +1,64 @@
+[{
+  "_id": {
+    "$oid": "674ffea82236c4a14bb20216"
+  },
+  "BannerId": "Ban20241204123304",
+  "BannerUrl": "banner/20241204_123304-Banner.png",
+  "altText": "Banner1",
+  "status": true,
+  "createdAt": {
+    "$date": "2024-12-04T07:03:04.393Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-04T07:03:04.393Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "674ffeac2236c4a14bb20218"
+  },
+  "BannerId": "Ban20241204123308",
+  "BannerUrl": "banner/20241204_123308-Banner.png",
+  "altText": "Banner2",
+  "status": true,
+  "createdAt": {
+    "$date": "2024-12-04T07:03:08.096Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-04T07:03:08.096Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "674ffeb12236c4a14bb2021a"
+  },
+  "BannerId": "Ban20241204123313",
+  "BannerUrl": "banner/20241204_123313-Banner.png",
+  "altText": "Banner3",
+  "status": true,
+  "createdAt": {
+    "$date": "2024-12-04T07:03:13.327Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-04T07:03:13.327Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "674ffeb42236c4a14bb2021c"
+  },
+  "BannerId": "Ban20241204123316",
+  "BannerUrl": "banner/20241204_123316-Banner.png",
+  "altText": "Banner4",
+  "status": true,
+  "createdAt": {
+    "$date": "2024-12-04T07:03:16.188Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-04T07:03:16.188Z"
+  },
+  "__v": 0
+}]

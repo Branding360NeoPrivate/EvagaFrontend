@@ -1,0 +1,355 @@
+[{
+  "_id": {
+    "$oid": "674d811269b95b0c7e0a712e"
+  },
+  "Category": {
+    "$oid": "67440b6ee18c7aa84fb42a8d"
+  },
+  "SubCategory": {
+    "$oid": "6746eb85f90793fb2a41495b"
+  },
+  "createdBy": {
+    "$oid": "67371b8139ada1b6e8db38e3"
+  },
+  "fields": [
+    {
+      "label": "Title",
+      "key": "Title",
+      "type": "text",
+      "required": false,
+      "options": [],
+      "items": [
+        ""
+      ],
+      "_id": {
+        "$oid": "674d811269b95b0c7e0a712f"
+      }
+    },
+    {
+      "label": "Price",
+      "key": "Price",
+      "type": "number",
+      "required": false,
+      "options": [],
+      "items": [
+        ""
+      ],
+      "_id": {
+        "$oid": "674d811269b95b0c7e0a7130"
+      }
+    },
+    {
+      "label": "Event Type",
+      "key": "EventType",
+      "type": "array",
+      "required": false,
+      "options": [],
+      "items": [],
+      "_id": {
+        "$oid": "674d811269b95b0c7e0a7131"
+      }
+    },
+    {
+      "label": "Inclusions",
+      "key": "Inclusions",
+      "type": "array",
+      "required": false,
+      "options": [],
+      "items": [],
+      "_id": {
+        "$oid": "674d811269b95b0c7e0a7132"
+      }
+    },
+    {
+      "label": "Deliverables",
+      "key": "Deliverables",
+      "type": "array",
+      "required": false,
+      "options": [],
+      "items": [],
+      "_id": {
+        "$oid": "674d811269b95b0c7e0a7133"
+      }
+    },
+    {
+      "label": "Add-Ons",
+      "key": "AddOns",
+      "type": "array",
+      "required": false,
+      "options": [],
+      "items": [
+        {
+          "Particulars": "",
+          "Amount": "",
+          "Uom": "",
+          "Note": ""
+        }
+      ],
+      "_id": {
+        "$oid": "674d811269b95b0c7e0a7134"
+      }
+    },
+    {
+      "label": "Travel Charges",
+      "key": "TravelCharges",
+      "type": "object",
+      "required": false,
+      "options": [],
+      "items": [
+        {
+          "Free Upto": "",
+          "thereon": "",
+          "Uom": "*Per Km"
+        }
+      ],
+      "_id": {
+        "$oid": "674d811269b95b0c7e0a7135"
+      }
+    },
+    {
+      "label": "Cover Image",
+      "key": "CoverImage",
+      "type": "file",
+      "required": false,
+      "options": [],
+      "items": [],
+      "_id": {
+        "$oid": "674d811269b95b0c7e0a7136"
+      }
+    },
+    {
+      "label": "Portfolio",
+      "key": "Portfolio",
+      "type": "array",
+      "required": false,
+      "options": [],
+      "items": [
+        {
+          "photos": {
+            "type": "file",
+            "multiple": true
+          },
+          "videos": {
+            "type": "file",
+            "multiple": true
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "674d811269b95b0c7e0a7137"
+      }
+    },
+    {
+      "label": "Terms & Conditions",
+      "key": "Terms&Conditions",
+      "type": "text",
+      "required": false,
+      "options": [],
+      "items": [
+        ""
+      ],
+      "_id": {
+        "$oid": "674d811269b95b0c7e0a7138"
+      }
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-12-02T09:42:42.638Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-02T09:42:42.638Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "674d983d025d69d242457485"
+  },
+  "Category": {
+    "$oid": "67440bb4e18c7aa84fb42a99"
+  },
+  "SubCategory": {
+    "$oid": "674d8a0d025d69d242457460"
+  },
+  "createdBy": {
+    "$oid": "67371b8139ada1b6e8db38e3"
+  },
+  "fields": [
+    {
+      "label": "Title",
+      "key": "Title",
+      "type": "option",
+      "required": false,
+      "options": [],
+      "items": [
+        {
+          "label": "Hospitality Staff",
+          "value": "hospitality staff"
+        },
+        {
+          "label": "Technical Staff",
+          "value": "technical staff"
+        }
+      ],
+      "_id": {
+        "$oid": "674d983d025d69d242457486"
+      }
+    },
+    {
+      "label": "Event Type",
+      "key": "EventType",
+      "type": "array",
+      "required": false,
+      "options": [],
+      "items": [],
+      "_id": {
+        "$oid": "674d983d025d69d242457487"
+      }
+    },
+    {
+      "label": "Capacity & Pricing",
+      "key": "Capacity&Pricing",
+      "type": "array",
+      "required": false,
+      "options": [],
+      "items": [
+        {
+          "title": "Hospitality Staff",
+          "staffDetails": [
+            {
+              "type": "Male",
+              "minCapacity": 2,
+              "maxCapacity": 30,
+              "pricing": 2000
+            },
+            {
+              "type": "Female",
+              "minCapacity": 2,
+              "maxCapacity": 30,
+              "pricing": 1500
+            }
+          ]
+        },
+        {
+          "title": "Technical Staff",
+          "staffDetails": [
+            {
+              "type": "General",
+              "minCapacity": "",
+              "maxCapacity": "",
+              "pricing": "",
+              "UOM": "Per staff"
+            }
+          ]
+        }
+      ],
+      "_id": {
+        "$oid": "674d983d025d69d242457488"
+      }
+    },
+    {
+      "label": "Inclusions",
+      "key": "Inclusions",
+      "type": "array",
+      "required": false,
+      "options": [],
+      "items": [],
+      "_id": {
+        "$oid": "674d983d025d69d242457489"
+      }
+    },
+    {
+      "label": "Deliverables",
+      "key": "Deliverables",
+      "type": "array",
+      "required": false,
+      "options": [],
+      "items": [],
+      "_id": {
+        "$oid": "674d983d025d69d24245748a"
+      }
+    },
+    {
+      "label": "Add-Ons",
+      "key": "AddOns",
+      "type": "array",
+      "required": false,
+      "options": [],
+      "items": [
+        {
+          "Particular": "",
+          "Amount": "",
+          "UOM": "Per qty",
+          "Notes": ""
+        }
+      ],
+      "_id": {
+        "$oid": "674d983d025d69d24245748b"
+      }
+    },
+    {
+      "label": "Travel Charges",
+      "key": "TravelCharges",
+      "type": "object",
+      "required": false,
+      "options": [],
+      "items": [
+        {
+          "Free Upto": "",
+          "thereon": "",
+          "Uom": "*Per Km"
+        }
+      ],
+      "_id": {
+        "$oid": "674d983d025d69d24245748c"
+      }
+    },
+    {
+      "label": "Cover Image",
+      "key": "CoverImage",
+      "type": "file",
+      "required": false,
+      "options": [],
+      "items": [],
+      "_id": {
+        "$oid": "674d983d025d69d24245748d"
+      }
+    },
+    {
+      "label": "Portfolio",
+      "key": "Portfolio",
+      "type": "object",
+      "required": false,
+      "options": [],
+      "items": [
+        {
+          "photos": [],
+          "videos": []
+        }
+      ],
+      "_id": {
+        "$oid": "674d983d025d69d24245748e"
+      }
+    },
+    {
+      "label": "Terms & Conditions",
+      "key": "Terms&Conditions",
+      "type": "text",
+      "required": false,
+      "options": [],
+      "items": [
+        ""
+      ],
+      "_id": {
+        "$oid": "674d983d025d69d24245748f"
+      }
+    }
+  ],
+  "createdAt": {
+    "$date": "2024-12-02T11:21:33.219Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-02T11:21:33.219Z"
+  },
+  "__v": 0
+}]
