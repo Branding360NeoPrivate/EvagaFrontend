@@ -9,7 +9,7 @@ import { LiaLanguageSolid } from "react-icons/lia";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoClose } from "react-icons/io5";
-
+import { TbLanguageHiragana } from "react-icons/tb";
 import HomeSearchableCityDropdown from "../Inputs/HomeSearchableCityDropdown";
 import HomeSearchBar from "../Inputs/HomeSearchBar";
 
@@ -61,14 +61,17 @@ const DynamicNav = () => {
 
   return (
     <nav className="sticky top-0 z-50 bg-purpleSecondary text-white shadow-lg w-full flex justify-between items-center flex-wrap px-4 md:px-10">
-      <div className="flex items-center justify-between w-full md:w-auto py-3">
+      <div className="flex items-center justify-between w-full lg:w-auto py-3">
         {/* Brand */}
         <Link to="/" className="hover:text-gray-300">
           <img src={logo} alt="logo" className="w-[50px]" />
         </Link>
 
         {/* Hamburger Menu for Mobile */}
-        <button className="lg:hidden" onClick={toggleMobileMenu}>
+        <button
+          className="lg:hidden float-right lg:float-right"
+          onClick={toggleMobileMenu}
+        >
           <GiHamburgerMenu className="text-3xl text-white" />
         </button>
       </div>
@@ -99,16 +102,14 @@ const DynamicNav = () => {
 
       <div className="hidden lg:flex items-center justify-center gap-5">
         <button className="flex items-center">
-          <LiaLanguageSolid className="text-3xl text-white" />
+          <TbLanguageHiragana  className="text-3xl text-white" />
           <MdKeyboardArrowDown />
         </button>
         {/* User Controls */}
         {auth.isAuthenticated ? (
           <div className="flex items-center space-x-4">
             <Link to={`/${auth.role}/profile`}>
-              <span className="text-lg font-medium capitalize">
-                {auth.role}
-              </span>
+              <span className="text-lg font-medium capitalize">My Profile</span>
             </Link>
             <button
               onClick={logout}
@@ -170,7 +171,7 @@ const DynamicNav = () => {
                 <div className="flex items-center space-x-4">
                   <Link to={`/${auth.role}/profile`}>
                     <span className="text-lg font-medium capitalize">
-                      {auth.role}
+                      My Profile
                     </span>
                   </Link>
                   <button

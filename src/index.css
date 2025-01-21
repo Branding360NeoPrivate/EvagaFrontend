@@ -133,41 +133,32 @@ code {
   margin-top: 0px !important; /* Adjust this value to reduce space */
 }
 
-/* Style the radio button */
-input[type="radio"] {
-  width: 20px; /* Size of the radio button */
-  height: 20px;
-  border-radius: 50%; /* Circular shape */
-  border: 1px solid #6a1b9a; /* Border color */
-  appearance: none; /* Remove default radio button appearance */
-  outline: none;
-  cursor: pointer;
-  position: relative;
-  background-color: #fff; /* Background color */
-  transition: background-color 0.3s, border-color 0.3s;
-}
-
-/* Change background color and border when checked */
-input[type="radio"]:checked {
-  background-color: #6a1b9a; /* Change background color */
-  border-color: #6a1b9a; /* Border color when checked */
-}
-
-/* Add a "dot" effect when checked */
-input[type="radio"]:checked::after {
-  content: "";
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: white;
-}
-
 /* Change color on hover */
 input[type="radio"]:hover {
-  border-color: #6a1b9a;
+  border-color: rgba(117, 117, 117, 0.8);
+}
+
+input[type="radio"] {
+  -webkit-appearance: none; /* Remove default appearance */
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(117, 117, 117, 0.8);
+  border-radius: 50%;
+  margin-right: 10px;
+  display: inline-block;
+  position: relative;
+}
+
+input[type="radio"]:checked::before {
+  content: "";
+  position: absolute;
+  top: 2.5px;
+  left: 2.5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(117, 117, 117, 0.8);
 }
 
 textarea {
@@ -185,3 +176,65 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+/* Custom scrollbar hiding */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
+
+.sub_heading {
+  font-size: 2rem;
+  color: #6a1b9a;
+  font-weight: 600;
+  font-family: "Poppins";
+  line-height: 1.6;
+}
+.horizontal-scroll-container {
+  display: flex;
+  overflow-x: scroll;
+  padding: 10px;
+  cursor: grab;
+  scrollbar-width: none; /* For Firefox */
+}
+
+.horizontal-scroll-container::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Edge */
+}
+/* Base styles for the checkbox */
+.filtercheckbox input[type='checkbox'] {
+  appearance: none; /* Removes default checkbox styling */
+  width: 25px;
+  height: 25px;
+  border: 2px solid #6a1b9a; /* Purple border */
+  border-radius: 4px; /* Rounded corners */
+  outline: none; /* Removes focus outline */
+  cursor: pointer;
+  position: relative; /* For pseudo-element positioning */
+  background-color: transparent; /* Transparent background */
+}
+
+
+.filtercheckbox input[type='checkbox']:checked {
+  border-color: #6a1b9a; 
+}
+
+.filtercheckbox input[type='checkbox']:checked::after {
+  content: '';
+  width: 6px;
+  height: 13px;
+  border: solid #6a1b9a; 
+  border-width: 0 2px 2px 0; 
+  transform: rotate(45deg);
+  position: absolute; 
+  top: 2px;
+  left: 6px; 
+}
+
+
+
+

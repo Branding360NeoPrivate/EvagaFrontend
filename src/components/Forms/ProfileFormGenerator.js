@@ -59,7 +59,7 @@ const ProfileFormGenerator = ({
       onSubmit={handleSubmit(onFormSubmit)}
       className={`w-full text-sm font-semibold ${
         fields.length > 7
-          ? "grid grid-cols-2 gap-x-6 gap-y-4 space-y-0"
+          ? "grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 space-y-0"
           : " space-y-4"
       }`}
     >
@@ -68,7 +68,7 @@ const ProfileFormGenerator = ({
           return (
             <div
               key={index}
-              className="grid grid-cols-1 gap-y-2 col-span-2 gap-x-2 pt-5"
+              className="grid grid-cols-1 gap-y-2 md:col-span-2 gap-x-2 pt-5"
             >
               <label htmlFor={field.name}>{field.placeholder}</label>
 
@@ -102,6 +102,28 @@ const ProfileFormGenerator = ({
                   </option>
                 ))}
               </select>
+              {errors[field.name] && (
+                <span className="text-red-500">
+                  {errors[field.name].message}
+                </span>
+              )}
+            </div>
+          );
+        } else if (field.type === "textarea") {
+          return (
+            <div key={index} className="grid grid-cols-2 gap-x-2">
+              <label htmlFor={field.name}>{field.placeholder}</label>
+              <textarea
+                id={field.name}
+                type={field.type}
+                accept={field.accept}
+                {...register(field.name, field.validation)}
+                disabled={!editable}
+                rows={5}
+                className={`p-2 text-gray-500 rounded-md ${
+                  editable ? "border" : "bg-grayBg border-none"
+                } ${errors[field.name] ? "border-red-500" : "border-gray-300"}`}
+              />
               {errors[field.name] && (
                 <span className="text-red-500">
                   {errors[field.name].message}

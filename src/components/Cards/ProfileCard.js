@@ -1,11 +1,14 @@
 import React from "react";
 import image from "../../assets/Temporary Images/image.png";
+import { useNavigate } from "react-router-dom";
+import { internalRoutes } from "../../utils/internalRoutes";
 function ProfileCard({
   profilePic,
   BusinessName,
   Category,
   profilePerccentage,
 }) {
+  const history = useNavigate();
   return (
     <div className="flex items-center justify-center flex-col gap-2 w-full h-full px-4">
       <div className="w-full flex items-center justify-start mb-4">
@@ -30,13 +33,19 @@ function ProfileCard({
 
       <div className="w-full mb-4">
         {Number(profilePerccentage) < 100 ? (
-          <p className="text-lg font-normal text-primary underline  underline-offset-1">
+          <p
+            className="text-lg font-normal text-primary underline  underline-offset-1 cursor-pointer"
+            onClick={() => history(internalRoutes.vendorProfile)}
+          >
             {" "}
             Complete your profile
           </p>
         ) : (
-          <p className="text-lg font-normal text-primary ">
-            Profile is complete
+          <p
+            className="text-lg font-normal text-primary cursor-pointer"
+            onClick={() => history(internalRoutes.vendorProfile)}
+          >
+            Profile is completed
           </p>
         )}
         <span className="w-full flex items-end justify-end text-primary">

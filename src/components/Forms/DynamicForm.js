@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ImCancelCircle } from "react-icons/im";
 import { AiOutlineEnter } from "react-icons/ai";
 import { FaArrowTurnUp, FaIndianRupeeSign, FaRupeeSign } from "react-icons/fa6";
@@ -7,14 +7,37 @@ import { FaCloudUploadAlt } from "react-icons/fa";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-const DynamicForm = ({ formData, setfiledFormData, index }) => {
+import SeasonsSelector from "../Inputs/SeasonsSelector";
+import FoodMenuForm from "./FoodMenuForm";
+import maxCapicty from "../../assets/Temporary Images/Max Capacity.png";
+import Theater from "../../assets/Temporary Images/Theater.png";
+import CocktailRounds from "../../assets/Temporary Images/Cocktail Rounds.png";
+import BanquetRounds from "../../assets/Temporary Images/Banquet Rounds.png";
+import UShape from "../../assets/Temporary Images/U Shape.png";
+import { toast } from "react-toastify";
+const DynamicForm = ({
+  formData,
+  setfiledFormData,
+  index,
+  setOpenMasterVenueModal,
+  setOpenInHouseCateringModal,
+  setInhouseCategoringOrBoth,
+}) => {
   const { fields = [] } = formData || {};
   const [isEditing, setIsEditing] = useState(false);
+  const [foodMenu, setFoodMenu] = useState([]);
   const totalNumberOfPhotoAllowed =
     process.env.REACT_APP_API_Number_of_Images_allowed || 6;
   const editorStyle = {
     backgroundColor: "#7575751a",
   };
+  console.log(fields, "fields");
+
+  const [seasons, setSeasons] = useState({
+    lowSeason: [],
+    shoulderSeason: [],
+    highSeason: [],
+  });
 
   const [formValues, setFormValues] = useState(
     fields.reduce((acc, field) => {
@@ -52,7 +75,34 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
       [`${key}_${index}`]: value, // Add the form index to uniquely scope the key
     }));
   };
-
+  useEffect(() => {
+    if (
+      formData?.entityModel === "Catering" ||
+      formData?.entityModel === "IN-House-Catering"
+    ) {
+      if (foodMenu.length > 0) {
+        setFormValues((prev) => ({
+          ...prev,
+          Cuisine: {
+            label: "Cuisine",
+            key: "Cuisine",
+            type: "section",
+            items: foodMenu,
+          },
+        }));
+      }
+    }
+  }, [foodMenu]);
+  useEffect(() => {
+    if (formData?.entityModel === "Venue") {
+      if (Object.keys(seasons).length > 0) {
+        setFormValues((prev) => ({
+          ...prev,
+          Seasons: seasons,
+        }));
+      }
+    }
+  }, [seasons]);
   const handleArrayChange = (key, value, index = null) => {
     setFormValues((prev) => {
       const updatedArray = Array.isArray(prev[key]) ? [...prev[key]] : [];
@@ -104,53 +154,119 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
       [fieldKey]: prev[fieldKey].filter((_, idx) => idx !== index),
     }));
   };
+  const handleSeasonsChange = (updatedSeasons) => {
+    setSeasons(updatedSeasons);
+  };
+  const handleObjectChangeForSeating = (
+    parentKey,
+    index,
+    key,
+    updatedSeating
+  ) => {
+    // Ensure parentKey exists in formValues and is an array
+    const parentArray = formValues[parentKey] || [];
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
+    // Create a copy of the parent array
+    const updatedSubVenues = [...parentArray];
 
-  //   const transformedData = fields.map((field) => ({
-  //     label: field.label,
-  //     key: field.key,
-  //     type: field.type,
-  //     items: formValues[field.key],
-  //   }));
+    // Ensure the target index exists in the array
+    if (!updatedSubVenues[index]) {
+      updatedSubVenues[index] = {}; // Initialize if undefined
+    }
 
-  //   setfiledFormData(transformedData);
-  //   setIsEditing(false);
-  //   console.log("Form submitted:", transformedData);
-  // };
+    // Update the specified key with the updated seating
+    updatedSubVenues[index][key] = updatedSeating;
+
+    // Update the state
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [parentKey]: updatedSubVenues,
+    }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // for (let field of fields) {
+    //   if (
+    //     field.key === "CoverImage" &&
+    //     (formValues.CoverImage_0 == "" || formValues.CoverImage_0 == null)
+    //   ) {
+    //     toast.error("Cover Image is required");
+    //     return;
+    //   }
+    //   if (
+    //     field.key === "Portfolio" &&
+    //     (formValues.Portfolio_0?.photos == "" || formValues.Portfolio_0?.photos == null)
+    //   ) {
+    //     toast.error("Portfolio Image is required");
+    //     return;
+    //   }
+    //   if (
+    //     field.key === "Portfolio" &&
+    //     (formValues.Portfolio_0?.videos == "" || formValues.Portfolio_0?.videos == null)
+    //   ) {
+    //     toast.error("Portfolio video is required");
+    //     return;
+    //   }
+    //   if (
+    //     field.key === "ProductImage" &&
+    //     (formValues.ProductImage == "" || formValues.ProductImage == null)
+    //   ) {
+    //     toast.error("Product Image  is required");
+    //     return;
+    //   }
+    //    if (
+    //     field.key === "RecceReport" &&
+    //     (formValues.RecceReport_0 == "" || formValues.RecceReport_0 == null)
+    //   ) {
+    //     toast.error("RecceReport is required");
+    //     return;
+    //   }
+    //   if (
+    //     field.key === "FloorPlan" &&
+    //     (formValues.FloorPlan_0 == "" || formValues.FloorPlan_0 == null)
+    //   ) {
+    //     toast.error("FloorPlan is required");
+    //     return;
+    //   }
+    //   if (
+    //     field.key === "3DTour" &&
+    //     (formValues["3DTour"] === "" || formValues["3DTour"] === null)
+    //   ) {
+    //     toast.error("3DTour is required");
+    //     return;
+    //   }
+    // }
     const transformedData = fields.map((field) => {
-      if (field.key === "Portfolio") {
-        // Transform Portfolio structure
-        const portfolioData = {};
+      // if (field.key === "Portfolio") {
+      //   // Transform Portfolio structure
+      //   const portfolioData = {};
 
-        // Collect all indexed keys for Portfolio
-        Object.keys(formValues).forEach((key) => {
-          if (key.startsWith("Portfolio_")) {
-            const index = key.split("_")[1]; // Extract index
-            portfolioData[`Portfolio_${index}`] = formValues[key];
-          }
-        });
+      //   // Collect all indexed keys for Portfolio
+      //   Object.keys(formValues).forEach((key) => {
+      //     if (key.startsWith("Portfolio_")) {
+      //       const index = key.split("_")[1]; // Extract index
+      //       portfolioData[`Portfolio_${index}`] = formValues[key];
+      //     }
+      //   });
 
-        // Combine into desired Portfolio format
-        const portfolioItems = Object.keys(portfolioData).map(
-          (portfolioKey) => {
-            const { photos = [], videos = [] } = portfolioData[portfolioKey];
-            return { photos, videos };
-          }
-        );
+      //   // Combine into desired Portfolio format
+      //   const portfolioItems = Object.keys(portfolioData).map(
+      //     (portfolioKey) => {
+      //       const { photos = [], videos = [] } = portfolioData[portfolioKey];
+      //       return { photos, videos };
+      //     }
+      //   );
+      //   console.log(portfolioItems);
 
-        return {
-          label: field.label,
-          key: field.key,
-          type: field.type,
-          items: portfolioItems, // items array contains {photos, videos}
-        };
-      }
+      //   return {
+      //     label: field.label,
+      //     key: field.key,
+      //     type: field.type,
+      //     items: portfolioItems, // items array contains {photos, videos}
+      //   };
+      // }
 
       // Default behavior for other fields
       const items = [];
@@ -167,143 +283,102 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
         items: items.length > 0 ? items : formValues[field.key],
       };
     });
-
     setfiledFormData(transformedData);
+    setOpenMasterVenueModal(false);
+    setOpenInHouseCateringModal(false);
     setIsEditing(false);
     console.log("Form submitted:", transformedData);
   };
-
-  // const handleFileChange = (key, subKey, newFiles) => {
-  //   setFormValues((prev) => ({
-  //     ...prev,
-  //     [key]: {
-  //       ...(prev[key] || {}),
-  //       [subKey]: newFiles,
-  //     },
-  //   }));
-  // };
-  // const handleFileChange = (key, subKey, index, newFiles) => {
-  //   console.log("New Files:", newFiles);
-  //   console.log("Key:", key, "SubKey:", subKey, "Index:", index);
-
-  //   setFormValues((prev) => {
-  //     console.log("Previous formValues:", prev);
-
-  //     // Ensure the key exists in prev
-  //     const updatedItems = [...(prev[key] || [])];
-
-  //     // Ensure the item at the given index exists
-  //     if (!updatedItems[index]) {
-  //       updatedItems[index] = {};
-  //     }
-
-  //     // Update the specific subKey (videos or photos)
-  //     if (subKey === "videos") {
-  //       updatedItems[index] = {
-  //         ...updatedItems[index],
-  //         [subKey]: newFiles[0], // Replace for single video
-  //       };
-  //     } else if (subKey === "photos") {
-  //       updatedItems[index] = {
-  //         ...updatedItems[index],
-  //         [subKey]: [
-  //           ...(updatedItems[index]?.[subKey] || []), // Append to existing photos
-  //           ...newFiles,
-  //         ],
-  //       };
-  //     }
-
-  //     console.log("Updated formValues:", updatedItems);
-
-  //     return {
-  //       ...prev,
-  //       [key]: updatedItems,
-  //     };
-  //   });
-  // };
-
-  // const handleFileRemove = (key, index, subKey, fileIdx = null) => {
-  //   setFormValues((prev) => {
-  //     const updatedItems = [...(prev[key] || [])];
-
-  //     if (subKey === "videos") {
-  //       // Clear the video file
-  //       updatedItems[index] = {
-  //         ...updatedItems[index],
-  //         [subKey]: null,
-  //       };
-  //     } else if (subKey === "photos" && fileIdx !== null) {
-  //       // Remove a specific photo by index
-  //       const updatedPhotos = [...(updatedItems[index]?.[subKey] || [])];
-  //       updatedPhotos.splice(fileIdx, 1);
-
-  //       updatedItems[index] = {
-  //         ...updatedItems[index],
-  //         [subKey]: updatedPhotos,
-  //       };
-  //     }
-
-  //     return {
-  //       ...prev,
-  //       [key]: updatedItems,
-  //     };
-  //   });
-  // };
-
-  const handleFileChange = (key, subKey, index, newFiles) => {
-    console.log(`Handling ${subKey} at ${key}_${index}`);
-    const portfolioKey = `${key}_${index}`; // Unique key: Portfolio_0, Portfolio_1
-
-    setFormValues((prev) => {
-      const existingData = prev[portfolioKey] || { photos: [], videos: [] };
-
-      // Update photos or videos
-      const updatedValue = {
-        ...existingData,
-        [subKey]:
-          subKey === "videos"
-            ? [...(existingData[subKey] || []), newFiles[0]] // Append single video
-            : [...(existingData[subKey] || []), ...newFiles], // Append multiple photos
-      };
-
-      return {
-        ...prev,
-        [portfolioKey]: updatedValue,
-      };
-    });
+  const handleSingleFileChange = (key, file) => {
+    setFormValues((prev) => ({
+      ...prev,
+      [key]: file, // Save the file directly to the specified key
+    }));
   };
+  // const handleFileChange = (key, subKey, index, newFiles) => {
+  //   const portfolioKey = `${key}_${index}`;
+  //   setFormValues((prev) => {
+  //     const existingData = prev[portfolioKey] || { photos: [], videos: [] };
+
+  //     // Update photos or videos
+  //     const updatedValue = {
+  //       ...existingData,
+  //       [subKey]:
+  //         subKey === "videos"
+  //           ? [...(existingData[subKey] || []), newFiles[0]]
+  //           : [...(existingData[subKey] || []), ...newFiles],
+  //     };
+
+  //     return {
+  //       ...prev,
+  //       [portfolioKey]: updatedValue,
+  //     };
+  //   });
+  // };
 
   // handleFileRemove: Removes specific files from photos or clears videos
-  const handleFileRemove = (key, index, subKey, fileIdx = null) => {
-    console.log(`Removing ${subKey} from ${key}_${index}`);
-    const portfolioKey = `${key}_${index}`; // Unique key: Portfolio_0, Portfolio_1
 
+  const handleFileChange = (fieldKey, type, files) => {
     setFormValues((prev) => {
-      const existingData = prev[portfolioKey] || { photos: [], videos: [] };
+      const updatedField = {
+        ...prev[fieldKey],
+        [type]: [...(prev[fieldKey]?.[type] || []), ...files],
+      };
+      return { ...prev, [fieldKey]: updatedField };
+    });
+  };
+  // const handleFileRemove = (key, index, subKey, fileIdx = null) => {
+  //   console.log(`Removing ${subKey} from ${key}_${index}`);
+  //   const portfolioKey = `${key}_${index}`; // Unique key: Portfolio_0, Portfolio_1
 
-      const updatedValue = { ...existingData };
+  //   setFormValues((prev) => {
+  //     const existingData = prev[portfolioKey] || { photos: [], videos: [] };
 
-      if (subKey === "videos") {
-        updatedValue[subKey] = []; // Clear videos
-      } else if (subKey === "photos" && fileIdx !== null) {
-        const updatedPhotos = [...existingData[subKey]];
-        updatedPhotos.splice(fileIdx, 1); // Remove specific photo
-        updatedValue[subKey] = updatedPhotos;
-      }
+  //     const updatedValue = { ...existingData };
 
+  //     if (subKey === "videos") {
+  //       updatedValue[subKey] = []; // Clear videos
+  //     } else if (subKey === "photos" && fileIdx !== null) {
+  //       const updatedPhotos = [...existingData[subKey]];
+  //       updatedPhotos.splice(fileIdx, 1); // Remove specific photo
+  //       updatedValue[subKey] = updatedPhotos;
+  //     }
+
+  //     return {
+  //       ...prev,
+  //       [portfolioKey]: updatedValue,
+  //     };
+  //   });
+  // };
+
+  const handleFileRemove = (fieldKey, type, fileIdx) => {
+    setFormValues((prev) => {
+      const updatedFiles = [...(prev[fieldKey]?.[type] || [])];
+      updatedFiles.splice(fileIdx, 1);
       return {
         ...prev,
-        [portfolioKey]: updatedValue,
+        [fieldKey]: { ...prev[fieldKey], [type]: updatedFiles },
       };
     });
   };
 
   console.log(formValues);
+  useEffect(() => {
+    if (
+      formValues?.CateringPolicy === "IN-house" ||
+      formValues?.CateringPolicy === "Both"
+    ) {
+      return setInhouseCategoringOrBoth(true);
+    }
+    if (formValues?.CateringPolicy === "Outside allowed") {
+      return setInhouseCategoringOrBoth(false);
+    }
+  }, [formValues?.CateringPolicy]);
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid grid-cols-1 gap-[2.5rem] py-4 w-full"
+      className="grid grid-cols-2 gap-[2.5rem] py-4 w-full"
     >
       {fields.map((field) => {
         if (!field) return null;
@@ -326,21 +401,64 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
             }
           }
           return (
-            <div key={field._id} className="grid grid-cols-3 gap-4">
+            <div key={field._id} className=" col-span-1 grid grid-cols-3 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <input
-                type={field.type}
-                value={formValues[field.key] || ""}
-                onChange={(e) => handleChange(field.key, e.target.value)}
-                className="col-span-2 border-2 w-[25rem] border-2 outline-none p-1 rounded-md text-textGray font-medium"
-                required
-                disabled={isEditing}
-              />
+              <span className="flex items-center justify-center gap-1 col-span-2">
+                <input
+                  type={field.type}
+                  value={formValues[field.key] || ""}
+                  onChange={(e) => handleChange(field.key, e.target.value)}
+                  className={
+                    field.key === "PricePerplate" ||
+                    field.key === "MOQ" ||
+                    field.key === "DurationofStall" ||
+                    field.key === "TeamSize" ||
+                    field.key === "DeliveryCharges" ||
+                    field.key === "Price" ||
+                    field.key === "Pricing" ||
+                    field.key === "SessionDuration"
+                      ? "col-span-1 border-2 w-[10rem] border-2 outline-none p-1 rounded-md text-textGray font-medium"
+                      : "col-span-2 border-2 w-[25rem] border-2 outline-none p-1 rounded-md text-textGray font-medium "
+                  }
+                  required
+                />
+                {field.key === "MOQ" && (
+                  <p className="text-sm text-textGray">*heads</p>
+                )}
+              </span>
             </div>
           );
-        } else if (field.key === "Capacity&Pricing") {
+        } else if (field.type === "time") {
+          return (
+            <div key={field._id} className=" col-span-1 grid grid-cols-3 gap-4">
+              <label className="text-primary text-xl font-semibold">
+                {field.label}:
+              </label>
+              <span className="flex items-center justify-center gap-1">
+                <input
+                  type={field.type}
+                  value={formValues[field.key] || "00:00:00"}
+                  onChange={(e) => handleChange(field.key, e.target.value)}
+                  className={
+                    field.key === "PricePerplate" ||
+                    field.key === "MOQ" ||
+                    field.key === "DurationofStall" ||
+                    field.key === "TeamSize" ||
+                    field.key === "DeliveryCharges"
+                      ? "col-span-1 border-2 w-[10rem] border-2 outline-none p-1 rounded-md text-textGray font-medium"
+                      : "col-span-2 border-2 w-[25rem] border-2 outline-none p-1 rounded-md text-textGray font-medium "
+                  }
+                  required
+                />
+                {field.key === "MOQ" && (
+                  <p className="text-sm text-textGray">*heads</p>
+                )}
+              </span>
+            </div>
+          );
+        } else if (field.key === "Capacity&Pricing" && field.type === "array") {
           const selectedTitle = formValues["Title"];
 
           const handleCapacityChange = (staffType, key, value) => {
@@ -356,7 +474,10 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
 
           if (!selectedTitle) {
             return (
-              <div key={field._id} className="grid grid-cols-3 gap-4">
+              <div
+                key={field._id}
+                className="col-span-2 grid grid-cols-3 gap-4"
+              >
                 <label className="text-primary text-xl font-semibold">
                   {field.label}:
                 </label>
@@ -406,6 +527,7 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                               )
                             }
                             className="border p-2 rounded-md w-[5rem] outline-none"
+                            required
                           />
                         </div>
 
@@ -425,6 +547,7 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                               )
                             }
                             className="border p-2 rounded-md w-[5rem] outline-none"
+                            required
                           />
                         </div>
 
@@ -444,6 +567,7 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                               )
                             }
                             className="border p-2 rounded-md w-[6rem] outline-none"
+                            required
                           />
                         </div>
                         {/* UOM */}
@@ -477,9 +601,129 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
               </div>
             </div>
           );
-        } else if (field.type === "text" && field.key === "Terms&Conditions") {
+        } else if (
+          field.key === "Capacity&Pricing" &&
+          field.type === "object"
+        ) {
+          const handleCapacityChange = (staffType, key, value) => {
+            setFormValues((prev) => {
+              const updatedCapacity = { ...prev[field.key] };
+              if (!updatedCapacity[staffType]) {
+                updatedCapacity[staffType] = {};
+              }
+              updatedCapacity[staffType][key] = value;
+              return { ...prev, [field.key]: updatedCapacity };
+            });
+          };
+
+          const selectedStaffData = field.items.find(
+            (item) => item.title !== ""
+          );
+
           return (
             <div key={field._id} className="grid grid-cols-3 gap-4">
+              <label className="text-primary text-xl font-semibold">
+                {field.label}:
+              </label>
+              <div className="col-span-2 flex flex-col gap-4">
+                {selectedStaffData.staffDetails.map((staff, index) => (
+                  <div
+                    key={index}
+                    className="grid grid-cols-5 items-center justify-center gap-2"
+                  >
+                    <p className="text-lg text-primary font-semibold">
+                      {staff.type}
+                    </p>
+                    <div className="col-span-4 flex gap-4">
+                      {/* Min Capacity */}
+                      <div className="flex flex-col gap-1">
+                        <label className="text-primary">Min</label>
+                        <input
+                          type="number"
+                          value={
+                            formValues[field.key]?.[staff.type]?.minCapacity ||
+                            staff.minCapacity
+                          }
+                          onChange={(e) =>
+                            handleCapacityChange(
+                              staff.type,
+                              "minCapacity",
+                              e.target.value
+                            )
+                          }
+                          className="border p-2 rounded-md w-[5rem] outline-none"
+                          required
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1">
+                        <label className="text-primary">Max</label>
+                        <input
+                          type="number"
+                          value={
+                            formValues[field.key]?.[staff.type]?.maxCapacity ||
+                            staff.maxCapacity
+                          }
+                          onChange={(e) =>
+                            handleCapacityChange(
+                              staff.type,
+                              "maxCapacity",
+                              e.target.value
+                            )
+                          }
+                          className="border p-2 rounded-md w-[5rem] outline-none"
+                          required
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1">
+                        <label className="text-primary">Pricing</label>
+                        <input
+                          type="number"
+                          value={
+                            formValues[field.key]?.[staff.type]?.pricing ||
+                            staff.pricing
+                          }
+                          onChange={(e) =>
+                            handleCapacityChange(
+                              staff.type,
+                              "pricing",
+                              e.target.value
+                            )
+                          }
+                          className="border p-2 rounded-md w-[6rem] outline-none"
+                          required
+                        />
+                      </div>
+                      {/* UOM */}
+                      <div className="flex flex-col gap-1">
+                        <label className="text-primary">UOM</label>
+                        <input
+                          type="text"
+                          value={
+                            formValues[field.key]?.[staff.type]?.UOM ||
+                            staff.UOM
+                          }
+                          onChange={(e) =>
+                            handleCapacityChange(
+                              staff.type,
+                              "UOM",
+                              e.target.value
+                            )
+                          }
+                          className="border p-2 rounded-md w-[5rem] outline-none"
+                          disabled
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        } else if (field.type === "text" && field.key === "Terms&Conditions") {
+          return (
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
@@ -495,10 +739,28 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
               </div>
             </div>
           );
+        } else if (field.type === "textarea" && field.key === "Description") {
+          return (
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+              <label className="text-primary text-xl font-semibold">
+                {field.label}:
+              </label>
+              <div className=" col-span-2  border-2 w-[25rem] border-2 outline-none p-1 rounded-md text-textGray font-medium ">
+                <textarea
+                  value={formValues[field.key] || ""}
+                  onChange={(e) => handleChange(field.key, e.target.value)}
+                  rows={2}
+                  required
+                  readOnly={isEditing}
+                  className="border-none outline-none w-full"
+                />
+              </div>
+            </div>
+          );
         } else if (field.type === "object" && field.key === "TravelCharges") {
           const items = Array.isArray(field.items) ? field.items : []; // Ensure it's always an array
           return (
-            <div key={field._id} className="grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
@@ -526,7 +788,6 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                           }
                           className="border-2 p-1 rounded-l-md text-textGray font-medium w-[5rem] h-full outline-none"
                           required
-                          disabled={isEditing}
                         />
                         <p className="bg-textYellow text-primary h-full flex items-center justify-center rounded-r-md p-1">
                           Kms
@@ -540,6 +801,9 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                         Thereon:
                       </label>
                       <span className="flex items-center justify-center h-[2rem]">
+                        <p className="bg-textYellow text-primary h-full flex items-center justify-center rounded-l-md p-1 px-3">
+                          ₹
+                        </p>
                         <input
                           type="number"
                           value={formValues[field.key]?.[index]?.thereon || ""}
@@ -551,20 +815,375 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                               e.target.value
                             )
                           }
-                          className="border-2 p-1 rounded-l-md text-textGray font-medium w-[5rem] h-full outline-none"
+                          className="border-2 p-1 rounded-r-md text-textGray font-medium w-[5rem] h-full outline-none"
                           required
-                          disabled={isEditing}
                         />
-                        <p className="bg-textYellow text-primary h-full flex items-center justify-center rounded-r-md p-1">
-                          Kms
-                        </p>
                       </span>
+                      <p className="text-textGray text-sm">*Per Km</p>
+                    </div>
+
+                    {/* <div className="flex flex-row gap-2 items-center justify-center">
+                      <label className="text-textGray font-medium">UOM:</label>
+                      <p className="text-textGray text-sm">
+                        {item["Uom"] || ""}
+                      </p>
+                    </div> */}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        } else if (
+          field.type === "object" &&
+          (field.key === "SessionLength" ||
+            field.key === "Duration&Pricing" ||
+            field.key === "Session&Tarrif" ||
+            field.key === "SessionLength&Pricing")
+        ) {
+          const items = Array.isArray(field.items) ? field.items : [];
+
+          const isBookForIngredientsNo =
+            formValues["BookforIngredients"] === "no";
+
+          if (field.key === "Duration&Pricing" && !isBookForIngredientsNo) {
+            return null;
+          }
+
+          return (
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+              <label className="text-primary text-xl font-semibold">
+                {field.label}:
+              </label>
+              <div className="col-span-2">
+                {items.map((item, index) => (
+                  <div key={index} className="grid grid-cols-4 gap-2">
+                    {/* Min */}
+                    <div className="flex flex-col items-center justify-center gap-2">
+                      <label className="text-textGray font-medium">Min</label>
+                      <div className="border-2 p-1 rounded-md text-textGray font-medium flex items-center justify-center">
+                        <input
+                          type="text"
+                          value={formValues[field.key]?.[index]?.Min || ""}
+                          onChange={(e) =>
+                            handleObjectChange(
+                              field.key,
+                              index,
+                              "Min",
+                              e.target.value
+                            )
+                          }
+                          className="w-[4rem] h-full outline-none h-[2rem]"
+                          required
+                        />
+                        <p>{item["UOM"] === "Per Hrs" ? "hrs" : "mins"} </p>
+                      </div>
+                    </div>
+                    {/* Max */}
+                    <div className="flex flex-col items-center justify-center gap-2">
+                      <label className="text-textGray font-medium">Max</label>
+                      <div className="border-2 p-1 rounded-md text-textGray font-medium flex items-center justify-center">
+                        <input
+                          type="text"
+                          value={formValues[field.key]?.[index]?.Max || ""}
+                          onChange={(e) =>
+                            handleObjectChange(
+                              field.key,
+                              index,
+                              "Max",
+                              e.target.value
+                            )
+                          }
+                          className=" w-[4rem] h-full outline-none h-[2rem]"
+                          required
+                        />
+                        <p>{item["UOM"] === "Per Hrs" ? "hrs" : "mins"} </p>
+                      </div>
+                    </div>
+
+                    {/* Amount */}
+                    <div className="flex flex-col gap-2 items-center justify-center">
+                      <label className="text-textGray font-medium">
+                        Amount
+                      </label>
+                      <div className="h-[2rem]">
+                        <span className="text-primary bg-textYellow px-2 py-1 h-full">
+                          ₹
+                        </span>
+                        <input
+                          type="text"
+                          value={formValues[field.key]?.[index]?.Amount || ""}
+                          onChange={(e) =>
+                            handleObjectChange(
+                              field.key,
+                              index,
+                              "Amount",
+                              e.target.value
+                            )
+                          }
+                          className="border-2 p-1 rounded-r-md text-textGray font-medium w-[5rem] h-full outline-none h-full"
+                          required
+                        />
+                      </div>
                     </div>
 
                     {/* UOM */}
-                    <div className="flex flex-row gap-2">
+                    <div className="flex flex-col items-center justify-center gap-2">
+                      <label className="text-textGray font-medium">UOM</label>
+                      <p className="text-textGray text-base">
+                        {item["UOM"] || ""}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        } else if (field.type === "object" && field.key === "NightTimeSlot") {
+          const items = Array.isArray(field.items) ? field.items : [];
+
+          return (
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+              <label className="text-primary text-xl font-semibold">
+                {field.label}:
+              </label>
+              <div className="col-span-2">
+                {items.map((item, index) => (
+                  <div
+                    key={index}
+                    className="grid grid-cols-4 items-center justify-center gap-4"
+                  >
+                    <div className="col-span-2 border-2 flex items-center gap-1 px-2 py-1 h-fit w-fit">
+                      <div className="flex flex-row items-center justfiy-center gap-2">
+                        <input
+                          type="time"
+                          value={
+                            formValues[field.key]?.[index]?.StartTime ||
+                            "00:00:00"
+                          }
+                          onChange={(e) =>
+                            handleObjectChange(
+                              field.key,
+                              index,
+                              "StartTime",
+                              e.target.value
+                            )
+                          }
+                          className=" rounded-md text-textGray font-medium w-[5rem] h-full outline-none"
+                          disabled={isEditing}
+                          required
+                        />
+                        <p>PM</p>
+                      </div>
+                      <p className="font-semibold">TO</p>
+                      <div className="flex flex-row items-center justfiy-center gap-2">
+                        <input
+                          type="time"
+                          value={
+                            formValues[field.key]?.[index]?.EndTime ||
+                            "00:00:00"
+                          }
+                          onChange={(e) =>
+                            handleObjectChange(
+                              field.key,
+                              index,
+                              "EndTime",
+                              e.target.value
+                            )
+                          }
+                          className=" rounded-md text-textGray font-medium w-[5rem] h-full outline-none"
+                          disabled={isEditing}
+                          required
+                        />
+                        <p>AM</p>
+                      </div>
+                    </div>
+                    {/* Amount */}
+                    <div className="flex flex-col gap-2">
+                      {/* <label className="text-textGray font-medium">
+                        Amount:
+                      </label> */}
+                      <div className="h-[2rem]">
+                        <span className="bg-textYellow px-2 py-1 h-full">
+                          ₹
+                        </span>
+                        <input
+                          type="number"
+                          value={
+                            formValues[field.key]?.[index]?.AdditionalCharges ||
+                            ""
+                          }
+                          onChange={(e) =>
+                            handleObjectChange(
+                              field.key,
+                              index,
+                              "AdditionalCharges",
+                              e.target.value
+                            )
+                          }
+                          className="border-2 p-1 rounded-r-md text-textGray font-medium w-[5rem] h-full outline-none"
+                          disabled={isEditing}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    {/* UOM */}
+                    <div className="flex flex-col gap-2">
+                      {/* <label className="text-textGray font-medium">UOM:</label> */}
+                      <p>{item["Uom"] || "extra per hour"}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        } else if (field.type === "object" && field.key === "QtyPricing") {
+          const items = Array.isArray(field.items) ? field.items : [];
+
+          return (
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+              <label className="text-primary text-xl font-semibold">
+                {field.label}:
+              </label>
+              <div className="col-span-2">
+                {items.map((item, index) => (
+                  <div key={index} className="grid grid-cols-4 gap-4">
+                    {/* Max */}
+                    <div className="flex flex-col gap-2">
+                      <label className="text-textGray font-medium">
+                        Min Qty
+                      </label>
+                      <input
+                        type="number"
+                        value={formValues[field.key]?.[index]?.MinQty || ""}
+                        onChange={(e) =>
+                          handleObjectChange(
+                            field.key,
+                            index,
+                            "MinQty",
+                            e.target.value
+                          )
+                        }
+                        className="border-2 p-1 rounded-md text-textGray font-medium w-[5rem] h-full outline-none"
+                        disabled={isEditing}
+                        required
+                      />
+                    </div>
+
+                    {/* Min */}
+                    <div className="flex flex-col gap-2">
+                      <label className="text-textGray font-medium">Rates</label>
+                      <div className="h-[2rem]">
+                        <span className="h-full bg-textYellow px-2 py-1">
+                          ₹
+                        </span>
+                        <input
+                          type="number"
+                          value={formValues[field.key]?.[index]?.Rates || ""}
+                          onChange={(e) =>
+                            handleObjectChange(
+                              field.key,
+                              index,
+                              "Rates",
+                              e.target.value
+                            )
+                          }
+                          className="border-2 p-1 rounded-r-md text-textGray font-medium w-[5rem] h-full outline-none"
+                          disabled={isEditing}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    {/* UOM */}
+                    <div className="flex flex-col gap-2">
                       <label className="text-textGray font-medium">UOM:</label>
-                      <p>{item["Uom"] || ""}</p>
+                      <p>{item["Uom"] || "extra per hour"}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        } else if (field.type === "object" && field.key === "Pricing") {
+          const items = Array.isArray(field.items) ? field.items : [];
+
+          return (
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+              <label className="text-primary text-xl font-semibold">
+                {field.label}:
+              </label>
+              <div className="col-span-2">
+                {items.map((item, index) => (
+                  <div key={index} className="grid grid-cols-4 gap-4">
+                    {/* Max */}
+                    <div className="flex flex-col gap-2">
+                      <label className="text-textGray font-medium">
+                        Min Qty
+                      </label>
+                      <input
+                        type="number"
+                        value={formValues[field.key]?.[index]?.MinQty || ""}
+                        onChange={(e) =>
+                          handleObjectChange(
+                            field.key,
+                            index,
+                            "MinQty",
+                            e.target.value
+                          )
+                        }
+                        className="border-2 p-1 rounded-md text-textGray font-medium w-[5rem] h-full outline-none"
+                        disabled={isEditing}
+                        required
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-textGray font-medium">
+                        Max Qty
+                      </label>
+                      <input
+                        type="number"
+                        value={formValues[field.key]?.[index]?.MaxQty || ""}
+                        onChange={(e) =>
+                          handleObjectChange(
+                            field.key,
+                            index,
+                            "MaxQty",
+                            e.target.value
+                          )
+                        }
+                        className="border-2 p-1 rounded-md text-textGray font-medium w-[5rem] h-full outline-none"
+                        disabled={isEditing}
+                        required
+                      />
+                    </div>
+                    {/* Min */}
+                    <div className="flex flex-col gap-2">
+                      <label className="text-textGray font-medium">Rates</label>
+                      <div className="h-[2rem] ">
+                        <span className="bg-textYellow px-2 py-1">₹</span>
+                        <input
+                          type="number"
+                          value={formValues[field.key]?.[index]?.Rates || ""}
+                          onChange={(e) =>
+                            handleObjectChange(
+                              field.key,
+                              index,
+                              "Rates",
+                              e.target.value
+                            )
+                          }
+                          className="border-2 p-1 rounded-r-md text-textGray font-medium w-[5rem] h-full outline-none"
+                          disabled={isEditing}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    {/* UOM */}
+                    <div className="flex flex-col gap-2">
+                      <label className="text-textGray font-medium">UOM:</label>
+                      <p>{item["Uom"] || "extra per hour"}</p>
                     </div>
                   </div>
                 ))}
@@ -573,91 +1192,119 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
           );
         } else if (
           field.type === "object" &&
-          (field.key === "SessionLength" || field.key === "Duration&Pricing")
+          (field.key === "SizePricing" ||
+            field.key === "Size&Pricing" ||
+            field.key === "GuestCapacity" ||
+            field.key === "Size&Dimensions")
         ) {
           const items = Array.isArray(field.items) ? field.items : [];
 
-          // Add condition for BookforIngredients to check if it's "no" to render Duration&Pricing
-          const isBookForIngredientsNo =
-            formValues["BookforIngredients"] === "no";
+          return (
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+              <label className="text-primary text-xl font-semibold">
+                {field.label}:
+              </label>
+              <div className="col-span-2">
+                {items.map((item, index) => (
+                  <div key={index} className="grid grid-cols-5 gap-4">
+                    {Object.keys(item).map((key) => {
+                      if (key !== "Uom") {
+                        return (
+                          <div key={key} className="flex flex-col gap-2">
+                            <label className="text-textGray font-medium">
+                              {key}
+                            </label>
+                            <input
+                              type="text"
+                              value={
+                                formValues[field.key]?.[index]?.[key] || ""
+                              }
+                              onChange={(e) =>
+                                handleObjectChange(
+                                  field.key,
+                                  index,
+                                  key,
+                                  e.target.value
+                                )
+                              }
+                              className="border-2 p-1 rounded-md text-textGray font-medium w-[5rem] h-full outline-none"
+                              disabled={isEditing}
+                              required
+                            />
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
 
-          // Skip rendering Duration&Pricing if BookforIngredients is "no"
-          if (field.key === "Duration&Pricing" && !isBookForIngredientsNo) {
-            return null; // Don't render Duration&Pricing unless BookforIngredients is "no"
-          }
+                    {/* UOM */}
+                    {field.key !== "Size&Dimensions" && (
+                      <div className="flex flex-col gap-2">
+                        <label className="text-textGray font-medium">
+                          UOM:
+                        </label>
+                        <p className="text-textGray">
+                          {item["Uom"] || "extra per hour"}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        } else if (field.type === "object" && field.key === "Menu&Breakup") {
+          const items = Array.isArray(field.items) ? field.items : [];
 
           return (
-            <div key={field._id} className="grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-2">
                 {items.map((item, index) => (
                   <div key={index} className="grid grid-cols-3 gap-4">
-                    {/* Amount */}
-                    <div className="flex flex-row gap-2">
-                      <label className="text-textGray font-medium">
-                        Amount:
-                      </label>
-                      <input
-                        type="text"
-                        value={formValues[field.key]?.[index]?.Amount || ""}
-                        onChange={(e) =>
-                          handleObjectChange(
-                            field.key,
-                            index,
-                            "Amount",
-                            e.target.value
-                          )
-                        }
-                        className="border-2 p-1 rounded-md text-textGray font-medium w-[5rem] h-full outline-none"
-                        disabled={isEditing}
-                      />
-                    </div>
-
-                    {/* Max */}
-                    <div className="flex flex-row gap-2">
-                      <label className="text-textGray font-medium">Max:</label>
-                      <input
-                        type="text"
-                        value={formValues[field.key]?.[index]?.Max || ""}
-                        onChange={(e) =>
-                          handleObjectChange(
-                            field.key,
-                            index,
-                            "Max",
-                            e.target.value
-                          )
-                        }
-                        className="border-2 p-1 rounded-md text-textGray font-medium w-[5rem] h-full outline-none"
-                        disabled={isEditing}
-                      />
-                    </div>
-
-                    {/* Min */}
-                    <div className="flex flex-row gap-2">
-                      <label className="text-textGray font-medium">Min:</label>
-                      <input
-                        type="text"
-                        value={formValues[field.key]?.[index]?.Min || ""}
-                        onChange={(e) =>
-                          handleObjectChange(
-                            field.key,
-                            index,
-                            "Min",
-                            e.target.value
-                          )
-                        }
-                        className="border-2 p-1 rounded-md text-textGray font-medium w-[5rem] h-full outline-none"
-                        disabled={isEditing}
-                      />
-                    </div>
-
-                    {/* UOM */}
-                    <div className="flex flex-row gap-2">
-                      <label className="text-textGray font-medium">UOM:</label>
-                      <p>{item["UOM"] || ""}</p>
-                    </div>
+                    {/* Dynamically render inputs */}
+                    <p></p>
+                    <p className="col-span-1 text-textGray grid items-center justify-start ">
+                      No. of Items
+                    </p>
+                    {Object.keys(item).map((key) => {
+                      if (key !== "Uom") {
+                        return (
+                          <div
+                            key={key}
+                            className=" col-span-2 flex flex-row gap-4"
+                          >
+                            <label
+                              className="text-textGray font-medium"
+                              style={{ flex: "0.45" }}
+                            >
+                              {key}
+                            </label>
+                            <input
+                              type="text"
+                              value={
+                                formValues[field.key]?.[index]?.[key] || ""
+                              }
+                              onChange={(e) =>
+                                handleObjectChange(
+                                  field.key,
+                                  index,
+                                  key,
+                                  e.target.value
+                                )
+                              }
+                              className="border-2 p-1 rounded-md text-textGray font-medium w-[5rem] h-full outline-none"
+                              required
+                              disabled={isEditing}
+                              style={{ flex: "0.45" }}
+                            />
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
                   </div>
                 ))}
               </div>
@@ -670,7 +1317,7 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
             field.key === "Package")
         ) {
           return (
-            <div key={field._id} className="grid grid-cols-4 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
@@ -681,40 +1328,57 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                   onClick={() =>
                     handleAddObject(field.key, field.items[0] || {})
                   }
-                  disabled={isEditing}
                 >
                   <IoAddCircleOutline className="text-xl" /> {field.label}
                 </button>
                 {(formValues[field.key] || []).map((item, index) => (
-                  <div key={index} className="flex flex-wrap gap-4  ">
+                  <div key={index} className="flex flex-wrap   ">
                     {Object.keys(item).map((objectKey, subIndex) => (
                       <div
                         key={subIndex}
                         className="flex items-center justify-center flex-col gap-1 items-center"
                       >
-                        <label>{objectKey}:</label>
-                        <input
-                          type="text"
-                          value={item[objectKey] || ""}
-                          onChange={(e) =>
-                            handleObjectChange(
-                              field.key,
-                              index,
-                              objectKey,
-                              e.target.value
-                            )
+                        <label className="text-textGray text-base">
+                          {objectKey}
+                        </label>
+                        <div
+                          className={
+                            objectKey === "Note"
+                              ? "h-[2rem] flex items-center justify-center px-4"
+                              : "h-[2rem] flex items-center justify-center"
                           }
-                          className="border p-2 rounded outline-none border-2 w-[7rem]"
-                          required
-                          disabled={isEditing}
-                        />
+                        >
+                          {objectKey === "Amount" && (
+                            <span className="h-full px-2 py-1 bg-textYellow text-primary font-medium">
+                              ₹
+                            </span>
+                          )}{" "}
+                          {objectKey === "UOM" && (
+                            <span className="h-full px-2 py-1 bg-textYellow text-primary font-medium">
+                              Per
+                            </span>
+                          )}
+                          <input
+                            type="text"
+                            value={item[objectKey] || ""}
+                            onChange={(e) =>
+                              handleObjectChange(
+                                field.key,
+                                index,
+                                objectKey,
+                                e.target.value
+                              )
+                            }
+                            className="border p-2 rounded outline-none border-2 w-[7rem] h-full"
+                            placeholder={objectKey}
+                          />
+                        </div>
                       </div>
                     ))}
                     <button
                       type="button"
                       className="text-red-500 self-end mt-2 flex items-center gap-2"
                       onClick={() => handleRemoveObject(field.key, index)}
-                      disabled={isEditing}
                     >
                       <ImCancelCircle />
                     </button>
@@ -729,13 +1393,106 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
         ) {
           const isBookForIngredients =
             formValues["BookforIngredients"] === "yes";
+          if (!("BookforIngredients" in formValues) || isBookForIngredients) {
+            return (
+              <div
+                key={field._id}
+                className="col-span-2 grid grid-cols-4 gap-4"
+              >
+                <label className="text-primary text-xl font-semibold">
+                  {field.label}:
+                </label>
+                <div className="col-span-3 flex items-center flex-col-reverse justify-center gap-2">
+                  <button
+                    type="button"
+                    className="text-primary px-4 py-2 rounded flex items-center justify-center gap-1 font-medium"
+                    onClick={() =>
+                      handleAddObject(field.key, field.items[0] || {})
+                    }
+                    disabled={isEditing}
+                  >
+                    <IoAddCircleOutline className="text-xl" /> {field.label}
+                  </button>
+                  {(formValues[field.key] || []).map((item, index) => (
+                    <div key={index} className="flex flex-wrap gap-4">
+                      {Object.keys(item).map((objectKey, subIndex) => (
+                        <div
+                          key={subIndex}
+                          className="flex items-center justify-center flex-col gap-1 items-center"
+                        >
+                          {objectKey !== "Device Name" &&
+                          objectKey !== "Name" &&
+                          objectKey !== "Flavour/Variety" ? (
+                            <label className="text-textGray text-base text-wrap  ">
+                              {objectKey}
+                            </label>
+                          ) : (
+                            <label className="text-textGray text-base opacity-0">
+                              {objectKey}
+                            </label>
+                          )}
 
-          if (!isBookForIngredients) {
-            return null;
+                          {objectKey === "Uom" ? (
+                            <p className="text-textGray text-base">
+                              {item[objectKey]}
+                            </p>
+                          ) : (
+                            <div className="h-[2rem]">
+                              {objectKey === "Rates" && (
+                                <span className="bg-textYellow px-2 py-1 h-full">
+                                  ₹
+                                </span>
+                              )}
+                              <input
+                                type="text"
+                                value={item[objectKey] || ""}
+                                onChange={(e) =>
+                                  handleObjectChange(
+                                    field.key,
+                                    index,
+                                    objectKey,
+                                    e.target.value
+                                  )
+                                }
+                                className={
+                                  objectKey === "Min Days" ||
+                                  objectKey === "Max Days" ||
+                                  objectKey === "Stock" ||
+                                  objectKey === "Rates" ||
+                                  objectKey === "Min servings" ||
+                                  objectKey === "Max servings" ||
+                                  objectKey === "Serving Size" ||
+                                  objectKey === "Servings per Batch"
+                                    ? "border p-2 rounded outline-none border-2 w-[4rem] h-full"
+                                    : "border p-2 rounded outline-none border-2 w-[7rem] h-full"
+                                }
+                                required
+                                disabled={isEditing}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        className="text-red-500 self-end mt-2 flex items-center gap-2"
+                        onClick={() => handleRemoveObject(field.key, index)}
+                        disabled={isEditing}
+                      >
+                        <ImCancelCircle />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
           }
 
+          // Skip rendering if "BookforIngredients" is present but not "yes"
+          return null;
+        } else if (field.type === "array" && field.key === "VehicleTarrifs") {
           return (
-            <div key={field._id} className="grid grid-cols-4 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
@@ -757,7 +1514,7 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                         key={subIndex}
                         className="flex items-center justify-center flex-col gap-1 items-center"
                       >
-                        <label>{objectKey}:</label>
+                        <label>{objectKey}</label>
                         <input
                           type="text"
                           value={item[objectKey] || ""}
@@ -792,52 +1549,24 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
           field.type === "file" &&
           (field.key === "CoverImage" ||
             field.key === "FloorPlan" ||
-            field.key === "3DTour" ||
-            field.key === "RecceReport")
+            field.key === "RecceReport" ||
+            field.key === "Certifications&Licenses")
         ) {
           return (
-            <div key={field._id} className="grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
               <label className="text-primary text-xl font-semibold">
-                {field.label}:{index}
+                {field.label}:
               </label>
               <div className="col-span-2 flex  items-center justify-start gap-4 ">
-                <div className="flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
-                  {/* <input
-                    type={field.type}
-                    id={`file-upload-${field.key}`}
-                    className="hidden"
-                    // onChange={(e) => [
-                    //   console.log(index),
-                    //   handleChange(field.key, e.target.files[0]),
-                    // ]}
-                    onChange={(e) =>
-                      handleChange(`${field.key}_${index}`, e.target.files[0])
-                    }
-                    required
-                    // disabled={isEditing}
-                  />{" "}
-                  <label
-                    htmlFor={`file-upload-${field.key}`}
-                    className="cursor-pointer flex items-center justify-center flex-col"
-                  >
-                    {" "}
-                    <IoCloudUploadOutline className="text-primary  text-2xl mb-4" />{" "}
-                    <p className="text-textGray">
-                      {" "}
-                      Drop your files or <span className="">
-                        Browse files
-                      </span>{" "}
-                    </p>{" "}
-                  </label>{" "} */}
-
+                {/* <div className="flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
                   <input
                     type={field.type}
+                    accept="image/*, application/pdf"
                     id={`file-upload-${field.key}-${index}`}
                     className="hidden"
                     onChange={(e) =>
                       handleImageChange(field.key, e.target.files[0])
                     }
-                    disabled={isEditing}
                   />
                   <label
                     htmlFor={`file-upload-${field.key}-${index}`}
@@ -848,14 +1577,83 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                       Drop your files or Browse files
                     </p>
                   </label>
+                </div> */}
+                <div className="relative cursor-pointer flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
+                  <IoCloudUploadOutline className="text-primary text-2xl mb-4" />
+                  <p className="text-textGray">
+                    Drop your {field.label} or <span>Browse {field.label}</span>
+                  </p>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const selectedFiles = Array.from(e.target.files);
+                      handleSingleFileChange(field.key, selectedFiles);
+                    }}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    required
+                  />
                 </div>
-                {formValues?.[`${field.key}_${index}`] && (
+                {formValues?.[`${field.key}`] && (
                   <span className="text-textGray bg-textLightGray flex p-1 rounded-md gap-1">
-                    <p>{formValues[`${field.key}_${index}`]?.name}</p>
+                    <p>{formValues[`${field.key}`]?.[0]?.name}</p>
                     <button
-                      onClick={() =>
-                        handleChange(`${field.key}_${index}`, null)
-                      } // Remove specific file
+                      onClick={() => handleChange(`${field.key}`, null)} // Remove specific file
+                      className="px-3 py-1"
+                    >
+                      <ImCancelCircle />
+                    </button>
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        } else if (field.type === "file" && field.key === "3DTour") {
+          return (
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+              <label className="text-primary text-xl font-semibold">
+                {field.label}*:
+              </label>
+              <div className="col-span-2 flex items-center justify-start gap-4">
+                <div className="flex items-center justify-center flex-col text-textGray ">
+                  <div className="relative cursor-pointer flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
+                    <IoCloudUploadOutline className="text-primary text-2xl mb-4" />
+                    <p className="text-textGray">
+                      Drop your Video or <span>Browse Video</span>
+                    </p>
+                    <input
+                      type="file"
+                      accept="video/mp4, video/webm"
+                      onChange={(e) => {
+                        const maxFileSize = 50 * 1024 * 1024; // 50 MB in bytes
+                        const selectedFiles = Array.from(e.target.files);
+                        const oversizedFiles = selectedFiles.filter(
+                          (file) => file.size > maxFileSize
+                        );
+
+                        if (oversizedFiles.length > 0) {
+                          alert(
+                            "One or more files exceed the maximum size of 50MB."
+                          );
+                          return;
+                        }
+
+                        handleSingleFileChange(field.key, selectedFiles);
+                      }}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      required
+                    />
+                  </div>
+
+                  {formValues?.["3DTour"] && (
+                    <p className="text-textGray mt-2">*Upload 1 Video</p>
+                  )}
+                </div>
+                {formValues?.[`${field.key}`] && (
+                  <span className="text-textGray bg-textLightGray flex p-1 rounded-md gap-1">
+                    <p>{formValues[`${field.key}`]?.[0]?.name}</p>
+                    <button
+                      onClick={() => handleChange(`${field.key}`, null)} // Remove specific file
                       className="px-3 py-1"
                     >
                       <ImCancelCircle />
@@ -867,47 +1665,42 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
           );
         } else if (field.type === "file" && field.key === "ProductImage") {
           return (
-            <div key={field._id} className="grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-2 flex items-center justify-start gap-4">
-                <div className="flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
-                  <input
-                    type="file"
-                    id="file-upload"
-                    className="hidden"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const selectedFiles = Array.from(e.target.files);
-                      const existingFiles = formValues?.ProductImage || [];
-                      if (selectedFiles.length + existingFiles.length > 3) {
-                        alert("You can only upload up to 3 images.");
-                        return;
-                      }
-
-                      const onlyImages = selectedFiles.filter((file) =>
-                        file.type.startsWith("image/")
-                      );
-                      handleChange(field.key, [
-                        ...existingFiles,
-                        ...onlyImages,
-                      ]);
-                    }}
-                    required
-                    disabled={isEditing}
-                    multiple
-                  />
-
-                  <label
-                    htmlFor="file-upload"
-                    className="cursor-pointer flex items-center justify-center flex-col"
-                  >
+                <div className="flex items-center justify-center flex-col text-textGray ">
+                  <div className="relative cursor-pointer flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
                     <IoCloudUploadOutline className="text-primary text-2xl mb-4" />
                     <p className="text-textGray">
-                      Drop your files or <span>Browse files</span>
+                      Drop your Photo or <span>Browse Photo</span>
                     </p>
-                  </label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={(e) => {
+                        const selectedFiles = Array.from(e.target.files);
+                        const existingFiles = formValues?.ProductImage || [];
+                        if (selectedFiles.length + existingFiles.length > 3) {
+                          alert("You can only upload up to 3 images.");
+                          return;
+                        }
+
+                        const onlyImages = selectedFiles.filter((file) =>
+                          file.type.startsWith("image/")
+                        );
+                        handleChange(field.key, [
+                          ...existingFiles,
+                          ...onlyImages,
+                        ]);
+                      }}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      required
+                    />
+                  </div>
+
                   {formValues?.ProductImage && (
                     <p className="text-textGray mt-2">*Upload up to 3 photos</p>
                   )}
@@ -942,268 +1735,164 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
           );
         } else if (field.type === "array" && field.key === "Portfolio") {
           return (
-            <div key={field._id} className="grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2  flex flex-col gap-4">
-                {field.items?.map((item, index) => (
-                  <div key={index} className="grid grid-cols-2 gap-4 ">
-                    {/* Handle Photos */}
-                    {item.photos && (
-                      <div className="flex flex-col items-start gap-2">
-                        <div className="flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
-                          <input
-                            type="file"
-                            accept="image/*"
-                            multiple
-                            // onChange={(e) => {
-                            //   console.log(index);
-                            //   const existingFiles =
-                            //     formValues[field.key]?.[index]?.photos || [];
-                            //   const selectedFiles = Array.from(e.target.files);
-                            //   const totalFiles =
-                            //     existingFiles.length + selectedFiles.length;
-
-                            //   if (totalFiles > totalNumberOfPhotoAllowed) {
-                            //     alert(
-                            //       `You can only upload up to ${totalNumberOfPhotoAllowed} images in total.`
-                            //     );
-                            //     return;
-                            //   }
-
-                            //   const onlyImages = selectedFiles.filter((file) =>
-                            //     file.type.startsWith("image/")
-                            //   );
-
-                            //   handleFileChange(field.key, "photos", index, [
-                            //     ...existingFiles,
-                            //     ...onlyImages,
-                            //   ]);
-                            // }}
-                            onChange={(e) => {
-                              console.log("Handling photos at index:", index); // Verify correct index
-                              const existingFiles =
-                                formValues[field.key]?.[index]?.photos || [];
-                              const selectedFiles = Array.from(e.target.files);
-                              handleFileChange(field.key, "photos", index, [
-                                ...existingFiles,
-                                ...selectedFiles,
-                              ]);
-                            }}
-                            id={`photo-upload-${field.key}-${index}`} // Unique id
-                            className="hidden"
-                            // required
-                            disabled={isEditing}
-                          />
-                          <label
-                            htmlFor={`photo-upload-${field.key}-${index}`} // Match the id
-                            className="cursor-pointer flex items-center justify-center flex-col"
-                          >
-                            <IoCloudUploadOutline className="text-primary text-2xl mb-4" />
-                            <p className="text-textGray">
-                              Drop your Photo or{" "}
-                              <span className="">Browse Photo</span>
-                            </p>
-                          </label>
-                        </div>
-                        {formValues[field.key]?.length > 0 && (
-                          <div className="mt-2 grid grid-cols-2 flex-wrap gap-1">
-                            {formValues[field.key].map(
-                              (portfolioItem, portfolioIdx) =>
-                                portfolioItem.photos?.length > 0
-                                  ? portfolioItem.photos.map(
-                                      (file, fileIdx) => (
-                                        <span
-                                          key={`${portfolioIdx}-${fileIdx}`}
-                                          className="text-textGray bg-textLightGray flex p-1 rounded-md justify-between items-center gap-2"
-                                        >
-                                          {/* Display File Name */}
-                                          <p className="truncate max-w-[10rem]">
-                                            {file.name}
-                                          </p>
-
-                                          {/* Cancel Button */}
-                                          <button
-                                            className="text-red-500 px-2 py-1"
-                                            onClick={() =>
-                                              handleFileRemove(
-                                                field.key,
-                                                portfolioIdx,
-                                                "photos",
-                                                fileIdx
-                                              )
-                                            }
-                                          >
-                                            <ImCancelCircle />
-                                          </button>
-                                        </span>
-                                      )
-                                    )
-                                  : null
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Handle Videos */}
-                    {item.videos && (
-                      <div className="flex flex-col items-start gap-2">
-                        <div className="flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
-                          <input
-                            type="file"
-                            accept="video/mp4, video/webm"
-                            multiple={false} // Single file only
-                            onChange={(e) => {
-                              const selectedFile = Array.from(e.target.files);
-                              console.log("Selected File:", selectedFile); // Debugging file input
-                              handleFileChange(
-                                field.key,
-                                "videos",
-                                index,
-                                selectedFile
-                              );
-                            }}
-                            id={`video-upload-${field.key}-${index}`}
-                            className="hidden"
-                          />
-
-                          <label
-                            htmlFor={`video-upload-${field.key}-${index}`}
-                            className="cursor-pointer flex items-center justify-center flex-col"
-                          >
-                            <IoCloudUploadOutline className="text-primary text-2xl mb-4" />
-                            <p className="text-textGray">
-                              Drop your video or{" "}
-                              <span className="text-primary">Browse video</span>
-                            </p>
-                          </label>
-                        </div>
-
-                        {/* Display Video */}
-                        {formValues[field.key]?.[index]?.videos && (
-                          <div className="mt-2 flex justify-between items-center bg-gray-200 p-2 rounded">
-                            <span className="truncate max-w-[10rem]">
-                              {formValues[field.key][index].videos.name}
-                            </span>
-                            <button
-                              type="button"
-                              className="text-red-500"
-                              onClick={() =>
-                                handleFileRemove(field.key, index, "videos")
-                              }
-                            >
-                              <ImCancelCircle />
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
+              <div className="col-span-2 flex flex-col gap-4">
                 <div className="col-span-2 flex flex-col gap-4">
-                  {field.items?.map((item, index) => {
-                    const portfolioKey = `${field.key}_${index}`; // Generate unique key: Portfolio_X
-                    const portfolioData = formValues[portfolioKey] || {
-                      photos: [],
-                      videos: [],
-                    };
-
-                    return (
-                      <div
-                        key={portfolioKey}
-                        className="grid grid-cols-2 gap-4"
-                      >
-                        {/* Handle Photos */}
-                        <div className="flex flex-col gap-2">
+                  {/* Ensure field.items is a valid object */}
+                  {field.items && (
+                    <div className="grid grid-cols-2 gap-4">
+                      {/* Photos Section */}
+                      <div className="flex flex-col gap-2">
+                        <div className="relative cursor-pointer flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
+                          <IoCloudUploadOutline className="text-primary text-2xl mb-4" />
+                          <p className="text-textGray">
+                            Drop your Photo or <span>Browse Photo</span>
+                          </p>
                           <input
                             type="file"
                             accept="image/*"
-                            multiple
+                            multiple={totalNumberOfPhotoAllowed}
                             onChange={(e) => {
                               const selectedFiles = Array.from(e.target.files);
+
+                              // Check if the total number of selected files exceeds the allowed limit
+                              const existingPhotos =
+                                formValues?.Portfolio?.photos || [];
+                              const totalSelected =
+                                existingPhotos.length + selectedFiles.length;
+
+                              if (totalSelected > totalNumberOfPhotoAllowed) {
+                                alert(
+                                  `You can only upload up to ${totalNumberOfPhotoAllowed} photos.`
+                                );
+                                return;
+                              }
+
                               handleFileChange(
                                 field.key,
                                 "photos",
-                                index,
                                 selectedFiles
-                              );
+                              ); // No index
                             }}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                           />
-                          {/* Display Photos */}
-                          {portfolioData.photos.map((file, fileIdx) => (
-                            <div
-                              key={fileIdx}
-                              className="flex items-center gap-2"
-                            >
-                              <p>{file.name}</p>
-                              <button
-                                onClick={() =>
-                                  handleFileRemove(
-                                    field.key,
-                                    index,
-                                    "photos",
-                                    fileIdx
-                                  )
-                                }
-                                className="text-red-500"
-                              >
-                                Remove
-                              </button>
-                            </div>
-                          ))}
                         </div>
+                        {/* Render Photos */}
+                        <div className="flex flex-wrap gap-1">
+                          {(formValues?.Portfolio?.photos || [])?.map(
+                            (photo, photoIdx) => (
+                              <div
+                                key={photoIdx}
+                                className="text-textGray bg-textLightGray flex p-1 rounded-md gap-1"
+                              >
+                                <p>{photo?.name}</p>
+                                <button
+                                  onClick={
+                                    () =>
+                                      handleFileRemove(
+                                        field.key,
+                                        "photos",
+                                        photoIdx
+                                      ) // No index
+                                  }
+                                  className="px-3 py-1"
+                                >
+                                  <ImCancelCircle />
+                                </button>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </div>
 
-                        {/* Handle Videos */}
-                        <div className="flex flex-col gap-2">
+                      {/* Videos Section */}
+                      <div className="flex flex-col gap-2">
+                        <div className="relative cursor-pointer flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
+                          <IoCloudUploadOutline className="text-primary text-2xl mb-4" />
+                          <p className="text-textGray">
+                            Drop your Video or <span>Browse Video</span>
+                          </p>
                           <input
                             type="file"
                             accept="video/mp4, video/webm"
                             onChange={(e) => {
-                              const selectedFile = Array.from(e.target.files);
+                              const maxFileSize = 100 * 1024 * 1024; // 100 MB
+                              const selectedFiles = Array.from(e.target.files);
+
+                              // Check if there's already a video uploaded
+                              const existingVideos =
+                                formValues?.Portfolio?.videos || [];
+                              if (existingVideos.length > 0) {
+                                alert(
+                                  "You can only upload one video. Please remove the existing video before uploading a new one."
+                                );
+                                return;
+                              }
+
+                              // Check for oversized files
+                              const oversizedFiles = selectedFiles.filter(
+                                (file) => file.size > maxFileSize
+                              );
+                              if (oversizedFiles.length > 0) {
+                                alert(
+                                  "One or more files exceed the maximum size of 100MB."
+                                );
+                                return;
+                              }
+
                               handleFileChange(
                                 field.key,
                                 "videos",
-                                index,
-                                selectedFile
-                              );
+                                selectedFiles
+                              ); // No index
                             }}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                           />
-                          {/* Display Videos */}
-                          {portfolioData.videos.map((file, fileIdx) => (
-                            <div
-                              key={fileIdx}
-                              className="flex items-center gap-2"
-                            >
-                              <p>{file.name}</p>
-                              <button
-                                onClick={() =>
-                                  handleFileRemove(
-                                    field.key,
-                                    index,
-                                    "videos",
-                                    fileIdx
-                                  )
-                                }
-                                className="text-red-500"
+                        </div>
+                        {/* Render Videos */}
+                        <div className="flex flex-wrap gap-1">
+                          {(formValues?.Portfolio?.videos || []).map(
+                            (video, videoIdx) => (
+                              <div
+                                key={videoIdx}
+                                className="text-textGray bg-textLightGray flex p-1 rounded-md gap-1"
                               >
-                                Remove
-                              </button>
-                            </div>
-                          ))}
+                                <p>{video?.name}</p>
+                                <button
+                                  onClick={
+                                    () =>
+                                      handleFileRemove(
+                                        field.key,
+                                        "videos",
+                                        videoIdx
+                                      ) // No index
+                                  }
+                                  className="px-3 py-1"
+                                >
+                                  <ImCancelCircle />
+                                </button>
+                              </div>
+                            )
+                          )}
                         </div>
                       </div>
-                    );
-                  })}
+                    </div>
+                  )}
                 </div>
-                ;
               </div>
             </div>
           );
-        } else if (field.type === "array" && field.key !== "SubVenueDetails") {
+        } else if (
+          field.type === "array" &&
+          field.key !== "SubVenueDetails" &&
+          field.key !== "Seasons" &&
+          field.key !== "DistanceFrom"
+        ) {
           return (
-            <div key={field._id} className="grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
@@ -1225,7 +1914,9 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                     <FaArrowTurnUp className="font-normal text-xl text-textGray rotate-90 " />
                   </p>
                 </span>
-
+                <p className="text-sm text-textGray">
+                  After typing each word, press Enter to submit.
+                </p>
                 <div className="flex items-center justify-start gap-2 flex-wrap">
                   {(formValues[field.key] || []).map((item, index) => (
                     <span
@@ -1243,7 +1934,6 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                             ),
                           }));
                         }}
-                        disabled={isEditing}
                       />
                     </span>
                   ))}
@@ -1253,7 +1943,7 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
           );
         } else if (field.type === "multi-select") {
           return (
-            <div key={field._id} className="grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
@@ -1265,7 +1955,7 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                     className={`py-2 px-4 rounded border ${
                       formValues[field.key]?.includes(item)
                         ? "bg-textYellow text-textGray border-textYellow"
-                        : "bg-white text-textGray border-gray-300"
+                        : "bg-white text-textGray border-gray-300 border-textYellow"
                     }`}
                     onClick={() => {
                       setFormValues((prev) => {
@@ -1285,7 +1975,56 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                         }
                       });
                     }}
-                    disabled={isEditing}
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
+        } else if (field.type === "sub-multi-select") {
+          const selectedType = formValues["Type"];
+          console.log(selectedType.trim(), field.key);
+          if (
+            String(field.key).trim() !==
+            String(selectedType).replace(/\s+/g, "")
+          ) {
+            return null;
+          }
+
+          return (
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+              <label className="text-primary text-xl font-semibold">
+                {field.label}:
+              </label>
+              <div className="col-span-2 flex items-start justify-start flex-wrap gap-3">
+                {(field.items || []).map((item, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className={`py-2 px-4 rounded border ${
+                      formValues[field.key]?.includes(item)
+                        ? "bg-textYellow text-textGray border-textYellow"
+                        : "bg-white text-textGray border-gray-300 border-textYellow"
+                    }`}
+                    onClick={() => {
+                      setFormValues((prev) => {
+                        const currentSelection = prev[field.key] || [];
+                        if (currentSelection.includes(item)) {
+                          return {
+                            ...prev,
+                            [field.key]: currentSelection.filter(
+                              (selectedItem) => selectedItem !== item
+                            ),
+                          };
+                        } else {
+                          return {
+                            ...prev,
+                            [field.key]: [...currentSelection, item],
+                          };
+                        }
+                      });
+                    }}
                   >
                     {item}
                   </button>
@@ -1295,7 +2034,7 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
           );
         } else if (field.type === "select") {
           return (
-            <div key={field._id} className="grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-1 grid grid-cols-3 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
@@ -1304,7 +2043,54 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                   value={formValues[field.key] || ""}
                   onChange={(e) => handleChange(field.key, e.target.value)}
                   className="border-2 w-[25rem] outline-none p-2 rounded-md text-textGray font-medium"
-                  disabled={isEditing}
+                  required
+                >
+                  <option value="" disabled>
+                    Select an option
+                  </option>
+                  {field.items.map((item, index) => (
+                    <option key={index} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          );
+        } else if (field.type === "sub-select") {
+          const selectedType = formValues["Type"];
+
+          const normalizeKey = (type) => {
+            const typeMap = {
+              Bouquets: "Bouquet",
+              Centerpieces: "Centerpiece",
+              " Floral Arches": "FloralArche",
+              "Flower Walls": "FlowerWalls",
+              "Floral Installations": "FloralInstallation",
+              Backdrops: "Backdrop",
+            };
+
+            const normalized = typeMap[type] || type;
+            return normalized.replace(/\s+/g, "");
+          };
+
+          const normalizedType = normalizeKey(selectedType);
+          const matchingKey = `${normalizedType}Type`;
+          if (String(field.key).trim() !== String(matchingKey).trim()) {
+            return null;
+          }
+
+          return (
+            <div key={field._id} className="col-span-1 grid grid-cols-3 gap-4">
+              <label className="text-primary text-xl font-semibold">
+                {field.label}:
+              </label>
+              <div className="col-span-2 flex items-start justify-start flex-col gap-2">
+                <select
+                  value={formValues[field.key] || ""}
+                  onChange={(e) => handleChange(field.key, e.target.value)}
+                  className="border-2 w-[25rem] outline-none p-2 rounded-md text-textGray font-medium"
+                  required
                 >
                   <option value="" disabled>
                     Select an option
@@ -1323,51 +2109,52 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
           field.key === "CustomThemeRequest"
         ) {
           return (
-            <div key={field._id} className="grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex items-start justify-start flex-col gap-2">
+              <div className="col-span-2 flex items-start justify-start flex-row gap-2">
                 {(field.items || []).map((item, index) => (
-                  <div key={index} className="flex items-center gap-4">
-                    <input
-                      type="radio"
-                      id={item.key}
-                      name={field.key}
-                      value={item.key}
-                      checked={formValues[field.key] === item.key}
-                      onChange={() => {
-                        setFormValues((prev) => {
-                          const updatedValues = {
-                            ...prev,
-                            [field.key]: item.key, // Update the selected radio option
-                          };
+                  <div key={index} className="flex items-start flex-col gap-4">
+                    <div className="flex items-center justify-start gap-1">
+                      <input
+                        type="radio"
+                        id={item.key}
+                        name={field.key}
+                        value={item.key}
+                        checked={formValues[field.key] === item.key}
+                        onChange={() => {
+                          setFormValues((prev) => {
+                            const updatedValues = {
+                              ...prev,
+                              [field.key]: item.key, // Update the selected radio option
+                            };
 
-                          // Clear text and sub-item fields if "No" is selected
-                          if (item.key === "NoOption") {
-                            Object.keys(prev).forEach((key) => {
-                              if (key.startsWith(`${field.key}_Yes`)) {
-                                delete updatedValues[key];
-                              }
-                            });
-                          }
+                            // Clear text and sub-item fields if "No" is selected
+                            if (item.key === "NoOption") {
+                              Object.keys(prev).forEach((key) => {
+                                if (key.startsWith(`${field.key}_Yes`)) {
+                                  delete updatedValues[key];
+                                }
+                              });
+                            }
 
-                          // Reset the additional text input
-                          if (item.key !== "YesOption") {
-                            updatedValues[`${field.key}_text`] = "";
-                          }
+                            // Reset the additional text input
+                            if (item.key !== "YesOption") {
+                              updatedValues[`${field.key}_text`] = "";
+                            }
 
-                          return updatedValues;
-                        });
-                      }}
-                      disabled={isEditing}
-                    />
-                    <label
-                      htmlFor={item.key}
-                      className="text-textGray font-medium"
-                    >
-                      {item.label}
-                    </label>
+                            return updatedValues;
+                          });
+                        }}
+                      />
+                      <label
+                        htmlFor={item.key}
+                        className="text-textGray font-medium"
+                      >
+                        {item.label}
+                      </label>
+                    </div>
 
                     {/* Render sub-item textboxes if available */}
                     {item.items && item.items.length > 0 && (
@@ -1426,7 +2213,7 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
           );
         } else if (field.type === "radio") {
           return (
-            <div key={field._id} className="grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
@@ -1443,8 +2230,9 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                       value={item.value || item} // Support object or string options
                       checked={formValues[field.key] === (item.value || item)}
                       onChange={(e) => handleChange(field.key, e.target.value)}
-                      disabled={isEditing} // Disable radio buttons if not in edit mode
+                      // Disable radio buttons if not in edit mode
                       className="accent-primary"
+                      required
                     />
                     {item.label || item}{" "}
                   </label>
@@ -1459,7 +2247,7 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
               : [
                   {
                     Title: "",
-                    CapacityMax: 0,
+                    CapacityMax: "",
                     PricesDuration: [],
                     CapacitySeating: [],
                     IndoorOutdoor: "",
@@ -1469,17 +2257,13 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                 ];
 
           return (
-            <div key={field._id} className="flex flex-col gap-4">
+            <div key={field._id} className="col-span-2 flex flex-col gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
 
               {subVenues.map((subVenue, index) => (
                 <div key={index} className="rounded-md p-4 grid gap-4 ">
-                  <h3 className="text-primary text-xl font-semibold">
-                    Sub Venue {index + 1}
-                  </h3>
-
                   {field.items.map((item, i) => (
                     <div key={i} className="grid grid-cols-3 gap-4">
                       <label className="text-primary text-xl font-semibold">
@@ -1500,8 +2284,8 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                                 e.target.value
                               )
                             }
-                            className="border-2 p-2 rounded-md w-full outline-none"
-                            disabled={isEditing}
+                            className="border-2 p-2 rounded-md w-[25rem] text-textGray outline-none"
+                            required
                           />
                         )}
 
@@ -1509,7 +2293,7 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                         {item.type === "number" && (
                           <input
                             type="number"
-                            value={subVenue[item.key] || 0}
+                            value={subVenue[item.key] || ""}
                             onChange={(e) =>
                               handleObjectChange(
                                 field.key,
@@ -1518,46 +2302,52 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                                 e.target.value
                               )
                             }
-                            className="border-2 p-2 rounded-md w-full outline-none"
-                            disabled={isEditing}
+                            className="border-2 p-2 rounded-md text-textGray outline-none"
+                            required
                           />
                         )}
                         {item.type === "array" &&
                           item.key !== "PricesDuration" && (
                             <div className="flex flex-col gap-2">
-                              <input
-                                type="text"
-                                placeholder={`Add ${item.label}`}
-                                onKeyDown={(e) => {
-                                  if (
-                                    e.key === "Enter" &&
-                                    e.target.value.trim()
-                                  ) {
-                                    e.preventDefault();
-                                    handleObjectChange(
-                                      field.key,
-                                      index,
-                                      item.key,
-                                      [
-                                        ...(subVenue[item.key] || []),
-                                        e.target.value.trim(),
-                                      ]
-                                    );
-                                    e.target.value = "";
-                                  }
-                                }}
-                                className="border-2 p-2 rounded-md outline-none"
-                                disabled={isEditing}
-                              />
+                              <span className="flex items-center w-full justify-start h-[2.3rem]">
+                                <input
+                                  type="text"
+                                  placeholder={`Add ${item.label}`}
+                                  onKeyDown={(e) => {
+                                    if (
+                                      e.key === "Enter" &&
+                                      e.target.value.trim()
+                                    ) {
+                                      e.preventDefault();
+                                      handleObjectChange(
+                                        field.key,
+                                        index,
+                                        item.key,
+                                        [
+                                          ...(subVenue[item.key] || []),
+                                          e.target.value.trim(),
+                                        ]
+                                      );
+                                      e.target.value = "";
+                                    }
+                                  }}
+                                  className="border-2 p-2 rounded-l-md w-[80%] text-textGray outline-none h-full"
+                                />
+
+                                <p className="bg-textYellow p-2 rounded-r-lg h-full">
+                                  <FaArrowTurnUp className="font-normal text-xl text-textGray rotate-90 " />
+                                </p>
+                              </span>
 
                               <div className="flex flex-wrap gap-2">
                                 {(subVenue[item.key] || []).map((val, idx) => (
                                   <span
                                     key={idx}
-                                    className="bg-gray-200 py-1 px-2 rounded flex items-center gap-2"
+                                    className="bg-textLightGray text-textGray py-1 px-3 flex items-center justify-center gap-1"
                                   >
                                     {val}
-                                    <button
+                                    <ImCancelCircle
+                                      className="text-textGray cursor-pointer"
                                       onClick={() => {
                                         const updatedArray = (
                                           subVenue[item.key] || []
@@ -1569,11 +2359,7 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                                           updatedArray
                                         );
                                       }}
-                                      disabled={isEditing}
-                                      className="text-red-500 font-bold"
-                                    >
-                                      &times;
-                                    </button>
+                                    />
                                   </span>
                                 ))}
                               </div>
@@ -1612,7 +2398,7 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                                         )
                                       }
                                       className="border-2 p-2 rounded-md outline-none w-[7rem] h-[2rem]"
-                                      disabled={isEditing}
+                                      required
                                     />
 
                                     {/* Rent Input */}
@@ -1641,7 +2427,7 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                                           )
                                         }
                                         className="border-2 p-2 rounded-r-md outline-none w-[7rem] h-full"
-                                        disabled={isEditing}
+                                        required
                                       />
                                     </div>
 
@@ -1667,11 +2453,11 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                                         )
                                       }
                                       className="border-2 p-2 rounded-md outline-none w-[10rem] h-[2rem]"
-                                      disabled={isEditing}
+                                      required
                                     />
 
                                     {/* Remove Button */}
-                                    {isEditing && (
+                                    {!isEditing && (
                                       <button
                                         onClick={() => {
                                           const updatedArray =
@@ -1685,9 +2471,9 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                                             updatedArray
                                           );
                                         }}
-                                        className="bg-red-500 text-white py-1 px-2 rounded-md"
+                                        className="text-red-500 "
                                       >
-                                        Remove
+                                        <ImCancelCircle />
                                       </button>
                                     )}
                                   </div>
@@ -1712,7 +2498,6 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                                     ]
                                   )
                                 }
-                                disabled={isEditing}
                               >
                                 <IoAddCircleOutline className="text-xl" /> Price
                                 & Duration
@@ -1744,8 +2529,8 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                                       e.target.value
                                     )
                                   }
-                                  disabled={isEditing}
                                   className="accent-primary"
+                                  required
                                 />
                                 {radioItem.label || radioItem}
                               </label>
@@ -1759,50 +2544,57 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                                 key={seatingIndex}
                                 className="flex flex-col items-center gap-2"
                               >
-                                <span className="text-textGray text-base font-normal">
-                                  {seatingItem.Style}:
+                                <span className="text-textGray text-base font-normal flex flex-col items-center">
+                                  <img
+                                    src={
+                                      seatingItem.Style === "Max Capacity"
+                                        ? maxCapicty
+                                        : seatingItem.Style === "Banquet Rounds"
+                                        ? BanquetRounds
+                                        : seatingItem.Style ===
+                                          "Cocktail Rounds"
+                                        ? CocktailRounds
+                                        : seatingItem.Style === "Theater"
+                                        ? Theater
+                                        : seatingItem.Style === "U Shape"
+                                        ? UShape
+                                        : ""
+                                    }
+                                    alt="capicty style"
+                                    className="object-contain h-[4rem]"
+                                  />
+                                  {seatingItem.Style}
                                 </span>
                                 <input
                                   type="number"
-                                  value={seatingItem.Capacity || ""}
+                                  // value={seatingItem.Capacity || ""}
                                   onChange={(e) => {
                                     const newValue = e.target.value;
 
-                                    // Debugging
-                                    console.log(
-                                      `Typing in field: ${seatingItem.Style}, Value: ${newValue}`
-                                    );
+                                    const updatedSeating = [
+                                      ...(subVenue?.CapacitySeating || []),
+                                    ];
 
-                                    const updatedSeating = item.items.map(
-                                      (seat, index) =>
-                                        index === seatingIndex
-                                          ? { ...seat, Capacity: newValue }
-                                          : seat
-                                    );
+                                    if (!updatedSeating[seatingIndex]) {
+                                      updatedSeating[seatingIndex] = {
+                                        Style: seatingItem.Style,
+                                        Capacity: "",
+                                      };
+                                    }
 
-                                    // Debugging updated items
-                                    console.log(
-                                      "Updated Seating Items:",
-                                      updatedSeating
-                                    );
+                                    updatedSeating[seatingIndex].Capacity =
+                                      newValue;
 
-                                    handleObjectChange(
+                                    handleObjectChangeForSeating(
                                       field.key,
                                       index,
                                       "CapacitySeating",
-                                      {
-                                        ...subVenue.CapacitySeating,
-                                        items: updatedSeating,
-                                      }
+                                      updatedSeating
                                     );
                                   }}
                                   className="border-2 p-2 rounded-md w-full outline-none"
-                                  disabled={isEditing}
+                                  required
                                 />
-                                {console.log(
-                                  "Rendered Input Value:",
-                                  seatingItem.Capacity
-                                )}
                               </div>
                             ))}
                           </div>
@@ -1812,22 +2604,31 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                   ))}
 
                   {/* Remove Sub Venue */}
-                  {isEditing && (
+                  {/*          
                     <button
                       onClick={() => handleRemoveObject(field.key, index)}
                       className="bg-red-500 text-white py-1 px-3 rounded-md mt-2"
                     >
                       Remove Sub Venue
-                    </button>
-                  )}
+                    </button> */}
+                  <div className="flex items-center justify-center">
+                    {formValues[field.key].length > 1 && (
+                      <button
+                        onClick={() => handleRemoveObject(field.key, index)}
+                        className="bg-red-500 text-white py-1 px-3 rounded-md mt-2 w-fit"
+                      >
+                        Remove Sub Venue
+                      </button>
+                    )}
+                  </div>
                 </div>
               ))}
               {/* {isEditing && ( */}
-              <button
+              {/* <button
                 onClick={() =>
                   handleAddObject(field.key, {
                     Title: "",
-                    CapacityMax: 0,
+                    CapacityMax: "",
                     PricesDuration: [],
                     CapacitySeating: [],
                     IndoorOutdoor: "",
@@ -1835,11 +2636,157 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
                     Inclusions: [],
                   })
                 }
-                className="bg-primary text-white py-2 px-4 rounded-md mt-2"
+                className="text-primary px-4 py-2 rounded flex items-center justify-center gap-1 font-medium"
               >
-                + Add New Sub Venue
-              </button>
+                <IoAddCircleOutline className="text-xl" /> Add New Sub Venue
+              </button> */}
               {/* )} */}
+            </div>
+          );
+        }
+
+        // Changed code by Amaan
+        else if (field.type === "array" && field.key === "DistanceFrom") {
+          return (
+            <div key={field._id} className=" col-span-2 grid grid-cols-3 gap-4">
+              <label className="text-primary text-xl font-semibold">
+                {field.label}:
+              </label>
+              <div className="col-span-3 flex items-center flex-col-reverse justify-center  gap-2">
+                <button
+                  type="button"
+                  className="text-primary px-4 py-2 rounded flex items-center justify-center gap-1 font-medium"
+                  onClick={() =>
+                    handleAddObject(field.key, field.items[0] || {})
+                  }
+                >
+                  <IoAddCircleOutline className="text-xl" /> {field.label}
+                </button>
+                {(formValues[field.key] || []).map((item, index) => (
+                  <div key={index} className="flex  gap-4  ">
+                    {Object.keys(item).map((objectKey, subIndex) => (
+                      <div
+                        key={subIndex}
+                        className="flex items-center justify-center flex-col gap-1 "
+                      >
+                        <label>{objectKey}:</label>
+                        <input
+                          type="text"
+                          value={
+                            typeof item[objectKey] === "object"
+                              ? ""
+                              : item[objectKey] || ""
+                          }
+                          onChange={(e) => [
+                            handleObjectChange(
+                              field.key,
+                              index,
+                              objectKey,
+                              e.target.value
+                            ),
+                          ]}
+                          className=" p-2 rounded outline-none border-2"
+                          required
+                        />
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      className="text-red-500 self-end mt-2 flex items-center gap-2"
+                      onClick={() => handleRemoveObject(field.key, index)}
+                    >
+                      <ImCancelCircle />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        } else if (field.type === "array" && field.key === "Seasons") {
+          return (
+            <div className="col-span-2">
+              <SeasonsSelector
+                seasons={seasons}
+                onSeasonsChange={handleSeasonsChange}
+                className="col-span-2"
+              />
+            </div>
+          );
+        } else if (field.type === "section" && field.key === "Cuisine") {
+          return (
+            <>
+              {formValues?.ChooseCuisinesAvailable.length > 0 &&
+              formValues?.ChooseType ? (
+                <div className="col-span-2">
+                  <FoodMenuForm
+                    cuisines={formValues?.ChooseCuisinesAvailable}
+                    categories={
+                      formData?.fields?.find((item) => item.key === "Cuisine")
+                        .items
+                    }
+                    type={formValues?.ChooseType}
+                    foodMenu={foodMenu}
+                    setFoodMenu={setFoodMenu}
+                  />
+                </div>
+              ) : (
+                <div className="col-span-2 text-textGray text-xl">
+                  Please select cuisine and type to create a food menu.
+                </div>
+              )}
+            </>
+          );
+        } else if (
+          field.type === "array" &&
+          (field.key !== "SubVenueDetails" || field.key !== "DistanceFrom")
+        ) {
+          return (
+            <div key={field._id} className="grid grid-cols-3 gap-4">
+              <label className="text-primary text-xl font-semibold">
+                {field.label}:
+              </label>
+              <div className="col-span-2 flex items-start justify-start flex-col gap-2">
+                <span className="flex items-center justify-center">
+                  <input
+                    type="text"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && e.target.value.trim()) {
+                        e.preventDefault();
+                        handleArrayChange(field.key, e.target.value.trim());
+                        e.target.value = "";
+                      }
+                    }}
+                    className="border-2 w-[25rem] outline-none p-1 rounded-l-lg text-textGray font-medium"
+                    disabled={!isEditing}
+                  />
+                  <p className="bg-textYellow p-2 rounded-r-lg">
+                    <FaArrowTurnUp className="font-normal text-xl text-textGray rotate-90 " />
+                  </p>
+                </span>
+
+                <div className="flex items-center justify-start gap-2 flex-wrap">
+                  {(formValues[field.key] || []).map((item, index) => (
+                    <span
+                      key={index}
+                      className="bg-textLightGray text-textGray py-1 px-3 flex items-center justify-center gap-1"
+                    >
+                      {item}{" "}
+                      <ImCancelCircle
+                        className="text-textGray cursor-pointer"
+                        onClick={() => {
+                          setFormValues((prev) => ({
+                            ...prev,
+                            [field.key]: prev[field.key].filter(
+                              (_, idx) => idx !== index
+                            ),
+                          }));
+                        }}
+                        disabled={!isEditing}
+                      />
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           );
         }
@@ -1847,7 +2794,7 @@ const DynamicForm = ({ formData, setfiledFormData, index }) => {
         return null;
       })}
 
-      <div className="flex items-center justify-end w-full gap-4">
+      <div className="col-span-2 flex items-center justify-end w-full gap-4">
         {isEditing ? (
           <button
             type="button"

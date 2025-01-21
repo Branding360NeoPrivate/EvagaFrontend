@@ -14,7 +14,8 @@ import vendorApi from "../../services/vendorApi";
 import { toast } from "react-toastify";
 import { fetchCategories } from "../../context/redux/slices/categorySlice";
 import SearchableCategoryAndSubcategoryDropdown from "../../components/Inputs/SearchableCategoryAndSubcategoryDropdown";
-
+import { showLoader } from "../../context/redux/slices/loaderSlice";
+import TermsModal from "../../components/Modal/TermsModal ";
 
 const VendorProfile = () => {
   const dispatch = useDispatch();
@@ -22,6 +23,10 @@ const VendorProfile = () => {
   const { categories, subCategories, status, error } = useSelector(
     (state) => state.category
   );
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const imagesBaseUrl = process.env.REACT_APP_API_Image_BASE_URL;
 
@@ -226,6 +231,13 @@ const VendorProfile = () => {
   );
 
   // console.log("vendorDetails in vendor profile:", vendorDetails);
+    useEffect(() => {
+      if (profile?.vendor?.termsAccepted === false) {
+        handleOpen();
+        console.log(profile?.vendor?.termsAccepted,'profile?.vendor?.termsAccepted');
+        
+      }
+    }, [profile?.vendor?.termsAccepted]);
 
   if (!profile)
     return <ErrorView status="loading" error={"Profile Details Not Found!"} />;
@@ -233,13 +245,13 @@ const VendorProfile = () => {
   return (
     <div className="min-h-screen bg-backgroundOffWhite pt-10 text-primary">
       {vendorDetails && (
-        <div className="container mx-auto max-w-[80%] rounded-lg space-y-6">
+        <div className="container mx-auto w-[95%] md:max-w-[80%] rounded-lg space-y-6">
           {/* Header Section */}
           <div
-            className="flex flex-col md:flex-row items-center justify-between gap-5 flex-wrap 
+            className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 flex-wrap 
           border-borderPrimary border-[2px] p-4 rounded-md"
           >
-            <div className="flex flex-1 items-center space-x-4">
+            <div className="flex flex-row md:flex-1 items-center space-x-4">
               <div className="flex flex-col gap-2 justify-center items-center">
                 {vendorDetails.profilePicture ? (
                   <img
@@ -297,7 +309,7 @@ const VendorProfile = () => {
           {/* Main Details Section */}
           {/* Need to give css to give 1/3rd space to the left column and the rest to the right column */}
           {/* Main Details Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-y-6 md:gap-6 lg:w-full">
             {/* Left Column */}
             <div className="lg:col-span-1 grid grid-cols-1 gap-6">
               {/* Personal Details */}
@@ -350,7 +362,7 @@ const VendorProfile = () => {
             </div>
 
             {/* Right Column */}
-            <div className="lg:col-span-2">
+            <div className="col-span-2">
               {/* Business Details */}
               <div className="bg-gray-50 rounded-lg p-4 shadow-sm border space-y-4">
                 <div className="flex justify-between items-center">
@@ -374,48 +386,57 @@ const VendorProfile = () => {
                   defaultValues={businessDefaultValues}
                   editable={false}
                 />
-                <div>
-                  {vendorDetails?.businessDetails?.categoriesOfServices &&
-                    //need to map the array expect the first element to be an array:
-                    vendorDetails?.businessDetails?.categoriesOfServices
-                      .length > 1 && (
-                      <div className="mt-4">
-                        <h3 className="font-bold text-lg">Add Categories+</h3>
-                        {vendorDetails?.businessDetails?.categoriesOfServices &&
-                          // map the array expect the first element to be an array:
-                          vendorDetails?.businessDetails?.categoriesOfServices
-                            .slice(1)
-                            .map((category) => {
-                              // wrap the category into an array:
-                              // this is necessary because the SearchableCategoryAndSubcategoryDropdown expects an array of objects
-                              const categoryArray = [{ ...category }];
-                              return (
-                                <div
-                                  key={category._id}
-                                  className="flex items-center gap-2"
-                                >
-                                  <SearchableCategoryAndSubcategoryDropdown
-                                    defaultValues={categoryArray}
-                                  />
-                                </div>
-                              );
-                            })}
-                      </div>
-                    )}
-                </div>
-                <div className="flex justify-center space-x-2">
-                  <Button
-                    className="hover:bg-primary hover:text-white "
-                    onClick={() => {
-                      handleOpenModal(
-                        "Add New Category And Sub-Category",
-                        formfields.vendorProfileDetails.categoryAndSubCategory
-                      );
-                    }}
-                  >
-                    <h4 className=" text-4xl font-bold">+</h4>
-                  </Button>
-                </div>
+                {businessDefaultValues?.categoriesOfServices && (
+                  <>
+                    <div>
+                      {vendorDetails?.businessDetails?.categoriesOfServices &&
+                        //need to map the array expect the first element to be an array:
+                        vendorDetails?.businessDetails?.categoriesOfServices
+                          .length > 1 && (
+                          <div className="mt-4">
+                            <h3 className="font-bold text-lg">
+                              Add Categories+
+                            </h3>
+                            {vendorDetails?.businessDetails
+                              ?.categoriesOfServices &&
+                              // map the array expect the first element to be an array:
+                              vendorDetails?.businessDetails?.categoriesOfServices
+                                .slice(1)
+                                .map((category) => {
+                                  // wrap the category into an array:
+                                  // this is necessary because the SearchableCategoryAndSubcategoryDropdown expects an array of objects
+                                  const categoryArray = [{ ...category }];
+                                  return (
+                                    <div
+                                      key={category._id}
+                                      className="flex items-center gap-2"
+                                    >
+                                      <SearchableCategoryAndSubcategoryDropdown
+                                        defaultValues={categoryArray}
+                                      />
+                                    </div>
+                                  );
+                                })}
+                          </div>
+                        )}
+                    </div>
+                    <div className="flex justify-center">
+                      <Button
+                        className="hover:bg-primary hover:text-white flex flex-col "
+                        onClick={() => {
+                          handleOpenModal(
+                            "Add New Category And Sub-Category",
+                            formfields.vendorProfileDetails
+                              .categoryAndSubCategory
+                          );
+                        }}
+                      >
+                        <h4 className=" text-4xl font-bold">+</h4>
+                        <span>Add Category & Sub Category</span>
+                      </Button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -466,6 +487,7 @@ const VendorProfile = () => {
           </Modal>
         </div>
       )}
+            <TermsModal open={open} handleClose={handleClose} />
     </div>
   );
 };

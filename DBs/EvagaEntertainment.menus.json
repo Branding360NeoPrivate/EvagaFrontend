@@ -58,7 +58,7 @@
     {
       "key": "NoofRooms",
       "label": "No of Rooms",
-      "type": "array",
+      "type": "number",
       "items": [],
       "isRequired": false,
       "_id": {
@@ -248,7 +248,7 @@
 },
 {
   "_id": {
-    "$oid": "6749618ab1055aa66c8eba71"
+    "$oid": "67604d3b1de994381777175c"
   },
   "associatedEntity": null,
   "entityModel": "Catering",
@@ -256,7 +256,7 @@
     {
       "key": "ChooseType",
       "label": "Choose Type",
-      "type": "array",
+      "type": "radio",
       "items": [
         {
           "label": "Veg",
@@ -273,7 +273,7 @@
       ],
       "isRequired": false,
       "_id": {
-        "$oid": "6749618ab1055aa66c8eba72"
+        "$oid": "67604d3b1de994381777175d"
       }
     },
     {
@@ -283,7 +283,7 @@
       "items": [],
       "isRequired": false,
       "_id": {
-        "$oid": "6749618ab1055aa66c8eba73"
+        "$oid": "67604d3b1de994381777175e"
       }
     },
     {
@@ -293,7 +293,7 @@
       "items": [],
       "isRequired": false,
       "_id": {
-        "$oid": "6749618ab1055aa66c8eba74"
+        "$oid": "67604d3b1de994381777175f"
       }
     },
     {
@@ -303,7 +303,7 @@
       "items": [],
       "isRequired": false,
       "_id": {
-        "$oid": "6749618ab1055aa66c8eba75"
+        "$oid": "67604d3b1de9943817771760"
       }
     },
     {
@@ -313,7 +313,7 @@
       "items": [],
       "isRequired": false,
       "_id": {
-        "$oid": "6749618ab1055aa66c8eba76"
+        "$oid": "67604d3b1de9943817771761"
       }
     },
     {
@@ -323,7 +323,7 @@
       "items": [],
       "isRequired": false,
       "_id": {
-        "$oid": "6749618ab1055aa66c8eba77"
+        "$oid": "67604d3b1de9943817771762"
       }
     },
     {
@@ -333,203 +333,42 @@
       "items": [],
       "isRequired": false,
       "_id": {
-        "$oid": "6749618ab1055aa66c8eba78"
+        "$oid": "67604d3b1de9943817771763"
       }
     },
     {
-      "key": "MainCourse",
-      "label": "Main Course",
+      "key": "Cuisine",
+      "label": "Cuisine",
       "type": "section",
       "items": [
         {
-          "label": "North India",
-          "key": "NorthIndia",
-          "type": "section",
-          "items": [
-            {
-              "label": "Veg",
-              "key": "Veg",
-              "type": "array",
-              "items": []
-            },
-            {
-              "label": "Non-Veg",
-              "key": "NonVeg",
-              "type": "array",
-              "items": []
-            }
-          ]
+          "label": "Main Course",
+          "key": "MainCourse",
+          "type": "array",
+          "items": []
         },
         {
-          "label": "South India",
-          "key": "SouthIndia",
-          "type": "section",
-          "items": [
-            {
-              "label": "Veg",
-              "key": "Veg",
-              "type": "array",
-              "items": []
-            },
-            {
-              "label": "Non-Veg",
-              "key": "NonVeg",
-              "type": "array",
-              "items": []
-            }
-          ]
+          "label": "Bread & Rice",
+          "key": "Bread&Rice",
+          "type": "array",
+          "items": []
+        },
+        {
+          "label": "Desserts",
+          "key": "Desserts",
+          "type": "array",
+          "items": []
+        },
+        {
+          "label": "Soups",
+          "key": "Soups",
+          "type": "array",
+          "items": []
         }
       ],
       "isRequired": false,
       "_id": {
-        "$oid": "6749618ab1055aa66c8eba79"
-      }
-    },
-    {
-      "key": "Bread&Rice",
-      "label": "Bread & Rice",
-      "type": "section",
-      "items": [
-        {
-          "label": "North India",
-          "key": "NorthIndia",
-          "type": "section",
-          "items": [
-            {
-              "label": "Veg",
-              "key": "Veg",
-              "type": "array",
-              "items": []
-            },
-            {
-              "label": "Non-Veg",
-              "key": "NonVeg",
-              "type": "array",
-              "items": []
-            }
-          ]
-        },
-        {
-          "label": "South India",
-          "key": "SouthIndia",
-          "type": "section",
-          "items": [
-            {
-              "label": "Veg",
-              "key": "Veg",
-              "type": "array",
-              "items": []
-            },
-            {
-              "label": "Non-Veg",
-              "key": "NonVeg",
-              "type": "array",
-              "items": []
-            }
-          ]
-        }
-      ],
-      "isRequired": false,
-      "_id": {
-        "$oid": "6749618ab1055aa66c8eba7a"
-      }
-    },
-    {
-      "key": "Desserts",
-      "label": "Desserts",
-      "type": "section",
-      "items": [
-        {
-          "label": "North India",
-          "key": "NorthIndia",
-          "type": "section",
-          "items": [
-            {
-              "label": "Veg",
-              "key": "Veg",
-              "type": "array",
-              "items": []
-            },
-            {
-              "label": "Non-Veg",
-              "key": "NonVeg",
-              "type": "array",
-              "items": []
-            }
-          ]
-        },
-        {
-          "label": "South India",
-          "key": "SouthIndia",
-          "type": "section",
-          "items": [
-            {
-              "label": "Veg",
-              "key": "Veg",
-              "type": "array",
-              "items": []
-            },
-            {
-              "label": "Non-Veg",
-              "key": "NonVeg",
-              "type": "array",
-              "items": []
-            }
-          ]
-        }
-      ],
-      "isRequired": false,
-      "_id": {
-        "$oid": "6749618ab1055aa66c8eba7b"
-      }
-    },
-    {
-      "key": "Soups",
-      "label": "Soups",
-      "type": "section",
-      "items": [
-        {
-          "label": "North India",
-          "key": "NorthIndia",
-          "type": "section",
-          "items": [
-            {
-              "label": "Veg",
-              "key": "Veg",
-              "type": "array",
-              "items": []
-            },
-            {
-              "label": "Non-Veg",
-              "key": "NonVeg",
-              "type": "array",
-              "items": []
-            }
-          ]
-        },
-        {
-          "label": "South India",
-          "key": "SouthIndia",
-          "type": "section",
-          "items": [
-            {
-              "label": "Veg",
-              "key": "Veg",
-              "type": "array",
-              "items": []
-            },
-            {
-              "label": "Non-Veg",
-              "key": "NonVeg",
-              "type": "array",
-              "items": []
-            }
-          ]
-        }
-      ],
-      "isRequired": false,
-      "_id": {
-        "$oid": "6749618ab1055aa66c8eba7c"
+        "$oid": "67604d3b1de9943817771764"
       }
     },
     {
@@ -539,7 +378,7 @@
       "items": [],
       "isRequired": false,
       "_id": {
-        "$oid": "6749618ab1055aa66c8eba7d"
+        "$oid": "67604d3b1de9943817771765"
       }
     }
   ],
@@ -547,7 +386,7 @@
     "$oid": "67371b8139ada1b6e8db38e3"
   },
   "createdAt": {
-    "$date": "2024-11-29T06:39:06.048Z"
+    "$date": "2024-12-16T15:54:35.049Z"
   },
   "__v": 0,
   "Category": {

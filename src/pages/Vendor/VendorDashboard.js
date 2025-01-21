@@ -22,14 +22,19 @@ import vendorApi from "../../services/vendorApi";
 import { extractDates } from "../../utils/extractDates";
 import { useNavigate } from "react-router-dom";
 import { internalRoutes } from "../../utils/internalRoutes";
+import TermsModal from "../../components/Modal/TermsModal ";
 
 const VendorDashboard = () => {
   const userId = Cookies.get("userId");
   const nevigate = useNavigate();
-  const currentDate = new Date(); 
+  const currentDate = new Date();
   const [activeMonth, setActiveMonth] = useState(currentDate.getMonth() + 1);
   const [activeYear, setActiveYear] = useState(currentDate.getFullYear());
   const getAllVendorService = useServices(vendorApi.getvendorAllService);
+
+
+
+
   useEffect(() => {
     const today = new Date();
     setActiveMonth(today.getMonth() + 1);
@@ -38,7 +43,7 @@ const VendorDashboard = () => {
 
   const handleActiveStartDateChange = ({ activeStartDate }) => {
     if (activeStartDate) {
-      setActiveMonth(activeStartDate.getMonth() + 1); // Month is 0-indexed
+      setActiveMonth(activeStartDate.getMonth() + 1); 
       setActiveYear(activeStartDate.getFullYear());
     }
   };
@@ -47,6 +52,8 @@ const VendorDashboard = () => {
   const { profile, profilePercentage, allService, status, error } = useSelector(
     (state) => state.vendor
   );
+
+
   const { banner } = useSelector((state) => state.banner);
   const dispatch = useDispatch();
   const getAllVendorServiceHandle = async () => {
@@ -77,31 +84,7 @@ const VendorDashboard = () => {
   const [activeState, setActivestate] = useState("Services Provided");
 
   const [blockedDatesFromBackend, setBlockedDatesFromBackend] = useState([]);
-
-  const [bookings, setBookings] = useState([]);
-
-  const serviceData = [
-    {
-      title: "Wedding Photography",
-      yearOfExp: "5",
-      desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an",
-      category: "Photography",
-      InclusionData: [
-        "Posed Photos",
-        "200-300 Guests",
-        "Bridal Portraits",
-        "Reception Highlights",
-      ],
-      DeliverablesData: [
-        "2hr Film",
-        "100 Photo Album",
-        "5 Instagram reels",
-        "500 Edited Photos",
-      ],
-      AddOnData: ["Drone", "Photobooth"],
-      price: "101000",
-    },
-  ];
+  const [bookings, setBookings] = useState([]); // Add state to store bookings
 
   const monthlyBookingCalender = useServices(vendorApi.getMonthlyBooking);
 
@@ -119,7 +102,6 @@ const VendorDashboard = () => {
         extractDates(booking.startDate, booking.endDate)
       );
       const flattenedDates = allDates.flat();
-
       setBlockedDatesFromBackend(flattenedDates);
     }
   };
@@ -136,8 +118,13 @@ const VendorDashboard = () => {
   };
 
   useEffect(() => {
+    getAllVendorServiceHandle();
+  }, []);
+  useEffect(() => {
     getMonthlyBookedDates();
   }, [activeMonth, activeYear]);
+  console.log(allService,'allService');
+  
 
   if (status === "loading" || status === "failed") {
     return <ErrorView status={status} error={error} />;
@@ -145,11 +132,11 @@ const VendorDashboard = () => {
 
   return (
     <div className="flex items-center justify-center flex-col w-full gap-2 mt-10 mb-10">
-      <div className="w-11/12 flex items-center justify-center h-fit  gap-4">
-        <div className="w-[70%] ">
+      <div className="w-11/12 flex flex-col md:flex-row items-start justify-center h-fit  gap-4">
+        <div className="w-[100%] md:w-[70%] ">
           <Slider bannerData={banner} />
         </div>
-        <div className="w-[30%] bg-textLightGray h-[18rem] rounded-md">
+        <div className="w-[100%] md:w-[30%] bg-textLightGray h-[18rem] rounded-md">
           <ProfileCard
             BusinessName={profile?.vendor?.name}
             profilePerccentage={profilePercentage?.profileCompletion}
@@ -191,14 +178,16 @@ const VendorDashboard = () => {
                     item?.services?.[0]?.values?.CoverImage?.[0] ||
                     item?.services?.[0]?.values?.ProductImage?.[0]
                   }
-                  title={item?.services?.[0]?.values?.Title}
+                  title={item?.services?.[0]?.values?.Title ||item?.services?.[0]?.values?.FoodTruckName||item?.services?.[0]?.values?.VenueName }
                   yearofexp={item?.YearofExperience}
-                  category={item?.category}
+                  category={item?.Category?.name}
+                  subCategory={item?.SubCategory?.name}
                   desc={item?.AbouttheService}
                   price={item?.services?.[0]?.values?.Price}
                   InclusionData={item?.services?.[0]?.values?.Inclusions}
                   DeliverablesData={item?.services?.[0]?.values?.Deliverables}
                   AddOnData={item?.services?.[0]?.values?.AddOns}
+                  serviceId={item?._id}
                 />
               ))
             ) : (
@@ -216,8 +205,8 @@ const VendorDashboard = () => {
           </div>
         )}
         {activeState === "Availibility Calendar" && (
-          <div className="w-full grid grid-cols-5 items-start justfiy-center flex-col gap-4 ">
-            <div className="col-span-3 flex items-center justfiy-center">
+          <div className="w-full grid grid-cols-1 md:grid-cols-5 items-start justfiy-center flex-col gap-y-4 md:gap-4 ">
+            <div className="col-span-3 flex items-center justfiy-center w-full">
               <Calendar
                 tileClassName={({ date }) =>
                   isBlocked(date) ? "blocked-date" : null
@@ -241,6 +230,7 @@ const VendorDashboard = () => {
                           <CalenderBookingCard
                             key={booking._id}
                             booking={booking}
+                            getMonthlyBookedDates={getMonthlyBookedDates}
                           />
                         ))}
                       </div>
@@ -266,6 +256,7 @@ const VendorDashboard = () => {
           </div>
         )}
       </div>
+
     </div>
   );
 };

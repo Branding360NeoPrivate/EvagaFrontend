@@ -1,5 +1,7 @@
 export const internalRoutes = {
   home: "/",
+  SinglePackage: "/package",
+  searchresultPage: "/search",
 
   userSignup: "/user/signup",
   userLogin: "/user/login",
@@ -21,6 +23,7 @@ export const internalRoutes = {
   vendorSupport: "/vendor/support",
   vendorCommunity: "/vendor/community",
   vendorCreateservice: "/vendor/Createservice",
+  vendorEditservice: "/vendor/Editservice",
 
   aboutUs: "/about-us",
   careers: "/careers",

@@ -4,16 +4,21 @@ import Cookies from "js-cookie";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { fetchCategories } from "../../context/redux/slices/categorySlice";
 import { setSearchTerm } from "../../context/redux/slices/userSearchSlice";
+import useDebounce from "../../utils/useDebounce";
+import useServices from "../../hooks/useServices";
+import packageApis from "../../services/packageApis";
+import { useNavigate } from "react-router-dom";
 
 function HomeSearchBar({ cities, value, onChange }) {
   const dispatch = useDispatch();
   const { categories } = useSelector((state) => state.category);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const dropdownRef = useRef(null);
-
+  const [search, setSearch] = useState();
+  const debounce = useDebounce(search);
   const { searchTerm } = useSelector((state) => state.userSearch);
-  //   console.log("searchTerm:", searchTerm);
 
   useEffect(() => {
     if (!categories || categories.length === 0) {
@@ -23,10 +28,13 @@ function HomeSearchBar({ cities, value, onChange }) {
 
   useEffect(() => {
     const savedCategory = Cookies.get("selectedCategory");
+    const savedCategoryId = Cookies.get("selectedCategoryId");
     if (savedCategory) {
       setSelectedCategory(savedCategory);
+      setSelectedCategoryId(savedCategoryId);
     } else {
       setSelectedCategory(allCategoriesOption.name);
+      setSelectedCategoryId(null);
     }
   }, []);
 
@@ -49,15 +57,66 @@ function HomeSearchBar({ cities, value, onChange }) {
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category?.name);
+    setSelectedCategoryId(category?._id);
     Cookies.set("selectedCategory", category?.name, { expires: 1 });
+    Cookies.set("selectedCategoryId", category?._id, { expires: 1 });
     setIsDropdownOpen(false);
   };
 
   const handleSearchInputChange = (e) => {
     const searchTerm = e.target.value;
+
     dispatch(setSearchTerm(searchTerm));
   };
-  const allCategoriesOption = { _id: "all", name: "All Categories" };
+  const allCategoriesOption = { _id: "all", name: "All" };
+
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      const query = new URLSearchParams({
+        q: searchTerm.trim(),
+        category: selectedCategoryId ? selectedCategoryId : "all",
+      }).toString();
+
+      navigate(`/search?${query}`);
+    }
+  };
+  useEffect(() => {
+    handleSearch();
+  }, [debounce]);
+  useEffect(() => {
+    const handleCookieChange = () => {
+      const currentCategory = Cookies.get("selectedCategory") || "All";
+      setSelectedCategory((prev) =>
+        prev !== currentCategory ? currentCategory : prev
+      );
+    };
+
+    const onCookieChange = (e) => {
+      if (e.detail.key === "selectedCategory") {
+        handleCookieChange();
+      }
+    };
+
+    window.addEventListener("cookieChange", onCookieChange);
+
+    return () => {
+      window.removeEventListener("cookieChange", onCookieChange);
+    };
+  }, []);
+  Cookies.set = ((originalSet) => {
+    return (...args) => {
+      const result = originalSet.apply(Cookies, args);
+
+      const event = new CustomEvent("cookieChange", {
+        detail: { key: args[0], value: args[1] },
+      });
+      window.dispatchEvent(event);
+
+      return result;
+    };
+  })(Cookies.set);
 
   return (
     <div
@@ -94,7 +153,10 @@ function HomeSearchBar({ cities, value, onChange }) {
         placeholder="Search..."
         value={searchTerm}
         className="ml-2 px-2 py-1 border-none rounded-md bg-transparent text-primary outline-none"
-        onChange={handleSearchInputChange}
+        onChange={(e) => [
+          handleSearchInputChange(e),
+          setSearch(e.target.value),
+        ]}
       />
     </div>
   );

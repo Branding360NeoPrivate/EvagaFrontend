@@ -1,8 +1,13 @@
 import { companyDetails } from "../../utils/companyDetails";
 import { footerMenuItems } from "../../utils/footerMenuList";
-
+import { BsTwitterX } from "react-icons/bs";
 import { FaFacebook } from "react-icons/fa";
-import { FaSquareInstagram } from "react-icons/fa6";
+import {
+  FaInstagram,
+  FaLinkedinIn,
+  FaSquareInstagram,
+  FaWhatsapp,
+} from "react-icons/fa6";
 import { FaXTwitter } from "react-icons/fa6";
 function Footer() {
   const backToTop = () => {
@@ -10,7 +15,7 @@ function Footer() {
   };
 
   return (
-    <footer className="bg-purpleSecondary text-backgroundOffWhite pb-10 font-semibold w-full">
+    <footer className="bg-purpleSecondary text-backgroundOffWhite pb-10 font-semibold w-full mt-6">
       {/* Back to Top */}
       <div
         onClick={backToTop}
@@ -38,14 +43,45 @@ function Footer() {
           <div>
             <h3 className="mb-2 font-semibold">Connect With Us</h3>
             <div className="flex space-x-4">
-              <a href="#" aria-label="Facebook" className="text-xl">
+              <a
+                href="https://www.facebook.com/share/15UhbdRWh8/?mibextid=wwXIfr "
+                target="_blank"
+                aria-label="Facebook"
+                className="text-xl"
+              >
                 <FaFacebook />
               </a>
-              <a href="#" aria-label="Instagram" className="text-xl">
-                <FaSquareInstagram />
+              <a
+                href="https://www.instagram.com/evagaentertainment/?igsh=MmcwdjJzMHUwd3k2&utm_source=qr"
+                target="_blank"
+                aria-label="Instagram"
+                className="text-xl"
+              >
+                <FaInstagram />
               </a>
-              <a href="#" aria-label="X" className="text-xl">
-                <FaXTwitter />
+              <a
+                href="https://www.linkedin.com/company/evaga-entertainment"
+                target="_blank"
+                aria-label="X"
+                className="text-xl"
+              >
+                <FaLinkedinIn />
+              </a>
+              <a
+                href="https://whatsapp.com/channel/0029VaWXX585fM5adzGAzC1C"
+                target="_blank"
+                aria-label="X"
+                className="text-xl"
+              >
+                <FaWhatsapp />
+              </a>{" "}
+              <a
+                href="https://x.com/EvagaOfficial"
+                target="_blank"
+                aria-label="X"
+                className="text-xl"
+              >
+                <BsTwitterX />
               </a>
             </div>
           </div>

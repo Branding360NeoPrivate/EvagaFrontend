@@ -6,7 +6,8 @@ import {
 } from "../../context/redux/slices/categorySlice";
 import categoryApi from "../../services/categoryServices";
 import useServices from "../../hooks/useServices";
-
+import { FaChevronDown } from "react-icons/fa6";
+import { MdArrowDropDown } from "react-icons/md";
 // Local SearchableInput component
 const SearchableInput = ({
   items,
@@ -65,7 +66,8 @@ const SearchableInput = ({
   };
 
   return (
-    <div className="relative" onFocus={() => setIsInputFocused(true)}>
+    <div className="relative w-full cursor-pointer" onFocus={() => setIsInputFocused(true)}>
+        <div className="relative flex items-center">
       <input
         type="text"
         placeholder={placeholder}
@@ -73,11 +75,15 @@ const SearchableInput = ({
         value={searchTerm}
         onChange={handleInputChange}
         disabled={disabledState}
-        className={`w-full px-4 py-2 border rounded-md focus:outline-nonep-2 text-gray-500
+        className={`w-full px-4 py-2 border rounded-md focus:outline-nonep-2 text-gray-500  outline-none cursor-pointer
               ${!disabledState ? " border " : " bg-grayBg border-none"} 
                 errors[field.name] ? "border-red-500" : "border-gray-300"
             `}
       />
+          <MdArrowDropDown 
+      className="absolute right-3 pointer-events-none text-gray-500 text-3xl"
+    />
+      </div>
       {isInputFocused && filteredItems.length > 0 && (
         <ul
           onBlur={() => setIsInputFocused(false)}
@@ -102,6 +108,8 @@ const SearchableCategoryAndSubcategoryDropdown = ({
   onSelect,
   disabled,
   defaultValues,
+  textColor,
+  textSize,
 }) => {
   const dispatch = useDispatch();
   const { categories, subCategories } = useSelector((state) => state.category);
@@ -162,9 +170,15 @@ const SearchableCategoryAndSubcategoryDropdown = ({
   };
 
   return (
-    <div className=" grid grid-cols-2 gap-5">
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+    <div className=" grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="">
+        <label
+          className={
+            textColor && textSize
+              ? `block text-[${textSize}] text-xl font-normal text-[#6A1B9A] mb-1`
+              : "block text-sm font-medium text-gray-700 mb-1"
+          }
+        >
           Category
         </label>
         <SearchableInput
@@ -178,8 +192,12 @@ const SearchableCategoryAndSubcategoryDropdown = ({
           disabled={disabled}
         />
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+      <div className="">
+        <label    className={
+            textColor && textSize
+              ? `block text-[${textSize}] text-xl font-normal text-[#6A1B9A] mb-1`
+              : "block text-sm font-medium text-gray-700 mb-1"
+          }>
           Subcategory
         </label>
         <SearchableInput

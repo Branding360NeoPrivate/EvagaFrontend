@@ -3,6 +3,7 @@ import adminActionsApi from "../../../services/adminActionsApi";
 
 const initialState = {
   vendors: [],
+  totalNumberOfVendors: 0,
   status: "idle",
   error: null,
 };
@@ -19,7 +20,7 @@ export const fetchAllVendorsWithProfileStatusAndService = createAsyncThunk(
         response
       );
 
-      return response.data.data;
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -52,7 +53,8 @@ const adminActionsSlice = createSlice({
         fetchAllVendorsWithProfileStatusAndService.fulfilled,
         (state, action) => {
           state.status = "succeeded";
-          state.vendors = action.payload;
+          state.totalNumberOfVendors = action.payload.totalVendors;
+          state.vendors = action.payload.data;
         }
       )
       .addCase(

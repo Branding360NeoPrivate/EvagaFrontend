@@ -1,13 +1,14 @@
-// src/services/api/apiClient.js
 import axios from "axios";
 import Cookies from "js-cookie";
 import { emitError } from "../utils/ErrorEmitter";
+import store from "../context/redux/store";
+import { showLoader, hideLoader } from "../context/redux/slices/loaderSlice";
 
 axios.defaults.withCredentials = true;
 
 const apiClient = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL,
-  timeout: 10000,
+  timeout: 100000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -19,14 +20,23 @@ apiClient.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    store.dispatch(showLoader());
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    store.dispatch(hideLoader());
+    return Promise.reject(error);
+  }
 );
 
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    store.dispatch(hideLoader());
+    return response;
+  },
   (error) => {
+    store.dispatch(hideLoader());
     let errorMessage = "An unexpected error occurred.";
     if (error.response) {
       errorMessage =

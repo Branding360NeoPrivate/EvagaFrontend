@@ -3,10 +3,20 @@ import { MdAccessTime } from "react-icons/md";
 import { FiEdit2 } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 import ReusableModal from "../Modal/Modal";
+import useServices from "../../hooks/useServices";
+import vendorApi from "../../services/vendorApi";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
-function CalenderBookingCard({ booking }) {
+function CalenderBookingCard({ booking, getMonthlyBookedDates }) {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const { register, handleSubmit, reset } = useForm();
+
+  const editVendorCalenderBooking = useServices(
+    vendorApi.editVendorCalenderBooking
+  );
+
+  // console.log("booking in calender booking card:", booking);
 
   useEffect(() => {
     if (isEditModalOpen) {
@@ -27,9 +37,29 @@ function CalenderBookingCard({ booking }) {
     setEditModalOpen(false);
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log("Updated Booking Details:", data);
-    // Handle the updated booking details here
+    try {
+      const response = await editVendorCalenderBooking.callApi(
+        booking?._id,
+        data
+      );
+
+      console.log("response in update booking:", response);
+
+      toast.success(response?.message);
+      getMonthlyBookedDates(); // Refresh the monthly booked dates in the dashboard
+    } catch (error) {
+      console.log(error);
+
+      if (error.message) {
+        toast.error(error.message);
+      } else if (error.data && error.data.message) {
+        toast.error(error.data.message);
+      } else {
+        toast.error("An error occurred while booking.");
+      }
+    }
     handleCloseModal();
   };
 
@@ -42,7 +72,7 @@ function CalenderBookingCard({ booking }) {
               <FiEdit2 />
             </button>
           </div>
-          <div className="grid grid-cols-7 w-full">
+          <div className="grid grid-cols-7 w-full ">
             <div className="col-span-3 px-4 py-2 bg-white flex flex-col items-start justify-center text-primary font-medium rounded-md">
               <span className="flex justify-center items-center">
                 From: {new Date(booking.startDate).getDate()}{" "}

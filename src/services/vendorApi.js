@@ -41,8 +41,14 @@ const vendorApi = {
         },
       }
     ),
+
   updateCalendar: (vendorId, bookingData) =>
     apiService.post(apiEndpoints.vendor.updateCalendar(vendorId), bookingData),
+  editVendorCalenderBooking: (bookingId, bookingData) =>
+    apiService.post(
+      apiEndpoints.vendor.editVendorCalenderBooking(bookingId),
+      bookingData
+    ),
   updateBusiness: (vendorId, businessData) =>
     apiService.post(apiEndpoints.vendor.updateBusiness(vendorId), businessData),
   addNewCategoryBusiness: (businessId, categoryData) =>
@@ -89,8 +95,44 @@ const vendorApi = {
         },
       }
     ),
+  getOnevendorService: (serviceId) =>
+    apiService.get(apiEndpoints.vendor.getOneVendorService(serviceId)),
   getvendorAllService: (vendorId, formData) =>
     apiService.get(apiEndpoints.vendor.getAllVendorServiceById(vendorId)),
+  forgortVendorpasswords: (formData) =>
+    apiService.post(apiEndpoints.vendor.vendorForgotPassword, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
+  verifyVendorOtp: (formData) =>
+    apiService.post(apiEndpoints.vendor.vendorVerifyOtp, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
+  changeVendorPassword: (vendorId, formData) =>
+    apiService.post(
+      apiEndpoints.vendor.vendorChangePassword(vendorId),
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    ),
+  vendorAcceptTermsAndcondition: (vendorId) =>
+    apiService.post(apiEndpoints.vendor.acceptTermsAndCondition(vendorId)),
+  vendorAcceptOrRejectpackage: (serviceId, packageId, formData) =>
+    apiService.post(
+      apiEndpoints.vendor.acceptOrRejectpackage(serviceId, packageId),
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    ),
 };
 
 export default vendorApi;

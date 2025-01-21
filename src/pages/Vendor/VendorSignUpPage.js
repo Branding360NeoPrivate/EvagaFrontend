@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 import notificationService from "../../utils/notificationService";
 
 function VendorSignUpPage() {
-  const { login } = useAuth(); // Access login function from AuthContext
+  const { login } = useAuth();
   const {
     loading: registerLoading,
     error: registerError,
@@ -21,11 +21,10 @@ function VendorSignUpPage() {
 
   const handleFormSubmit = async (data) => {
     try {
-      const response = await registerApi(data); // Calls the API
+      const response = await registerApi(data); 
       console.log("Registration successful:", response);
       notificationService.success(registerSuccess);
 
-      // Save token and role in cookies using login function
       if (response.token && response.role && response.userId) {
         login(response.token, response.role, response.userId);
       }
@@ -36,7 +35,7 @@ function VendorSignUpPage() {
   };
 
   return (
-    <div className="w-full h-auto md:h-[93vh] flex flex-col md:flex-row justify-center gap-4 items-center">
+    <div className="w-full h-auto md:h-[100vh] flex flex-col md:flex-row justify-center gap-4 items-center">
       <div className=" w-full md:w-[50%] h-full flex justify-center items-center bg-highlight">
         <img
           className="w-full md:w-auto md:h-full object-contain "
@@ -57,6 +56,7 @@ function VendorSignUpPage() {
           {registerLoading && <p className="text-gray-500">Registering...</p>}
 
           <AuthForm
+            formType="signIn"
             stages={formfields.vendorSignUp}
             handleFormSubmit={handleFormSubmit}
           />

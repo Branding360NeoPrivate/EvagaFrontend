@@ -39,8 +39,18 @@ export default function VendorOrderPage() {
           </h6>
         </span>
         {activeState === "Ongoing Order" && (
-          <div className="w-full flex items-center justfiy-center flex-col gap-4">
-            <OrderVenderCard />
+          <div className="w-full h-[50vh] flex items-center justfiy-center flex-col gap-4">
+            {/* <OrderVenderCard /> */}
+          </div>
+        )}
+        {activeState === "Completed order" && (
+          <div className="w-full h-[50vh] flex items-center justfiy-center flex-col gap-4">
+            {/* <OrderVenderCard /> */}
+          </div>
+        )}{" "}
+        {activeState === "Cancelled order" && (
+          <div className="w-full h-[50vh] flex items-center justfiy-center flex-col gap-4">
+            {/* <OrderVenderCard /> */}
           </div>
         )}
       </div>

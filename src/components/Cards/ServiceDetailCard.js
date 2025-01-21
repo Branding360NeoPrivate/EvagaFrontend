@@ -1,0 +1,152 @@
+import React from "react";
+import { FaRegShareFromSquare } from "react-icons/fa6";
+import { FcLike } from "react-icons/fc";
+import { IoBagOutline } from "react-icons/io5";
+import parse from "html-react-parser";
+import formatCurrency from "../../utils/formatCurrency";
+import share from "../../assets/Temporary Images/share-square 1.png";
+import Year from "../../assets/Temporary Images/briefcase-blank 1.png";
+import event from "../../assets/Temporary Images/party-horn 1.png";
+import inclusion from "../../assets/Temporary Images/web-test 1.png";
+import deliverable from "../../assets/Temporary Images/Vector (1).png";
+import terms from "../../assets/Temporary Images/terms-info (1) 1.png";
+function ServiceDetailCard({
+  title,
+  category,
+  rating,
+  reviews,
+  experience,
+  companyName,
+  price,
+  tAndC = [],
+  DataToRender,
+}) {
+  const keysToRender = [
+    "Event Type",
+    "EventType",
+    "TypesofFlavours",
+    "Inclusions",
+    "Deliverables",
+    "MealType",
+    "MealTime",
+    "Cuisines",
+    "MenuBreakUp",
+    "Description",
+    "DurationofStall",
+  ];
+  const iconMapping = {
+    "Event Type": event,
+    "EventType": event,
+    TypesofFlavours: "",
+    Inclusions: inclusion,
+    Deliverables: deliverable,
+    MealType: "",
+    MealTime: "",
+    Cuisines: "",
+    MenuBreakUp: "",
+    Description: terms,
+    DurationofStall: "",
+  };
+  return (
+    <div className="  bg-white p-4 w-full max-w-3xl">
+      {/* Header */}
+      <div className=" w-full flex flex-row items-center mb-4">
+        <div className="w-[80%] ">
+          <h2 className="text-2xl font-semibold text-primary">{title}</h2>
+          <p className="text-base  text-textGray">{category}</p>
+        </div>
+        <div className="w-[20%] text-right">
+          <div className="flex flex-col items-end justify-end gap-1">
+            <div className="flex flex-row">
+              <span className="text-yellow-500 text-lg">★</span>
+              <span className="text-gray-700 font-medium">{rating} </span>
+              <span className="text-gray-500 text-md">({reviews})</span>
+            </div>
+          </div>
+          <p className="text-sm text-gray-500">Reviews</p>
+        </div>
+      </div>
+
+      {/* Company Name */}
+      <div className="w-full flex flex-row  items-center justify-between">
+        <div className=" text-lg font-semibold text-primary mb-4">
+          <h3 className="text-xl font-semibold ">{companyName}</h3>
+        </div>
+        <div className="flex flex-col items-center justify-center gap-1">
+          <img src={Year} alt="share" className="object-contain h-[1.5rem]" />
+          <p className="text-sm text-textGray font-medium">
+            {experience} Years
+          </p>
+        </div>{" "}
+        <div className="w-[10%] items-end">
+          <img src={share} alt="share" className="object-contain h-[2rem]" />
+          <p className="text-sm text-textGray font-medium">Share</p>
+        </div>
+        <div className="w-[10%] items-end">
+          <FcLike />
+        </div>
+      </div>
+      <hr style={{ margin: "0.2rem 0" }} />
+
+      {/* Price */}
+      <div className="flex flex-row">
+        <div className="text-lg font-medium text-primary pt-2 pr-2">Price</div>
+        <div className="text-2xl font-bold text-primary mb-4">
+          {formatCurrency(price)}
+        </div>
+      </div>
+
+      {/* Event */}
+      {keysToRender.map((key, index) => {
+        const value = DataToRender?.[key];
+        if (Array.isArray(value) && value.length > 0) {
+          console.log(value, key);
+
+          return (
+            <div className="flex gap-4 items-start justify-start">
+              <span className="bg-textLightGray p-2 rounded-[50%]">
+                <img
+                  src={iconMapping[key]}
+                  alt="event"
+                  className="object-contain h-[1.5rem]"
+                />
+              </span>
+              <div className="mb-4 w-full">
+                <h3 className="text-xl font-meduim text-primary">{key}</h3>
+                <hr style={{ margin: "0.3rem 0" }} />
+                <div className="flex gap-2 mt-1">
+                  {value?.map((event, index) => (
+                    <span
+                      key={index}
+                      className="bg-gray-200 text-textGray text-sm px-3 py-1 rounded-md"
+                    >
+                      {event}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        }
+      })}
+
+  
+      {/* Terms & Conditions */}
+      <div className="flex gap-4 items-start justify-start">
+        <span className="bg-textLightGray p-2 rounded-[50%]">
+          <img src={terms} alt="event" className="object-contain h-[1.5rem]" />
+        </span>
+        <div className="w-full text-textGray">
+          <h3 className="text-xl font-meduim text-primary">
+            Terms & Conditions
+          </h3>
+          <hr style={{ margin: "0.3rem 0" }} />
+        
+            {parse(tAndC ? tAndC : "")}
+        
+        </div>
+      </div>
+    </div>
+  );
+}
+export default ServiceDetailCard;

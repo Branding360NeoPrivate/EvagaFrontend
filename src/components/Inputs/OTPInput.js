@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-const OTPInput = ({ length = 4, onChange, verifyOtp }) => {
+const OTPInput = ({ length = 4, onChange, verifyOtp,verificationStatus }) => {
   const [otp, setOtp] = useState(Array(length).fill(""));
-  const [verificationStatus, setVerificationStatus] = useState(null);
+
 
   // Handle input change
   const handleChange = (value, index) => {
@@ -41,20 +41,26 @@ const OTPInput = ({ length = 4, onChange, verifyOtp }) => {
   };
 
   // Handle OTP verification
+  // const handleVerify = (e) => {
+  //   e.preventDefault();
+  //   const fullOtp = otp.join("");
+
+  //   verifyOtp(fullOtp)
+  //     .then((response) => {
+  //       console.log("OTP verification successful:", response);
+
+  //       setVerificationStatus(true);
+  //     })
+  //     .catch((error) => {
+  //       console.error("OTP verification failed:", error);
+  //       setVerificationStatus(false);
+  //     });
+  // };
   const handleVerify = (e) => {
     e.preventDefault();
     const fullOtp = otp.join("");
 
-    verifyOtp(fullOtp)
-      .then((isValid) => {
-        // console.log("OTP verification successful:", isValid);
-
-        setVerificationStatus(true);
-      })
-      .catch((error) => {
-        console.error("OTP verification failed:", error);
-        setVerificationStatus(false);
-      });
+    verifyOtp(fullOtp);
   };
 
   return (

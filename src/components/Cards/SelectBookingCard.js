@@ -5,7 +5,7 @@ import vendorApi from "../../services/vendorApi";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-function SelectBookingCard({ setBookingFormVisible, getMonthlyBookedDates }) {
+function SelectBookingCard({ setBookingFormVisible, getMonthlyBookedDates, }) {
   const blockCalender = useServices(vendorApi.addVendorBooking);
   const [selectedStartDate, setSelectedStartDate] = useState("");
   const [selectedStartTime, setSelectedStartTime] = useState("");
@@ -33,21 +33,27 @@ function SelectBookingCard({ setBookingFormVisible, getMonthlyBookedDates }) {
 
     try {
       const finalData = {
-        ...data, 
+        ...data,
         userID: null,
-        bookedByVendor: true, 
+        bookedByVendor: true,
       };
       const userId = Cookies.get("userId");
       const response = await blockCalender.callApi(userId, finalData);
-      console.log(response);
-      
+
 
       toast.success(response?.message);
-      getMonthlyBookedDates(); // Refresh the monthly booked dates in the dashboard
+      setBookingFormVisible(false)
+      getMonthlyBookedDates(); 
     } catch (error) {
       console.log(error);
-      
-      toast.error("Failed to update profile. Please try again.");
+
+      if (error.message) {
+        toast.error(error.message);
+      } else if (error.data && error.data.message) {
+        toast.error(error.data.message);
+      } else {
+        toast.error("An error occurred while booking.");
+      }
     }
   };
 

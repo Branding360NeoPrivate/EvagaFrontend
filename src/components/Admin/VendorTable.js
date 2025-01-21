@@ -3,13 +3,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaFilter, FaSort } from "react-icons/fa";
 import AdminVendorTableModal from "./AdminVendorTableModal";
 import { fetchAllVendorsWithProfileStatusAndService } from "../../context/redux/slices/adminActionsSlice";
+import { Pagination, Stack } from "@mui/material";
 
-const VendorTable = ({ onMenuSelect }) => {
+const VendorTable = ({ onMenuSelect, selectedVendor, setSelectedVendor }) => {
+  const style={
+
+      '& .Mui-selected': {
+        backgroundColor: '#6A1B9A !important',
+        color: 'white',
+      },
+
+    
+
+  }
   const dispatch = useDispatch();
-  const { vendors, status, error } = useSelector((state) => state.adminActions);
-  const [selectedVendor, setSelectedVendor] = useState(null); // For modal data
+  const { vendors, totalNumberOfVendors, status, error } = useSelector(
+    (state) => state.adminActions
+  );
   const [isModalOpen, setIsModalOpen] = useState(false); // Control modal visibility
-  console.log("vendors in Redux:", vendors);
 
   // Fetch vendor data from Redux store
   useEffect(() => {
@@ -26,6 +37,17 @@ const VendorTable = ({ onMenuSelect }) => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedVendor(null);
+  };
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
+  const itemsPerPage = 10;
+
+  // Update the total pages count whenever the product array changes
+  useEffect(() => {
+    setCount(Math.ceil(vendors?.length / itemsPerPage)); // Use Math.ceil for better accuracy
+  }, [vendors]);
+  const handlePageChange = (event, value) => {
+    setPage(value);
   };
 
   if (status === "loading") {
@@ -70,44 +92,58 @@ const VendorTable = ({ onMenuSelect }) => {
             </tr>
           </thead>
           <tbody>
-            {vendors.map((vendor, index) => (
-              <tr key={vendor.id} className="text-center">
-                <td className="  px-4 py-2">{index + 1}</td>
-                <td className="  px-4 py-2">{vendor.name}</td>
-                <td className="  px-4 py-2">
-                  {vendor?.businessDetails?.categoriesOfServices[0]?.category[0]
-                    ?.name
-                    ? `${
-                        vendor.businessDetails.categoriesOfServices[0]
-                          .category[0].name
-                      } + ${
-                        vendor.businessDetails.categoriesOfServices.length - 1
-                      }`
-                    : "Not Available"}
-                </td>
-                <td
-                  className={`  px-4 py-2 font-medium ${
-                    vendor.profileCompletion === 100
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}
-                >
-                  {vendor.profileCompletion === 100 ? "Complete" : "Incomplete"}
-                </td>
-                <td className="  px-4 py-2">{vendor.phoneNumber}</td>
-                <td className="  px-4 py-2">{vendor.numberOfServices}</td>
-                <td className="  px-4 py-2">
-                  <button
-                    className="text-blue-600 hover:underline"
-                    onClick={() => handleViewDetails(vendor)}
+            {vendors
+              ?.slice((page - 1) * 10, (page - 1) * 10 + 10)
+              .map((vendor, index) => (
+                <tr key={index} className="text-center">
+                  <td className="  px-4 py-2">{index + 1}</td>
+                  <td className="  px-4 py-2">{vendor.name}</td>
+                  <td className="  px-4 py-2">
+                    {vendor?.businessDetails?.categoriesOfServices[0]
+                      ?.category[0]?.name
+                      ? `${
+                          vendor.businessDetails.categoriesOfServices[0]
+                            .category[0].name
+                        } + ${
+                          vendor.businessDetails.categoriesOfServices.length - 1
+                        }`
+                      : "Not Available"}
+                  </td>
+                  <td
+                    className={`  px-4 py-2 font-medium ${
+                      vendor.profileCompletion === 100
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
                   >
-                    View
-                  </button>
-                </td>
-              </tr>
-            ))}
+                    {vendor.profileCompletion === 100
+                      ? "Complete"
+                      : "Incomplete"}
+                  </td>
+                  <td className="  px-4 py-2">{vendor.phoneNumber}</td>
+                  <td className="  px-4 py-2">{vendor.numberOfServices}</td>
+                  <td className="  px-4 py-2">
+                    <button
+                      className="text-blue-600 hover:underline"
+                      onClick={() => handleViewDetails(vendor)}
+                    >
+                      View
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
+        <div className="flex items-center justify-center w-full py-3">
+          <Stack spacing={2}>
+            <Pagination
+              count={count}
+              page={page}
+              onChange={handlePageChange}
+              sx={style}
+            />
+          </Stack>
+        </div>
       </div>
 
       {/* CustomModal for Viewing Vendor Details */}
@@ -118,7 +154,15 @@ const VendorTable = ({ onMenuSelect }) => {
       >
         {selectedVendor && (
           <div className=" flex justify-center items-center gap-5">
-            <button className=" btn-primary">Vendor Access</button>
+            <button
+              className=" btn-primary"
+              onClick={(e) => {
+                e.preventDefault();
+                onMenuSelect("vendorServiceAccess");
+              }}
+            >
+              Vendor Services
+            </button>
             <button
               className=" btn-primary"
               onClick={(e) => {

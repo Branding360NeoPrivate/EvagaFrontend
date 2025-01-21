@@ -1,5 +1,5 @@
 import ForgotPasswordLeftImg from "../../assets/LoginSigupImgs/ForgotPasswordLeftImg.png";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useServices from "../../hooks/useServices";
 import formfields from "../../utils/formFields";
 import vendorApi from "../../services/vendorApi";
@@ -7,10 +7,14 @@ import AuthForm from "../../components/AuthForm";
 import notificationService from "../../utils/notificationService";
 import AuthBox from "../../components/AuthBox";
 import { useAuth } from "../../context/AuthContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { internalRoutes } from "../../utils/internalRoutes";
-
+import Cookies from "js-cookie";
 function VendorForgotPasswordPage() {
+  const hsitory = useNavigate();
+  const vendorNewPassword = useServices(vendorApi.changeVendorPassword);
+  const [countdown, setCountdown] = useState(10);
+  const [isPasswordResetSuccess, setIsPasswordResetSuccess] = useState(false);
   const { login } = useAuth(); // Access login function from AuthContext
   //   const {
   //     loading: forgotPasswordLoading,
@@ -18,6 +22,22 @@ function VendorForgotPasswordPage() {
   //     success: forgotPasswordSuccess,
   //     callApi: forgotPasswordApi,
   //   } = useServices(vendorApi.forgotPassword);
+  // useEffect(() => {
+  //   if (countdown > 0) {
+  //     const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [countdown]);
+  useEffect(() => {
+    if (isPasswordResetSuccess) {
+      if (countdown > 0) {
+        const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+        return () => clearTimeout(timer);
+      } else if (countdown === 0 && isPasswordResetSuccess) {
+        hsitory(internalRoutes.vendorLogin);
+      }
+    }
+  }, [countdown, isPasswordResetSuccess]);
 
   const handleFormSubmit = async (data) => {
     //   try {
@@ -35,6 +55,20 @@ function VendorForgotPasswordPage() {
     //     );
     //     notificationService.error(forgotPasswordError);
     //   }
+
+    const userId = Cookies.get("tempId");
+    const formData1 = new FormData();
+    formData1.append("newPassword", data.password);
+    const response = await vendorNewPassword.callApi(userId, formData1);
+    if (response) {
+      console.log(response);
+      setIsPasswordResetSuccess(true);
+      if (response) {
+        console.log(response);
+        setIsPasswordResetSuccess(true);
+      }
+    }
+
     console.log("data in forgotPasswordPage:", data);
   };
 
@@ -55,7 +89,7 @@ function VendorForgotPasswordPage() {
   };
 
   return (
-    <div className="w-full h-auto md:h-[93vh] flex flex-col md:flex-row justify-center gap-4 items-center">
+    <div className="w-full h-auto md:h-[100vh] flex flex-col md:flex-row justify-center gap-4 items-center">
       <div className=" w-full md:w-[50%] h-full flex justify-center items-center bg-highlight">
         <img
           className="w-full md:w-auto md:h-full object-contain "
@@ -78,12 +112,34 @@ function VendorForgotPasswordPage() {
           {forgotPasswordLoading && (
             <p className="text-gray-500">Processing...</p>
           )} */}
+    { isPasswordResetSuccess &&(
+            <div className="text-center">
+              <h4 className="text-base text-green-500">
+                Password Reset Successful!
+              </h4>
+              <p className=" text-base text-green-500">
+                Redirecting to login page in {countdown} seconds...
+              </p>
+            </div>
+          )}
 
           <AuthForm
             stages={formfields.vendorForgotPassword}
             handleFormSubmit={handleFormSubmit}
             verifyOtp={verifyOtp}
+            isDisabled={isPasswordResetSuccess }
+            
           />
+          {isPasswordResetSuccess && (
+            <div className="text-center">
+              <h4 className="text-primary text-xl">
+                Password Reset Successful!
+              </h4>
+              <p className="text-primary text-base">
+                Redirecting to login page in {countdown} seconds...
+              </p>
+            </div>
+          )}
 
           <div className="flex gap-2 font-semibold">
             <h5>Remembered your password?</h5>

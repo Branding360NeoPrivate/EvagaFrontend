@@ -26,7 +26,7 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
     <div
       className={`bg-primary text-white ${
         isCollapsed ? "w-20" : "w-64"
-      } h-full flex flex-col transition-width duration-300`}
+      } h-full min-h-[100vh] flex flex-col transition-width duration-300`}
     >
       {/* Toggle Button */}
       <button
