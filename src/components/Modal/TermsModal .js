@@ -434,11 +434,7 @@ const TermsModal = ({ open, handleClose }) => {
             checked={isChecked}
             disabled={!isAtBottom}
             onChange={handleCheckboxChange}
-            sx={{
-              width: 24, // Adjust as needed
-              height: 24, // Adjust as needed
-              padding: 0, // Remove default padding
-            }}
+            
            
           />
           <p className="text-sm text-textGray">
