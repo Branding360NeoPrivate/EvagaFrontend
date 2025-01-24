@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { MdKeyboardArrowDown } from "react-icons/md";
@@ -71,20 +71,27 @@ function HomeSearchBar({ cities, value, onChange }) {
   const allCategoriesOption = { _id: "all", name: "All" };
 
   const navigate = useNavigate();
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+  const handleSearch = useCallback(
+    (bypassSearchTermCheck = true) => {
+      if (bypassSearchTermCheck || searchTerm.trim()) {
+        const query = new URLSearchParams({
+          q: searchTerm.trim(),
+          category: selectedCategoryId ? selectedCategoryId : "all",
+        }).toString();
 
-  const handleSearch = () => {
-    if (searchTerm.trim()) {
-      const query = new URLSearchParams({
-        q: searchTerm.trim(),
-        category: selectedCategoryId ? selectedCategoryId : "all",
-      }).toString();
+        navigate(`/search?${query}`);
+      }
+    },
+    [searchTerm, selectedCategoryId, navigate]
+  );
 
-      navigate(`/search?${query}`);
-    }
-  };
   useEffect(() => {
-    handleSearch();
-  }, [debounce]);
+
+      handleSearch(shouldRedirect);
+      setShouldRedirect(false);
+
+  }, [debounce, shouldRedirect]);
   useEffect(() => {
     const handleCookieChange = () => {
       const currentCategory = Cookies.get("selectedCategory") || "All";
@@ -139,7 +146,10 @@ function HomeSearchBar({ cities, value, onChange }) {
               <li
                 key={index}
                 className="px-4 py-2 hover:bg-purpleHighlight hover:text-white font-semibold cursor-pointer border-spacing-5 border-b-solid border-gray-200"
-                onClick={() => handleCategorySelect(category)}
+                onClick={() => [
+                  handleCategorySelect(category),
+                  setShouldRedirect(true),
+                ]}
               >
                 {category?.name}
               </li>
