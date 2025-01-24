@@ -1,197 +1,175 @@
-import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import { internalRoutes } from "../../utils/internalRoutes";
-import logo from "../../assets/Temporary Images/Evaga Logo.png";
-
-import { MdExitToApp } from "react-icons/md";
-import { LiaLanguageSolid } from "react-icons/lia";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Cookies from "js-cookie";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { IoClose } from "react-icons/io5";
-import { TbLanguageHiragana } from "react-icons/tb";
-import HomeSearchableCityDropdown from "../Inputs/HomeSearchableCityDropdown";
-import HomeSearchBar from "../Inputs/HomeSearchBar";
+import { fetchCategories } from "../../context/redux/slices/categorySlice";
+import { setSearchTerm } from "../../context/redux/slices/userSearchSlice";
+import useDebounce from "../../utils/useDebounce";
+import useServices from "../../hooks/useServices";
+import packageApis from "../../services/packageApis";
+import { useNavigate } from "react-router-dom";
 
-const DynamicNav = () => {
-  const { auth, logout } = useAuth();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+function HomeSearchBar({ cities, value, onChange }) {
+  const dispatch = useDispatch();
+  const { categories } = useSelector((state) => state.category);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const dropdownRef = useRef(null);
+  const [search, setSearch] = useState();
+  const debounce = useDebounce(search);
+  const { searchTerm } = useSelector((state) => state.userSearch);
 
-  // Define menus dynamically based on role
-  const menuItems = [
-    {
-      label: "Services",
-      path: internalRoutes.vendorDashboard,
-      roles: ["vendor"],
-    },
-    {
-      label: "Orders",
-      path: internalRoutes.vendorOrders,
-      roles: ["vendor"],
-    },
-    {
-      label: "Support",
-      path: internalRoutes.vendorSupport,
-      roles: ["vendor"],
-    },
-    {
-      label: "Community",
-      path: internalRoutes.vendorCommunity,
-      roles: ["vendor"],
-    },
-  ];
+  useEffect(() => {
+    if (!categories || categories.length === 0) {
+      dispatch(fetchCategories());
+    }
+  }, [dispatch, categories]);
 
-  const guestMenu = [
-    { component: <HomeSearchableCityDropdown />, roles: [] },
-    { component: <HomeSearchBar />, roles: [] },
-  ];
+  useEffect(() => {
+    const savedCategory = Cookies.get("selectedCategory");
+    const savedCategoryId = Cookies.get("selectedCategoryId");
+    if (savedCategory) {
+      setSelectedCategory(savedCategory);
+      setSelectedCategoryId(savedCategoryId);
+    } else {
+      setSelectedCategory(allCategoriesOption.name);
+      setSelectedCategoryId(null);
+    }
+  }, []);
 
-  // Filter menu items based on role
-  const filteredMenuItems = auth.isAuthenticated
-    ? menuItems.filter((item) => item.roles.includes(auth.role))
-    : guestMenu;
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
 
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category?.name);
+    setSelectedCategoryId(category?._id);
+    Cookies.set("selectedCategory", category?.name, { expires: 1 });
+    Cookies.set("selectedCategoryId", category?._id, { expires: 1 });
+    setIsDropdownOpen(false);
   };
+
+  const handleSearchInputChange = (e) => {
+    const searchTerm = e.target.value;
+
+    dispatch(setSearchTerm(searchTerm));
+  };
+  const allCategoriesOption = { _id: "all", name: "All" };
+
+  const navigate = useNavigate();
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+  const handleSearch = useCallback(
+    (bypassSearchTermCheck = true) => {
+      if (bypassSearchTermCheck || searchTerm.trim()) {
+        const query = new URLSearchParams({
+          q: searchTerm.trim(),
+          category: selectedCategoryId ? selectedCategoryId : "all",
+        }).toString();
+
+        navigate(`/search?${query}`);
+      }
+    },
+    [searchTerm, selectedCategoryId, navigate]
+  );
+
+  useEffect(() => {
+
+      handleSearch(shouldRedirect);
+      setShouldRedirect(false);
+
+  }, [debounce, shouldRedirect]);
+  useEffect(() => {
+    const handleCookieChange = () => {
+      const currentCategory = Cookies.get("selectedCategory") || "All";
+      setSelectedCategory((prev) =>
+        prev !== currentCategory ? currentCategory : prev
+      );
+    };
+
+    const onCookieChange = (e) => {
+      if (e.detail.key === "selectedCategory") {
+        handleCookieChange();
+      }
+    };
+
+    window.addEventListener("cookieChange", onCookieChange);
+
+    return () => {
+      window.removeEventListener("cookieChange", onCookieChange);
+    };
+  }, []);
+  Cookies.set = ((originalSet) => {
+    return (...args) => {
+      const result = originalSet.apply(Cookies, args);
+
+      const event = new CustomEvent("cookieChange", {
+        detail: { key: args[0], value: args[1] },
+      });
+      window.dispatchEvent(event);
+
+      return result;
+    };
+  })(Cookies.set);
 
   return (
-    <nav className="sticky top-0 z-50 bg-purpleSecondary text-white shadow-lg w-full flex justify-between items-center flex-wrap px-4 md:px-10">
-      <div className="flex items-center justify-between w-full lg:w-auto py-3">
-        {/* Brand */}
-        <Link to="/" className="hover:text-gray-300">
-          <img src={logo} alt="logo" className="w-[50px]" />
-        </Link>
-
-        {/* Hamburger Menu for Mobile */}
-        <button
-          className="lg:hidden float-right lg:float-right"
-          onClick={toggleMobileMenu}
-        >
-          <GiHamburgerMenu className="text-3xl text-white" />
-        </button>
+    <div
+      className="w-[200px] lg:w-[40vw] xl:w-[50vw] h-[45px] flex justify-start bg-gray-100 items-center rounded-md relative"
+      ref={dropdownRef}
+    >
+      <div
+        className="flex justify-center items-center h-full w-auto text-nowrap px-2 rounded-md bg-highlightYellow text-textPrimary font-bold cursor-pointer"
+        onClick={toggleDropdown}
+      >
+        <span className=" text-sm text-primary">
+          {selectedCategory ? selectedCategory : "Not Found"}
+        </span>
+        <MdKeyboardArrowDown className="ml-1" />
       </div>
-
-      {/* Desktop Menu Items */}
-      <ul className="hidden lg:flex flex-row justify-start items-center gap-5 w-full md:w-auto">
-        {filteredMenuItems.map((item, index) => (
-          <div key={index}>
-            {item.component ? (
-              item.component
-            ) : (
-              <li>
-                <NavLink
-                  to={item.path}
-                  className={({ isActive }) =>
-                    `text-lg font-medium ${
-                      isActive ? "text-white" : "text-[#FAFAFA4D]"
-                    } hover:text-gray-300`
-                  }
-                >
-                  {item.label}
-                </NavLink>
+      {isDropdownOpen && (
+        <div className="absolute top-full left-0 mt-1 w-[200px] max-h-[50vh] overflow-y-scroll text-textPrimary bg-white border border-gray-300 rounded-md shadow-lg z-10">
+          <ul>
+            {[allCategoriesOption, ...categories].map((category, index) => (
+              <li
+                key={index}
+                className="px-4 py-2 hover:bg-purpleHighlight hover:text-white font-semibold cursor-pointer border-spacing-5 border-b-solid border-gray-200"
+                onClick={() => [
+                  handleCategorySelect(category),
+                  setShouldRedirect(true),
+                ]}
+              >
+                {category?.name}
               </li>
-            )}
-          </div>
-        ))}
-      </ul>
-
-      <div className="hidden lg:flex items-center justify-center gap-5">
-        <button className="flex items-center">
-          <TbLanguageHiragana  className="text-3xl text-white" />
-          <MdKeyboardArrowDown />
-        </button>
-        {/* User Controls */}
-        {auth.isAuthenticated ? (
-          <div className="flex items-center space-x-4">
-            <Link to={`/${auth.role}/profile`}>
-              <span className="text-lg font-medium capitalize">My Profile</span>
-            </Link>
-            <button
-              onClick={logout}
-              className="text-2xl text-white hover:text-red-500 font-bold"
-            >
-              <MdExitToApp />
-            </button>
-          </div>
-        ) : (
-          <button className="bg-highlightYellow max-w-[200px] w-[200px] px-6 py-3 text-primary font-semibold text-lg rounded-md">
-            Sign In
-          </button>
-        )}
-      </div>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
-          onClick={closeMobileMenu}
-        >
-          <div
-            className="fixed right-0 top-0 h-full w-3/4 bg-purpleSecondary text-white shadow-lg z-50 p-5 space-y-10"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button className="mb-5" onClick={closeMobileMenu}>
-              <IoClose className="text-3xl text-white" />
-            </button>
-            <ul className="flex flex-col gap-5">
-              {filteredMenuItems.map((item, index) => (
-                <div key={index}>
-                  {item.component ? (
-                    item.component
-                  ) : (
-                    <li>
-                      <NavLink
-                        to={item.path}
-                        className={({ isActive }) =>
-                          `text-lg font-medium ${
-                            isActive ? "text-white" : "text-[#FAFAFA4D]"
-                          } hover:text-gray-300`
-                        }
-                        onClick={closeMobileMenu}
-                      >
-                        {item.label}
-                      </NavLink>
-                    </li>
-                  )}
-                </div>
-              ))}
-            </ul>
-            <div className=" flex lg:hidden flex-col items-start justify-center gap-5">
-              <button className="flex items-center">
-                <LiaLanguageSolid className="text-3xl text-white" />
-                <MdKeyboardArrowDown />
-              </button>
-              {/* User Controls */}
-              {auth.isAuthenticated ? (
-                <div className="flex items-center space-x-4">
-                  <Link to={`/${auth.role}/profile`}>
-                    <span className="text-lg font-medium capitalize">
-                      My Profile
-                    </span>
-                  </Link>
-                  <button
-                    onClick={logout}
-                    className="text-2xl text-white hover:text-red-500 font-bold"
-                  >
-                    <MdExitToApp />
-                  </button>
-                </div>
-              ) : (
-                <button className="bg-highlightYellow max-w-[200px] w-[200px] px-6 py-3 text-primary font-semibold text-lg rounded-md">
-                  Sign In
-                </button>
-              )}
-            </div>
-          </div>
+            ))}
+          </ul>
         </div>
       )}
-    </nav>
+      {/* Input through which the user can search */}
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchTerm}
+        className="ml-2 px-2 py-1 border-none rounded-md bg-transparent text-primary outline-none"
+        onChange={(e) => [
+          handleSearchInputChange(e),
+          setSearch(e.target.value),
+        ]}
+      />
+    </div>
   );
-};
+}
 
-export default DynamicNav;
+export default HomeSearchBar;
