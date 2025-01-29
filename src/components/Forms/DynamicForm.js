@@ -405,7 +405,12 @@ const DynamicForm = ({
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <span className="flex items-center justify-center gap-1 col-span-2">
+              <span className="flex items-center justify-start col-span-2">
+              {field.key === "Price" && (
+                   <span className="h-full px-2 py-1 bg-textYellow text-primary font-medium">
+                   ₹
+                 </span>
+                )}
                 <input
                   type={field.type}
                   value={formValues[field.key] || ""}
@@ -419,7 +424,7 @@ const DynamicForm = ({
                     field.key === "Price" ||
                     field.key === "Pricing" ||
                     field.key === "SessionDuration"
-                      ? "col-span-1 border-2 w-[10rem] border-2 outline-none p-1 rounded-md text-textGray font-medium"
+                      ? "col-span-1 border-2 w-[10rem] border-2 outline-none p-1 rounded-r-md text-textGray font-medium"
                       : "col-span-2 border-2 w-[25rem] border-2 outline-none p-1 rounded-md text-textGray font-medium "
                   }
                   required
@@ -494,11 +499,11 @@ const DynamicForm = ({
           );
 
           return (
-            <div key={field._id} className="grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex flex-col gap-4">
+              <div className="col-span-3 flex flex-col gap-4">
                 {selectedStaffData &&
                 selectedStaffData.staffDetails.length > 0 ? (
                   selectedStaffData.staffDetails.map((staff, index) => (
@@ -621,11 +626,11 @@ const DynamicForm = ({
           );
 
           return (
-            <div key={field._id} className="grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex flex-col gap-4">
+              <div className="col-span-3 flex flex-col gap-4">
                 {selectedStaffData.staffDetails.map((staff, index) => (
                   <div
                     key={index}
@@ -723,11 +728,11 @@ const DynamicForm = ({
           );
         } else if (field.type === "text" && field.key === "Terms&Conditions") {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="bg-textLightGray col-span-2">
+              <div className="bg-textLightGray col-span-3">
                 <ReactQuill
                   theme="snow"
                   value={formValues[field.key] || ""}
@@ -741,11 +746,11 @@ const DynamicForm = ({
           );
         } else if (field.type === "textarea" && field.key === "Description") {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className=" col-span-2  border-2 w-[25rem] border-2 outline-none p-1 rounded-md text-textGray font-medium ">
+              <div className=" col-span-3  border-2 w-[25rem] border-2 outline-none p-1 rounded-md text-textGray font-medium ">
                 <textarea
                   value={formValues[field.key] || ""}
                   onChange={(e) => handleChange(field.key, e.target.value)}
@@ -760,11 +765,11 @@ const DynamicForm = ({
         } else if (field.type === "object" && field.key === "TravelCharges") {
           const items = Array.isArray(field.items) ? field.items : []; // Ensure it's always an array
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2">
+              <div className="col-span-3">
                 {items.map((item, index) => (
                   <div key={index} className="grid grid-cols-3 gap-4">
                     {/* Free Upto */}
@@ -850,11 +855,11 @@ const DynamicForm = ({
           }
 
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2">
+              <div className="col-span-3">
                 {items.map((item, index) => (
                   <div key={index} className="grid grid-cols-4 gap-2">
                     {/* Min */}
@@ -942,11 +947,11 @@ const DynamicForm = ({
           const items = Array.isArray(field.items) ? field.items : [];
 
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2">
+              <div className="col-span-3">
                 {items.map((item, index) => (
                   <div
                     key={index}
@@ -1041,11 +1046,11 @@ const DynamicForm = ({
           const items = Array.isArray(field.items) ? field.items : [];
 
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2">
+              <div className="col-span-3">
                 {items.map((item, index) => (
                   <div key={index} className="grid grid-cols-4 gap-4">
                     {/* Max */}
@@ -1109,11 +1114,11 @@ const DynamicForm = ({
           const items = Array.isArray(field.items) ? field.items : [];
 
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2">
+              <div className="col-span-3">
                 {items.map((item, index) => (
                   <div key={index} className="grid grid-cols-4 gap-4">
                     {/* Max */}
@@ -1200,11 +1205,11 @@ const DynamicForm = ({
           const items = Array.isArray(field.items) ? field.items : [];
 
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2">
+              <div className="col-span-3">
                 {items.map((item, index) => (
                   <div key={index} className="grid grid-cols-5 gap-4">
                     {Object.keys(item).map((key) => {
@@ -1257,11 +1262,11 @@ const DynamicForm = ({
           const items = Array.isArray(field.items) ? field.items : [];
 
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2">
+              <div className="col-span-3">
                 {items.map((item, index) => (
                   <div key={index} className="grid grid-cols-3 gap-4">
                     {/* Dynamically render inputs */}
@@ -1321,7 +1326,7 @@ const DynamicForm = ({
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-3 flex items-center flex-col-reverse justify-center  gap-2">
+              <div className="col-span-3 flex items-center flex-col-reverse justify-start  gap-2">
                 <button
                   type="button"
                   className="text-primary px-4 py-2 rounded flex items-center justify-center gap-1 font-medium"
@@ -1332,13 +1337,13 @@ const DynamicForm = ({
                   <IoAddCircleOutline className="text-xl" /> {field.label}
                 </button>
                 {(formValues[field.key] || []).map((item, index) => (
-                  <div key={index} className="flex flex-wrap   ">
+                  <div key={index} className="flex flex-wrap  w-full ">
                     {Object.keys(item).map((objectKey, subIndex) => (
                       <div
                         key={subIndex}
                         className="flex items-center justify-center flex-col gap-1 items-center"
                       >
-                        <label className="text-textGray text-base">
+                        <label className="text-primary text-base">
                           {objectKey}
                         </label>
                         <div
@@ -1369,7 +1374,7 @@ const DynamicForm = ({
                                 e.target.value
                               )
                             }
-                            className="border p-2 rounded outline-none border-2 w-[7rem] h-full"
+                            className="border p-2 rounded outline-none border-2 w-[10rem] h-full "
                             placeholder={objectKey}
                           />
                         </div>
@@ -1553,11 +1558,11 @@ const DynamicForm = ({
             field.key === "Certifications&Licenses")
         ) {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex  items-center justify-start gap-4 ">
+              <div className="col-span-3 flex  items-center justify-start gap-4 ">
                 {/* <div className="flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
                   <input
                     type={field.type}
@@ -1610,11 +1615,11 @@ const DynamicForm = ({
           );
         } else if (field.type === "file" && field.key === "3DTour") {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}*:
               </label>
-              <div className="col-span-2 flex items-center justify-start gap-4">
+              <div className="col-span-3 flex items-center justify-start gap-4">
                 <div className="flex items-center justify-center flex-col text-textGray ">
                   <div className="relative cursor-pointer flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
                     <IoCloudUploadOutline className="text-primary text-2xl mb-4" />
@@ -1665,11 +1670,11 @@ const DynamicForm = ({
           );
         } else if (field.type === "file" && field.key === "ProductImage") {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex items-center justify-start gap-4">
+              <div className="col-span-3 flex items-center justify-start gap-4">
                 <div className="flex items-center justify-center flex-col text-textGray ">
                   <div className="relative cursor-pointer flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
                     <IoCloudUploadOutline className="text-primary text-2xl mb-4" />
@@ -1735,11 +1740,11 @@ const DynamicForm = ({
           );
         } else if (field.type === "array" && field.key === "Portfolio") {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex flex-col gap-4">
+              <div className="col-span-3 flex flex-col gap-4">
                 <div className="col-span-2 flex flex-col gap-4">
                   {/* Ensure field.items is a valid object */}
                   {field.items && (
@@ -1892,12 +1897,12 @@ const DynamicForm = ({
           field.key !== "DistanceFrom"
         ) {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex items-start justify-start flex-col gap-2">
-                <span className="flex items-center justify-center">
+              <div className="col-span-3 flex items-start justify-start flex-col gap-2">
+                <span className="flex items-center justify-start w-full">
                   <input
                     type="text"
                     onKeyDown={(e) => {
@@ -1907,7 +1912,7 @@ const DynamicForm = ({
                         e.target.value = "";
                       }
                     }}
-                    className="border-2 w-[25rem] border-2 outline-none p-1 rounded-l-lg text-textGray font-medium"
+                    className="border-2 w-[60%] border-2 outline-none p-1 rounded-l-lg text-textGray font-medium"
                     disabled={isEditing}
                   />
                   <p className="bg-textYellow p-2 rounded-r-lg">
@@ -1943,11 +1948,11 @@ const DynamicForm = ({
           );
         } else if (field.type === "multi-select") {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex items-start justify-start flex-wrap gap-3">
+              <div className="col-span-3 flex items-start justify-start flex-wrap gap-3">
                 {(field.items || []).map((item, index) => (
                   <button
                     key={index}
@@ -1993,11 +1998,11 @@ const DynamicForm = ({
           }
 
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex items-start justify-start flex-wrap gap-3">
+              <div className="col-span-3 flex items-start justify-start flex-wrap gap-3">
                 {(field.items || []).map((item, index) => (
                   <button
                     key={index}
@@ -2034,11 +2039,11 @@ const DynamicForm = ({
           );
         } else if (field.type === "select") {
           return (
-            <div key={field._id} className="col-span-1 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-1 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex items-start justify-start flex-col gap-2">
+              <div className="col-span-3 flex items-start justify-start flex-col gap-2">
                 <select
                   value={formValues[field.key] || ""}
                   onChange={(e) => handleChange(field.key, e.target.value)}
@@ -2081,11 +2086,11 @@ const DynamicForm = ({
           }
 
           return (
-            <div key={field._id} className="col-span-1 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-1 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex items-start justify-start flex-col gap-2">
+              <div className="col-span-3 flex items-start justify-start flex-col gap-2">
                 <select
                   value={formValues[field.key] || ""}
                   onChange={(e) => handleChange(field.key, e.target.value)}
@@ -2109,11 +2114,11 @@ const DynamicForm = ({
           field.key === "CustomThemeRequest"
         ) {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex items-start justify-start flex-row gap-2">
+              <div className="col-span-3 flex items-start justify-start flex-row gap-2">
                 {(field.items || []).map((item, index) => (
                   <div key={index} className="flex items-start flex-col gap-4">
                     <div className="flex items-center justify-start gap-1">
@@ -2213,11 +2218,11 @@ const DynamicForm = ({
           );
         } else if (field.type === "radio") {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex flex-row gap-4">
+              <div className="col-span-3 flex flex-row gap-4">
                 {/* Render Radio Buttons */}
                 {field.items.map((item, index) => (
                   <label
@@ -2648,7 +2653,7 @@ const DynamicForm = ({
         // Changed code by Amaan
         else if (field.type === "array" && field.key === "DistanceFrom") {
           return (
-            <div key={field._id} className=" col-span-2 grid grid-cols-3 gap-4">
+            <div key={field._id} className=" col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
@@ -2741,11 +2746,11 @@ const DynamicForm = ({
           (field.key !== "SubVenueDetails" || field.key !== "DistanceFrom")
         ) {
           return (
-            <div key={field._id} className="grid grid-cols-3 gap-4">
+            <div key={field._id} className="grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex items-start justify-start flex-col gap-2">
+              <div className="col-span-3 flex items-start justify-start flex-col gap-2">
                 <span className="flex items-center justify-center">
                   <input
                     type="text"

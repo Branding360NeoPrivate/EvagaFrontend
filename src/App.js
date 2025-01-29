@@ -4,7 +4,7 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { internalRoutes } from "./utils/internalRoutes";
 import { ToastContainer } from "react-toastify";
@@ -31,10 +31,22 @@ import GlobalLoader from "./components/Loaders/GlobalLoader";
 import VendorEditService from "./pages/Vendor/VendorEditService";
 import { useEffect } from "react";
 import usePageTracking from "./hooks/usePageTracking";
-import GoToTop from './GoToTop'
+import GoToTop from "./GoToTop";
 import SearchResultPage from "./pages/SearchResultPage ";
+import UserSignupPage from "./pages/User/UserSignupPage";
+import Wishlist from "./pages/Wishlist";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserWishlist } from "./context/redux/slices/wishlistSlice";
+import Cookies from "js-cookie";
+import UserForgotPassword from "./pages/User/UserForgotPassword";
+import InterestSelection from "./pages/InterestSelection";
+import UserProfile from "./pages/User/UserProfile";
 const AppContent = () => {
+  const { auth } = useAuth();
+  const dispatch = useDispatch();
   const location = useLocation();
+  const userId = Cookies.get("userId");
+  const { allWishlist } = useSelector((state) => state.wishlist);
   const noNavbarPaths = [
     internalRoutes.userSignup,
     internalRoutes.userLogin,
@@ -43,8 +55,19 @@ const AppContent = () => {
     internalRoutes.vendorLogin,
     internalRoutes.vendorSignup,
     internalRoutes.vendorForgotPassword,
+    internalRoutes.userForgotPassword,
+    internalRoutes.adminDashboard,
+    internalRoutes.interest,
   ];
-  usePageTracking();
+  useEffect(() => {
+    if (
+      auth?.isAuthenticated &&
+      auth?.role === "user" &&
+      allWishlist?.length === 0
+    ) {
+      dispatch(fetchUserWishlist(userId));
+    }
+  }, [auth, allWishlist, userId, dispatch]);
   return (
     <>
       {!noNavbarPaths.includes(location.pathname) && <DynamicNav />}
@@ -62,14 +85,35 @@ const AppContent = () => {
         pauseOnHover
         theme="light"
       />
-      <GoToTop/>
+      <GoToTop />
       <Routes>
         {/* Public Routes */}
         <Route element={<AdminLoginPage />} path={internalRoutes.adminLogin} />
         <Route element={<UserLoginPage />} path={internalRoutes.userLogin} />
+        <Route element={<UserSignupPage />} path={internalRoutes.userSignup} />
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={["user"]}>
+              <UserProfile />
+            </ProtectedRoute>
+          }
+          path={internalRoutes.profile}
+        />
+        <Route
+          element={<UserForgotPassword />}
+          path={internalRoutes.userForgotPassword}
+        />
         <Route element={<Home />} path={internalRoutes.home} />
-        <Route element={<SearchResultPage />} path={internalRoutes.searchresultPage} />
-        <Route element={<SinglePackage />} path={`${internalRoutes.SinglePackage +"/:serviceId/:packageId"}`} />
+        <Route element={<InterestSelection />} path={internalRoutes.interest} />
+        <Route
+          element={<SearchResultPage />}
+          path={internalRoutes.searchresultPage}
+        />
+        <Route element={<Wishlist />} path={internalRoutes.wishlist} />
+        <Route
+          element={<SinglePackage />}
+          path={`${internalRoutes.SinglePackage + "/:serviceId/:packageId"}`}
+        />
         <Route
           element={<VendorSignUpPage />}
           path={internalRoutes.vendorSignup}

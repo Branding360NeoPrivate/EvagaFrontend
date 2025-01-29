@@ -1,7 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
 import vendorReducer from "./slices/vendorSlice";
+import userReducer from "./slices/userSlice";
 import packageReducer from "./slices/packageSlice";
+import userWishlistReducer from "./slices/wishlistSlice";
 import categoryReducer from "./slices/categorySlice";
 import bannerReducer from "./slices/bannerSlice";
 import userSearchReducer from "./slices/userSearchSlice";
@@ -20,6 +22,9 @@ const store = configureStore({
     adminActions: adminActionsReducer,
     loader: loaderReducer,
     package: packageReducer,
+    wishlist: userWishlistReducer,
+    wishlist: userWishlistReducer,
+    userProfile: userReducer,
   },
   devTools: process.env.REACT_APP_Server === "development"?true:false,
 });

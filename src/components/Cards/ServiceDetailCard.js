@@ -10,6 +10,14 @@ import event from "../../assets/Temporary Images/party-horn 1.png";
 import inclusion from "../../assets/Temporary Images/web-test 1.png";
 import deliverable from "../../assets/Temporary Images/Vector (1).png";
 import terms from "../../assets/Temporary Images/terms-info (1) 1.png";
+import Wishlist from "../../utils/Wishlist";
+import Cookies from "js-cookie";
+import useServices from "../../hooks/useServices";
+import userApi from "../../services/userApi";
+import { useDispatch } from "react-redux";
+import { fetchUserWishlist } from "../../context/redux/slices/wishlistSlice";
+import { toast } from "react-toastify";
+import { useAuth } from "../../context/AuthContext";
 function ServiceDetailCard({
   title,
   category,
@@ -20,6 +28,9 @@ function ServiceDetailCard({
   price,
   tAndC = [],
   DataToRender,
+  isFavourite,
+  serviceId,
+  packageId,
 }) {
   const keysToRender = [
     "Event Type",
@@ -36,7 +47,7 @@ function ServiceDetailCard({
   ];
   const iconMapping = {
     "Event Type": event,
-    "EventType": event,
+    EventType: event,
     TypesofFlavours: "",
     Inclusions: inclusion,
     Deliverables: deliverable,
@@ -47,6 +58,30 @@ function ServiceDetailCard({
     Description: terms,
     DurationofStall: "",
   };
+  const userId = Cookies.get("userId");
+  const wishlist = useServices(userApi.toggleWishlist);
+  const { auth } = useAuth();
+  const dispatch = useDispatch();
+  const toggleWishlistHandle = async () => {
+    if (auth?.isAuthenticated && auth?.role === "user") {
+      const formdata = new FormData();
+      formdata.append("serviceId", serviceId);
+      formdata.append("packageId", packageId);
+
+      try {
+        const response = await wishlist.callApi(userId, formdata);
+        dispatch(fetchUserWishlist(userId));
+        toast.success(response?.message);
+      } catch (error) {
+        toast.error("Failed to toggle wishlist. Please try again.");
+        console.error(error);
+      }
+    } else {
+      toast.info("You need to log in first to add items to the wishlist.");
+    }
+  };
+  console.log(isFavourite);
+  
   return (
     <div className="  bg-white p-4 w-full max-w-3xl">
       {/* Header */}
@@ -83,7 +118,10 @@ function ServiceDetailCard({
           <p className="text-sm text-textGray font-medium">Share</p>
         </div>
         <div className="w-[10%] items-end">
-          <FcLike />
+          <Wishlist
+            isInWishlist={isFavourite}
+            onWishlistToggle={() => toggleWishlistHandle(userId)}
+          />
         </div>
       </div>
       <hr style={{ margin: "0.2rem 0" }} />
@@ -130,7 +168,6 @@ function ServiceDetailCard({
         }
       })}
 
-  
       {/* Terms & Conditions */}
       <div className="flex gap-4 items-start justify-start">
         <span className="bg-textLightGray p-2 rounded-[50%]">
@@ -141,9 +178,8 @@ function ServiceDetailCard({
             Terms & Conditions
           </h3>
           <hr style={{ margin: "0.3rem 0" }} />
-        
-            {parse(tAndC ? tAndC : "")}
-        
+
+          {parse(tAndC ? tAndC : "")}
         </div>
       </div>
     </div>

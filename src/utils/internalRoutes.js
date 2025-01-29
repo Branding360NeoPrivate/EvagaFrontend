@@ -2,11 +2,15 @@ export const internalRoutes = {
   home: "/",
   SinglePackage: "/package",
   searchresultPage: "/search",
+  wishlist:"/wishlist",
+  checkout:"/checkout",
+  interest:"/select-your-interest",
+  profile:"/user/profile",
 
   userSignup: "/user/signup",
   userLogin: "/user/login",
   userDashboard: "/user/dashboard",
-
+  userForgotPassword: "/user/forgot-password",
   adminSignup: "/admin/signup",
   adminLogin: "/admin/login",
   adminDashboard: "/admin/dashboard",

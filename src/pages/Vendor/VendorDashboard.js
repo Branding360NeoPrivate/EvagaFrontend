@@ -15,7 +15,7 @@ import CalenderBookingCard from "../../components/Cards/CalenderBookingCard";
 import Slider from "../../components/Slider/Slider";
 import ProfileCard from "../../components/Cards/ProfileCard";
 import SelectBookingCard from "../../components/Cards/SelectBookingCard";
-import { fetchBanner } from "../../context/redux/slices/bannerSlice";
+import { fetchBanner, fetchVendorBanner } from "../../context/redux/slices/bannerSlice";
 import axios from "axios";
 import useServices from "../../hooks/useServices";
 import vendorApi from "../../services/vendorApi";
@@ -54,7 +54,7 @@ const VendorDashboard = () => {
   );
 
 
-  const { banner } = useSelector((state) => state.banner);
+  const { banner ,vendorBanner} = useSelector((state) => state.banner);
   const dispatch = useDispatch();
   const getAllVendorServiceHandle = async () => {
     const response = await getAllVendorService.callApi(userId);
@@ -76,10 +76,12 @@ const VendorDashboard = () => {
   }, [dispatch, profile, profilePercentage]);
 
   useEffect(() => {
-    if (!banner || banner.length === 0) {
-      dispatch(fetchBanner());
+    if (!vendorBanner || vendorBanner.length === 0) {
+      console.log('vendor banner');
+      
+      dispatch(fetchVendorBanner());
     }
-  }, [dispatch, banner]);
+  }, [dispatch, vendorBanner]);
 
   const [activeState, setActivestate] = useState("Services Provided");
 
@@ -134,7 +136,7 @@ const VendorDashboard = () => {
     <div className="flex items-center justify-center flex-col w-full gap-2 mt-10 mb-10">
       <div className="w-11/12 flex flex-col md:flex-row items-start justify-center h-fit  gap-4">
         <div className="w-[100%] md:w-[70%] ">
-          <Slider bannerData={banner} />
+          <Slider bannerData={vendorBanner} />
         </div>
         <div className="w-[100%] md:w-[30%] bg-textLightGray h-[18rem] rounded-md">
           <ProfileCard

@@ -22,11 +22,15 @@ function Slider({ bannerData }) {
       autoPlay
       infinite
       autoPlayInterval={4000}
-      paddingRight={0} 
+      paddingRight={0}
       paddingLeft={0}
     >
-      {bannerData?.banners?.map((item) => (
-        <Banner key={item?.BannerId} image={item?.BannerUrl} />
+      {bannerData?.map((item) => (
+        <Banner
+          key={item?.BannerId}
+          image={item?.BannerUrl}
+          category={item?.categoryId}
+        />
       ))}
     </AliceCarousel>
   );

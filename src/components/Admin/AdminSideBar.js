@@ -11,9 +11,20 @@ import {
 } from "react-icons/fa";
 
 import MainLogo from "../../assets/Temporary Images/Evaga Logo.png";
-
+import useServices from "../../hooks/useServices";
+import adminApi from "../../services/adminApi";
+import { toast } from "react-toastify";
+import Cookies from 'js-cookie'
+import { useAuth } from "../../context/AuthContext";
 const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
+  const userId=Cookies.get('userId')
+    const { auth, logout } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  // const logout = useServices(adminApi.logout);
+  const handleLogout = async (userId) => {
+    const response = await logout.callApi(userId);
+    toast.success(response?.message);
+  };
   const menuItems = [
     { id: "Home", label: "Home", icon: <FaHome /> },
     { id: "Vendor", label: "Vendor", icon: <FaUsers /> },
@@ -60,7 +71,7 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
       <div className="border-t border-purple-500">
         <button
           className="w-full flex items-center px-6 py-4 text-left text-white hover:bg-purple-600 focus:outline-none"
-          onClick={() => alert("Logging out...")}
+          onClick={logout}
         >
           <span className="mr-3 text-lg">
             <svg

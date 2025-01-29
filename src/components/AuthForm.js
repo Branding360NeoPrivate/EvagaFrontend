@@ -9,11 +9,12 @@ import categoryApi from "../services/categoryServices";
 import { sendOtp, verifyOtp } from "../sendOtpUsingFirebase";
 import vendorApi from "../services/vendorApi";
 import Cookies from "js-cookie";
-const AuthForm = ({ stages, formType, handleFormSubmit }) => {
+import userApi from "../services/userApi";
+import { useAuth } from "../context/AuthContext";
+const AuthForm = ({ stages, formType, handleFormSubmit, role }) => {
   const [currentStage, setCurrentStage] = useState(0);
   const [isOtpVerified, setIsOtpVerified] = useState(false);
   const [otpSentResponse, setOtpSentResponse] = useState(null);
-  console.log(stages, "stages");
 
   const {
     register,
@@ -28,11 +29,13 @@ const AuthForm = ({ stages, formType, handleFormSubmit }) => {
   const [verificationStatus, setVerificationStatus] = useState(null);
   const { data: citiesList } = useFetchCities(null);
   const { loading, error, callApi } = useServices(categoryApi.getCategories);
-  const forgotPassword = useServices(vendorApi.forgortVendorpasswords);
+  const sendVendorOtp = useServices(vendorApi.forgortVendorpasswords);
+  const sendUserOtp = useServices(userApi.sendUserOtp);
   const verifyVendorOtp = useServices(vendorApi.verifyVendorOtp);
-
+  const verifyUserOtp = useServices(userApi.verifyUserOtp);
+  const currentFields = stages[currentStage]?.fields;
   const password = watch("password");
-
+  const { login } = useAuth();
   useEffect(() => {
     async function fetchCategories() {
       try {
@@ -47,83 +50,286 @@ const AuthForm = ({ stages, formType, handleFormSubmit }) => {
   }, []);
 
   // const onNext = (data) => {
-  //   setFormData((prev) => ({ ...prev, ...data }));
-  //   if (currentStage < stages?.length - 1) {
-  //     setCurrentStage(currentStage + 1);
-  //     console.log(data,'data');
+  //   const updatedFormData = { ...formData, ...data };
+  //   setFormData(updatedFormData);
 
-  //     handleSendOtp();
+  //   if (currentStage < stages?.length - 1) {
+  //     if (formType !== "VendorSignIn" && formType !== "userSignIn") {
+  //       console.log("inside the function");
+
+  //       if (!isOtpVerified) {
+  //         handleSendOtp(updatedFormData);
+  //       }
+  //     }
+
+  //     setCurrentStage(currentStage + 1);
   //   } else {
-  //     handleFormSubmit({ ...formData, ...data });
+  //     handleFormSubmit(updatedFormData);
   //   }
   // };
-  const onNext = (data) => {
+
+  // const onNext = async (data) => {
+  //   const updatedFormData = { ...formData, ...data };
+  //   console.log(updatedFormData, "updatedFormData");
+  //   setFormData(updatedFormData);
+
+  //   console.log("Stages:", stages);
+  //   console.log("Current Stage:", currentStage);
+  //   if (
+  //     stages[currentStage]?.fields.some(
+  //       (field) => field.name === "confirmPassword"
+  //     )
+  //   ) {
+  //     try {
+  //       console.log("User registered successfully");
+  //       await handleFormSubmit(updatedFormData);
+  //       setCurrentStage(currentStage + 1);
+  //       await handleSendOtp(updatedFormData);
+  //     } catch (error) {
+  //       console.error("Error registering user:", error);
+  //     }
+  //   } else if (currentStage < stages?.length - 1) {
+  //     setCurrentStage(currentStage + 1);
+  //   } else {
+  //     handleFormSubmit(updatedFormData);
+  //   }
+  // };
+  const onNext = async (data) => {
     const updatedFormData = { ...formData, ...data };
     setFormData(updatedFormData);
 
-    if (currentStage < stages?.length - 1) {
-      if (formType !== "signIn") {
-        if (!isOtpVerified) {
-          handleSendOtp(updatedFormData);
+    const currentStageData = stages[currentStage];
+
+    if (!currentStageData || !currentStageData.fields) {
+      console.error("Invalid stage data or no fields defined");
+      return;
+    }
+
+    const currentFields = currentStageData.fields || [];
+    console.log("Current Fields:", currentFields);
+
+    // Flags for common fields
+    const hasIdentifier = currentFields.some(
+      (field) => field.name === "identifier"
+    );
+    const hasPassword = currentFields.some(
+      (field) => field.name === "password"
+    );
+    const hasConfirmPassword = currentFields.some(
+      (field) => field.name === "confirmPassword"
+    );
+    const hasOtp = currentFields.some((field) => field.name === "otp");
+console.log(hasIdentifier,hasPassword,hasConfirmPassword);
+
+    try {
+      // Special case: Forgot password flow or flows requiring OTP
+      if (
+        formType === "vendorForgotPassword" ||
+        formType === "userForgotPassword"
+      ) {
+        if (hasIdentifier) {
+          console.log("Forgot password flow - Sending OTP");
+          await handleSendOtp(updatedFormData);
+
+          const nextStageData = stages[currentStage + 1];
+          if (
+            nextStageData &&
+            nextStageData.fields.some((field) => field.name === "otp")
+          ) {
+            setCurrentStage(currentStage + 1); // Advance to OTP stage
+          } else {
+            console.error("OTP stage missing in forgot password flow");
+          }
+        } else if (hasOtp) {
+          console.log("Forgot password flow - Verifying OTP");
+          await handleFormSubmit(updatedFormData);
+          setCurrentStage(currentStage + 1); // Advance to password reset stage
+        } else if (hasPassword && hasConfirmPassword) {
+          console.log("Forgot password flow - Resetting password");
+          await handleFormSubmit(updatedFormData);
+        } else {
+          console.error("Unknown stage in forgot password flow");
         }
       }
-
-      setCurrentStage(currentStage + 1);
-    } else {
-      handleFormSubmit(updatedFormData);
+      // Generic flow handling (e.g., vendorLogin)
+      else {
+        if (hasIdentifier && hasPassword) {
+          console.log("Login flow - Handling identifier and password");
+          await handleFormSubmit(updatedFormData); // Submit form directly
+        } else if (hasIdentifier && !hasOtp) {
+          console.log(
+            "Identifier field found, but OTP not required for this flow"
+          );
+          setCurrentStage(currentStage + 1); // Advance without sending OTP
+        } else if (hasOtp) {
+          console.log("Handling OTP step");
+          await handleFormSubmit(updatedFormData);
+          setCurrentStage(currentStage + 1);
+        } else if (hasPassword && hasConfirmPassword) {
+          console.log("Resetting password");
+          await handleFormSubmit(updatedFormData);
+        } else if (currentStage < stages.length - 1) {
+          console.log("Intermediate step, advancing stage");
+          setCurrentStage(currentStage + 1);
+        } else {
+          console.log("Final submission flow initiated");
+          await handleFormSubmit(updatedFormData);
+        }
+      }
+    } catch (error) {
+      console.error(
+        hasOtp
+          ? "Error handling OTP step:"
+          : hasIdentifier
+          ? "Error sending OTP:"
+          : "Error handling form submission:",
+        error
+      );
     }
   };
 
   const handlePreviousStage = () => {
-    // setCurrentStage((prev) => (prev > 0 ? prev - 1 : prev));
     if (currentStage > 0) {
       setCurrentStage((prev) => prev - 1);
     }
   };
 
+  // const handleSendOtp = async (updatedFormData) => {
+  //   try {
+  //     const formData1 = new FormData();
+  //     formData1.append("identifier", updatedFormData.identifier);
+
+  //     const response = await forgotPassword.callApi(formData1);
+  //     console.log(response, "response");
+  //     setOtpSentResponse("OTP sent successfully On Registered Email!");
+  //     setTimeout(() => {
+  //       setOtpSentResponse(null);
+  //     }, 3000);
+  //   } catch (error) {
+  //     console.error("Error sending OTP:", error);
+  //   }
+  // };
+
   const handleSendOtp = async (updatedFormData) => {
+    console.log(updatedFormData, "form value");
+
     try {
-      const formData1 = new FormData();
-      formData1.append("identifier", updatedFormData.identifier);
+      const config = {
+        user: {
+          identifierKey: "identifier",
+          value: (formData) => formData.email || formData.identifier,
+          apiCall: sendUserOtp,
+          successMessage: "OTP sent successfully to your registered email!",
+        },
+        vendor: {
+          identifierKey: "identifier",
+          value: (formData) => formData.email || formData.identifier,
+          apiCall: sendVendorOtp,
+          successMessage: "OTP sent successfully to the vendor's email!",
+        },
+      };
 
-      const response = await forgotPassword.callApi(formData1);
-      console.log(response, "response");
-      setOtpSentResponse("OTP sent successfully On Registered Email!");
+      const currentConfig = config[role];
+      console.log(currentConfig);
+      if (!currentConfig) {
+        throw new Error(`Invalid context: ${role}`);
+      }
+      console.log(currentConfig, "currentConfig");
+      const resolvedValue = currentConfig.value(updatedFormData); // Resolve value
+      if (!resolvedValue) {
+        throw new Error("Email or Identifier is required.");
+      }
 
-      // Remove the OTP sent response message after 3 seconds
-      setTimeout(() => {
-        setOtpSentResponse(null);
-      }, 3000);
+      const formData = new FormData();
+      formData.append(currentConfig.identifierKey, resolvedValue); // Append email/identifier
+      formData.append("role", role); // Append role
+      const response = await currentConfig.apiCall.callApi(formData);
+      console.log(response, "response otp send after");
+
+      setOtpSentResponse(response.message);
+      setTimeout(() => setOtpSentResponse(null), 10000);
     } catch (error) {
-      console.error("Error sending OTP:", error);
+      console.error(`Error sending OTP for ${role}:`, error);
     }
   };
 
+  // const handleVerifyOtp = async (otp) => {
+  //   try {
+  //     console.log(formData);
+
+  //     const formData1 = new FormData();
+  //     formData1.append("identifier", formData.identifier);
+  //     formData1.append("otp", otp);
+  //     const response = await verifyVendorOtp.callApi(formData1);
+  //     console.log(response, "response");
+
+  //     if (response) {
+  //       setIsOtpVerified(true);
+  //       setVerificationStatus(true);
+  //       Cookies.set("tempId", response.userId, { path: "/" });
+  //       console.log("OTP verified successfully!");
+  //     } else {
+  //       console.log("OTP verification failed.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error verifying OTP:", error);
+  //   }
+  // };
+
   const handleVerifyOtp = async (otp) => {
     try {
-      console.log(otp, "otp");
+      const resolvedIdentifier = formData.email || formData.identifier; // Dynamically resolve email or identifier
+      if (!resolvedIdentifier) {
+        throw new Error("Email or Identifier is required.");
+      }
+
       const formData1 = new FormData();
-      formData1.append("identifier", formData.identifier);
+      formData1.append("identifier", resolvedIdentifier);
       formData1.append("otp", otp);
-      const response = await verifyVendorOtp.callApi(formData1);
+      formData1.append("role", role);
+
+      const apiConfig = {
+        vendor: verifyVendorOtp,
+        user: verifyUserOtp,
+      };
+
+      const apiCall = apiConfig[role];
+      if (!apiCall) {
+        throw new Error(`Invalid role specified: ${role}`);
+      }
+
+      const response = await apiCall.callApi(formData1);
       console.log(response, "response");
 
       if (response) {
         setIsOtpVerified(true);
         setVerificationStatus(true);
         Cookies.set("tempId", response.userId, { path: "/" });
-        console.log("OTP verified successfully!");
+
+        if (response.token && response.role && response.userId) {
+          // Normal OTP verification flow
+          if (role === "vendor" || role === "user") {
+            console.log(
+              "Forgot password OTP verified. Redirecting to reset password..."
+            );
+            setCurrentStage(currentStage + 1); // Redirect to password reset stage
+          } else {
+            login(response.token, response.role, response.userId);
+          }
+        }
       } else {
         console.log("OTP verification failed.");
       }
     } catch (error) {
-      console.error("Error verifying OTP:", error);
+      console.error(`Error verifying OTP for ${role}:`, error);
     }
   };
+
   const handlechangePasswords = async () => {};
 
-  const currentFields = stages[currentStage]?.fields;
-
+  useEffect(() => {
+    console.log(currentStage, "from useeffect", stages[currentStage]);
+  }, [currentStage]);
   const renderInput = (field) => {
     if (field.type === "searchable") {
       const items = field.name === "location" ? citiesList : categories;
@@ -144,7 +350,7 @@ const AuthForm = ({ stages, formType, handleFormSubmit }) => {
 
     if (field.type === "otp") {
       return (
-        <div>
+        <div className="w-full">
           {/* <button
             type="button"
             onClick={handleSendOtp}
@@ -157,6 +363,7 @@ const AuthForm = ({ stages, formType, handleFormSubmit }) => {
             onChange={(otp) => setValue(field.name, otp)}
             verifyOtp={handleVerifyOtp}
             verificationStatus={verificationStatus}
+            message={otpSentResponse}
           />
         </div>
       );
@@ -173,16 +380,13 @@ const AuthForm = ({ stages, formType, handleFormSubmit }) => {
     );
   };
 
-  // console.log("isOtpVerified", isOtpVerified);
-  console.log(formData, "formData");
-
   return (
     <>
       {/* Recaptcha container */}
 
       <form onSubmit={handleSubmit(onNext)} className="space-y-6 text-gray-500">
         <div id="recaptcha-container"></div>
-
+        {otpSentResponse && <p className="text-green-500">{otpSentResponse}</p>}
         <div
           className={` ${
             currentFields?.length > 3
@@ -217,23 +421,23 @@ const AuthForm = ({ stages, formType, handleFormSubmit }) => {
               onClick={handlePreviousStage}
               className="text-primary"
               disabled={
-                formType !== "signIn" && currentStage === stages?.length - 1
+                formType !== "VendorSignIn" &&
+                formType !== "userSignIn" &&
+                currentStage === stages?.length - 1
               }
             >
               Back
             </button>
           )}
-          {otpSentResponse && (
-            <p className="text-green-500">{otpSentResponse}</p>
-          )}
+
           <button
             type="submit"
             className={`w-full py-2 ${
               currentFields.some((field) => field.type === "otp") &&
               !isOtpVerified
-                ? " bg-gray-100 text-gray-400 border-2"
-                : " bg-primary text-white  hover:bg-accent"
-            }  font-bold rounded-md`}
+                ? "bg-gray-100 text-gray-400 border-2"
+                : "bg-primary text-white hover:bg-accent"
+            } font-bold rounded-md`}
             disabled={
               currentFields.some((field) => field.type === "otp") &&
               !isOtpVerified

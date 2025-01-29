@@ -3,7 +3,9 @@ import adminActionsApi from "../../../services/adminActionsApi";
 
 const initialState = {
   vendors: [],
+  users: [],
   totalNumberOfVendors: 0,
+  totalNumberOfUser: 0,
   status: "idle",
   error: null,
 };
@@ -43,7 +45,14 @@ export const verifyVendorDocument = createAsyncThunk(
 const adminActionsSlice = createSlice({
   name: "adminActions",
   initialState,
-  reducers: {},
+  reducers: {
+    addUser: (state, action) => {
+      state.users = action.payload;
+    },
+    totalUserCount: (state, action) => {
+      state.totalNumberOfUser = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllVendorsWithProfileStatusAndService.pending, (state) => {
@@ -69,7 +78,6 @@ const adminActionsSlice = createSlice({
       })
       .addCase(verifyVendorDocument.fulfilled, (state, action) => {
         state.status = "succeeded";
-        // Handle the successful verification, e.g., update vendor status
       })
       .addCase(verifyVendorDocument.rejected, (state, action) => {
         state.status = "failed";
@@ -78,4 +86,5 @@ const adminActionsSlice = createSlice({
   },
 });
 
+export const { totalUserCount, addUser } = adminActionsSlice.actions;
 export default adminActionsSlice.reducer;

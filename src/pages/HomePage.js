@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBanner } from "../context/redux/slices/bannerSlice";
+import { fetchBanner, fetchUserBanner } from "../context/redux/slices/bannerSlice";
 import Slider from "../components/Slider/Slider";
 import CategoryImage from "../assets/CategoryImages/Vector.png";
 import CategoryDisplayCard from "../components/Cards/CategoryDisplayCard";
@@ -23,19 +23,38 @@ import HorizontalScroll from "../utils/HorizontalScroll";
 import { useNavigate } from "react-router-dom";
 import { internalRoutes } from "../utils/internalRoutes";
 import { Link } from "react-alice-carousel";
-
+import { motion } from "framer-motion";
+import Cookies from "js-cookie";
+import { addWishlist } from "../context/redux/slices/wishlistSlice";
+import { useAuth } from "../context/AuthContext";
+import userApi from "../services/userApi";
 function Home() {
-  const { banner } = useSelector((state) => state.banner);
+  const { banner ,userBanner} = useSelector((state) => state.banner);
   const dispatch = useDispatch();
   const { categories } = useSelector((state) => state.category);
   const { allPackages } = useSelector((state) => state.package);
   const getAllPackages = useServices(packageApis.getAllPackage);
+  const { allWishlist } = useSelector((state) => state.wishlist);
   const history = useNavigate();
+  const userId = Cookies.get("userId");
+  const { auth } = useAuth();
+
+  const wishlist = useServices(userApi.Wishlist);
+
   const handleGetAllPackages = async () => {
     const response = await getAllPackages.callApi();
     dispatch(addPackage(response?.data));
   };
 
+  const handleGetWishList = async (userId) => {
+    const response = await wishlist.callApi(userId);
+    dispatch(addWishlist(response?.wishlist));
+  };
+  useEffect(() => {
+    if (auth?.isAuthenticated && auth?.role === "user") {
+      handleGetWishList(userId);
+    }
+  }, [auth.isAuthenticated, auth.role, userId]);
   useEffect(() => {
     if (!categories || categories.length === 0) {
       dispatch(fetchCategories());
@@ -49,7 +68,7 @@ function Home() {
 
   useEffect(() => {
     if (!banner || banner.length === 0) {
-      dispatch(fetchBanner());
+      dispatch(fetchUserBanner());
     }
   }, [dispatch, banner]);
 
@@ -118,9 +137,18 @@ function Home() {
   // Update filters when checkboxes are clicked
 
   return (
-    <div className=" flex flex-col justify-center items-center gap-4 w-full">
+    <motion.div
+      className=" flex flex-col justify-center items-center gap-4 w-full"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{
+        opacity: { duration: 0.8, ease: "easeInOut" },
+        scale: { duration: 0.5, ease: "easeOut" },
+      }}
+    >
       <div className="flex justify-center items-center contain-content w-[100%]">
-        <Slider bannerData={banner} />
+        <Slider bannerData={userBanner} />
       </div>
       <div className="w-[95%]  mx-12 gap-4">
         <h2 className="sub_heading">Browse by Category</h2>
@@ -151,7 +179,7 @@ function Home() {
           <HorizontalScroll speed={1} className="flex flex-row gap-8">
             {allPackages.map((service, index) => (
               <ProductCard
-                key={service?._id}
+                key={service?.serviceDetails?._id}
                 popularimage={
                   process.env.REACT_APP_API_Image_BASE_URL +
                   `${
@@ -174,16 +202,24 @@ function Home() {
                     ?.Rates ||
                   service.serviceDetails?.values?.["Duration&Pricing"]?.[0]
                     ?.Amount ||
-                  service.serviceDetails?.values?.["SessionLength"]?.[0]?.Amount||
+                  service.serviceDetails?.values?.["SessionLength"]?.[0]
+                    ?.Amount ||
                   service.serviceDetails?.values?.["QtyPricing"]?.[0]?.Rates
                 }
                 rating={0}
                 reviews={0}
+                serviceId={service?._id}
+                packageId={service?.serviceDetails?._id}
                 onClick={() =>
                   history(
                     `${internalRoutes.SinglePackage}/${service?._id}/${service?.serviceDetails?._id}`
                   )
                 }
+                isFavourite={allWishlist?.some(
+                  (item) =>
+                    item._id === service?._id &&
+                    item.packageDetails?._id === service?.serviceDetails?._id
+                )}
               />
             ))}
           </HorizontalScroll>
@@ -204,7 +240,7 @@ function Home() {
           ))}
         </div>
       </div> */}
-    </div>
+    </motion.div>
   );
 }
 

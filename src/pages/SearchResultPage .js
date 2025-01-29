@@ -11,9 +11,11 @@ import CustomPagination from "../utils/CustomPagination";
 import Cookies from "js-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
 import { internalRoutes } from "../utils/internalRoutes";
+import { motion } from "framer-motion";
 function SearchResultPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { allWishlist } = useSelector((state) => state.wishlist);
   const [searchResult, setSearchResult] = useState([]);
   const [pages, setPages] = useState({
     currentPage: 1,
@@ -127,7 +129,15 @@ function SearchResultPage() {
     } catch (error) {
       console.error("Error fetching packages:", error);
     }
-  }, [debounce, pages.currentPage, selectedCategoryId, sortvalue,filters?.eventTypes,filters?.locationTypes,filters?.priceRange]);
+  }, [
+    debounce,
+    pages.currentPage,
+    selectedCategoryId,
+    sortvalue,
+    filters?.eventTypes,
+    filters?.locationTypes,
+    filters?.priceRange,
+  ]);
 
   useEffect(() => {
     if (debounce) {
@@ -175,7 +185,16 @@ function SearchResultPage() {
     console.log(filters);
   }, [filters]);
   return (
-    <div className="w-full flex items-center flex-col justify-center">
+    <motion.div
+      className="w-full flex items-center flex-col justify-center"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{
+        opacity: { duration: 0.8, ease: "easeInOut" },
+        scale: { duration: 0.5, ease: "easeOut" },
+      }}
+    >
       <div className="flex md:flex-row flex-col w-11/12 relative">
         <div className="w-1/4 px-4 py-2 sticky top-0 sticky top-[10%] self-start">
           <FilterCard
@@ -218,6 +237,13 @@ function SearchResultPage() {
                         `${internalRoutes.SinglePackage}/${item?._id}/${item?.serviceDetails?._id}`
                       )
                     }
+                    isFavourite={allWishlist?.some(
+                      (val) =>
+                        val._id === item?._id &&
+                        val.packageDetails?._id === item?.serviceDetails?._id
+                    )}
+                    serviceId={item?._id}
+                    packageId={item?.serviceDetails?._id}
                   />
                 ))
               ) : (
@@ -236,7 +262,7 @@ function SearchResultPage() {
           onChange={handlePageChange}
         />
       )}
-    </div>
+    </motion.div>
   );
 }
 

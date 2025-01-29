@@ -4,15 +4,51 @@ import AuthForm from "../../components/AuthForm";
 import formfields from "../../utils/formFields";
 import { internalRoutes } from "../../utils/internalRoutes";
 import { Link } from "react-router-dom";
-import LoginWithGoogle from "../../components/buttons/LoginWithGoogleButton";
-
+import userLogin from "../../assets/LoginSigupImgs/LoginLeftImg.png";
+import userApi from "../../services/userApi";
+import useServices from "../../hooks/useServices";
+import { useDispatch } from "react-redux";
+import { useAuth } from "../../context/AuthContext";
+import { loginReducer } from "../../context/redux/slices/authSlice";
+import LoginWithGoogleForUser from "../../utils/LoginWithGoogleForUser";
 function UserLoginPage() {
-  const handleFormSubmit = (data) => {
-    console.log(data);
+  const loginUser = useServices(userApi.login);
+  const dispatch = useDispatch();
+  const { login } = useAuth();
+
+  const handleFormSubmit = async (data) => {
+    const response = await loginUser.callApi(data);
+    if (response.token && response.role && response.userId) {
+      login(response.token, response.role, response.userId);
+      const payload = {
+        accessToken: response.token,
+        role: response.role,
+        userId: response.userId,
+      };
+      dispatch(loginReducer(payload));
+    }
   };
+  const handleGoogleLogin = async (token) => {
+    console.log("Token received:", token);
+    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL+"user/auth/google"}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token }),
+    });
+    return response.json();
+  };
+
   return (
     <div className=" w-full h-[100vh] flex justify-center items-center">
-      <div className=" flex-1">Left Image</div>
+      <div className=" flex-1 flex items-center justify-center w-[90%]">
+        <img
+          src={userLogin}
+          alt="user login"
+          className="w-[80%] md:w-[80%] md:h-full object-contain p-4"
+        />
+      </div>
       <div className=" flex-1 flex justify-center items-center">
         <AuthBox>
           <div className=" text-center">
@@ -23,8 +59,15 @@ function UserLoginPage() {
           <AuthForm
             stages={formfields.userLogin}
             handleFormSubmit={handleFormSubmit}
+            formType="userLogin"
+            role="user"
           />
-
+          <div className=" flex gap-2 font-semibold">
+            <h5>Forgot Password?</h5>
+            <Link to={internalRoutes.userForgotPassword}>
+              <button className=" btn-transparent ">Reset Password!</button>
+            </Link>
+          </div>
           <div className=" flex gap-2 font-semibold">
             <h5>Don't have an account?</h5>
             <Link to={internalRoutes.userSignup}>
@@ -41,7 +84,10 @@ function UserLoginPage() {
                 Or
               </span>
             </div>
-            <LoginWithGoogle>Login With Google</LoginWithGoogle>
+            <div className="w-full">
+              <LoginWithGoogleForUser userGoogleLogin={handleGoogleLogin} />
+            </div>
+
             {/* <button className=" btn-primary flex justify-center items-center gap-2">
               <FcGoogle /> Login With Google
             </button> */}

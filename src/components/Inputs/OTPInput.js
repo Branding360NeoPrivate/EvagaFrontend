@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 
-const OTPInput = ({ length = 4, onChange, verifyOtp,verificationStatus }) => {
+const OTPInput = ({
+  length = 4,
+  onChange,
+  verifyOtp,
+  verificationStatus,
+  otpSentResponse,
+}) => {
   const [otp, setOtp] = useState(Array(length).fill(""));
-
 
   // Handle input change
   const handleChange = (value, index) => {
@@ -63,8 +68,12 @@ const OTPInput = ({ length = 4, onChange, verifyOtp,verificationStatus }) => {
     verifyOtp(fullOtp);
   };
 
+
   return (
     <div className=" w-full flex flex-col justify-start items-start gap-5">
+      {otpSentResponse && (
+        <p className="text-base text-green-500">{otpSentResponse}</p>
+      )}
       <div className=" w-full flex justify-between gap-2">
         {otp.map((value, index) => (
           <input

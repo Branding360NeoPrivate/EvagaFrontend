@@ -4,7 +4,6 @@ import AuthForm from "../../components/AuthForm";
 import formfields from "../../utils/formFields";
 import { internalRoutes } from "../../utils/internalRoutes";
 import { Link, useNavigate } from "react-router-dom";
-import LoginWithGoogle from "../../components/buttons/LoginWithGoogleButton";
 import useServices from "../../hooks/useServices";
 import vendorApi from "../../services/vendorApi";
 import { useAuth } from "../../context/AuthContext";
@@ -70,6 +69,8 @@ function VendorLoginPage() {
           <AuthForm
             stages={formfields.vendorLogin}
             handleFormSubmit={handleFormSubmit}
+            formType="vendorLogin"
+             role="vendor"
           />
 
           <div className=" flex gap-2 font-semibold">

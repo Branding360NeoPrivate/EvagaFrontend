@@ -26,7 +26,7 @@ const apiEndpoints = {
       `vender/addNewCategoryvenderBusinessDeatils/${businessId}`,
     getProfilePercentage: (vendorId) =>
       `vender/getVendorProfilePercentage/${vendorId}`,
-    getAllMonthlyBooking: (vendorId) => `vender/getBookingByMonth/${vendorId}`,
+    // getAllMonthlyBooking: (vendorId) => `vender/getBookingByMonth/${vendorId}`,
     getAllMonthlyBooking: (vendorId) => `vender/getBookingByMonth/${vendorId}`,
     getSelectedCategoryAndSubCategoryForm: (categoryId, subCategoryId) =>
       `form/get-one-event-form-with-category/${categoryId}/${subCategoryId}`,
@@ -49,10 +49,20 @@ const apiEndpoints = {
 
   // User-related endpoints
   user: {
-    register: "users/register",
-    login: "users/login",
-    getProfile: "users/profile",
-    updateProfile: "users/profile",
+    register: "user/registerUser",
+    login: "user/loginUser",
+    googleLogin: "user/auth/google",
+    logout: (userId) => `user/logoutUser/${userId}`,
+    resetpassword: (userId) => `user/set-user-new-password/${userId}`,
+    getProfile: "user/profile",
+    updateProfile: "user/profile",
+    sendOtpUser: `user/forgot-password`,
+    userVerifyOtp: `user/verify-One-time-password`,
+    userInterest: `user/save-user-interest?interest`,
+    userIntereststatus: `user/get-user-interest-status`,
+    wishlist: (userId) => `wishlist/get-wishlist/${userId}`,
+    toggelewishlist: (userId) => `wishlist/toggle-wishlist/${userId}`,
+    getUserprofile: (userId) => `user/getUserProfile/${userId}`,
   },
   category: {
     add: "category",
@@ -63,18 +73,22 @@ const apiEndpoints = {
   },
   common: {
     getAllBanner: () => "banner/get-all-banner",
+    getUserBanner: () => "banner/get-user-banner",
+    getVendorBanner: () => "banner/get-vendor-banner",
     addBanner: "banner/add-banner",
     updateOneBanner: "banner/update-one-banner/:bannerId",
     deleteOneBanner: "banner/delete-one-banner/:bannerId",
   },
   admin: {
     register: "admin/registerAdmin",
+
     login: "admin/loginAdmin",
     update: (userId) => `admin/updateAdmin/${userId}`,
     getOne: (userId) => `admin/getOneAdmin/${userId}`,
     changePassword: (userId) => `admin/changeAdminPassword/${userId}`,
     deleteProfile: (userId) => `admin/deleteAdminProfile/${userId}`,
     logout: (userId) => `admin/logoutAdmin/${userId}`,
+    getTotalUser: "user/get-all-user",
   },
   adminActions: {
     getAllVendorsWithProfileStatusAndService:

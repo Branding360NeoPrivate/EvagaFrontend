@@ -23,7 +23,13 @@ export const AuthProvider = ({ children }) => {
     accessToken: Cookies.get("accessToken") || null,
     userId: Cookies.get("userId") || null,
   });
-
+  const allowedUserRoutes = [
+    internalRoutes.home,
+    internalRoutes.SinglePackage,
+    internalRoutes.SinglePackage,
+    internalRoutes.checkout,
+    internalRoutes.wishlist,
+  ];
   // Determine the dashboard route based on role
   const getDashboardRoute = (role) => {
     switch (role) {
@@ -32,7 +38,7 @@ export const AuthProvider = ({ children }) => {
       case "admin":
         return internalRoutes.adminDashboard;
       case "user":
-        return internalRoutes.userDashboard;
+        return internalRoutes.interest;
       default:
         return internalRoutes.home;
     }
@@ -60,11 +66,12 @@ export const AuthProvider = ({ children }) => {
         await vendorApi.logout(auth.userId);
       } else if (auth.role === "user") {
         // Assuming there's a logout method in userApi, if not, you may need to add it
-        await userApi.logout();
+        console.log('inside elseif user');
+        
+        await userApi.logout(auth.userId);
       } else if (auth.role === "admin") {
         await adminApi.logout(auth.userId);
       }
-      // For admin or any other roles, you can add more conditions here
 
       // Clear state and cookies
       setAuth({

@@ -1,13 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddorBuyCard from "../components/Cards/AddorBuyCard";
 import ServiceDetailCard from "../components/Cards/ServiceDetailCard";
 import ImageNavigationCard from "../components/Cards/ImageNavigationCard";
 import { useParams } from "react-router-dom";
 import useServices from "../hooks/useServices";
 import packageApis from "../services/packageApis";
+import { motion } from "framer-motion";
+import { useSelector } from "react-redux";
 function SinglePackage() {
   const { serviceId, packageId } = useParams();
   const [images, setImages] = useState([]);
+  const { allWishlist } = useSelector((state) => state.wishlist);
   const getAllPackages = useServices(packageApis.getOnePackage);
   const [singlePageData, setSinglePageData] = useState();
   const [vendorProfile, setVendorProfile] = useState({ name: "", bio: "" });
@@ -117,7 +120,16 @@ function SinglePackage() {
   };
 
   return (
-    <div className="w-full flex md:flex-row flex-col  pb-4 items-start justify-between px-6 py-4">
+    <motion.div
+      className="w-full flex md:flex-row flex-col  pb-4 items-start justify-between px-6 py-4"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{
+        opacity: { duration: 0.8, ease: "easeInOut" },
+        scale: { duration: 0.5, ease: "easeOut" },
+      }}
+    >
       <div
         className=" flex justify-center items-start flex-col"
         style={{ flex: "0.4" }}
@@ -154,11 +166,13 @@ function SinglePackage() {
             singlePageData?.services?.[0]?.values?.price ||
             singlePageData?.services?.[0]?.values?.Pricing ||
             singlePageData?.services?.[0]?.values?.Package?.[0]?.Rates ||
-            singlePageData?.services?.[0]?.values?.["OrderQuantity&Pricing"]?.[0]
-              ?.Rates ||
+            singlePageData?.services?.[0]?.values?.[
+              "OrderQuantity&Pricing"
+            ]?.[0]?.Rates ||
             singlePageData?.services?.[0]?.values?.["Duration&Pricing"]?.[0]
               ?.Amount ||
-            singlePageData?.services?.[0]?.values?.["SessionLength"]?.[0]?.Amount||
+            singlePageData?.services?.[0]?.values?.["SessionLength"]?.[0]
+              ?.Amount ||
             singlePageData?.services?.[0]?.values?.["QtyPricing"]?.[0]?.Rates
           }
           eventData={singlePageData?.services?.[0]?.values?.EventType}
@@ -167,6 +181,13 @@ function SinglePackage() {
               ? singlePageData?.services?.[0]?.values?.["Terms&Conditions"]
               : ""
           }
+          isFavourite={allWishlist?.some(
+            (item) =>
+              item._id === singlePageData?._id &&
+              item.packageDetails?._id === singlePageData?.services?.[0]?._id
+          )}
+          serviceId={singlePageData?._id}
+          packageId={singlePageData?.services?.[0]?._id}
         />
       </div>
 
@@ -184,7 +205,7 @@ function SinglePackage() {
           renderPrice={singlePageData?.services?.[0]?.values}
         />
       </div>
-    </div>
+    </motion.div>
   );
 }
 

@@ -1,13 +1,9 @@
-import React, { useState } from "react";
-const Wishlist = ({ itemId, onWishlistToggle, isInWishlist }) => {
-  const handleClick = () => {
-    onWishlistToggle(itemId); 
-  };
-
+import React from "react";
+const Wishlist = ({ onWishlistToggle, isInWishlist }) => {
   return (
     <div
       className="cursor-pointer flex items-center justify-center w-8 h-8 rounded-full"
-    //   onClick={handleClick}
+      onClick={onWishlistToggle}
     >
       {isInWishlist ? (
         <svg

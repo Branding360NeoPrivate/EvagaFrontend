@@ -3,22 +3,65 @@ import { internalRoutes } from "../../utils/internalRoutes";
 import AuthBox from "../../components/AuthBox";
 import AuthForm from "../../components/AuthForm";
 import formfields from "../../utils/formFields";
-import LoginWithGoogle from "../../components/buttons/LoginWithGoogleButton";
-
+import userSignUp from "../../assets/LoginSigupImgs/userSingup.png";
 import { FcGoogle } from "react-icons/fc";
+import useServices from "../../hooks/useServices";
+import userApi from "../../services/userApi";
+import { useDispatch } from "react-redux";
+import { useAuth } from "../../context/AuthContext";
+import { loginReducer } from "../../context/redux/slices/authSlice";
+import LoginWithGoogleForUser from "../../utils/LoginWithGoogleForUser";
 
 function UserSignupPage() {
-  const handleFormSubmit = (data) => {
-    console.log(data);
+  const registerUser = useServices(userApi.register);
+  const userGoogleLogin = useServices(userApi.googleLogin);
+  const dispatch = useDispatch();
+  const { login } = useAuth();
+  const handleFormSubmit = async (data) => {
+    console.log(data, "handleFormSubmit");
+    const response = await registerUser.callApi(data);
+
+    if (response.token && response.role && response.userId) {
+      login(response.token, response.role, response.userId);
+      const payload = {
+        accessToken: response.token,
+        role: response.role,
+        userId: response.userId,
+      };
+      dispatch(loginReducer(payload));
+    }
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async (response) => {
     console.log("Google Signup Called");
+    const token = response.credential;
+
+    const result = await userGoogleLogin.callApi(token);
+    console.log(result,'result');
   };
+
+  // const handleGoogleLogin = async (token) => {
+  //   console.log("Token received:", token);
+  //   const response = await fetch("/user/auth/google", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ token }),
+  //   });
+  //   return response.json();
+  // };
+  
 
   return (
     <div className=" w-full min-h-[100vh] flex justify-center items-center">
-      <div className=" flex-1">Left Image</div>
+      <div className=" flex-1 flex items-center justify-center w-[90%]">
+        <img
+          src={userSignUp}
+          alt="user login"
+          className="w-[80%] md:w-[80%] md:h-full object-contain p-4"
+        />
+      </div>
       <div className=" flex-1 flex justify-center items-center">
         <AuthBox>
           <div className=" text-center">
@@ -27,8 +70,10 @@ function UserSignupPage() {
           </div>
 
           <AuthForm
+            formType="userSignIn"
             stages={formfields.userSignUp}
             handleFormSubmit={handleFormSubmit}
+            role="user"
           />
 
           <div className=" flex gap-2 font-semibold">
@@ -47,9 +92,10 @@ function UserSignupPage() {
                 Or
               </span>
             </div>
-            <LoginWithGoogle handleGoogleLogin={handleGoogleLogin}>
-              Sign Up With Google
-            </LoginWithGoogle>
+            <div className="w-full">
+              <LoginWithGoogleForUser userGoogleLogin={handleGoogleLogin} />
+            </div>
+
           </div>
         </AuthBox>
       </div>

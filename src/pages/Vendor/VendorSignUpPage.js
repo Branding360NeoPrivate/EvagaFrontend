@@ -56,7 +56,7 @@ function VendorSignUpPage() {
           {registerLoading && <p className="text-gray-500">Registering...</p>}
 
           <AuthForm
-            formType="signIn"
+            formType="VendorSignIn"
             stages={formfields.vendorSignUp}
             handleFormSubmit={handleFormSubmit}
           />

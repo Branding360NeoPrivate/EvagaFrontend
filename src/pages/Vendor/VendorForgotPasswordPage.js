@@ -13,7 +13,7 @@ import Cookies from "js-cookie";
 function VendorForgotPasswordPage() {
   const hsitory = useNavigate();
   const vendorNewPassword = useServices(vendorApi.changeVendorPassword);
-  const [countdown, setCountdown] = useState(10);
+  const [countdown, setCountdown] = useState(5);
   const [isPasswordResetSuccess, setIsPasswordResetSuccess] = useState(false);
   const { login } = useAuth(); // Access login function from AuthContext
   //   const {
@@ -112,7 +112,7 @@ function VendorForgotPasswordPage() {
           {forgotPasswordLoading && (
             <p className="text-gray-500">Processing...</p>
           )} */}
-    { isPasswordResetSuccess &&(
+          {isPasswordResetSuccess && (
             <div className="text-center">
               <h4 className="text-base text-green-500">
                 Password Reset Successful!
@@ -127,8 +127,9 @@ function VendorForgotPasswordPage() {
             stages={formfields.vendorForgotPassword}
             handleFormSubmit={handleFormSubmit}
             verifyOtp={verifyOtp}
-            isDisabled={isPasswordResetSuccess }
-            
+            isDisabled={isPasswordResetSuccess}
+            role="vendor"
+            formType="vendorForgotPassword"
           />
           {isPasswordResetSuccess && (
             <div className="text-center">

@@ -61,6 +61,20 @@ const formfields = {
         },
       ],
     },
+    // {
+    //   fields: [
+    //     {
+    //       name: "otp",
+    //       type: "otp",
+    //       placeholder: "OTP",
+    //       validation: {
+    //         required: "OTP is required",
+    //         minLength: { value: 4, message: "OTP must be 4 or 6 digits" },
+    //         maxLength: { value: 6, message: "OTP must be 4 or 6 digits" },
+    //       },
+    //     },
+    //   ],
+    // },
   ],
   userSignUp: [
     {
@@ -117,16 +131,74 @@ const formfields = {
       ],
     },
 
+    // {
+    //   fields: [
+    //     {
+    //       name: "otp",
+    //       type: "otp",
+    //       placeholder: "OTP",
+    //       validation: {
+    //         required: "OTP is required",
+    //         minLength: { value: 4, message: "OTP must be 4 or 6 digits" },
+    //         maxLength: { value: 6, message: "OTP must be 4 or 6 digits" },
+    //       },
+    //     },
+    //   ],
+    // },
+  ],
+  userForgotPassword: [
+    {
+      fields: [
+        {
+          name: "identifier",
+          type: "text",
+          placeholder: "Email or Phone Number",
+          validation: {
+            required: "Email or Phone Number is required",
+            pattern: {
+              value: regexList.emailAndPhone,
+              message: "Enter a valid email or 10-digit phone number",
+            },
+          },
+        },
+      ],
+    },
     {
       fields: [
         {
           name: "otp",
-          type: "text",
+          type: "otp",
           placeholder: "OTP",
           validation: {
             required: "OTP is required",
             minLength: { value: 4, message: "OTP must be 4 or 6 digits" },
             maxLength: { value: 6, message: "OTP must be 4 or 6 digits" },
+          },
+        },
+      ],
+    },
+    {
+      fields: [
+        {
+          name: "password",
+          type: "password",
+          placeholder: "Password",
+          validation: {
+            required: "Password is required",
+            minLength: {
+              value: 6,
+              message: "Password must be at least 6 characters",
+            },
+          },
+        },
+        {
+          name: "confirmPassword",
+          type: "password",
+          placeholder: "Re-enter Password",
+          validation: {
+            required: "Please confirm your password",
+            validate: (value, allValues) =>
+              value === allValues.password || "Passwords do not match",
           },
         },
       ],

@@ -1,6 +1,4 @@
-import { companyDetails } from "./companyDetails";
 import { internalRoutes } from "./internalRoutes";
-
 export const footerMenuItems = {
   leftMenu: [
     { label: "About Evaga", path: internalRoutes.aboutUs },
