@@ -11,8 +11,7 @@ import { motion } from "framer-motion";
 const InterestSelection = () => {
   const saveUserInterest = useServices(userApi.userInterest);
   const UserInterestStatus = useServices(userApi.userIntereststatus);
-  const histroy = useNavigate();
-
+  const navigate = useNavigate();
   const { auth } = useAuth();
   const interestsList = [
     "Weddings",
@@ -39,8 +38,16 @@ const InterestSelection = () => {
     );
   };
   const getuserInterestStatusHandle = async () => {
-    const response = await UserInterestStatus.callApi();
-    return response?.user?.userInterestFilled ? histroy("/") : "";
+    try {
+      const response = await UserInterestStatus.callApi();
+      console.log("API Response:", response);
+
+      if (response?.user?.userInterestFilled) {
+        navigate("/"); // Use 'navigate' to go to the home page
+      }
+    } catch (error) {
+      console.error("Error fetching user interest status:", error);
+    }
   };
   useEffect(() => {
     getuserInterestStatusHandle();
@@ -49,8 +56,7 @@ const InterestSelection = () => {
     const formData = new FormData();
     formData.append("interests", selectedInterests);
     const response = await saveUserInterest.callApi(formData);
-    return response ? histroy("/") : "";
-    console.log(response);
+    return response ? navigate("/") : "";
   };
   if (!auth?.isAuthenticated || auth?.role !== "user") {
     return (
@@ -69,7 +75,7 @@ const InterestSelection = () => {
         </p>
         <button
           className="btn-primary w-fit px-4"
-          onClick={() => histroy(internalRoutes.home)}
+          onClick={() => navigate(internalRoutes.home)}
         >
           Login
         </button>

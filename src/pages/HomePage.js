@@ -2,19 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBanner, fetchUserBanner } from "../context/redux/slices/bannerSlice";
 import Slider from "../components/Slider/Slider";
-import CategoryImage from "../assets/CategoryImages/Vector.png";
 import CategoryDisplayCard from "../components/Cards/CategoryDisplayCard";
 import ProductCard from "../components/Cards/ProductCard";
-import PopularImage from "../assets/PopularImages/image.png";
-import RecentlyViewedCard from "../components/Cards/RecentlyViewedCard";
-import RecentImage from "../assets/RecentlyViewed/RecentImg.png";
 import NavImage from "../assets/ImageNavImgs/image.png";
-import ImageNavigationCard from "../components/Cards/ImageNavigationCard";
-import ServiceDetailCard from "../components/Cards/ServiceDetailCard";
-import AddorBuyCard from "../components/Cards/AddorBuyCard";
-import FilterCard from "../components/Cards/FilterCard";
-import SortandFilterCard from "../components/Cards/SortAndFilterCard";
-import ProductDisplayCard from "../components/Cards/ProductDisplayCard";
 import { fetchCategories } from "../context/redux/slices/categorySlice";
 import packageApis from "../services/packageApis";
 import useServices from "../hooks/useServices";
@@ -139,7 +129,7 @@ function Home() {
   return (
     <motion.div
       className=" flex flex-col justify-center items-center gap-4 w-full"
-      initial={{ opacity: 0, scale: 0.95 }}
+      initial={{ opacity: 0, scale: 1 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{

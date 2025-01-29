@@ -4,7 +4,6 @@ import AuthBox from "../../components/AuthBox";
 import AuthForm from "../../components/AuthForm";
 import formfields from "../../utils/formFields";
 import userSignUp from "../../assets/LoginSigupImgs/userSingup.png";
-import { FcGoogle } from "react-icons/fc";
 import useServices from "../../hooks/useServices";
 import userApi from "../../services/userApi";
 import { useDispatch } from "react-redux";

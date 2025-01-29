@@ -38,8 +38,9 @@ const LoginWithGoogleForUser = ({ userGoogleLogin }) => {
       return;
     }
 
+    console.log("Initializing Google Sign-In with Client ID:", clientId);
 
-    window?.google?.accounts?.id?.initialize({
+    window.google.accounts.id.initialize({
       client_id: clientId,
       callback: (response) => {
         console.log("Google callback triggered:", response);
@@ -52,12 +53,12 @@ const LoginWithGoogleForUser = ({ userGoogleLogin }) => {
       },
     });
 
-    window?.google?.accounts?.id?.renderButton(
+    window.google.accounts.id.renderButton(
       document.getElementById("googleSignInButton"),
       { theme: "outline", size: "large" }
     );
 
-    window?.google?.accounts?.id?.prompt((notification) => {
+    window.google.accounts.id.prompt((notification) => {
       console.log("Google Prompt Notification:", notification);
     });
   }, []);
