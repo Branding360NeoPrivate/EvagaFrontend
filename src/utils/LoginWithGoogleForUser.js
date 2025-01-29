@@ -34,7 +34,7 @@ const LoginWithGoogleForUser = ({ userGoogleLogin }) => {
     const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
     if (!clientId) {
-      console.error("Google Client ID is missing!");
+      console.error("Google Client ID is missing!",process.env.REACT_APP_API_BASE_URL);
       return;
     }
 
