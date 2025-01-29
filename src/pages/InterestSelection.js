@@ -52,7 +52,8 @@ const InterestSelection = () => {
   useEffect(() => {
     getuserInterestStatusHandle();
   }, []);
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     const formData = new FormData();
     formData.append("interests", selectedInterests);
     const response = await saveUserInterest.callApi(formData);
