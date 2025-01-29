@@ -57,7 +57,7 @@ const LoginWithGoogleForUser = ({ userGoogleLogin }) => {
       { theme: "outline", size: "large" }
     );
 
-    window.google.accounts.id.prompt((notification) => {
+    window?.google?.accounts?.id?.prompt((notification) => {
       console.log("Google Prompt Notification:", notification);
     });
   }, []);
