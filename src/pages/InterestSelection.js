@@ -37,14 +37,19 @@ const InterestSelection = () => {
         : [...prevSelected, interest]
     );
   };
+  const [hasFetched, setHasFetched] = useState(false);
   const getuserInterestStatusHandle = async () => {
     try {
+      if (hasFetched) return; 
+
       const response = await UserInterestStatus.callApi();
       console.log("API Response:", response);
 
       if (response?.user?.userInterestFilled) {
-        navigate("/"); // Use 'navigate' to go to the home page
+        navigate("/");
       }
+
+      setHasFetched(true); 
     } catch (error) {
       console.error("Error fetching user interest status:", error);
     }
@@ -53,7 +58,7 @@ const InterestSelection = () => {
     getuserInterestStatusHandle();
   }, []);
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const formData = new FormData();
     formData.append("interests", selectedInterests);
     const response = await saveUserInterest.callApi(formData);
