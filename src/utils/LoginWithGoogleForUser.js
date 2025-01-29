@@ -4,28 +4,6 @@ import { useDispatch } from "react-redux";
 import { useAuth } from "../context/AuthContext";
 
 const LoginWithGoogleForUser = ({ userGoogleLogin }) => {
-  // const handleGoogleLogin = async (googleUser) => {
-  //   console.log("Google Signup Called");
-  //   try {
-  //     const token = googleUser.getAuthResponse().id_token;
-  //     const response = await userGoogleLogin(token);
-  //     console.log("Google login response:", response);
-  //   } catch (error) {
-  //     console.error("Google Login Error:", error.message);
-  //   }
-  // };
-
-  // React.useEffect(() => {
-  //   window.google.accounts.id.initialize({
-  //     client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-  //     callback: handleGoogleLogin,
-  //   });
-
-  //   window.google.accounts.id.renderButton(
-  //     document.getElementById("googleSignInButton"),
-  //     { theme: "outline", size: "large" }
-  //   );
-  // }, []);
 
   const dispatch = useDispatch();
   const { login } = useAuth();
@@ -38,14 +16,13 @@ const LoginWithGoogleForUser = ({ userGoogleLogin }) => {
       return;
     }
 
-    console.log("Initializing Google Sign-In with Client ID:", clientId);
 
     window?.google?.accounts?.id?.initialize({
       client_id: clientId,
       callback: (response) => {
         console.log("Google callback triggered:", response);
         if (response && response.credential) {
-          console.log("Google ID Token:", response.credential);
+        
           handleGoogleLogin(response.credential);
         } else {
           console.error("No credential received in the Google response.");
@@ -59,7 +36,7 @@ const LoginWithGoogleForUser = ({ userGoogleLogin }) => {
     );
 
     window?.google?.accounts?.id?.prompt((notification) => {
-      console.log("Google Prompt Notification:", notification);
+      console.log("Google Prompt Notification:");
     });
   }, []);
 

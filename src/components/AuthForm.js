@@ -119,7 +119,7 @@ const AuthForm = ({ stages, formType, handleFormSubmit, role }) => {
       (field) => field.name === "confirmPassword"
     );
     const hasOtp = currentFields.some((field) => field.name === "otp");
-console.log(hasIdentifier,hasPassword,hasConfirmPassword);
+
 
     try {
       // Special case: Forgot password flow or flows requiring OTP

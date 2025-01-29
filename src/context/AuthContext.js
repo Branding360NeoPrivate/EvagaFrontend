@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
       case "admin":
         return internalRoutes.adminDashboard;
       case "user":
-        return internalRoutes.home;
+        return internalRoutes.interest;
       default:
         return internalRoutes.home;
     }
