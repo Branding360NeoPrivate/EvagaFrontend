@@ -175,7 +175,7 @@ const SearchableCategoryAndSubcategoryDropdown = ({
         <label
           className={
             textColor && textSize
-              ? `block text-[${textSize}] text-xl font-semibold text-[#6A1B9A] mb-1`
+              ? `block text-[${textSize}] text-base font-semibold text-[#6A1B9A] mb-1`
               : "block text-sm font-semibold text-gray-700 mb-1"
           }
         >
@@ -195,7 +195,7 @@ const SearchableCategoryAndSubcategoryDropdown = ({
       <div className="">
         <label    className={
             textColor && textSize
-              ? `block text-[${textSize}] text-xl font-semibold text-[#6A1B9A] mb-1`
+              ? `block text-[${textSize}] text-base font-semibold text-[#6A1B9A] mb-1`
               : "block text-sm font-semibold text-gray-700 mb-1"
           }>
           Subcategory
