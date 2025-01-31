@@ -25,7 +25,9 @@ const AdminDashboard = () => {
   const { auth } = useAuth();
   const dispatch = useDispatch();
   const { details, status, error } = useSelector((state) => state.admin);
-  const { totalNumberOfVendors ,totalNumberOfUser} = useSelector((state) => state.adminActions);
+  const { totalNumberOfVendors, totalNumberOfUser } = useSelector(
+    (state) => state.adminActions
+  );
 
   const handleMenuSelect = (menu) => {
     sessionStorage.setItem("adminMenu", menu);
@@ -70,16 +72,16 @@ const AdminDashboard = () => {
       dispatch(fetchAdminDetails(auth.userId));
     }
   }, [dispatch, auth.userId]);
+  console.log(selectedMenu, "selectedMenu");
 
   return (
     <div className="flex h-auto bg-gray-100">
-      {/* Sidebar */}
       <AdminSideBar
         selectedMenu={selectedMenu}
         onMenuSelect={handleMenuSelect}
       />
       <div className="flex flex-col flex-grow p-6">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-6 sticky top-0 bg-white py-2 px-2 z-40">
           <div className="relative">
             <input
               type="text"

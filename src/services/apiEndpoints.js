@@ -66,8 +66,10 @@ const apiEndpoints = {
     getUserprofile: (userId) => `user/getUserProfile/${userId}`,
     addUserAdress: (userId) => `user/add-new-address/${userId}`,
     getOneAddress: (addressId) => `user/get-user-one-address/${addressId}`,
-    updateOneAddress: (addressId) => `user/update-user-one-address/${addressId}`,
-    deleteOneAddress: (addressId) => `user/delete-user-one-address/${addressId}`,
+    updateOneAddress: (addressId) =>
+      `user/update-user-one-address/${addressId}`,
+    deleteOneAddress: (addressId) =>
+      `user/delete-user-one-address/${addressId}`,
   },
   category: {
     add: "category",
@@ -100,6 +102,16 @@ const apiEndpoints = {
       "adminAction/get-all-vendor-with-profile-status-and-no-of-service",
     verifyVendorDocument: (documentId) =>
       `adminAction/verify-vendor-document/${documentId}`,
+    updateVendorBankDetailsByAdmin: (vendorID) =>
+      `adminAction/update-vendor-bank-details/${vendorID}`,
+    updateVendorBusinessDetailsByAdmin: (vendorID) =>
+      `adminAction/update-vendor-business-details/${vendorID}`,
+    updateVendorProfileUpdateByAdmin: (vendorID) =>
+      `adminAction/update-vendor-profile-details/${vendorID}`,
+    updateVendorBioUpdateByAdmin: (vendorID) =>
+      `adminAction/update-vendor-bio-details/${vendorID}`,
+    updateVendorProfilePicUpdateByAdmin: (vendorID) =>
+      `adminAction/update-vendor-profilepic-details/${vendorID}`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",

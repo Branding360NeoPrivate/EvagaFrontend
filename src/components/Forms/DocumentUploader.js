@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchVendorProfile } from "../../context/redux/slices/vendorSlice";
 
-const DocumentUploader = ({ formfields, vendorDetails, onUpload }) => {
+const DocumentUploader = ({ formfields, vendorDetails, onUpload,vendorId }) => {
   const [uploadProgress, setUploadProgress] = useState({});
   const dispatch = useDispatch();
   const [documentsState, setDocumentsState] = useState(null);
@@ -40,40 +40,41 @@ const DocumentUploader = ({ formfields, vendorDetails, onUpload }) => {
   const handleFileChange = async (event, doc) => {
     const file = event.target.files[0];
     if (!file) return;
+  
+    const userId = vendorId || Cookies.get("userId");
     console.log("doc in handleFileChange:", doc);
-
+  
     const formData = new FormData();
     formData.append("document", file);
     formData.append("documentName", doc.name);
     formData.append("documentType", file.type);
     formData.append("documentId", doc?.documentId || "");
-
+  
+    if (vendorId) {
+      formData.append("adminId", Cookies.get("userId"));
+    }
+  
     try {
       setUploadProgress((prev) => ({ ...prev, [doc.name]: 0 }));
+  
       // Simulate progress upload for 1 second
       for (let i = 0; i < 10; i++) {
         await new Promise((resolve) => setTimeout(resolve, 100));
-
         setUploadProgress((prev) => ({ ...prev, [doc.name]: i * 10 }));
       }
-
-      const response = await documentUploadService.callApi(
-        Cookies.get("userId"),
-        formData,
-        {
-          onUploadProgress: (progressEvent) => {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            setUploadProgress((prev) => ({
-              ...prev,
-              [doc.name]: percentCompleted,
-            }));
-          },
-        }
-      );
-      // Loop to increase progress upto 90 for each 100ms
-
+  
+      const response = await documentUploadService.callApi(userId, formData, {
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setUploadProgress((prev) => ({
+            ...prev,
+            [doc.name]: percentCompleted,
+          }));
+        },
+      });
+  
       if (response.document) {
         toast.success(
           `${doc.name
@@ -81,7 +82,7 @@ const DocumentUploader = ({ formfields, vendorDetails, onUpload }) => {
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(" ")} uploaded successfully!`
         );
-        dispatch(fetchVendorProfile(Cookies.get("userId")));
+        dispatch(fetchVendorProfile(userId));
       }
     } catch (error) {
       console.error(error);
@@ -97,6 +98,8 @@ const DocumentUploader = ({ formfields, vendorDetails, onUpload }) => {
       );
     }
   };
+  
+  
 
   return (
     <div className="bg-gray-50 rounded-lg p-4 shadow-sm border">

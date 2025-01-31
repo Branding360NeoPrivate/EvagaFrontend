@@ -35,7 +35,7 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
 
   return (
     <div
-      className={`bg-primary text-white ${
+      className={`bg-primary text-white sticky top-0 ${
         isCollapsed ? "w-20" : "w-64"
       } h-full min-h-[100vh] flex flex-col transition-width duration-300`}
     >

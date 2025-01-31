@@ -306,9 +306,7 @@ const VendorProfile = () => {
             </div>
           </div>
 
-          {/* Main Details Section */}
-          {/* Need to give css to give 1/3rd space to the left column and the rest to the right column */}
-          {/* Main Details Section */}
+      
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-y-6 md:gap-6 lg:w-full">
             {/* Left Column */}
             <div className="lg:col-span-1 grid grid-cols-1 gap-6">

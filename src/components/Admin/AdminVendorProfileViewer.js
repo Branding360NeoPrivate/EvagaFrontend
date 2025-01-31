@@ -14,6 +14,8 @@ import { toast } from "react-toastify";
 import { fetchCategories } from "../../context/redux/slices/categorySlice";
 import SearchableCategoryAndSubcategoryDropdown from "../../components/Inputs/SearchableCategoryAndSubcategoryDropdown";
 import AdminVendorDocumentsVerification from "../../components/Admin/AdminVendorDocumentsVerification";
+import adminActionsApi from "../../services/adminActionsApi";
+import DocumentUploader from "../Forms/DocumentUploader";
 
 const AdminVendorProfileViewer = ({ vendorId }) => {
   const [currentVendorId, setCurrentVendorId] = useState(null);
@@ -28,6 +30,13 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
   const [vendorDetails, setVendorDetails] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [activeSection, setActiveSection] = useState(null);
+  const updateProfileService = useServices(adminActionsApi.updateVendorProfileUpdateByAdmin);
+  const updateBankDetailsService = useServices(adminActionsApi.updateVendorBankDetailsByAdmin);
+  const updateBusinessService = useServices(adminActionsApi.updateVendorBusinessDetailsByAdmin);
+  const updateBioService = useServices(adminActionsApi.updateVendorBioUpdateByAdmin);
+  const updateProfilePictureService = useServices(
+    adminActionsApi.updateVendorProfilePicUpdateByAdmin
+  );
 
   useEffect(() => {
     if (vendorId !== currentVendorId) {
@@ -72,7 +81,105 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
         return {};
     }
   };
+  const handleUpdateProfile = async (data) => {
+    try {
+      const response = await updateProfileService.callApi(vendorId, data);
+      toast.success("Profile updated successfully!");
+      dispatch(fetchVendorProfile(vendorId)); 
+    } catch (error) {
+      toast.error("Failed to update profile. Please try again.");
+    }
+  };
 
+  const handleUpdateBankDetails = async (data) => {
+    try {
+      const userId = Cookies.get("userId");
+      const response = await updateBankDetailsService.callApi(vendorId, data);
+      toast.success("Bank details updated successfully!");
+      dispatch(fetchVendorProfile(vendorId));
+    } catch (error) {
+      toast.error("Failed to update bank details. Please try again.");
+    }
+  };
+
+  const handleUpdateBusiness = async (data) => {
+    try {
+      console.log(data);
+      
+      await updateBusinessService.callApi(vendorId, data);
+      toast.success("Business details updated successfully!");
+      dispatch(fetchVendorProfile(vendorId)); // Refresh profile data
+    } catch (error) {
+      toast.error("Failed to update business details. Please try again.");
+    }
+  };
+
+  const handleAddNewCategoryAndSubCategory = async (data) => {
+    try {
+      const businessId = vendorDetails?.businessDetails?._id;
+      await vendorApi.addNewCategoryBusiness(businessId, data);
+      toast.success("New category and subcategory added successfully!");
+      dispatch(fetchVendorProfile(Cookies.get("userId"))); // Refresh profile data
+    } catch (error) {
+      toast.error(
+        "Failed to add new category and subcategory. Please try again."
+      );
+    }
+  };
+
+  const handleUpdateBio = async (bio) => {
+    try {
+      const userId = Cookies.get("userId");
+      await updateBioService.callApi(vendorId, bio);
+      toast.success("Bio updated successfully!");
+      dispatch(fetchVendorProfile(vendorId)); // Refresh profile data
+    } catch (error) {
+      toast.error("Failed to update bio. Please try again.");
+    }
+  };
+  const handleUpdateProfilePicture = async (data) => {
+    try {
+      console.log(data);
+      
+      const profilePic = data.profilePicture[0];
+      console.log("imageFile:", profilePic);
+      const formData = new FormData();
+      formData.append("profilePic", profilePic);
+      await updateProfilePictureService.callApi(vendorId, formData);
+      toast.success("Profile picture updated successfully!");
+      dispatch(fetchVendorProfile(vendorId)); 
+    } catch (error) {
+      console.log("errror in update profile picture:", error);
+
+      toast.error("Failed to update profile picture. Please try again.");
+    }
+  };
+
+  const handleSubmit = (data) => {
+    switch (activeSection.name) {
+      case "Personal Contact Info":
+        handleUpdateProfile(data);
+        break;
+      case "Bank Details":
+        handleUpdateBankDetails(data);
+        break;
+      case "Business Details":
+        handleUpdateBusiness(data);
+        break;
+      case "Add New Category And Sub-Category":
+        handleAddNewCategoryAndSubCategory(data);
+        break;
+      case "Bio":
+        handleUpdateBio(data);
+        break;
+      case "Profile Picture":
+        handleUpdateProfilePicture(data);
+        break;
+      default:
+        console.error("Unknown section:", activeSection.name);
+    }
+    handleCloseModal();
+  };
   const bioDefaultValues = useMemo(
     () =>
       generateDefaultValues(
@@ -108,6 +215,7 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
       ),
     [vendorDetails]
   );
+console.log(vendorDetails?.businessDetails,'vendorDetails?.businessDetails');
 
   if (!profile)
     return <ErrorView status="loading" error={"Profile Details Not Found!"} />;
@@ -134,6 +242,17 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
                     {vendorDetails.name.charAt(0).toUpperCase()}
                   </div>
                 )}
+                    <button
+                  className="hover:text-primary text-purpleSecondary font-bold"
+                  onClick={() =>
+                    handleOpenModal(
+                      "Profile Picture",
+                      formfields.vendorProfileDetails.profilePicture
+                    )
+                  }
+                >
+                  Edit Logo
+                </button>
               </div>
 
               <div>
@@ -149,6 +268,17 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
             <div className="flex-1 space-y-2">
               <div className="flex justify-between items-center">
                 <h2 className="font-bold text-lg">Seller Bio</h2>
+                <Button
+                  className="flex justify-center items-center hover:bg-primary hover:text-white"
+                  onClick={() =>
+                    handleOpenModal(
+                      "Bio",
+                      formfields.vendorProfileDetails.bioDetails
+                    )
+                  }
+                >
+                  <FaRegEdit className="text-xl" />
+                </Button>
               </div>
               <p className="text-gray-600">{vendorDetails.bio || "N/A"}</p>
             </div>
@@ -162,6 +292,17 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
               <div className="bg-gray-50 rounded-lg p-4 shadow-sm border space-y-4 ">
                 <div className="flex justify-between items-center">
                   <h3 className="font-bold text-lg">Personal Contact Info</h3>
+                  <Button
+                    className="flex justify-center items-center hover:bg-primary hover:text-white"
+                    onClick={() =>
+                      handleOpenModal(
+                        "Personal Contact Info",
+                        formfields.vendorProfileDetails.personalDetails
+                      )
+                    }
+                  >
+                    <FaRegEdit className="text-xl" />
+                  </Button>
                 </div>
                 <ProfileFormGenerator
                   fields={
@@ -176,6 +317,17 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
               <div className="bg-gray-50 rounded-lg p-4 shadow-sm border space-y-4 ">
                 <div className="flex justify-between items-center ">
                   <h3 className="font-bold text-lg">Bank Details</h3>
+                  <Button
+                    className="flex justify-center items-center hover:bg-primary hover:text-white"
+                    onClick={() =>
+                      handleOpenModal(
+                        "Bank Details",
+                        formfields.vendorProfileDetails.bankDetails
+                      )
+                    }
+                  >
+                    <FaRegEdit className="text-xl" />
+                  </Button>
                 </div>
                 <ProfileFormGenerator
                   fields={formfields.vendorProfileDetails.bankDetails.fields}
@@ -191,6 +343,17 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
               <div className="bg-gray-50 rounded-lg p-4 shadow-sm border space-y-4">
                 <div className="flex justify-between items-center">
                   <h3 className="font-bold text-lg">Business Details</h3>
+                  <Button
+                    className="flex justify-center items-center hover:bg-primary hover:text-white"
+                    onClick={() =>
+                      handleOpenModal(
+                        "Business Details",
+                        formfields.vendorProfileDetails.businessDetails
+                      )
+                    }
+                  >
+                    <FaRegEdit className="text-xl" />
+                  </Button>
                 </div>
                 <ProfileFormGenerator
                   fields={
@@ -227,14 +390,19 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
               </div>
             </div>
           </div>
-
+          <DocumentUploader
+            formfields={formfields.vendorProfileDetails.documents.fields}
+            vendorDetails={vendorDetails.documents}
+            vendorId={vendorId}
+            
+          />
           {/* Documents Section */}
           <AdminVendorDocumentsVerification
             documents={vendorDetails.documents}
             onDocumentVerified={handleDocumentVerified}
           />
 
-          {/* Modal for Viewing Section */}
+    
           <Modal open={openModal} onClose={handleCloseModal}>
             <Box
               sx={{
@@ -255,7 +423,7 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
               {activeSection && (
                 <div>
                   <h2 className="font-bold text-lg mb-4">
-                    View: {activeSection.name}
+                  Edit: {activeSection.name}
                   </h2>
                   <ProfileFormGenerator
                     fields={activeSection.fields}
@@ -263,7 +431,10 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
                       getDefaultValuesForSection(activeSection),
                       activeSection.fields
                     )}
-                    editable={false}
+                    editable={true}
+                    onSubmit={(data) => {
+                      handleSubmit(data);
+                    }}
                   />
                 </div>
               )}
