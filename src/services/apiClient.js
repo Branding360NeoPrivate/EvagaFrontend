@@ -43,7 +43,7 @@ apiClient.interceptors.response.use(
         error.response.data?.error ||
         `Error ${error.response.status}: ${error.response.statusText}`;
     }
-    console.log("error caught in interceptor:", error);
+    // console.log("error caught in interceptor:", error);
 
     // Emit the error message
     emitError(errorMessage);

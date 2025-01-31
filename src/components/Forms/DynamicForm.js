@@ -401,15 +401,16 @@ const DynamicForm = ({
             }
           }
           return (
-            <div key={field._id} className=" col-span-1 grid grid-cols-3 gap-4">
+            <div key={field._id} className=" col-span-1 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
+              <p></p>
               <span className="flex items-center justify-start col-span-2">
-              {field.key === "Price" && (
-                   <span className="h-full px-2 py-1 bg-textYellow text-primary font-medium">
-                   ₹
-                 </span>
+                {(field.key === "Price" || field.key === "Pricing") && (
+                  <span className="bg-textYellow px-3 py-1  rounded-l-md font-medium text-primary">
+                    ₹
+                  </span>
                 )}
                 <input
                   type={field.type}
@@ -423,6 +424,8 @@ const DynamicForm = ({
                     field.key === "DeliveryCharges" ||
                     field.key === "Price" ||
                     field.key === "Pricing" ||
+                    field.key === "NoofDrivers" ||
+                    field.key === "Duration of Stall" ||
                     field.key === "SessionDuration"
                       ? "col-span-1 border-2 w-[10rem] border-2 outline-none p-1 rounded-r-md text-textGray font-medium"
                       : "col-span-2 border-2 w-[25rem] border-2 outline-none p-1 rounded-md text-textGray font-medium "
@@ -437,11 +440,11 @@ const DynamicForm = ({
           );
         } else if (field.type === "time") {
           return (
-            <div key={field._id} className=" col-span-1 grid grid-cols-3 gap-4">
+            <div key={field._id} className=" col-span-1 grid grid-cols-4 gap-4">
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <span className="flex items-center justify-center gap-1">
+              <span className="flex items-center justify-center gap-1 col-span-3">
                 <input
                   type={field.type}
                   value={formValues[field.key] || "00:00:00"}
@@ -794,7 +797,7 @@ const DynamicForm = ({
                           className="border-2 p-1 rounded-l-md text-textGray font-medium w-[5rem] h-full outline-none"
                           required
                         />
-                        <p className="bg-textYellow text-primary h-full flex items-center justify-center rounded-r-md p-1">
+                        <p className="bg-textYellow text-primary font-medium h-full flex items-center justify-center rounded-r-md p-1">
                           Kms
                         </p>
                       </span>
@@ -806,7 +809,7 @@ const DynamicForm = ({
                         Thereon:
                       </label>
                       <span className="flex items-center justify-center h-[2rem]">
-                        <p className="bg-textYellow text-primary h-full flex items-center justify-center rounded-l-md p-1 px-3">
+                        <p className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
                           ₹
                         </p>
                         <input
@@ -911,7 +914,7 @@ const DynamicForm = ({
                         Amount
                       </label>
                       <div className="h-[2rem]">
-                        <span className="text-primary bg-textYellow px-2 py-1 h-full">
+                        <span className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
                           ₹
                         </span>
                         <input
@@ -955,9 +958,9 @@ const DynamicForm = ({
                 {items.map((item, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-4 items-center justify-center gap-4"
+                    className="grid grid-cols-3 items-center justify-center gap-4"
                   >
-                    <div className="col-span-2 border-2 flex items-center gap-1 px-2 py-1 h-fit w-fit">
+                    <div className=" border-2 flex items-center gap-1 px-2 py-1 h-fit w-fit rounded-md">
                       <div className="flex flex-row items-center justfiy-center gap-2">
                         <input
                           type="time"
@@ -977,9 +980,9 @@ const DynamicForm = ({
                           disabled={isEditing}
                           required
                         />
-                        <p>PM</p>
+                        <p className="text-textGray font-medium ">PM</p>
                       </div>
-                      <p className="font-semibold">TO</p>
+                      <p className="text-textGray font-medium ">TO</p>
                       <div className="flex flex-row items-center justfiy-center gap-2">
                         <input
                           type="time"
@@ -999,16 +1002,12 @@ const DynamicForm = ({
                           disabled={isEditing}
                           required
                         />
-                        <p>AM</p>
+                        <p className="text-textGray font-medium ">AM</p>
                       </div>
                     </div>
-                    {/* Amount */}
-                    <div className="flex flex-col gap-2">
-                      {/* <label className="text-textGray font-medium">
-                        Amount:
-                      </label> */}
-                      <div className="h-[2rem]">
-                        <span className="bg-textYellow px-2 py-1 h-full">
+                    <div className="flex items-center justify-center flex-row gap-2">
+                      <div className="flex items-center justify-center h-[2rem]">
+                        <span className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
                           ₹
                         </span>
                         <input
@@ -1030,12 +1029,9 @@ const DynamicForm = ({
                           required
                         />
                       </div>
-                    </div>
-
-                    {/* UOM */}
-                    <div className="flex flex-col gap-2">
-                      {/* <label className="text-textGray font-medium">UOM:</label> */}
-                      <p>{item["Uom"] || "extra per hour"}</p>
+                      <p className="text-sm text-textGray">
+                        {"*" + item["Uom"] || "*extra per hour"}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -1079,7 +1075,7 @@ const DynamicForm = ({
                     <div className="flex flex-col gap-2">
                       <label className="text-textGray font-medium">Rates</label>
                       <div className="h-[2rem]">
-                        <span className="h-full bg-textYellow px-2 py-1">
+                        <span className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
                           ₹
                         </span>
                         <input
@@ -1166,7 +1162,9 @@ const DynamicForm = ({
                     <div className="flex flex-col gap-2">
                       <label className="text-textGray font-medium">Rates</label>
                       <div className="h-[2rem] ">
-                        <span className="bg-textYellow px-2 py-1">₹</span>
+                        <span className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
+                          ₹
+                        </span>
                         <input
                           type="number"
                           value={formValues[field.key]?.[index]?.Rates || ""}
@@ -1337,7 +1335,7 @@ const DynamicForm = ({
                   <IoAddCircleOutline className="text-xl" /> {field.label}
                 </button>
                 {(formValues[field.key] || []).map((item, index) => (
-                  <div key={index} className="flex flex-wrap  w-full ">
+                  <div key={index} className="flex flex-wrap gap-4  w-full ">
                     {Object.keys(item).map((objectKey, subIndex) => (
                       <div
                         key={subIndex}
@@ -1354,7 +1352,12 @@ const DynamicForm = ({
                           }
                         >
                           {objectKey === "Amount" && (
-                            <span className="h-full px-2 py-1 bg-textYellow text-primary font-medium">
+                            <span className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
+                              ₹
+                            </span>
+                          )}{" "}
+                               {objectKey === "Rates" && (
+                            <span className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
                               ₹
                             </span>
                           )}{" "}
@@ -1444,7 +1447,7 @@ const DynamicForm = ({
                           ) : (
                             <div className="h-[2rem]">
                               {objectKey === "Rates" && (
-                                <span className="bg-textYellow px-2 py-1 h-full">
+                                <span className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
                                   ₹
                                 </span>
                               )}
@@ -2043,11 +2046,12 @@ const DynamicForm = ({
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-3 flex items-start justify-start flex-col gap-2">
+              <p></p>
+              <div className="col-span-2 flex items-start justify-start flex-col gap-2">
                 <select
                   value={formValues[field.key] || ""}
                   onChange={(e) => handleChange(field.key, e.target.value)}
-                  className="border-2 w-[25rem] outline-none p-2 rounded-md text-textGray font-medium"
+                  className="border-2  outline-none p-2 rounded-md text-textGray font-medium w-full"
                   required
                 >
                   <option value="" disabled>
@@ -2090,11 +2094,12 @@ const DynamicForm = ({
               <label className="text-primary text-xl font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-3 flex items-start justify-start flex-col gap-2">
+              <p></p>
+              <div className="col-span-2 flex items-start justify-start flex-col gap-2">
                 <select
                   value={formValues[field.key] || ""}
                   onChange={(e) => handleChange(field.key, e.target.value)}
-                  className="border-2 w-[25rem] outline-none p-2 rounded-md text-textGray font-medium"
+                  className="border-2  outline-none p-2 rounded-md text-textGray font-medium w-full"
                   required
                 >
                   <option value="" disabled>

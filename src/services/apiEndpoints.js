@@ -53,6 +53,7 @@ const apiEndpoints = {
     login: "user/loginUser",
     googleLogin: "user/auth/google",
     logout: (userId) => `user/logoutUser/${userId}`,
+    updateUserProfile: (userId) => `user/updateUser/${userId}`,
     resetpassword: (userId) => `user/set-user-new-password/${userId}`,
     getProfile: "user/profile",
     updateProfile: "user/profile",
@@ -63,6 +64,10 @@ const apiEndpoints = {
     wishlist: (userId) => `wishlist/get-wishlist/${userId}`,
     toggelewishlist: (userId) => `wishlist/toggle-wishlist/${userId}`,
     getUserprofile: (userId) => `user/getUserProfile/${userId}`,
+    addUserAdress: (userId) => `user/add-new-address/${userId}`,
+    getOneAddress: (addressId) => `user/get-user-one-address/${addressId}`,
+    updateOneAddress: (addressId) => `user/update-user-one-address/${addressId}`,
+    deleteOneAddress: (addressId) => `user/delete-user-one-address/${addressId}`,
   },
   category: {
     add: "category",

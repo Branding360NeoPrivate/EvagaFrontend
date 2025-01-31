@@ -3,21 +3,20 @@
 import apiService from "./apiService";
 import apiEndpoints from "./apiEndpoints";
 
-
 const userApi = {
   register: (userData) => apiService.post(apiEndpoints.user.register, userData),
   login: (credentials) => apiService.post(apiEndpoints.user.login, credentials),
   googleLogin: (token) => apiService.post(apiEndpoints.user.googleLogin, token),
   resetpassword: (credentials, formData) =>
-    apiService.post(apiEndpoints.user.resetpassword(credentials),  formData, {
+    apiService.post(apiEndpoints.user.resetpassword(credentials), formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     }),
   logout: (userId) => apiService.post(apiEndpoints.user.logout(userId)),
   getProfile: () => apiService.get(apiEndpoints.user.getProfile),
-  updateProfile: (userData) =>
-    apiService.put(apiEndpoints.user.updateProfile, userData),
+  updateProfile: (userId, formData) =>
+    apiService.put(apiEndpoints.user.updateUserProfile(userId), formData),
   sendUserOtp: (formData) =>
     apiService.post(apiEndpoints.user.sendOtpUser, formData, {
       headers: {
@@ -42,7 +41,16 @@ const userApi = {
   toggleWishlist: (userId, formData) =>
     apiService.post(apiEndpoints.user.toggelewishlist(userId), formData),
   getTotalUser: () => apiService.get(apiEndpoints.admin.getTotalUser),
-  getUserProfile: (userId) => apiService.get(apiEndpoints.user.getUserprofile(userId)),
+  getUserProfile: (userId) =>
+    apiService.get(apiEndpoints.user.getUserprofile(userId)),
+  addUserAdress: (userId, formData) =>
+    apiService.post(apiEndpoints.user.addUserAdress(userId), formData),
+  getOneAddress: (addressId) =>
+    apiService.get(apiEndpoints.user.getOneAddress(addressId)),
+  updateOneAddress: (addressId,formData) =>
+    apiService.put(apiEndpoints.user.updateOneAddress(addressId),formData),
+  deleteOneAddress: (addressId) =>
+    apiService.delete(apiEndpoints.user.deleteOneAddress(addressId)),
 };
 
 export default userApi;

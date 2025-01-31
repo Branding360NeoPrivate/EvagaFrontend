@@ -23,6 +23,9 @@ h6 {
 p {
   font-family: "Poppins", sans-serif;
 }
+label{
+  font-family: "Poppins", sans-serif;
+}
 strong {
   font-family: "Poppins", sans-serif;
 }
@@ -206,7 +209,7 @@ input[type="number"] {
   display: none; /* For Chrome, Safari, and Edge */
 }
 /* Base styles for the checkbox */
-.filtercheckbox input[type='checkbox'] {
+.filtercheckbox input[type="checkbox"] {
   appearance: none; /* Removes default checkbox styling */
   width: 25px;
   height: 25px;
@@ -218,23 +221,18 @@ input[type="number"] {
   background-color: transparent; /* Transparent background */
 }
 
-
-.filtercheckbox input[type='checkbox']:checked {
-  border-color: #6a1b9a; 
+.filtercheckbox input[type="checkbox"]:checked {
+  border-color: #6a1b9a;
 }
 
-.filtercheckbox input[type='checkbox']:checked::after {
-  content: '';
+.filtercheckbox input[type="checkbox"]:checked::after {
+  content: "";
   width: 6px;
   height: 13px;
-  border: solid #6a1b9a; 
-  border-width: 0 2px 2px 0; 
+  border: solid #6a1b9a;
+  border-width: 0 2px 2px 0;
   transform: rotate(45deg);
-  position: absolute; 
+  position: absolute;
   top: 2px;
-  left: 6px; 
+  left: 6px;
 }
-
-
-
-

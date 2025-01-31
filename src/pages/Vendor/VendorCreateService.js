@@ -522,7 +522,7 @@ function VendorCreateService() {
             />
           </div>
           <div className="w-full gap-4 grid grid-cols-1 md:grid-cols-4 text-primary">
-            <p className="text-xl font-normal">About the Service</p>
+            <p className="text-xl font-semibold">About the Service</p>
             <textarea
               type="text"
               className="col-span-3 bg-textLightGray p-2 border-none outline-none text-textGray"
@@ -531,7 +531,7 @@ function VendorCreateService() {
             />
           </div>
           <div className="w-full gap-4 grid grid-cols-1 md:grid-cols-4 text-primary">
-            <p className="text-xl font-normal">Year(s) of Experience</p>
+            <p className="text-xl font-semibold">Year(s) of Experience</p>
             <span className="col-span-1 flex items-center justfiy-center">
               <input
                 type="number"
@@ -548,7 +548,7 @@ function VendorCreateService() {
       <div className="w-11/12 flex items-start justify-start flex-col">
         {menuFeilds && menuFeilds?.fields && (
           <>
-            <h6 className="text-primary text-xl font-medium">
+            <h6 className="text-primary text-xl font-semibold">
               Create Master Menu
             </h6>
             <div className="w-full flex items-start justify-start flex-col border-2 border-textLightGray rounded-lg py-4 px-[5%] gap-4">
@@ -590,7 +590,7 @@ function VendorCreateService() {
         )}
       </div>
       <div className="w-11/12 flex items-start justify-start flex-col">
-        <h6 className="text-primary text-xl font-medium">Create Package(s)</h6>
+        <h6 className="text-primary text-xl font-semibold">Create Package(s)</h6>
         {formInstances.map((form, index) => (
           <div className="w-full flex items-start justify-start flex-col border-2 border-textLightGray rounded-lg py-4 px-[5%] gap-4">
             <div key={form.id} className="mb-4">

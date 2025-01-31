@@ -20,6 +20,7 @@ const useServices = (apiFunction) => {
         response = await apiFunction(params);
       }
       // console.log("Response in useServices:", response);
+      console.log("log from use service");
 
       setData(response.data);
 
@@ -29,7 +30,7 @@ const useServices = (apiFunction) => {
 
       return response.data;
     } catch (err) {
-      console.error("API call failed:", err.response?.data || err.message);
+      console.error("API call failed:", err.response?.data || err.message, err);
       setError(err.response?.data?.error || "An unexpected error occurred.");
       throw err;
     } finally {

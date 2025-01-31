@@ -3,7 +3,7 @@ import React from "react";
 
 const ErrorModal = ({ errorMessage, onClose, onRedirectHome }) => {
   return (
-    <div style={modalStyles.overlay}>
+    <div style={modalStyles.overlay} className="z-1000">
       <div style={modalStyles.modal}>
         <h2>Error</h2>
         <p>{`${
@@ -35,7 +35,7 @@ const modalStyles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 1000,
+    zIndex: 9999999,
   },
   modal: {
     backgroundColor: "white",
