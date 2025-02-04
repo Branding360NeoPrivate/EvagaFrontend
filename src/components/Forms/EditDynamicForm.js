@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ImCancelCircle } from "react-icons/im";
-import { AiOutlineEnter } from "react-icons/ai";
 import { FaArrowTurnUp, FaIndianRupeeSign, FaRupeeSign } from "react-icons/fa6";
 import { IoAddCircleOutline } from "react-icons/io5";
-import { FaCloudUploadAlt } from "react-icons/fa";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -36,25 +34,12 @@ const EditDynamicForm = ({
     highSeason: [],
   });
 
-  //   const [formValues, setFormValues] = useState(
-  //     fields.reduce((acc, field) => {
-  //       if (field.type === "array") {
-  //         acc[field.key] = [];
-  //       } else if (field.type === "object") {
-  //         acc[field.key] = field.items || [];
-  //       } else {
-  //         acc[field.key] = "";
-  //       }
-  //       return acc;
-  //     }, {})
-  //   );
-
   const [formValues, setFormValues] = useState({}); // Initialize as an empty object
 
   useEffect(() => {
     if (formData?.fields) {
       const initialValues = formData.fields.reduce((acc, field) => {
-        acc[field.key] = field.items || ""; // Prepopulate with `items`
+        acc[field.key] = field.items || ""; 
         return acc;
       }, {});
       setFormValues(initialValues);
@@ -71,11 +56,34 @@ const EditDynamicForm = ({
         };
       }
 
+      if (
+        Array.isArray(prev[key]) &&
+        prev[key].every((item) => item.hasOwnProperty("checked"))
+      ) {
+        return {
+          ...prev,
+          [key]: value, // ✅ Store selected value as a string
+          [`${key}_options`]: prev[key].map((item) => ({
+            ...item,
+            checked: item.value === value, // ✅ Update checked dynamically
+          })),
+        };
+      }
       return {
         ...prev,
         [key]: value, // Dynamically updates any key, including file uploads
       };
     });
+  };
+
+  const handleRadioChange = (key, value) => {
+    setFormValues((prev) => ({
+      ...prev,
+      [key]: prev[key].map((item) => ({
+        ...item,
+        checked: item.value === value, // Set only the selected option as checked
+      })),
+    }));
   };
 
   const handleImageChange = (key, value) => {
@@ -160,21 +168,16 @@ const EditDynamicForm = ({
     key,
     updatedSeating
   ) => {
-    // Ensure parentKey exists in formValues and is an array
     const parentArray = formValues[parentKey] || [];
 
-    // Create a copy of the parent array
     const updatedSubVenues = [...parentArray];
 
-    // Ensure the target index exists in the array
     if (!updatedSubVenues[index]) {
-      updatedSubVenues[index] = {}; // Initialize if undefined
+      updatedSubVenues[index] = {};
     }
 
-    // Update the specified key with the updated seating
     updatedSubVenues[index][key] = updatedSeating;
 
-    // Update the state
     setFormValues((prevValues) => ({
       ...prevValues,
       [parentKey]: updatedSubVenues,
@@ -184,35 +187,52 @@ const EditDynamicForm = ({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const transformedData = fields.map((field) => {
-    
+    try {
+      const transformedData = fields?.map((field) => {
+        const items = [];
+        Object?.keys(formValues)?.forEach((key) => {
+          if (key?.startsWith(`${field.key}_`)) {
+            items?.push(formValues[key]);
+          }
+        });
 
-      // Default behavior for other fields
-      const items = [];
-      Object.keys(formValues).forEach((key) => {
-        if (key.startsWith(`${field.key}_`)) {
-          items.push(formValues[key]);
+
+        if (field.type === "radio") {
+          return {
+            label: field.label,
+            key: field.key,
+            type: field.type,
+            items: formValues[`${field.key}_options`] 
+              ? formValues[`${field.key}_options`]
+              : field.items, 
+            selectedValue: formValues[field.key], 
+          };
         }
+
+        return {
+          label: field.label,
+          key: field.key,
+          type: field.type,
+          items: items.length > 0 ? items : formValues[field.key],
+        };
       });
 
-      return {
-        label: field.label,
-        key: field.key,
-        type: field.type,
-        items: items.length > 0 ? items : formValues[field.key],
-      };
-    });
-    setfiledFormData(transformedData);
-    setOpenMasterVenueModal(false);
-    setIsEditing(false);
-    console.log("Form submitted:", transformedData);
+      setfiledFormData(transformedData);
+      setOpenMasterVenueModal(false);
+      setIsEditing(false);
+      console.log("✅ Form submitted successfully:", transformedData);
+    } catch (error) {
+      console.error("❌ Error in form submission:", error);
+    }
   };
+
   const handleSingleFileChange = (key, file) => {
     setFormValues((prev) => ({
       ...prev,
-      [key]: file, // Save the file directly to the specified key
+      [key]: file,
     }));
   };
+
   // const handleFileChange = (key, subKey, index, newFiles) => {
   //   console.log(`Handling ${subKey} at ${key}_${index}`);
   //   const portfolioKey = `${key}_${index}`; // Unique key: Portfolio_0, Portfolio_1
@@ -280,7 +300,7 @@ const EditDynamicForm = ({
       };
     });
   };
-  console.log(formValues, "formvalues");
+  console.log(formValues, "formvalues", formValues?.Portfolio?.photos);
 
   return (
     <form
@@ -308,11 +328,17 @@ const EditDynamicForm = ({
             }
           }
           return (
-            <div key={field._id} className=" col-span-1 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className=" col-span-1 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <span className="flex items-center justify-center gap-1 col-span-2">
+              <p></p>
+              <span className="flex items-center justify-start col-span-2">
+                {(field.key === "Price" || field.key === "Pricing") && (
+                  <span className="bg-textYellow px-3 py-1  rounded-l-md font-medium text-primary">
+                    ₹
+                  </span>
+                )}
                 <input
                   type={field.type}
                   value={formValues[field.key] || ""}
@@ -322,8 +348,13 @@ const EditDynamicForm = ({
                     field.key === "MOQ" ||
                     field.key === "DurationofStall" ||
                     field.key === "TeamSize" ||
-                    field.key === "DeliveryCharges"
-                      ? "col-span-1 border-2 w-[10rem] border-2 outline-none p-1 rounded-md text-textGray font-medium"
+                    field.key === "DeliveryCharges" ||
+                    field.key === "Price" ||
+                    field.key === "Pricing" ||
+                    field.key === "NoofDrivers" ||
+                    field.key === "Duration of Stall" ||
+                    field.key === "SessionDuration"
+                      ? "col-span-1 border-2 w-[10rem] border-2 outline-none p-1 rounded-r-md text-textGray font-medium"
                       : "col-span-2 border-2 w-[25rem] border-2 outline-none p-1 rounded-md text-textGray font-medium "
                   }
                   required
@@ -336,14 +367,14 @@ const EditDynamicForm = ({
           );
         } else if (field.type === "time") {
           return (
-            <div key={field._id} className=" col-span-1 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className=" col-span-1 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <span className="flex items-center justify-center gap-1">
+              <span className="flex items-center justify-center gap-1 col-span-3">
                 <input
                   type={field.type}
-                  value={formValues[field.key] || field.items || ""}
+                  value={formValues[field.key] || "00:00:00"}
                   onChange={(e) => handleChange(field.key, e.target.value)}
                   className={
                     field.key === "PricePerplate" ||
@@ -382,7 +413,7 @@ const EditDynamicForm = ({
                 key={field._id}
                 className="col-span-2 grid grid-cols-3 gap-4"
               >
-                <label className="text-primary text-xl font-semibold">
+                <label className="text-primary text-base font-semibold">
                   {field.label}:
                 </label>
                 <p className="col-span-2 text-gray-500">
@@ -398,11 +429,11 @@ const EditDynamicForm = ({
           );
 
           return (
-            <div key={field._id} className="grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex flex-col gap-4">
+              <div className="col-span-3 flex flex-col gap-4">
                 {selectedStaffData &&
                 selectedStaffData.staffDetails.length > 0 ? (
                   selectedStaffData.staffDetails.map((staff, index) => (
@@ -525,11 +556,11 @@ const EditDynamicForm = ({
           );
 
           return (
-            <div key={field._id} className="grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex flex-col gap-4">
+              <div className="col-span-3 flex flex-col gap-4">
                 {selectedStaffData.staffDetails.map((staff, index) => (
                   <div
                     key={index}
@@ -627,19 +658,14 @@ const EditDynamicForm = ({
           );
         } else if (field.type === "text" && field.key === "Terms&Conditions") {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="bg-textLightGray col-span-2">
+              <div className="bg-textLightGray col-span-3">
                 <ReactQuill
                   theme="snow"
-                  value={
-                    formValues?.[field?.key] &&
-                    typeof formValues[field.key] === "string"
-                      ? formValues[field.key]
-                      : ""
-                  }
+                  value={formValues[field.key] || ""}
                   onChange={(value) => handleChange(field.key, value)}
                   style={editorStyle}
                   required
@@ -650,13 +676,13 @@ const EditDynamicForm = ({
           );
         } else if (field.type === "textarea" && field.key === "Description") {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className=" col-span-2  border-2 w-[25rem] border-2 outline-none p-1 rounded-md text-textGray font-medium ">
+              <div className=" col-span-3  border-2 w-[25rem] border-2 outline-none p-1 rounded-md text-textGray font-medium ">
                 <textarea
-                  value={formValues[field.key] || field.items || ""}
+                  value={formValues[field.key] || ""}
                   onChange={(e) => handleChange(field.key, e.target.value)}
                   rows={2}
                   required
@@ -669,11 +695,11 @@ const EditDynamicForm = ({
         } else if (field.type === "object" && field.key === "TravelCharges") {
           const items = Array.isArray(field.items) ? field.items : []; // Ensure it's always an array
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2">
+              <div className="col-span-3">
                 {items.map((item, index) => (
                   <div key={index} className="grid grid-cols-3 gap-4">
                     {/* Free Upto */}
@@ -698,7 +724,7 @@ const EditDynamicForm = ({
                           className="border-2 p-1 rounded-l-md text-textGray font-medium w-[5rem] h-full outline-none"
                           required
                         />
-                        <p className="bg-textYellow text-primary h-full flex items-center justify-center rounded-r-md p-1">
+                        <p className="bg-textYellow text-primary font-medium h-full flex items-center justify-center rounded-r-md p-1">
                           Kms
                         </p>
                       </span>
@@ -710,7 +736,7 @@ const EditDynamicForm = ({
                         Thereon:
                       </label>
                       <span className="flex items-center justify-center h-[2rem]">
-                        <p className="bg-textYellow text-primary h-full flex items-center justify-center rounded-l-md p-1 px-3">
+                        <p className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
                           ₹
                         </p>
                         <input
@@ -759,11 +785,11 @@ const EditDynamicForm = ({
           }
 
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2">
+              <div className="col-span-3">
                 {items.map((item, index) => (
                   <div key={index} className="grid grid-cols-4 gap-2">
                     {/* Min */}
@@ -815,7 +841,7 @@ const EditDynamicForm = ({
                         Amount
                       </label>
                       <div className="h-[2rem]">
-                        <span className="text-primary bg-textYellow px-2 py-1 h-full">
+                        <span className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
                           ₹
                         </span>
                         <input
@@ -851,22 +877,23 @@ const EditDynamicForm = ({
           const items = Array.isArray(field.items) ? field.items : [];
 
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2">
+              <div className="col-span-3">
                 {items.map((item, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-4 items-center justify-center gap-4"
+                    className="grid grid-cols-3 items-center justify-center gap-4"
                   >
-                    <div className="col-span-2 border-2 flex items-center gap-1 px-2 py-1 h-fit w-fit">
+                    <div className=" border-2 flex items-center gap-1 px-2 py-1 h-fit w-fit rounded-md">
                       <div className="flex flex-row items-center justfiy-center gap-2">
                         <input
                           type="time"
                           value={
-                            formValues[field.key]?.[index]?.StartTime || ""
+                            formValues[field.key]?.[index]?.StartTime ||
+                            "00:00:00"
                           }
                           onChange={(e) =>
                             handleObjectChange(
@@ -880,13 +907,16 @@ const EditDynamicForm = ({
                           disabled={isEditing}
                           required
                         />
-                        <p>PM</p>
+                        <p className="text-textGray font-medium ">PM</p>
                       </div>
-                      <p className="font-semibold">TO</p>
+                      <p className="text-textGray font-medium ">TO</p>
                       <div className="flex flex-row items-center justfiy-center gap-2">
                         <input
                           type="time"
-                          value={formValues[field.key]?.[index]?.EndTime || ""}
+                          value={
+                            formValues[field.key]?.[index]?.EndTime ||
+                            "00:00:00"
+                          }
                           onChange={(e) =>
                             handleObjectChange(
                               field.key,
@@ -899,16 +929,12 @@ const EditDynamicForm = ({
                           disabled={isEditing}
                           required
                         />
-                        <p>AM</p>
+                        <p className="text-textGray font-medium ">AM</p>
                       </div>
                     </div>
-                    {/* Amount */}
-                    <div className="flex flex-col gap-2">
-                      {/* <label className="text-textGray font-medium">
-                        Amount:
-                      </label> */}
-                      <div className="h-[2rem]">
-                        <span className="bg-textYellow px-2 py-1 h-full">
+                    <div className="flex items-center justify-center flex-row gap-2">
+                      <div className="flex items-center justify-center h-[2rem]">
+                        <span className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
                           ₹
                         </span>
                         <input
@@ -930,12 +956,9 @@ const EditDynamicForm = ({
                           required
                         />
                       </div>
-                    </div>
-
-                    {/* UOM */}
-                    <div className="flex flex-col gap-2">
-                      {/* <label className="text-textGray font-medium">UOM:</label> */}
-                      <p>{item["Uom"] || "extra per hour"}</p>
+                      <p className="text-sm text-textGray">
+                        {"*" + item["Uom"] || "*extra per hour"}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -946,11 +969,11 @@ const EditDynamicForm = ({
           const items = Array.isArray(field.items) ? field.items : [];
 
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2">
+              <div className="col-span-3">
                 {items.map((item, index) => (
                   <div key={index} className="grid grid-cols-4 gap-4">
                     {/* Max */}
@@ -979,7 +1002,7 @@ const EditDynamicForm = ({
                     <div className="flex flex-col gap-2">
                       <label className="text-textGray font-medium">Rates</label>
                       <div className="h-[2rem]">
-                        <span className="h-full bg-textYellow px-2 py-1">
+                        <span className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
                           ₹
                         </span>
                         <input
@@ -1014,11 +1037,11 @@ const EditDynamicForm = ({
           const items = Array.isArray(field.items) ? field.items : [];
 
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2">
+              <div className="col-span-3">
                 {items.map((item, index) => (
                   <div key={index} className="grid grid-cols-4 gap-4">
                     {/* Max */}
@@ -1066,7 +1089,9 @@ const EditDynamicForm = ({
                     <div className="flex flex-col gap-2">
                       <label className="text-textGray font-medium">Rates</label>
                       <div className="h-[2rem] ">
-                        <span className="bg-textYellow px-2 py-1">₹</span>
+                        <span className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
+                          ₹
+                        </span>
                         <input
                           type="number"
                           value={formValues[field.key]?.[index]?.Rates || ""}
@@ -1099,16 +1124,17 @@ const EditDynamicForm = ({
           field.type === "object" &&
           (field.key === "SizePricing" ||
             field.key === "Size&Pricing" ||
-            field.key === "GuestCapacity")
+            field.key === "GuestCapacity" ||
+            field.key === "Size&Dimensions")
         ) {
           const items = Array.isArray(field.items) ? field.items : [];
 
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2">
+              <div className="col-span-3">
                 {items.map((item, index) => (
                   <div key={index} className="grid grid-cols-5 gap-4">
                     {Object.keys(item).map((key) => {
@@ -1142,10 +1168,16 @@ const EditDynamicForm = ({
                     })}
 
                     {/* UOM */}
-                    <div className="flex flex-col gap-2">
-                      <label className="text-textGray font-medium">UOM:</label>
-                      <p>{item["Uom"] || "extra per hour"}</p>
-                    </div>
+                    {field.key !== "Size&Dimensions" && (
+                      <div className="flex flex-col gap-2">
+                        <label className="text-textGray font-medium">
+                          UOM:
+                        </label>
+                        <p className="text-textGray">
+                          {item["Uom"] || "extra per hour"}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -1155,11 +1187,11 @@ const EditDynamicForm = ({
           const items = Array.isArray(field.items) ? field.items : [];
 
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2">
+              <div className="col-span-3">
                 {items.map((item, index) => (
                   <div key={index} className="grid grid-cols-3 gap-4">
                     {/* Dynamically render inputs */}
@@ -1216,10 +1248,10 @@ const EditDynamicForm = ({
         ) {
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
-              <label className="text-primary text-xl font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-3 flex items-center flex-col-reverse justify-center  gap-2">
+              <div className="col-span-3 flex items-center flex-col-reverse justify-start  gap-2">
                 <button
                   type="button"
                   className="text-primary px-4 py-2 rounded flex items-center justify-center gap-1 font-medium"
@@ -1230,13 +1262,13 @@ const EditDynamicForm = ({
                   <IoAddCircleOutline className="text-xl" /> {field.label}
                 </button>
                 {(formValues[field.key] || []).map((item, index) => (
-                  <div key={index} className="flex flex-wrap   ">
+                  <div key={index} className="flex flex-wrap gap-4  w-full ">
                     {Object.keys(item).map((objectKey, subIndex) => (
                       <div
                         key={subIndex}
                         className="flex items-center justify-center flex-col gap-1 items-center"
                       >
-                        <label className="text-textGray text-base">
+                        <label className="text-primary text-base">
                           {objectKey}
                         </label>
                         <div
@@ -1247,7 +1279,12 @@ const EditDynamicForm = ({
                           }
                         >
                           {objectKey === "Amount" && (
-                            <span className="h-full px-2 py-1 bg-textYellow text-primary font-medium">
+                            <span className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
+                              ₹
+                            </span>
+                          )}{" "}
+                          {objectKey === "Rates" && (
+                            <span className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
                               ₹
                             </span>
                           )}{" "}
@@ -1267,9 +1304,8 @@ const EditDynamicForm = ({
                                 e.target.value
                               )
                             }
-                            className="border p-2 rounded outline-none border-2 w-[7rem] h-full"
+                            className="border p-2 rounded outline-none border-2 w-[10rem] h-full "
                             placeholder={objectKey}
-                            required
                           />
                         </div>
                       </div>
@@ -1298,7 +1334,7 @@ const EditDynamicForm = ({
                 key={field._id}
                 className="col-span-2 grid grid-cols-4 gap-4"
               >
-                <label className="text-primary text-xl font-semibold">
+                <label className="text-primary text-base font-semibold">
                   {field.label}:
                 </label>
                 <div className="col-span-3 flex items-center flex-col-reverse justify-center gap-2">
@@ -1338,7 +1374,7 @@ const EditDynamicForm = ({
                           ) : (
                             <div className="h-[2rem]">
                               {objectKey === "Rates" && (
-                                <span className="bg-textYellow px-2 py-1 h-full">
+                                <span className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
                                   ₹
                                 </span>
                               )}
@@ -1392,7 +1428,7 @@ const EditDynamicForm = ({
         } else if (field.type === "array" && field.key === "VehicleTarrifs") {
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
-              <label className="text-primary text-xl font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3 flex items-center flex-col-reverse justify-center gap-2">
@@ -1452,11 +1488,31 @@ const EditDynamicForm = ({
             field.key === "Certifications&Licenses")
         ) {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex  items-center justify-start gap-4 ">
+              <div className="col-span-3 flex  items-center justify-start gap-4 ">
+                {/* <div className="flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
+                  <input
+                    type={field.type}
+                    accept="image/*, application/pdf"
+                    id={`file-upload-${field.key}-${index}`}
+                    className="hidden"
+                    onChange={(e) =>
+                      handleImageChange(field.key, e.target.files[0])
+                    }
+                  />
+                  <label
+                    htmlFor={`file-upload-${field.key}-${index}`}
+                    className="cursor-pointer flex items-center justify-center flex-col"
+                  >
+                    <IoCloudUploadOutline className="text-primary text-2xl mb-4" />
+                    <p className="text-textGray">
+                      Drop your files or Browse files
+                    </p>
+                  </label>
+                </div> */}
                 <div className="relative cursor-pointer flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
                   <IoCloudUploadOutline className="text-primary text-2xl mb-4" />
                   <p className="text-textGray">
@@ -1470,7 +1526,7 @@ const EditDynamicForm = ({
                       handleSingleFileChange(field.key, selectedFiles);
                     }}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    
+                    required
                   />
                 </div>
                 {formValues?.[`${field.key}`] && (
@@ -1498,11 +1554,11 @@ const EditDynamicForm = ({
           );
         } else if (field.type === "file" && field.key === "3DTour") {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}*:
               </label>
-              <div className="col-span-2 flex items-center justify-start gap-4">
+              <div className="col-span-3 flex items-center justify-start gap-4">
                 <div className="flex items-center justify-center flex-col text-textGray ">
                   <div className="relative cursor-pointer flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
                     <IoCloudUploadOutline className="text-primary text-2xl mb-4" />
@@ -1553,11 +1609,11 @@ const EditDynamicForm = ({
           );
         } else if (field.type === "file" && field.key === "ProductImage") {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex items-center justify-start gap-4">
+              <div className="col-span-3 flex items-center justify-start gap-4">
                 <div className="flex items-center justify-center flex-col text-textGray ">
                   <div className="relative cursor-pointer flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
                     <IoCloudUploadOutline className="text-primary text-2xl mb-4" />
@@ -1601,7 +1657,6 @@ const EditDynamicForm = ({
                           key={idx}
                           className="text-textGray bg-textLightGray flex p-1 rounded-md justify-between items-center gap-1"
                         >
-
                           <p>{item?.name || "Uploaded File"}</p>
                           <button
                             className="text-primary hover:text-red-500"
@@ -1624,11 +1679,11 @@ const EditDynamicForm = ({
           );
         } else if (field.type === "array" && field.key === "Portfolio") {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex flex-col gap-4">
+              <div className="col-span-3 flex flex-col gap-4">
                 <div className="col-span-2 flex flex-col gap-4">
                   {/* Ensure field.items is a valid object */}
                   {field.items && (
@@ -1646,8 +1701,6 @@ const EditDynamicForm = ({
                             multiple={totalNumberOfPhotoAllowed}
                             onChange={(e) => {
                               const selectedFiles = Array.from(e.target.files);
-
-                              // Check if the total number of selected files exceeds the allowed limit
                               const existingPhotos =
                                 formValues?.Portfolio?.photos || [];
                               const totalSelected =
@@ -1671,31 +1724,24 @@ const EditDynamicForm = ({
                         </div>
                         {/* Render Photos */}
                         <div className="flex flex-wrap gap-1">
-                          {(formValues?.Portfolio?.photos || [])?.map(
+                          {(formValues?.Portfolio?.photos || []).map(
                             (photo, photoIdx) => (
                               <div
                                 key={photoIdx}
                                 className="text-textGray bg-textLightGray flex p-1 rounded-md gap-1"
                               >
-                               <p>
-  {Array.isArray(formValues?.Portfolio?.photos) &&
-  formValues?.Portfolio?.photos.length > 0
-    ? typeof formValues?.Portfolio?.photos[0] === "string"
-      ? formValues?.Portfolio?.photos[0].replace(/^service\//, "")
-      : formValues?.Portfolio?.photos[0]?.name || "Invalid photo format"
-    : "No photos available"}
-</p>
-
-
-                                {/* <p>{photo?.name}</p> */}
+                                <p>
+                                  {typeof photo === "string"
+                                    ? photo.replace(/^service\//, "")
+                                    : photo?.name || "Invalid photo format"}
+                                </p>
                                 <button
-                                  onClick={
-                                    () =>
-                                      handleFileRemove(
-                                        field.key,
-                                        "photos",
-                                        photoIdx
-                                      ) // No index
+                                  onClick={() =>
+                                    handleFileRemove(
+                                      field.key,
+                                      "photos",
+                                      photoIdx
+                                    )
                                   }
                                   className="px-3 py-1"
                                 >
@@ -1721,7 +1767,6 @@ const EditDynamicForm = ({
                               const maxFileSize = 100 * 1024 * 1024; // 100 MB
                               const selectedFiles = Array.from(e.target.files);
 
-                              // Check if there's already a video uploaded
                               const existingVideos =
                                 formValues?.Portfolio?.videos || [];
                               if (existingVideos.length > 0) {
@@ -1759,14 +1804,20 @@ const EditDynamicForm = ({
                                 key={videoIdx}
                                 className="text-textGray bg-textLightGray flex p-1 rounded-md gap-1"
                               >
-                               <p>
-  {Array.isArray(formValues?.Portfolio?.videos) &&
-  formValues?.Portfolio?.videos.length > 0
-    ? typeof formValues?.Portfolio?.videos[0] === "string"
-      ? formValues?.Portfolio?.videos[0].replace(/^service\//, "")
-      : formValues?.Portfolio?.videos[0]?.name || "Invalid videos format"
-    : "No video available"}
-</p>
+                                <p>
+                                  {Array.isArray(
+                                    formValues?.Portfolio?.videos
+                                  ) && formValues?.Portfolio?.videos.length > 0
+                                    ? typeof formValues?.Portfolio
+                                        ?.videos[0] === "string"
+                                      ? formValues?.Portfolio?.videos[0].replace(
+                                          /^service\//,
+                                          ""
+                                        )
+                                      : formValues?.Portfolio?.videos[0]
+                                          ?.name || "Invalid videos format"
+                                    : "No video available"}
+                                </p>
 
                                 <button
                                   onClick={
@@ -1795,15 +1846,16 @@ const EditDynamicForm = ({
         } else if (
           field.type === "array" &&
           field.key !== "SubVenueDetails" &&
+          field.key !== "Seasons" &&
           field.key !== "DistanceFrom"
         ) {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex items-start justify-start flex-col gap-2">
-                <span className="flex items-center justify-center">
+              <div className="col-span-3 flex items-start justify-start flex-col gap-2">
+                <span className="flex items-center justify-start w-full">
                   <input
                     type="text"
                     onKeyDown={(e) => {
@@ -1813,13 +1865,16 @@ const EditDynamicForm = ({
                         e.target.value = "";
                       }
                     }}
-                    className="border-2 w-[25rem] border-2 outline-none p-1 rounded-l-lg text-textGray font-medium"
+                    className="border-2 w-[60%] border-2 outline-none p-1 rounded-l-lg text-textGray font-medium"
                     disabled={isEditing}
                   />
                   <p className="bg-textYellow p-2 rounded-r-lg">
                     <FaArrowTurnUp className="font-normal text-xl text-textGray rotate-90 " />
                   </p>
                 </span>
+                <p className="text-sm text-textGray">
+                  After typing each word, press Enter to submit.
+                </p>
                 <div className="flex items-center justify-start gap-2 flex-wrap">
                   {(formValues[field.key] || []).map((item, index) => (
                     <span
@@ -1846,11 +1901,61 @@ const EditDynamicForm = ({
           );
         } else if (field.type === "multi-select") {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex items-start justify-start flex-wrap gap-3">
+              <div className="col-span-3 flex items-start justify-start flex-wrap gap-3">
+                {(field.items || []).map((item, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    className={`py-2 px-4 rounded border ${
+                      formValues[field.key]?.includes(item)
+                        ? "bg-textYellow text-textGray border-textYellow"
+                        : "bg-white text-textGray border-gray-300 border-textYellow"
+                    }`}
+                    onClick={() => {
+                      setFormValues((prev) => {
+                        const currentSelection = prev[field.key] || [];
+                        if (currentSelection.includes(item)) {
+                          return {
+                            ...prev,
+                            [field.key]: currentSelection.filter(
+                              (selectedItem) => selectedItem !== item
+                            ),
+                          };
+                        } else {
+                          return {
+                            ...prev,
+                            [field.key]: [...currentSelection, item],
+                          };
+                        }
+                      });
+                    }}
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
+        } else if (field.type === "sub-multi-select") {
+          const selectedType = formValues["Type"];
+          console.log(selectedType.trim(), field.key);
+          if (
+            String(field.key).trim() !==
+            String(selectedType).replace(/\s+/g, "")
+          ) {
+            return null;
+          }
+
+          return (
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
+                {field.label}:
+              </label>
+              <div className="col-span-3 flex items-start justify-start flex-wrap gap-3">
                 {(field.items || []).map((item, index) => (
                   <button
                     key={index}
@@ -1887,15 +1992,64 @@ const EditDynamicForm = ({
           );
         } else if (field.type === "select") {
           return (
-            <div key={field._id} className="col-span-1 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-1 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
+              <p></p>
               <div className="col-span-2 flex items-start justify-start flex-col gap-2">
                 <select
                   value={formValues[field.key] || ""}
                   onChange={(e) => handleChange(field.key, e.target.value)}
-                  className="border-2 w-[25rem] outline-none p-2 rounded-md text-textGray font-medium"
+                  className="border-2  outline-none p-2 rounded-md text-textGray font-medium w-full"
+                  required
+                >
+                  <option value="" disabled>
+                    Select an option
+                  </option>
+                  {field.items.map((item, index) => (
+                    <option key={index} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          );
+        } else if (field.type === "sub-select") {
+          const selectedType = formValues["Type"];
+
+          const normalizeKey = (type) => {
+            const typeMap = {
+              Bouquets: "Bouquet",
+              Centerpieces: "Centerpiece",
+              " Floral Arches": "FloralArche",
+              "Flower Walls": "FlowerWalls",
+              "Floral Installations": "FloralInstallation",
+              Backdrops: "Backdrop",
+            };
+
+            const normalized = typeMap[type] || type;
+            return normalized.replace(/\s+/g, "");
+          };
+
+          const normalizedType = normalizeKey(selectedType);
+          const matchingKey = `${normalizedType}Type`;
+          if (String(field.key).trim() !== String(matchingKey).trim()) {
+            return null;
+          }
+
+          return (
+            <div key={field._id} className="col-span-1 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
+                {field.label}:
+              </label>
+              <p></p>
+              <div className="col-span-2 flex items-start justify-start flex-col gap-2">
+                <select
+                  value={formValues[field.key] || ""}
+                  onChange={(e) => handleChange(field.key, e.target.value)}
+                  className="border-2  outline-none p-2 rounded-md text-textGray font-medium w-full"
                   required
                 >
                   <option value="" disabled>
@@ -1915,11 +2069,11 @@ const EditDynamicForm = ({
           field.key === "CustomThemeRequest"
         ) {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex items-start justify-start flex-row gap-2">
+              <div className="col-span-3 flex items-start justify-start flex-row gap-2">
                 {(field.items || []).map((item, index) => (
                   <div key={index} className="flex items-start flex-col gap-4">
                     <div className="flex items-center justify-start gap-1">
@@ -2017,41 +2171,48 @@ const EditDynamicForm = ({
               </div>
             </div>
           );
-        } 
-        else if (field.type === "radio") {
+        } else if (field.type === "radio") {
+
+
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
-                {field.label}:
+            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
+                {field?.label}:
               </label>
-              <div className="col-span-2 flex flex-row gap-4">
-                {/* Render Radio Buttons */}
-                {field.items.map((item, index) => (
-                  <label
-                    key={index}
-                    className="flex items-center gap-2 text-textGray"
-                  >
-                    <input
-                      type="radio"
-                      name={field.key} // Ensure all radio buttons for this field share the same name
-                      value={item.value || item} // Support object or string options
-                      checked={
-                        String(formValues[field.key]) === String(item.value || item)
-                      } // Compare as strings for consistency
-                      onChange={(e) => handleChange(field.key, e.target.value)}
-                      className="accent-primary"
-                      required
-                    />
-                    {item.label || item} {/* Support label or string value */}
-                  </label>
-                ))}
+              <div className="col-span-3 flex flex-row gap-4">
+                {(Array.isArray(field?.items) ? field.items : []).map(
+                  (item, index) => (
+                    <label
+                      key={index}
+                      className="flex items-center gap-2 text-textGray"
+                    >
+                      <input
+                        type="radio"
+                        name={field.key}
+                        value={item.value}
+                        checked={
+                          Array.isArray(formValues[field?.key])
+                            ? formValues[field.key]?.some(
+                                (option) =>
+                                  option?.value === item?.value &&
+                                  option?.checked
+                              )
+                            : formValues[field.key] === item?.value
+                        }
+                        onChange={(e) =>
+                          handleChange(field.key, e.target.value)
+                        }
+                        className="accent-primary"
+                        required
+                      />
+                      {item.label}
+                    </label>
+                  )
+                )}
               </div>
             </div>
           );
-        }
-        
-        
-         else if (field.type === "array" && field.key === "SubVenueDetails") {
+        } else if (field.type === "array" && field.key === "SubVenueDetails") {
           const subVenues =
             formValues[field.key]?.length > 0
               ? formValues[field.key]
@@ -2069,19 +2230,15 @@ const EditDynamicForm = ({
 
           return (
             <div key={field._id} className="col-span-2 flex flex-col gap-4">
-              <label className="text-primary text-xl font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
 
               {subVenues.map((subVenue, index) => (
                 <div key={index} className="rounded-md p-4 grid gap-4 ">
-                  <h3 className="text-primary text-xl font-semibold">
-                    Sub Venue {index + 1}
-                  </h3>
-
                   {field.items.map((item, i) => (
                     <div key={i} className="grid grid-cols-3 gap-4">
-                      <label className="text-primary text-xl font-semibold">
+                      <label className="text-primary text-base font-semibold">
                         {item.label}:
                       </label>
 
@@ -2439,7 +2596,7 @@ const EditDynamicForm = ({
                 </div>
               ))}
               {/* {isEditing && ( */}
-              <button
+              {/* <button
                 onClick={() =>
                   handleAddObject(field.key, {
                     Title: "",
@@ -2454,7 +2611,7 @@ const EditDynamicForm = ({
                 className="text-primary px-4 py-2 rounded flex items-center justify-center gap-1 font-medium"
               >
                 <IoAddCircleOutline className="text-xl" /> Add New Sub Venue
-              </button>
+              </button> */}
               {/* )} */}
             </div>
           );
@@ -2463,8 +2620,8 @@ const EditDynamicForm = ({
         // Changed code by Amaan
         else if (field.type === "array" && field.key === "DistanceFrom") {
           return (
-            <div key={field._id} className=" col-span-2 grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className=" col-span-2 grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3 flex items-center flex-col-reverse justify-center  gap-2">
@@ -2519,11 +2676,13 @@ const EditDynamicForm = ({
           );
         } else if (field.type === "array" && field.key === "Seasons") {
           return (
-            <SeasonsSelector
-              seasons={seasons}
-              onSeasonsChange={handleSeasonsChange}
-              className="col-span-2"
-            />
+            <div className="col-span-2">
+              <SeasonsSelector
+                seasons={seasons}
+                onSeasonsChange={handleSeasonsChange}
+                className="col-span-2"
+              />
+            </div>
           );
         } else if (field.type === "section" && field.key === "Cuisine") {
           return (
@@ -2554,11 +2713,11 @@ const EditDynamicForm = ({
           (field.key !== "SubVenueDetails" || field.key !== "DistanceFrom")
         ) {
           return (
-            <div key={field._id} className="grid grid-cols-3 gap-4">
-              <label className="text-primary text-xl font-semibold">
+            <div key={field._id} className="grid grid-cols-4 gap-4">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-2 flex items-start justify-start flex-col gap-2">
+              <div className="col-span-3 flex items-start justify-start flex-col gap-2">
                 <span className="flex items-center justify-center">
                   <input
                     type="text"

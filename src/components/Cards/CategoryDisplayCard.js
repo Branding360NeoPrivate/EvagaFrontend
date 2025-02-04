@@ -14,7 +14,7 @@ function CategoryDisplayCard({ image, text, onClick, catId }) {
   };
   return (
     <div
-      className="min-w-[140px] min-h-[140px]  flex flex-col items-center gap-3 cursor-pointer"
+      className="min-w-[110px] min-h-[130px]  flex flex-col items-center gap-3 cursor-pointer"
       onClick={() => handleSearch(catId,text)}
     >
       <div className="w-full  rounded-lg object-contain flex items-center justify-center">
@@ -24,7 +24,7 @@ function CategoryDisplayCard({ image, text, onClick, catId }) {
           className="w-full object-fit "
         />
       </div>
-      <p className="text-lg font-medium text-primary">
+      <p className="text-normal font-medium text-primary">
         {text ? text : "Default Text"}
       </p>
     </div>

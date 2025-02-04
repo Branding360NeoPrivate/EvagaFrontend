@@ -351,7 +351,7 @@ function VendorCreateService() {
 
       const response = await addNewService.callApi(userId, formData);
       toast.success(response?.message);
-      history("/vendor/dashboard");
+      // history("/vendor/dashboard");
       setLoading(false);
     } catch (error) {
       setLoading(false);

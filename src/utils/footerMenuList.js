@@ -11,7 +11,7 @@ export const footerMenuItems = {
   midMenu: [
     { label: "Evaga Community", path: internalRoutes.evagaCommunity },
     { label: "Become a Vendor", path: internalRoutes.vendorSignup },
-    { label: "Vendor Onboarding", path: internalRoutes.vendorLogin },
+    { label: "Vendor Login", path: internalRoutes.vendorLogin },
     { label: "Terms and Condition", path: '/' },
   ],
   rightMenu: [

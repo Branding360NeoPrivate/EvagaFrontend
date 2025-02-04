@@ -20,7 +20,7 @@ function Banner({ image, height, category }) {
         }
         alt="Banner"
         className={
-          // height ? `object-fill w-full h-[${height}]` :
+          height ? `object-fill w-full h-[${height}]` :
           "object-fill w-full "
         }
         onClick={category ? () => handleSearch() : undefined}

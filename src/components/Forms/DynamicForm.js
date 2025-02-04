@@ -27,7 +27,7 @@ const DynamicForm = ({
   const [isEditing, setIsEditing] = useState(false);
   const [foodMenu, setFoodMenu] = useState([]);
   const totalNumberOfPhotoAllowed =
-    process.env.REACT_APP_API_Number_of_Images_allowed || 6;
+    process.env.REACT_APP_API_Number_of_Images_allowed || 10;
   const editorStyle = {
     backgroundColor: "#7575751a",
   };
@@ -374,6 +374,7 @@ const DynamicForm = ({
       return setInhouseCategoringOrBoth(false);
     }
   }, [formValues?.CateringPolicy]);
+  console.log(formValues);
 
   return (
     <form
@@ -1043,7 +1044,7 @@ const DynamicForm = ({
 
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3">
@@ -1111,7 +1112,7 @@ const DynamicForm = ({
 
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3">
@@ -1204,7 +1205,7 @@ const DynamicForm = ({
 
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3">
@@ -1261,7 +1262,7 @@ const DynamicForm = ({
 
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3">
@@ -1321,7 +1322,7 @@ const DynamicForm = ({
         ) {
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3 flex items-center flex-col-reverse justify-start  gap-2">
@@ -1356,7 +1357,7 @@ const DynamicForm = ({
                               ₹
                             </span>
                           )}{" "}
-                               {objectKey === "Rates" && (
+                          {objectKey === "Rates" && (
                             <span className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
                               ₹
                             </span>
@@ -1407,7 +1408,7 @@ const DynamicForm = ({
                 key={field._id}
                 className="col-span-2 grid grid-cols-4 gap-4"
               >
-              <label className="text-primary text-base font-semibold">
+                <label className="text-primary text-base font-semibold">
                   {field.label}:
                 </label>
                 <div className="col-span-3 flex items-center flex-col-reverse justify-center gap-2">
@@ -1501,7 +1502,7 @@ const DynamicForm = ({
         } else if (field.type === "array" && field.key === "VehicleTarrifs") {
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3 flex items-center flex-col-reverse justify-center gap-2">
@@ -1562,7 +1563,7 @@ const DynamicForm = ({
         ) {
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3 flex  items-center justify-start gap-4 ">
@@ -1619,7 +1620,7 @@ const DynamicForm = ({
         } else if (field.type === "file" && field.key === "3DTour") {
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}*:
               </label>
               <div className="col-span-3 flex items-center justify-start gap-4">
@@ -1674,7 +1675,7 @@ const DynamicForm = ({
         } else if (field.type === "file" && field.key === "ProductImage") {
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3 flex items-center justify-start gap-4">
@@ -1744,7 +1745,7 @@ const DynamicForm = ({
         } else if (field.type === "array" && field.key === "Portfolio") {
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3 flex flex-col gap-4">
@@ -1901,7 +1902,7 @@ const DynamicForm = ({
         ) {
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3 flex items-start justify-start flex-col gap-2">
@@ -1952,7 +1953,7 @@ const DynamicForm = ({
         } else if (field.type === "multi-select") {
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3 flex items-start justify-start flex-wrap gap-3">
@@ -2002,7 +2003,7 @@ const DynamicForm = ({
 
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3 flex items-start justify-start flex-wrap gap-3">
@@ -2043,7 +2044,7 @@ const DynamicForm = ({
         } else if (field.type === "select") {
           return (
             <div key={field._id} className="col-span-1 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <p></p>
@@ -2091,7 +2092,7 @@ const DynamicForm = ({
 
           return (
             <div key={field._id} className="col-span-1 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <p></p>
@@ -2120,7 +2121,7 @@ const DynamicForm = ({
         ) {
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3 flex items-start justify-start flex-row gap-2">
@@ -2222,9 +2223,11 @@ const DynamicForm = ({
             </div>
           );
         } else if (field.type === "radio") {
+          console.log(field.items);
+          
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3 flex flex-row gap-4">
@@ -2268,7 +2271,7 @@ const DynamicForm = ({
 
           return (
             <div key={field._id} className="col-span-2 flex flex-col gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
 
@@ -2276,7 +2279,7 @@ const DynamicForm = ({
                 <div key={index} className="rounded-md p-4 grid gap-4 ">
                   {field.items.map((item, i) => (
                     <div key={i} className="grid grid-cols-3 gap-4">
-                    <label className="text-primary text-base font-semibold">
+                      <label className="text-primary text-base font-semibold">
                         {item.label}:
                       </label>
 
@@ -2659,7 +2662,7 @@ const DynamicForm = ({
         else if (field.type === "array" && field.key === "DistanceFrom") {
           return (
             <div key={field._id} className=" col-span-2 grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3 flex items-center flex-col-reverse justify-center  gap-2">
@@ -2752,7 +2755,7 @@ const DynamicForm = ({
         ) {
           return (
             <div key={field._id} className="grid grid-cols-4 gap-4">
-            <label className="text-primary text-base font-semibold">
+              <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
               <div className="col-span-3 flex items-start justify-start flex-col gap-2">

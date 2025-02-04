@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addService,
@@ -15,7 +15,10 @@ import CalenderBookingCard from "../../components/Cards/CalenderBookingCard";
 import Slider from "../../components/Slider/Slider";
 import ProfileCard from "../../components/Cards/ProfileCard";
 import SelectBookingCard from "../../components/Cards/SelectBookingCard";
-import { fetchBanner, fetchVendorBanner } from "../../context/redux/slices/bannerSlice";
+import {
+  fetchBanner,
+  fetchVendorBanner,
+} from "../../context/redux/slices/bannerSlice";
 import axios from "axios";
 import useServices from "../../hooks/useServices";
 import vendorApi from "../../services/vendorApi";
@@ -32,9 +35,6 @@ const VendorDashboard = () => {
   const [activeYear, setActiveYear] = useState(currentDate.getFullYear());
   const getAllVendorService = useServices(vendorApi.getvendorAllService);
 
-
-
-
   useEffect(() => {
     const today = new Date();
     setActiveMonth(today.getMonth() + 1);
@@ -43,7 +43,7 @@ const VendorDashboard = () => {
 
   const handleActiveStartDateChange = ({ activeStartDate }) => {
     if (activeStartDate) {
-      setActiveMonth(activeStartDate.getMonth() + 1); 
+      setActiveMonth(activeStartDate.getMonth() + 1);
       setActiveYear(activeStartDate.getFullYear());
     }
   };
@@ -53,13 +53,12 @@ const VendorDashboard = () => {
     (state) => state.vendor
   );
 
-
-  const { banner ,vendorBanner} = useSelector((state) => state.banner);
+  const { banner, vendorBanner } = useSelector((state) => state.banner);
   const dispatch = useDispatch();
-  const getAllVendorServiceHandle = async () => {
+  const getAllVendorServiceHandle = useCallback(async () => {
     const response = await getAllVendorService.callApi(userId);
     dispatch(addService(response?.services));
-  };
+  }, []);
   useEffect(() => {
     getAllVendorServiceHandle();
   }, []);
@@ -77,8 +76,8 @@ const VendorDashboard = () => {
 
   useEffect(() => {
     if (!vendorBanner || vendorBanner.length === 0) {
-      console.log('vendor banner');
-      
+      console.log("vendor banner");
+
       dispatch(fetchVendorBanner());
     }
   }, [dispatch, vendorBanner]);
@@ -120,13 +119,9 @@ const VendorDashboard = () => {
   };
 
   useEffect(() => {
-    getAllVendorServiceHandle();
-  }, []);
-  useEffect(() => {
     getMonthlyBookedDates();
   }, [activeMonth, activeYear]);
-  console.log(allService,'allService');
-  
+  console.log(allService, "allService");
 
   if (status === "loading" || status === "failed") {
     return <ErrorView status={status} error={error} />;
@@ -180,7 +175,11 @@ const VendorDashboard = () => {
                     item?.services?.[0]?.values?.CoverImage?.[0] ||
                     item?.services?.[0]?.values?.ProductImage?.[0]
                   }
-                  title={item?.services?.[0]?.values?.Title ||item?.services?.[0]?.values?.FoodTruckName||item?.services?.[0]?.values?.VenueName }
+                  title={
+                    item?.services?.[0]?.values?.Title ||
+                    item?.services?.[0]?.values?.FoodTruckName ||
+                    item?.services?.[0]?.values?.VenueName
+                  }
                   yearofexp={item?.YearofExperience}
                   category={item?.Category?.name}
                   subCategory={item?.SubCategory?.name}
@@ -258,7 +257,6 @@ const VendorDashboard = () => {
           </div>
         )}
       </div>
-
     </div>
   );
 };

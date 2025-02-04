@@ -32,6 +32,8 @@ const apiEndpoints = {
       `form/get-one-event-form-with-category/${categoryId}/${subCategoryId}`,
     addNewServiceVendor: (vendorId) =>
       `vender/createService/add-new-service/${vendorId}`,
+    updateServiceVendor: (serviceId) =>
+      `vender/createService/update-one-service/${serviceId}`,
     getOneVendorService: (serviceId) =>
       `vender/createService/get-one-service/${serviceId}`,
     getAllVendorServiceById: (vendorId) =>

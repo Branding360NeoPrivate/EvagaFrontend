@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { internalRoutes } from "../../utils/internalRoutes";
@@ -59,8 +59,32 @@ const DynamicNav = () => {
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
   };
+  const [isSliderOpen, setIsSliderOpen] = useState(false);
+  const sliderRef = useRef(null);
 
-  
+  // Toggle slider visibility
+  const toggleSlider = () => {
+    console.log(isSliderOpen);
+    setIsSliderOpen((prev) => !prev);
+  };
+
+  // Close slider when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        sliderRef.current &&
+        !sliderRef.current.contains(event.target) &&
+        event.target.id !== "sliderButton"
+      ) {
+        setIsSliderOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -112,7 +136,7 @@ const DynamicNav = () => {
           {/* User Controls */}
           {auth.isAuthenticated ? (
             <div className="flex items-center space-x-4">
-              <Link to={`/${auth.role}/profile`} >
+              <Link to={`/${auth.role}/profile`}>
                 <span className="text-lg font-medium capitalize border px-3 py-2 rounded-md">
                   My Profile
                 </span>
@@ -202,7 +226,10 @@ const DynamicNav = () => {
         )}
       </nav>
       <div className="bg-primary py-2 px-[2.5%] flex items-center justify-start gap-12 text-white">
-        <span className="flex items-center justify-center gap-2 text-white cursor-pointer">
+        <span
+          className="flex items-center justify-center gap-2 text-white cursor-pointer"
+          onClick={toggleSlider}
+        >
           <MdOutlineSort className="text-2xl text-white" />
           <p>All</p>
         </span>
@@ -211,6 +238,77 @@ const DynamicNav = () => {
         <Link to={"#"}>Community</Link>
         <Link to={"#"}>Customer Service</Link>
       </div>
+      <div
+        ref={sliderRef}
+        className={`slider rounded-r-md ${isSliderOpen ? "open z-50" : "closed z-50"}`}
+      >
+        <ul className="rounded-r-md">
+          <li>Home</li>
+          <li>About</li>
+          <li>Services</li>
+          <li>Contact</li>
+        </ul>
+      </div>
+      {/* Styles */}
+      <style jsx>{`
+        .slider-button {
+          padding: 10px 15px;
+          font-size: 16px;
+          background-color: #555;
+          color: white;
+          border: none;
+          cursor: pointer;
+        }
+
+        .slider-button:hover {
+          background-color: #777;
+        }
+
+        /* Slider */
+        .slider {
+          position: fixed;
+          top: 25%;
+          left: 0%;
+          height: fit-content;
+          width: 250px;
+          background-color: #f4f4f4;
+          box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+          transform: translateX(-100%);
+          transition: transform 0.3s ease-in-out;
+        }
+
+        .slider.open {
+          transform: translateX(0);
+        }
+
+        .slider.closed {
+          transform: translateX(-100%);
+        }
+
+        /* Menu styles */
+        .slider h2 {
+          padding: 20px;
+          background-color: #333;
+          color: white;
+          margin: 0;
+        }
+
+        .slider ul {
+          list-style: none;
+          padding: 10px;
+        }
+
+        .slider li {
+          margin: 10px 0;
+          padding: 10px;
+          background-color: #ddd;
+          cursor: pointer;
+        }
+
+        .slider li:hover {
+          background-color: #ccc;
+        }
+      `}</style>
     </>
   );
 };

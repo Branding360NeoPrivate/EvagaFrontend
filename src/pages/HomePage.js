@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBanner, fetchUserBanner } from "../context/redux/slices/bannerSlice";
+import {
+  fetchBanner,
+  fetchUserBanner,
+} from "../context/redux/slices/bannerSlice";
 import Slider from "../components/Slider/Slider";
 import CategoryDisplayCard from "../components/Cards/CategoryDisplayCard";
 import ProductCard from "../components/Cards/ProductCard";
@@ -19,7 +22,7 @@ import { addWishlist } from "../context/redux/slices/wishlistSlice";
 import { useAuth } from "../context/AuthContext";
 import userApi from "../services/userApi";
 function Home() {
-  const { banner ,userBanner} = useSelector((state) => state.banner);
+  const { banner, userBanner } = useSelector((state) => state.banner);
   const dispatch = useDispatch();
   const { categories } = useSelector((state) => state.category);
   const { allPackages } = useSelector((state) => state.package);
@@ -50,11 +53,14 @@ function Home() {
       dispatch(fetchCategories());
     }
   }, [dispatch, categories]);
+  const fetchedRef = useRef(false);
+
   useEffect(() => {
-    if (!allPackages || allPackages.length === 0) {
+    if (!fetchedRef.current && (!allPackages || allPackages.length === 0)) {
       handleGetAllPackages();
+      fetchedRef.current = true;
     }
-  }, [dispatch, allPackages]);
+  }, [allPackages]); // Remove dispatch
 
   useEffect(() => {
     if (!banner || banner.length === 0) {

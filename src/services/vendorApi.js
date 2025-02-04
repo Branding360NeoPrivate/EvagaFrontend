@@ -95,6 +95,16 @@ const vendorApi = {
         },
       }
     ),
+  updateVendorService: (serviceId, formData) =>
+    apiService.post(
+      apiEndpoints.vendor.updateServiceVendor(serviceId),
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    ),
   getOnevendorService: (serviceId) =>
     apiService.get(apiEndpoints.vendor.getOneVendorService(serviceId)),
   getvendorAllService: (vendorId, formData) =>

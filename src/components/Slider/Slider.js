@@ -30,6 +30,7 @@ function Slider({ bannerData }) {
           key={item?.BannerId}
           image={item?.BannerUrl}
           category={item?.categoryId}
+          height={'20rem'}
         />
       ))}
     </AliceCarousel>
