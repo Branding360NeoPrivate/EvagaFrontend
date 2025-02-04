@@ -16,6 +16,7 @@ import {
   addUser,
   totalUserCount,
 } from "../../context/redux/slices/adminActionsSlice";
+import BannerTable from "../../components/Admin/BannerTable";
 
 const AdminDashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState("Home");
@@ -168,6 +169,7 @@ const AdminDashboard = () => {
             </div>
           </>
         )}
+         {selectedMenu === "Banner" && <BannerTable/>}
       </div>
     </div>
   );

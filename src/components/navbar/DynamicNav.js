@@ -13,10 +13,12 @@ import { TbLanguageHiragana } from "react-icons/tb";
 import HomeSearchableCityDropdown from "../Inputs/HomeSearchableCityDropdown";
 import HomeSearchBar from "../Inputs/HomeSearchBar";
 import { MdOutlineSort } from "react-icons/md";
+import { useSelector } from "react-redux";
 const DynamicNav = () => {
   const { auth, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  const { categories } = useSelector((state) => state.category);
+  const allCategoriesOption = { _id: "all", name: "All" };
   // Define menus dynamically based on role
   const menuItems = [
     {
@@ -46,7 +48,7 @@ const DynamicNav = () => {
     { component: <HomeSearchBar />, roles: [] },
   ];
 
-  // Filter menu items based on role
+
   const filteredMenuItems =
     auth.isAuthenticated && auth.role === "vendor"
       ? menuItems.filter((item) => item.roles.includes(auth.role))
@@ -62,13 +64,11 @@ const DynamicNav = () => {
   const [isSliderOpen, setIsSliderOpen] = useState(false);
   const sliderRef = useRef(null);
 
-  // Toggle slider visibility
   const toggleSlider = () => {
     console.log(isSliderOpen);
     setIsSliderOpen((prev) => !prev);
   };
 
-  // Close slider when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -240,16 +240,21 @@ const DynamicNav = () => {
       </div>
       <div
         ref={sliderRef}
-        className={`slider rounded-r-md ${isSliderOpen ? "open z-50" : "closed z-50"}`}
+        className={`slider rounded-r-md ${
+          isSliderOpen ? "open z-50" : "closed z-50"
+        }`}
       >
         <ul className="rounded-r-md">
-          <li>Home</li>
-          <li>About</li>
-          <li>Services</li>
-          <li>Contact</li>
+          {[allCategoriesOption, ...categories].map((category, index) => (
+            <li
+              key={index}
+              className="px-4 py-1 text-normal text-textGray hover:bg-purpleHighlight hover:text-white font-medium cursor-pointer border-spacing-5 border-b-solid border-gray-200"
+            >
+              {category?.name}
+            </li>
+          ))}
         </ul>
       </div>
-      {/* Styles */}
       <style jsx>{`
         .slider-button {
           padding: 10px 15px;
@@ -267,10 +272,10 @@ const DynamicNav = () => {
         /* Slider */
         .slider {
           position: fixed;
-          top: 25%;
+          top: 15%;
           left: 0%;
           height: fit-content;
-          width: 250px;
+          width: 275px;
           background-color: #f4f4f4;
           box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
           transform: translateX(-100%);
@@ -285,29 +290,13 @@ const DynamicNav = () => {
           transform: translateX(-100%);
         }
 
-        /* Menu styles */
-        .slider h2 {
-          padding: 20px;
-          background-color: #333;
-          color: white;
-          margin: 0;
-        }
 
         .slider ul {
           list-style: none;
           padding: 10px;
         }
 
-        .slider li {
-          margin: 10px 0;
-          padding: 10px;
-          background-color: #ddd;
-          cursor: pointer;
-        }
-
-        .slider li:hover {
-          background-color: #ccc;
-        }
+     
       `}</style>
     </>
   );
