@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, memo } from "react";
 import {
   TextField,
   Button,
@@ -7,34 +7,50 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../context/redux/slices/categorySlice";
-function AddBannerForm({ onSubmit }) {
+import { useDispatch, useSelector } from "react-redux";
+
+const EditForm = memo(({ onSubmit, existingData }) => {
   const { categories } = useSelector((state) => state.category);
   const allCategoriesOption = { _id: "all", name: "All" };
   const [isCategoriesFetched, setIsCategoriesFetched] = useState(false);
   const dispatch = useDispatch();
+  const [bannerId, setBannerId] = useState(null);
   const [image, setImage] = useState(null);
-  const [altText, setAltText] = useState("");
-  const [forType, setForType] = useState("vendor");
-  const [category, setCategory] = useState("");
-  const [status, setStatus] = useState(true);
+  const [altText, setAltText] = useState(existingData?.altText || "");
+  const [forType, setForType] = useState(existingData?.forType || "vendor");
+  const [category, setCategory] = useState(existingData?.categoryId || "");
+  const [status, setStatus] = useState(existingData?.status ?? true);
+
+  useEffect(() => {
+    setImage(null);
+    setAltText(existingData?.altText || "");
+    setForType(existingData?.forType || "vendor");
+    setCategory(existingData?.categoryId || "");
+    setStatus(existingData?.status ?? true);
+    setBannerId(existingData?._id ?? true);
+  }, [existingData]);
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(file);
+      setImage((file));
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ image, altText, forType, category, status });
-    setImage(null);
-    setCategory("");
-    setForType("vendor");
-    setAltText("");
+    if (
+      !altText ||
+      !forType ||
+      (forType === "user" && !category) ||
+      status === ""
+    ) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+    onSubmit({ image, altText, forType, category, status,bannerId });
   };
-
   useEffect(() => {
     if (!isCategoriesFetched && (!categories || categories.length === 0)) {
       dispatch(fetchCategories()).then((response) => {
@@ -44,6 +60,7 @@ function AddBannerForm({ onSubmit }) {
       });
     }
   }, [categories, isCategoriesFetched, dispatch]);
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -54,11 +71,10 @@ function AddBannerForm({ onSubmit }) {
         accept="image/*"
         onChange={handleImageChange}
         className="mb-4"
-        required
       />
-      {image && (
+     {(image || existingData?.BannerUrl) && (
         <img
-          src={URL?.createObjectURL(image)}
+          src={image ? URL.createObjectURL(image) : `${process.env.REACT_APP_API_Image_BASE_URL}${existingData.BannerUrl}`}
           alt="Preview"
           className="w-full h-32 object-cover mb-4"
         />
@@ -70,11 +86,16 @@ function AddBannerForm({ onSubmit }) {
         onChange={(e) => setAltText(e.target.value)}
         fullWidth
         className="mb-4"
+        required
       />
 
       <FormControl fullWidth className="mb-4" required>
         <InputLabel>For Type</InputLabel>
-        <Select value={forType} onChange={(e) => setForType(e.target.value)}>
+        <Select
+          value={forType}
+          onChange={(e) => setForType(e.target.value)}
+          required
+        >
           <MenuItem value="vendor">Vendor</MenuItem>
           <MenuItem value="user">User</MenuItem>
         </Select>
@@ -86,9 +107,12 @@ function AddBannerForm({ onSubmit }) {
           <Select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
+            required
           >
             {[allCategoriesOption, ...categories]?.map((item) => (
-              <MenuItem value={item?._id}>{item?.name}</MenuItem>
+              <MenuItem key={item?._id} value={item?._id}>
+                {item?.name}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -99,6 +123,7 @@ function AddBannerForm({ onSubmit }) {
         <Select
           value={status}
           onChange={(e) => setStatus(e.target.value === "true")}
+          required
         >
           <MenuItem value={"true"}>Active</MenuItem>
           <MenuItem value={"false"}>Inactive</MenuItem>
@@ -117,10 +142,9 @@ function AddBannerForm({ onSubmit }) {
           },
         }}
       >
-        Submit
+        Save Changes
       </Button>
     </form>
   );
-}
-
-export default AddBannerForm;
+});
+export default EditForm;

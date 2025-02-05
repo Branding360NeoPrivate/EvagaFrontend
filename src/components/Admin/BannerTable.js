@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import TableComponet from "../../utils/TableComponet";
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineDelete } from "react-icons/md";
@@ -8,12 +8,19 @@ import { fetchBanner } from "../../context/redux/slices/bannerSlice";
 import AddBannerForm from "./AddBannerForm";
 import useServices from "../../hooks/useServices";
 import adminActionsApi from "../../services/adminActionsApi";
+import EditForm from "./EditBannerFrom";
+import DeleteForm from "./DeleteForm";
 
 function BannerTable() {
   const [page, setPage] = useState(1);
+  const [oneBannerData, setOneBannerData] = useState();
+  const [bannerId, setBannerId] = useState(null);
   const { banner } = useSelector((state) => state.banner);
   const addBanner = useServices(adminActionsApi.addBanner);
-
+  const getOneBanner = useServices(adminActionsApi.getOneBanner);
+  const updateOneBanner = useServices(adminActionsApi.editBanner);
+  const deleteOneBanner = useServices(adminActionsApi.deleteBanner);
+  const [hasFetched, setHasFetched] = useState(false);
   const dispatch = useDispatch();
 
   const handlePageChange = (event, value) => {
@@ -27,17 +34,55 @@ function BannerTable() {
   const handleClose = () => {
     setOpen(false);
   };
-  const addBannerhandle = async({image, altText, forType, category, status}) => {
-    const formData=new FormData()
-    formData.append("bannerImage",image)
-    formData.append("altText",altText)
-    formData.append("categoryId",category)
-    formData.append("forType",forType)
-    formData.append("status",status)
-    const response=await addBanner.callApi(formData)
-    handleClose()
-    dispatch(fetchBanner())
-    
+  const addBannerhandle = async ({
+    image,
+    altText,
+    forType,
+    category,
+    status,
+  }) => {
+    const formData = new FormData();
+    formData.append("bannerImage", image);
+    formData.append("altText", altText);
+    formData.append("categoryId", category);
+    formData.append("forType", forType);
+    formData.append("status", status);
+    const response = await addBanner.callApi(formData);
+    handleClose();
+    dispatch(fetchBanner());
+  };
+  const getOneBannerHandle = useCallback(async (bannerId) => {
+    const response = await getOneBanner.callApi(bannerId);
+    setOneBannerData(response?.banner);
+  });
+  const updateBannerhandle = async ({
+    image,
+    altText,
+    forType,
+    category,
+    status,
+    bannerId,
+  }) => {
+    console.log(image, altText, forType, category, status, bannerId);
+
+    const formData = new FormData();
+    formData.append("bannerImage", image);
+    formData.append("altText", altText);
+    formData.append("categoryId", category);
+    formData.append("forType", forType);
+    formData.append("status", status);
+    const response = await updateOneBanner.callApi(bannerId, formData);
+    console.log(response);
+
+    handleClose();
+    dispatch(fetchBanner());
+  };
+  const deleteBannerHandle = async () => {
+    const response = await deleteOneBanner.callApi(bannerId);
+
+    handleClose();
+    dispatch(fetchBanner());
+    setBannerId(null);
   };
 
   const columns = [
@@ -63,25 +108,37 @@ function BannerTable() {
     {
       label: "Action",
       key: "interests",
-      render: () => (
+      render: (row) => (
         <div className="flex items-center justify-center gap-2">
           <CiEdit
             className="text-3xl font-semibold cursor-pointer text-textGray"
-            onClick={() => [handleOpen(), setModalType("editBanner")]}
+            onClick={() => [
+              handleOpen(),
+              setModalType("editBanner"),
+              getOneBannerHandle(row?._id),
+            ]}
           />
           <MdOutlineDelete
             className="text-3xl font-semibold cursor-pointer text-textGray"
-            onClick={() => [handleOpen(), setModalType("deleteBanner")]}
+            onClick={() => [
+              handleOpen(),
+              setModalType("deleteBanner"),
+              setBannerId(row?._id),
+            ]}
           />
         </div>
       ),
     },
   ];
+
+
   useEffect(() => {
-    if (!banner || (Array.isArray(banner) && banner.length === 0)) {
+    if (!hasFetched && (!banner || (Array.isArray(banner) && banner.length === 0))) {
       dispatch(fetchBanner());
+      setHasFetched(true);
     }
-  }, [banner, dispatch]);
+  }, [banner, dispatch, hasFetched]);
+
   return (
     <div>
       <button
@@ -110,7 +167,18 @@ function BannerTable() {
             : "Default Title"
         }
       >
-        {modalType === "addBanner" && <AddBannerForm onSubmit={addBannerhandle}/>}
+        {modalType === "addBanner" && (
+          <AddBannerForm onSubmit={addBannerhandle} />
+        )}
+        {modalType === "editBanner" && (
+          <EditForm
+            existingData={oneBannerData}
+            onSubmit={updateBannerhandle}
+          />
+        )}{" "}
+        {modalType === "deleteBanner" && (
+          <DeleteForm onDelete={deleteBannerHandle} />
+        )}
       </ReusableModal>
     </div>
   );

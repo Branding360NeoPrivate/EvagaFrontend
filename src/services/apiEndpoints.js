@@ -117,6 +117,7 @@ const apiEndpoints = {
       `adminAction/update-vendor-profilepic-details/${vendorID}`,
     addBanner: "banner/add-banner",
     editBanner:(bannerId) => `banner/update-one-banner/${bannerId}`,
+    getOneBanner:(bannerId) => `banner/get-one-banner-by-id/${bannerId}`,
     deleteBanner:(bannerId) => `banner/delete-one-banner/${bannerId}`,
   },
   packages: {
