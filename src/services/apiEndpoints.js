@@ -98,6 +98,7 @@ const apiEndpoints = {
     deleteProfile: (userId) => `admin/deleteAdminProfile/${userId}`,
     logout: (userId) => `admin/logoutAdmin/${userId}`,
     getTotalUser: "user/get-all-user",
+ 
   },
   adminActions: {
     getAllVendorsWithProfileStatusAndService:
@@ -114,6 +115,9 @@ const apiEndpoints = {
       `adminAction/update-vendor-bio-details/${vendorID}`,
     updateVendorProfilePicUpdateByAdmin: (vendorID) =>
       `adminAction/update-vendor-profilepic-details/${vendorID}`,
+    addBanner: "banner/add-banner",
+    editBanner:(bannerId) => `banner/update-one-banner/${bannerId}`,
+    deleteBanner:(bannerId) => `banner/delete-one-banner/${bannerId}`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",

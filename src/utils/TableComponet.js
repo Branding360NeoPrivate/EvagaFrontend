@@ -2,6 +2,12 @@ import React from "react";
 import { Pagination, Stack } from "@mui/material";
 
 const TableComponet = ({ columns, data, page = 1, itemsPerPage = 10, onPageChange }) => {
+  const style = {
+    "& .Mui-selected": {
+      backgroundColor: "#6A1B9A !important",
+      color: "white",
+    },
+  };
   const count = Math.ceil((data?.length || 0) / itemsPerPage);
   const startIndex = (page - 1) * itemsPerPage;
   const paginatedData = data?.slice(startIndex, startIndex + itemsPerPage) || [];
@@ -42,7 +48,7 @@ const TableComponet = ({ columns, data, page = 1, itemsPerPage = 10, onPageChang
       {/* Pagination Component */}
       <div className="flex items-center justify-center w-full py-3">
         <Stack spacing={2}>
-          <Pagination count={count} page={page} onChange={onPageChange} />
+          <Pagination count={count} page={page} onChange={onPageChange} sx={style}/>
         </Stack>
       </div>
     </div>

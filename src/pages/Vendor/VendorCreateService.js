@@ -469,8 +469,7 @@ function VendorCreateService() {
   const handleCreateService = () => {
     // const savedData = JSON.parse(localStorage.getItem("savedFormData")) || [];
     // console.log("Submitting Service with Data:", savedData);
-    console.log("Filled Data:", filedFormData);
-    console.log("updatedInstance:", formInstances, formInstances.length);
+
   };
 
   // Master Venue Modal Functionality

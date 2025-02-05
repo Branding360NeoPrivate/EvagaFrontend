@@ -1784,12 +1784,13 @@ const DynamicForm = ({
                                 field.key,
                                 "photos",
                                 selectedFiles
-                              ); // No index
+                              );
                             }}
                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                           />
+                            <p>Upload upto 30 Images</p>
                         </div>
-                        {/* Render Photos */}
+                      
                         <div className="flex flex-wrap gap-1">
                           {(formValues?.Portfolio?.photos || [])?.map(
                             (photo, photoIdx) => (
@@ -1799,13 +1800,12 @@ const DynamicForm = ({
                               >
                                 <p>{photo?.name}</p>
                                 <button
-                                  onClick={
-                                    () =>
-                                      handleFileRemove(
-                                        field.key,
-                                        "photos",
-                                        photoIdx
-                                      ) // No index
+                                  onClick={() =>
+                                    handleFileRemove(
+                                      field.key,
+                                      "photos",
+                                      photoIdx
+                                    )
                                   }
                                   className="px-3 py-1"
                                 >
@@ -1828,20 +1828,16 @@ const DynamicForm = ({
                             type="file"
                             accept="video/mp4, video/webm"
                             onChange={(e) => {
-                              const maxFileSize = 100 * 1024 * 1024; // 100 MB
+                              const maxFileSize = 100 * 1024 * 1024; 
                               const selectedFiles = Array.from(e.target.files);
-
-                              // Check if there's already a video uploaded
                               const existingVideos =
                                 formValues?.Portfolio?.videos || [];
-                              if (existingVideos.length > 0) {
+                              if (existingVideos.length > 6) {
                                 alert(
-                                  "You can only upload one video. Please remove the existing video before uploading a new one."
+                                  "You can only upload max 6 video. Please remove the existing video before uploading a new one."
                                 );
                                 return;
                               }
-
-                              // Check for oversized files
                               const oversizedFiles = selectedFiles.filter(
                                 (file) => file.size > maxFileSize
                               );
@@ -1859,7 +1855,9 @@ const DynamicForm = ({
                               ); // No index
                             }}
                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            
                           />
+                           <p>Upload upto 6 Video</p>
                         </div>
                         {/* Render Videos */}
                         <div className="flex flex-wrap gap-1">
@@ -2224,7 +2222,7 @@ const DynamicForm = ({
           );
         } else if (field.type === "radio") {
           console.log(field.items);
-          
+
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-base font-semibold">

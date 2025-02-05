@@ -38,6 +38,36 @@ const adminActionsApi = {
         },
       }
     ),
+  addBanner: (formData) =>
+    apiService.post(
+      apiEndpoints.adminActions.addBanner,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    ),
+  editBanner: (bannerId, formData) =>
+    apiService.post(
+      apiEndpoints.adminActions.editBanner(bannerId),
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    ),
+    deleteBanner: (bannerId, formData) =>
+    apiService.post(
+      apiEndpoints.adminActions.deleteBanner(bannerId),
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    ),
 };
 
 export default adminActionsApi;
