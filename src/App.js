@@ -41,6 +41,7 @@ import Cookies from "js-cookie";
 import UserForgotPassword from "./pages/User/UserForgotPassword";
 import InterestSelection from "./pages/InterestSelection";
 import UserProfile from "./pages/User/UserProfile";
+import PressRelease from "./pages/PressRelease";
 const AppContent = () => {
   const { auth } = useAuth();
   const dispatch = useDispatch();
@@ -110,6 +111,7 @@ const AppContent = () => {
           path={internalRoutes.searchresultPage}
         />
         <Route element={<Wishlist />} path={internalRoutes.wishlist} />
+        <Route element={<PressRelease />} path={internalRoutes.pressReleases} />
         <Route
           element={<SinglePackage />}
           path={`${internalRoutes.SinglePackage + "/:serviceId/:packageId"}`}
