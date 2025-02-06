@@ -55,6 +55,28 @@ const adminActionsApi = {
 
   deleteBanner: (bannerId) =>
     apiService.delete(apiEndpoints.adminActions.deleteBanner(bannerId)),
+  getAllCoupons: () => apiService.get(apiEndpoints.adminActions.getAllCoupons),
+  addCoupons: (formData) =>
+    apiService.post(apiEndpoints.adminActions.addCoupons, formData),
+  getOneCoupons: (couponId) =>
+    apiService.get(apiEndpoints.adminActions.getOneCoupons(couponId)),
+  editOneCoupons: (couponId, formData) =>
+    apiService.put(
+      apiEndpoints.adminActions.editOneCoupons(couponId),
+      formData
+    ),
+  deleteOneCoupons: (couponId) =>
+    apiService.delete(apiEndpoints.adminActions.deleteOneCoupons(couponId)),
+  getAllCategoryFees: () =>
+    apiService.get(apiEndpoints.adminActions.getAllCategoryFees),
+  addCategoryFees: (formData) =>
+    apiService.post(apiEndpoints.adminActions.addCategoryFees, formData),
+  getOneFees: (feeId) =>
+    apiService.get(apiEndpoints.adminActions.getOneFees(feeId)),
+  editOneFees: (feeId, formData) =>
+    apiService.put(apiEndpoints.adminActions.editOneFees(feeId), formData),
+  deleteOneFees: (feeId) =>
+    apiService.delete(apiEndpoints.adminActions.deleteOneFees(feeId)),
 };
 
 export default adminActionsApi;

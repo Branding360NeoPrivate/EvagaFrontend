@@ -8,18 +8,17 @@ import {
   FaBars,
   FaAngleRight,
   FaAngleLeft,
+  FaRegMoneyBillAlt,
 } from "react-icons/fa";
-
+import { RiCoupon3Line } from "react-icons/ri";
 import MainLogo from "../../assets/Temporary Images/Evaga Logo.png";
-import useServices from "../../hooks/useServices";
-import adminApi from "../../services/adminApi";
 import { toast } from "react-toastify";
-import Cookies from 'js-cookie'
+import Cookies from "js-cookie";
 import { useAuth } from "../../context/AuthContext";
 import { FaRegImage } from "react-icons/fa6";
 const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
-  const userId=Cookies.get('userId')
-    const { auth, logout } = useAuth();
+  const userId = Cookies.get("userId");
+  const { auth, logout } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
   // const logout = useServices(adminApi.logout);
   const handleLogout = async (userId) => {
@@ -30,7 +29,13 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
     { id: "Home", label: "Home", icon: <FaHome /> },
     { id: "Vendor", label: "Vendor", icon: <FaUsers /> },
     { id: "Client", label: "Client", icon: <FaClipboardList /> },
-    { id: "Banner", label: "Banner", icon: <FaRegImage  /> },
+    { id: "Banner", label: "Banner", icon: <FaRegImage /> },
+    { id: "Coupons", label: "Coupons", icon: <RiCoupon3Line /> },
+    {
+      id: "Fee Breakdown by Category",
+      label: "Fee Breakdown by Category",
+      icon: <FaRegMoneyBillAlt  />,
+    },
     { id: "AdminUsers", label: "Admin Users", icon: <FaUserShield /> },
     { id: "SupportCenter", label: "Support Center", icon: <FaHeadset /> },
   ];

@@ -103,7 +103,7 @@ function BannerTable() {
     {
       label: "Status",
       key: "status",
-      render: () => (true ? "Active" : "Deactive"),
+      render: (row) => (row?.status === true ? "Active" : "Deactive"),
     },
     {
       label: "Action",
@@ -131,9 +131,11 @@ function BannerTable() {
     },
   ];
 
-
   useEffect(() => {
-    if (!hasFetched && (!banner || (Array.isArray(banner) && banner.length === 0))) {
+    if (
+      !hasFetched &&
+      (!banner || (Array.isArray(banner) && banner.length === 0))
+    ) {
       dispatch(fetchBanner());
       setHasFetched(true);
     }

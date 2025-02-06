@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { FaFilter, FaSort } from "react-icons/fa";
-import AdminVendorTableModal from "./AdminVendorTableModal";
-import { fetchAllVendorsWithProfileStatusAndService } from "../../context/redux/slices/adminActionsSlice";
 import { Pagination, Stack } from "@mui/material";
 
 const UserTable = ({ onMenuSelect, selectedVendor, setSelectedVendor }) => {
@@ -12,15 +10,12 @@ const UserTable = ({ onMenuSelect, selectedVendor, setSelectedVendor }) => {
       color: "white",
     },
   };
-  const dispatch = useDispatch();
   const { users, totalNumberOfUser, status, error } = useSelector(
     (state) => state.adminActions
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    dispatch(fetchAllVendorsWithProfileStatusAndService());
-  }, [dispatch]);
+
 
   // Open modal with vendor details
   const handleViewDetails = (vendor) => {

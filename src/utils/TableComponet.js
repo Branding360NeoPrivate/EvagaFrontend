@@ -27,7 +27,7 @@ const TableComponet = ({ columns, data, page = 1, itemsPerPage = 10, onPageChang
         <tbody>
           {paginatedData.length > 0 ? (
             paginatedData.map((row, rowIndex) => (
-              <tr key={rowIndex} className="text-center border border-gray-200">
+              <tr key={rowIndex} className="text-center border text-textGray border-gray-200">
                 {columns.map((col, colIndex) => (
                   <td key={colIndex} className="px-4 py-2">
                     {col.render ? col.render(row, rowIndex) : row[col.key] || "N/A"}

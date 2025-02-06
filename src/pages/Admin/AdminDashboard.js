@@ -17,6 +17,8 @@ import {
   totalUserCount,
 } from "../../context/redux/slices/adminActionsSlice";
 import BannerTable from "../../components/Admin/BannerTable";
+import CouponsTable from "../../components/Admin/CouponsTable";
+import FeeBreakdownbyCategory from "../../components/Admin/FeeBreakdownbyCategory";
 
 const AdminDashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState("Home");
@@ -73,7 +75,6 @@ const AdminDashboard = () => {
       dispatch(fetchAdminDetails(auth.userId));
     }
   }, [dispatch, auth.userId]);
-  console.log(selectedMenu, "selectedMenu");
 
   return (
     <div className="flex h-auto bg-gray-100">
@@ -126,7 +127,7 @@ const AdminDashboard = () => {
         )}
         {selectedMenu === "VendorDocumentVerification" && (
           <div className="bg-white shadow rounded-lg">
-            <AdminVendorProfileViewer vendorId={selectedVendor?._id} />
+            <AdminVendorProfileViewer vendorId={selectedVendor?._id}/>
           </div>
         )}
 
@@ -170,6 +171,8 @@ const AdminDashboard = () => {
           </>
         )}
          {selectedMenu === "Banner" && <BannerTable/>}
+         {selectedMenu === "Coupons" && <CouponsTable/>}
+         {selectedMenu === "Fee Breakdown by Category" && <FeeBreakdownbyCategory/>}
       </div>
     </div>
   );

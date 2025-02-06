@@ -44,7 +44,7 @@ function ProductCard({
   };
 
   return (
-    <div className="min-w-[295px] min-h-[356px] border rounded-lg bg-white overflow-hidden">
+    <div className="min-w-[265px] min-h-[340px] border rounded-lg bg-white overflow-hidden">
       <div className="w-full h-[247px]" onClick={onClick}>
         <img
           src={popularimage}
@@ -55,7 +55,7 @@ function ProductCard({
       <div className="p-2">
         <div className="flex justify-between items-center" onClick={onClick}>
           <div className="w-[82%] flex flex-col justify-start">
-            <span className="text-[18px] font-semibold text-primary">
+            <span className="text-normal font-medium text-primary">
               {title}
             </span>
             <span className="text-sm text-gray-600 mt-1">{category}</span>

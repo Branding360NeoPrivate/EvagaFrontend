@@ -19,7 +19,6 @@ const DynamicNav = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { categories } = useSelector((state) => state.category);
   const allCategoriesOption = { _id: "all", name: "All" };
-  // Define menus dynamically based on role
   const menuItems = [
     {
       label: "Services",
@@ -47,7 +46,6 @@ const DynamicNav = () => {
     { component: <HomeSearchableCityDropdown />, roles: [] },
     { component: <HomeSearchBar />, roles: [] },
   ];
-
 
   const filteredMenuItems =
     auth.isAuthenticated && auth.role === "vendor"
@@ -248,7 +246,7 @@ const DynamicNav = () => {
           {[allCategoriesOption, ...categories].map((category, index) => (
             <li
               key={index}
-              className="px-4 py-1 text-normal text-textGray hover:bg-purpleHighlight hover:text-white font-medium cursor-pointer border-spacing-5 border-b-solid border-gray-200"
+              className="px-4 py-1 text-sm text-textGray hover:bg-purpleHighlight hover:text-white hover:rounded-md font-medium cursor-pointer border-spacing-5 border-b-solid border-gray-200"
             >
               {category?.name}
             </li>
@@ -290,13 +288,10 @@ const DynamicNav = () => {
           transform: translateX(-100%);
         }
 
-
         .slider ul {
           list-style: none;
           padding: 10px;
         }
-
-     
       `}</style>
     </>
   );

@@ -98,7 +98,6 @@ const apiEndpoints = {
     deleteProfile: (userId) => `admin/deleteAdminProfile/${userId}`,
     logout: (userId) => `admin/logoutAdmin/${userId}`,
     getTotalUser: "user/get-all-user",
- 
   },
   adminActions: {
     getAllVendorsWithProfileStatusAndService:
@@ -116,9 +115,19 @@ const apiEndpoints = {
     updateVendorProfilePicUpdateByAdmin: (vendorID) =>
       `adminAction/update-vendor-profilepic-details/${vendorID}`,
     addBanner: "banner/add-banner",
-    editBanner:(bannerId) => `banner/update-one-banner/${bannerId}`,
-    getOneBanner:(bannerId) => `banner/get-one-banner-by-id/${bannerId}`,
-    deleteBanner:(bannerId) => `banner/delete-one-banner/${bannerId}`,
+    editBanner: (bannerId) => `banner/update-one-banner/${bannerId}`,
+    getOneBanner: (bannerId) => `banner/get-one-banner-by-id/${bannerId}`,
+    deleteBanner: (bannerId) => `banner/delete-one-banner/${bannerId}`,
+    getAllCoupons: `coupons/get-all-coupons`,
+    addCoupons: `coupons/create-one-coupons`,
+    getOneCoupons: (couponId) => `coupons/get-one-coupons/${couponId}`,
+    editOneCoupons: (couponId) => `coupons/edit-one-coupons/${couponId}`,
+    deleteOneCoupons: (couponId) => `coupons/delete-one-coupons/${couponId}`,
+    getAllCategoryFees: `categoryFee/getCategoryFees`,
+    addCategoryFees: `categoryFee/createCategoryFee`,
+    getOneFees: (feeId) => `categoryFee/getCategoryFee/${feeId}`,
+    editOneFees: (feeId) => `categoryFee/updateCategoryFee/${feeId}`,
+    deleteOneFees: (feeId) => `categoryFee/deleteCategoryFee/${feeId}`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",

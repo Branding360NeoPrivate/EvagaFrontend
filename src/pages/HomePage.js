@@ -60,7 +60,7 @@ function Home() {
       handleGetAllPackages();
       fetchedRef.current = true;
     }
-  }, [allPackages]); // Remove dispatch
+  }, [allPackages]); 
 
   useEffect(() => {
     if (!banner || banner.length === 0) {
@@ -125,12 +125,7 @@ function Home() {
     },
   ];
 
-  // Mock data
-  // State for products
 
-  // Handle Sorting
-
-  // Update filters when checkboxes are clicked
 
   return (
     <motion.div
