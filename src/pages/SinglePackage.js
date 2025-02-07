@@ -93,7 +93,7 @@ function SinglePackage() {
     >
       <div
         className=" flex justify-center items-start flex-col"
-        style={{ flex: "0.4" }}
+        style={{ flex: "0.35" }}
       >
         <ImageNavigationCard
           mediaUrls={images}

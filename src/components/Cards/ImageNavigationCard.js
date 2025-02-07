@@ -73,7 +73,7 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
             <img
               src={process.env.REACT_APP_API_Image_BASE_URL + selectedUrl}
               alt="Selected Media"
-              className="w-full h-full object-cover rounded-md cursor-pointer aspect-[4/5]"
+              className="w-fit h-full object-cover rounded-md cursor-pointer aspect-[4/5]"
               onClick={() => setIsModalOpen(true)}
             />
           </div>
