@@ -51,7 +51,7 @@ function VendorCreateService() {
       if (!abouttheService.trim()) {
         toast.error("Please fill in the 'About the Service' field.");
         return;
-        return;
+  
       }
 
       if (
@@ -60,7 +60,6 @@ function VendorCreateService() {
         yearofExperience <= 0
       ) {
         toast.error("Please enter a valid 'Year(s) of Experience'.");
-        return;
         return;
       }
       setLoading(true);
@@ -347,7 +346,7 @@ function VendorCreateService() {
           }
         });
       });
-      console.log(services, "service");
+  
 
       const response = await addNewService.callApi(userId, formData);
       toast.success(response?.message);

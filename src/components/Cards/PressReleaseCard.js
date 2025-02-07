@@ -13,6 +13,7 @@ const PressReleaseCard = memo(({ articleUrl }) => {
             key: process.env.REACT_APP_Link_previwer,
             q: articleUrl,
           },
+           withCredentials: false,
         });
 
         const data = response.data;

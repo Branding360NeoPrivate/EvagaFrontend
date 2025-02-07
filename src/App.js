@@ -42,6 +42,7 @@ import UserForgotPassword from "./pages/User/UserForgotPassword";
 import InterestSelection from "./pages/InterestSelection";
 import UserProfile from "./pages/User/UserProfile";
 import PressRelease from "./pages/PressRelease";
+import CheckOut from "./pages/CheckOut";
 const AppContent = () => {
   const { auth } = useAuth();
   const dispatch = useDispatch();
@@ -111,6 +112,7 @@ const AppContent = () => {
           path={internalRoutes.searchresultPage}
         />
         <Route element={<Wishlist />} path={internalRoutes.wishlist} />
+        <Route element={<CheckOut />} path={internalRoutes.checkout} />
         <Route element={<PressRelease />} path={internalRoutes.pressReleases} />
         <Route
           element={<SinglePackage />}

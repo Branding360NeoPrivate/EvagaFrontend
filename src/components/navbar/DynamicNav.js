@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { internalRoutes } from "../../utils/internalRoutes";
 import logo from "../../assets/Temporary Images/Evaga Logo.png";
+import cart from "../../assets/Temporary Images/cart.png";
 
 import { MdExitToApp } from "react-icons/md";
 import { LiaLanguageSolid } from "react-icons/lia";
@@ -153,6 +154,15 @@ const DynamicNav = () => {
               </button>
             </Link>
           )}
+          {(!auth?.isAuthenticated || auth?.role == "user") && (
+            <Link to={internalRoutes.checkout}>
+              <img
+                src={cart}
+                alt="cart"
+                className="h-[2rem] object-contain cursor-pointer"
+              />
+            </Link>
+          )}
         </div>
 
         {/* Mobile Menu */}
@@ -223,7 +233,7 @@ const DynamicNav = () => {
           </div>
         )}
       </nav>
-      <div className="bg-primary py-2 px-[2.5%] flex items-center justify-start gap-12 text-white">
+      <div className="bg-primary px-[2.5%] flex items-center justify-start gap-12 text-white flex-wrap gap-y-2">
         <span
           className="flex items-center justify-center gap-2 text-white cursor-pointer"
           onClick={toggleSlider}

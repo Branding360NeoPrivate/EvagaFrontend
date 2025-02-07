@@ -70,45 +70,6 @@ function SinglePackage() {
     handlegetOnePackage();
   }, [serviceId, packageId]);
 
-  const weddingPhotographyData = [
-    {
-      title: "Wedding Photography",
-      category: "Photography",
-      rating: 3.9,
-      reviews: 353,
-      experience: 5,
-      companyName: "Geeta Pvt Ltd.",
-      price: "₹ 1,01,000.00",
-      eventData: ["Weddings", "Engagement"],
-      inclusionData: [
-        "Posed Photos",
-        "Bridal Portraits",
-        "Reception Highlights",
-      ],
-      deliverableData: [
-        "500 Edited Photos",
-        "2hr Wedding Film",
-        "100 Photo Album Book",
-        "5 Instagram reels",
-      ],
-      terms: [
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
-        "It has survived not only five centuries.",
-      ],
-    },
-  ];
-  const AddorBuyDetails = [
-    {
-      price: "₹1,01,000.00",
-      pincode: "123456",
-      addonsPrice: "10,000.00",
-      addonsDetails: [
-        { title: "Drone", description: "Sky drone for aerial shots" },
-        { title: "Lighting Setup", description: "Professional lighting setup" },
-      ],
-    },
-  ];
   const [selectedImage, setSelectedImage] = useState(null);
   useEffect(() => {
     if (images && images.length > 0) {
