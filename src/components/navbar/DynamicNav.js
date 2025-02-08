@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { internalRoutes } from "../../utils/internalRoutes";
 import logo from "../../assets/Temporary Images/Evaga Logo.png";
@@ -15,10 +15,18 @@ import HomeSearchableCityDropdown from "../Inputs/HomeSearchableCityDropdown";
 import HomeSearchBar from "../Inputs/HomeSearchBar";
 import { MdOutlineSort } from "react-icons/md";
 import { useSelector } from "react-redux";
+import useDebounce from "../../utils/useDebounce";
+import Cookies from "js-cookie";
 const DynamicNav = () => {
   const { auth, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { categories } = useSelector((state) => state.category);
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+    const [search, setSearch] = useState();
+    const debounce = useDebounce(search);
+    const { searchTerm } = useSelector((state) => state.userSearch);
   const allCategoriesOption = { _id: "all", name: "All" };
   const menuItems = [
     {
@@ -85,6 +93,65 @@ const DynamicNav = () => {
     };
   }, []);
 
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category?.name);
+    setSelectedCategoryId(category?._id);
+    Cookies.set("selectedCategory", category?.name, { expires: 1 });
+    Cookies.set("selectedCategoryId", category?._id, { expires: 1 });
+    setIsDropdownOpen(false);
+  };
+  const navigate = useNavigate();
+  const [shouldRedirect, setShouldRedirect] = useState(false);
+  const handleSearch = useCallback(
+    (bypassSearchTermCheck = true) => {
+      if (bypassSearchTermCheck || searchTerm.trim()) {
+        const query = new URLSearchParams({
+          q: searchTerm.trim(),
+          category: selectedCategoryId ? selectedCategoryId : "all",
+        }).toString();
+
+        navigate(`/search?${query}`);
+      }
+    },
+    [searchTerm, selectedCategoryId, navigate]
+  );
+
+  useEffect(() => {
+    handleSearch(shouldRedirect);
+    setShouldRedirect(false);
+  }, [debounce, shouldRedirect]);
+  useEffect(() => {
+    const handleCookieChange = () => {
+      const currentCategory = Cookies.get("selectedCategory") || "All";
+      setSelectedCategory((prev) =>
+        prev !== currentCategory ? currentCategory : prev
+      );
+    };
+
+    const onCookieChange = (e) => {
+      if (e.detail.key === "selectedCategory") {
+        handleCookieChange();
+      }
+    };
+
+    window.addEventListener("cookieChange", onCookieChange);
+
+    return () => {
+      window.removeEventListener("cookieChange", onCookieChange);
+    };
+  }, []);
+  Cookies.set = ((originalSet) => {
+    return (...args) => {
+      const result = originalSet.apply(Cookies, args);
+
+      const event = new CustomEvent("cookieChange", {
+        detail: { key: args[0], value: args[1] },
+      });
+      window.dispatchEvent(event);
+
+      return result;
+    };
+  })(Cookies.set);
   return (
     <>
       <nav className="sticky top-0 z-50 bg-purpleSecondary text-white shadow-lg w-full flex justify-between items-center flex-wrap px-4 md:px-10">
@@ -257,6 +324,11 @@ const DynamicNav = () => {
             <li
               key={index}
               className="px-4 py-1 text-sm text-textGray hover:bg-purpleHighlight hover:text-white hover:rounded-md font-medium cursor-pointer border-spacing-5 border-b-solid border-gray-200"
+              onClick={() => [
+                handleCategorySelect(category),
+                setShouldRedirect(true),
+                toggleSlider()
+              ]}
             >
               {category?.name}
             </li>
