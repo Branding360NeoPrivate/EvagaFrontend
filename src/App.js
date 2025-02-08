@@ -43,6 +43,9 @@ import InterestSelection from "./pages/InterestSelection";
 import UserProfile from "./pages/User/UserProfile";
 import PressRelease from "./pages/PressRelease";
 import CheckOut from "./pages/CheckOut";
+import AboutEvaga from "./pages/AboutEvaga";
+import RefundAndCancellation from "./pages/RefundAndCancellation";
+import TermsAndConditions from "./pages/TermsAndConditions";
 const AppContent = () => {
   const { auth } = useAuth();
   const dispatch = useDispatch();
@@ -114,6 +117,9 @@ const AppContent = () => {
         <Route element={<Wishlist />} path={internalRoutes.wishlist} />
         <Route element={<CheckOut />} path={internalRoutes.checkout} />
         <Route element={<PressRelease />} path={internalRoutes.pressReleases} />
+        <Route element={<AboutEvaga />} path={internalRoutes.aboutUs} />
+        <Route element={<RefundAndCancellation />} path={internalRoutes.cancellationPolicy} />
+        <Route element={<TermsAndConditions />} path={internalRoutes.TermsAndConditions} />
         <Route
           element={<SinglePackage />}
           path={`${internalRoutes.SinglePackage + "/:serviceId/:packageId"}`}

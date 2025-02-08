@@ -66,7 +66,7 @@ function ProductDisplayCard({
   return (
     <div className="min-h-[300px] border rounded-lg shadow-sm flex flex-col md:flex-row gap-4 cursor-pointer">
       <img
-        src={process.env.REACT_APP_API_Image_BASE_URL + image}
+        src={image}
         alt={title}
         className=" w-[30%] rounded-lg object-cover"
         onClick={onClick}

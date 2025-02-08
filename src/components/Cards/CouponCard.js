@@ -4,7 +4,7 @@ import CommentInfo from "../../assets/Temporary Images/comment-info1.png";
 import Add from "../../assets/Temporary Images/AddButton.png";
 function CouponCard() {
   return (
-    <div className="w-full max-sm:w-full h-[560px] mx-auto border rounded-[10px] border-gray-300 shadow-md p-6 bg-white font-['Poppins']"> 
+    <div className="w-full max-sm:w-full h-[560px] mx-auto border rounded-[10px] border-gray-300  p-6 bg-white font-['Poppins']"> 
     <h2 className="text-xl font-semibold text-primary mb-4">Coupons</h2>
     <div className="flex items-center mb-6">
       <img

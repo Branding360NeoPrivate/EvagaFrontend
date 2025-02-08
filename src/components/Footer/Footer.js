@@ -88,9 +88,9 @@ function Footer() {
             <ul className="space-y-4">
               {footerMenuItems.midMenu.map((item, index) => (
                 <li key={index}>
-                  <a href={item.path || "#"} className="hover:text-highlight">
+                  <Link to={item.path || "#"} className="hover:text-highlight">
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -100,9 +100,9 @@ function Footer() {
             <ul className="space-y-4">
               {footerMenuItems.rightMenu.map((item, index) => (
                 <li key={index}>
-                  <a href={item.path || "#"} className="hover:text-highlight">
+                  <Link to={item.path || "#"} className="hover:text-highlight">
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -125,9 +125,9 @@ function Footer() {
             <ul className="space-y-4">
               {footerMenuItems.leftMenu.map((item, index) => (
                 <li key={index}>
-                  <a href={item.path || "#"} className=" text-sm">
+                  <Link to={item.path || "#"} className=" text-sm">
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -138,18 +138,18 @@ function Footer() {
           <ul className="space-y-4">
             {footerMenuItems.midMenu.map((item, index) => (
               <li key={index}>
-                <a href={item.path || "#"} className="hover:text-highlight">
+                <Link to={item.path || "#"} className="hover:text-highlight">
                   {item.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
           <ul className="space-y-4">
             {footerMenuItems.rightMenu.map((item, index) => (
               <li key={index}>
-                <a href={item.path || "#"} className="hover:text-highlight">
+                <Link to={item.path || "#"} className="hover:text-highlight">
                   {item.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

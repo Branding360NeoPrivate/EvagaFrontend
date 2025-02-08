@@ -22,47 +22,6 @@ function SearchResultPage() {
     totalPages: 0,
     totalData: 0,
   });
-  const mockData = [
-    {
-      id: 1,
-      image: NavImage,
-      title: "Wedding Photography",
-      category: "Photography and Videography",
-      vendor: "Geeta Pvt Ltd",
-      inclusions: ["Posed Photos", "200-300 Guests", "Bridal Portraits"],
-      deliverables: ["2hr Film", "100 Photo Album", "5 Instagram reels"],
-      addOns: ["Drone", "Photobooth"],
-      price: 1500,
-      rating: 3.9,
-      reviews: 353,
-    },
-    {
-      id: 2,
-      image: NavImage,
-      title: "Outdoor Photography",
-      category: "Photography and Videography",
-      vendor: "Dream Lens Pvt Ltd",
-      inclusions: ["Candid Shots", "50-100 Guests", "Ceremony Highlights"],
-      deliverables: ["1hr Film", "50 Photo Album"],
-      addOns: ["Lighting", "Decor Photos"],
-      price: 3000,
-      rating: 4.5,
-      reviews: 250,
-    },
-    {
-      id: 3,
-      image: NavImage,
-      title: "Event Photography",
-      category: "Photography and Videography",
-      vendor: "Moments Studio",
-      inclusions: ["Candid Shots", "100-200 Guests", "Group Portraits"],
-      deliverables: ["1hr Film", "200 Photo Album"],
-      addOns: ["Editing", "Special Effects"],
-      price: "1,11,000",
-      rating: 4.8,
-      reviews: 120,
-    },
-  ];
 
   const [filters, setFilters] = React.useState({
     eventTypes: [],
@@ -218,34 +177,41 @@ function SearchResultPage() {
           <div className="w-full px-4 pb-2">
             <div className="flex flex-col gap-6">
               {searchResult?.length > 0 ? (
-                searchResult.map((item) => (
-                  <ProductDisplayCard
-                    key={item?.serviceDetails?._id || item?.title}
-                    image={
-                      item?.serviceDetails?.values?.CoverImage?.[0] ||
-                      item?.serviceDetails?.values?.ProductImage?.[0]
-                    }
-                    title={
-                      item?.serviceDetails?.values?.Title ||
-                      item?.serviceDetails?.values?.FoodTruckName ||
-                      item?.serviceDetails?.values?.VenueName
-                    }
-                    category={item?.categoryName}
-                    eventData={item?.serviceDetails}
-                    onClick={() =>
-                      navigate(
-                        `${internalRoutes.SinglePackage}/${item?._id}/${item?.serviceDetails?._id}`
-                      )
-                    }
-                    isFavourite={allWishlist?.some(
-                      (val) =>
-                        val._id === item?._id &&
-                        val.packageDetails?._id === item?.serviceDetails?._id
-                    )}
-                    serviceId={item?._id}
-                    packageId={item?.serviceDetails?._id}
-                  />
-                ))
+                searchResult.map((item) => { 
+                  const imageUrl =
+                  item.serviceDetails?.values?.CoverImage ||
+                  item.serviceDetails?.values?.ProductImage?.[0];
+                  const popularimage = imageUrl?.startsWith("service/")
+                    ? process.env.REACT_APP_API_Image_BASE_URL + imageUrl
+                    : imageUrl;
+                  return (
+                    <ProductDisplayCard
+                      key={item?.serviceDetails?._id || item?.title}
+                      image={
+                        popularimage
+                      }
+                      title={
+                        item?.serviceDetails?.values?.Title ||
+                        item?.serviceDetails?.values?.FoodTruckName ||
+                        item?.serviceDetails?.values?.VenueName
+                      }
+                      category={item?.categoryName}
+                      eventData={item?.serviceDetails}
+                      onClick={() =>
+                        navigate(
+                          `${internalRoutes.SinglePackage}/${item?._id}/${item?.serviceDetails?._id}`
+                        )
+                      }
+                      isFavourite={allWishlist?.some(
+                        (val) =>
+                          val._id === item?._id &&
+                          val.packageDetails?._id === item?.serviceDetails?._id
+                      )}
+                      serviceId={item?._id}
+                      packageId={item?.serviceDetails?._id}
+                    />
+                  );
+                })
               ) : (
                 <p className="w-full flex items-center justify-center  py-6 text-textGray">
                   No Search Found With This KeyWord

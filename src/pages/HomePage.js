@@ -60,7 +60,7 @@ function Home() {
       handleGetAllPackages();
       fetchedRef.current = true;
     }
-  }, [allPackages]); 
+  }, [allPackages]);
 
   useEffect(() => {
     if (!banner || banner.length === 0) {
@@ -125,8 +125,6 @@ function Home() {
     },
   ];
 
-
-
   return (
     <motion.div
       className=" flex flex-col justify-center items-center gap-4 w-full"
@@ -168,51 +166,55 @@ function Home() {
         </span>
         <div className="flex flex-row gap-5 overflow-x-scroll no-scrollbar box-border">
           <HorizontalScroll speed={1} className="flex flex-row gap-8">
-            {allPackages.map((service, index) => (
-              <ProductCard
-                key={service?.serviceDetails?._id}
-                popularimage={
-                  process.env.REACT_APP_API_Image_BASE_URL +
-                  `${
-                    service.serviceDetails?.values?.CoverImage ||
-                    service.serviceDetails?.values?.ProductImage?.[0]
-                  }`
-                }
-                title={
-                  service.serviceDetails?.values?.Title ||
-                  service.serviceDetails?.values?.VenueName ||
-                  service.serviceDetails?.values?.FoodTruckName
-                }
-                category={service?.categoryName}
-                price={
-                  service.serviceDetails?.values?.price ||
-                  service.serviceDetails?.values?.Pricing ||
-                  service.serviceDetails?.values?.Price ||
-                  service.serviceDetails?.values?.Package?.[0]?.Rates ||
-                  service.serviceDetails?.values?.["OrderQuantity&Pricing"]?.[0]
-                    ?.Rates ||
-                  service.serviceDetails?.values?.["Duration&Pricing"]?.[0]
-                    ?.Amount ||
-                  service.serviceDetails?.values?.["SessionLength"]?.[0]
-                    ?.Amount ||
-                  service.serviceDetails?.values?.["QtyPricing"]?.[0]?.Rates
-                }
-                rating={0}
-                reviews={0}
-                serviceId={service?._id}
-                packageId={service?.serviceDetails?._id}
-                onClick={() =>
-                  history(
-                    `${internalRoutes.SinglePackage}/${service?._id}/${service?.serviceDetails?._id}`
-                  )
-                }
-                isFavourite={allWishlist?.some(
-                  (item) =>
-                    item._id === service?._id &&
-                    item.packageDetails?._id === service?.serviceDetails?._id
-                )}
-              />
-            ))}
+            {allPackages.map((service, index) => {
+              const imageUrl =
+                service.serviceDetails?.values?.CoverImage ||
+                service.serviceDetails?.values?.ProductImage?.[0];
+
+              const popularimage = imageUrl?.startsWith("service/")
+                ? process.env.REACT_APP_API_Image_BASE_URL + imageUrl
+                : imageUrl;
+              return (
+                <ProductCard
+                  key={service?.serviceDetails?._id}
+                  popularimage={popularimage}
+                  title={
+                    service.serviceDetails?.values?.Title ||
+                    service.serviceDetails?.values?.VenueName ||
+                    service.serviceDetails?.values?.FoodTruckName
+                  }
+                  category={service?.categoryName}
+                  price={
+                    service.serviceDetails?.values?.price ||
+                    service.serviceDetails?.values?.Pricing ||
+                    service.serviceDetails?.values?.Price ||
+                    service.serviceDetails?.values?.Package?.[0]?.Rates ||
+                    service.serviceDetails?.values?.[
+                      "OrderQuantity&Pricing"
+                    ]?.[0]?.Rates ||
+                    service.serviceDetails?.values?.["Duration&Pricing"]?.[0]
+                      ?.Amount ||
+                    service.serviceDetails?.values?.["SessionLength"]?.[0]
+                      ?.Amount ||
+                    service.serviceDetails?.values?.["QtyPricing"]?.[0]?.Rates
+                  }
+                  rating={0}
+                  reviews={0}
+                  serviceId={service?._id}
+                  packageId={service?.serviceDetails?._id}
+                  onClick={() =>
+                    history(
+                      `${internalRoutes.SinglePackage}/${service?._id}/${service?.serviceDetails?._id}`
+                    )
+                  }
+                  isFavourite={allWishlist?.some(
+                    (item) =>
+                      item._id === service?._id &&
+                      item.packageDetails?._id === service?.serviceDetails?._id
+                  )}
+                />
+              );
+            })}
           </HorizontalScroll>
         </div>
       </div>

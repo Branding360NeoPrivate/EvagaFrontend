@@ -129,7 +129,7 @@ const VendorDashboard = () => {
 
   return (
     <div className="flex items-center justify-center flex-col w-full gap-2 mt-10 mb-10">
-      <div className="w-11/12 flex flex-col md:flex-row items-start justify-center h-fit  gap-4">
+      <div className="w-[98%] flex flex-col md:flex-row items-start justify-center h-fit  gap-4">
         <div className="w-[100%] md:w-[70%] ">
           <Slider bannerData={vendorBanner} />
         </div>

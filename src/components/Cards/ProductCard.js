@@ -49,7 +49,7 @@ function ProductCard({
         <img
           src={popularimage}
           alt={title}
-          className="w-full h-full rounded-t-md "
+          className="w-full h-full aspect-[4/5] rounded-t-md "
         />
       </div>
       <div className="p-2">

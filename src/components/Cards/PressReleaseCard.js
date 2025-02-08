@@ -13,7 +13,7 @@ const PressReleaseCard = memo(({ articleUrl }) => {
             key: process.env.REACT_APP_Link_previwer,
             q: articleUrl,
           },
-           withCredentials: false,
+          withCredentials: false,
         });
 
         const data = response.data;
@@ -31,7 +31,16 @@ const PressReleaseCard = memo(({ articleUrl }) => {
     fetchMetadata();
   }, [articleUrl]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <div className="max-w-sm rounded-2xl overflow-hidden shadow-lg bg-gray-200 animate-pulse">
+        <div className="relative h-48 bg-gray-300"></div>
+        <div className="p-6">
+          <div className="h-6 bg-gray-300 rounded-md mb-4"></div>
+          <div className="h-10 w-24 bg-gray-300 rounded-lg"></div>
+        </div>
+      </div>
+    );
 
   return (
     <div className="max-w-sm rounded-2xl overflow-hidden shadow-lg bg-white transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
