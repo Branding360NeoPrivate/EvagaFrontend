@@ -69,7 +69,7 @@ function AddorBuyCard({ price, addonsPrice, addonsDetails, bio, renderPrice }) {
 
 
     const addOnsPrice = selectedAddOns.reduce((total, addOn) => {
-      console.log(addOn);
+      console.log(addOn,total);
       if (addOn.type === "Package") {
         return total + Number(addOn.Rates || 0);
       }
@@ -270,7 +270,7 @@ function AddorBuyCard({ price, addonsPrice, addonsDetails, bio, renderPrice }) {
                     </p>
                   </div>
                   {value.map((item, idx) => {
-                    const isPackage = key === "Package"; // Determine if it's a package
+                    const isPackage = key === "Package"; 
                     const rateInfo = isPackage ? item.Rates : item.Amount || item?.Rates;
                     const uom = isPackage ? item.days : item.Uom || item.UOM;
 
@@ -282,7 +282,7 @@ function AddorBuyCard({ price, addonsPrice, addonsDetails, bio, renderPrice }) {
                         uom={uom}
                         note={item.Note || ""}
                         minQuantity={1}
-                        type={isPackage ? "Package" : key} // Pass type
+                        type={isPackage ? "Package" : key} 
                         onAdd={() =>
                           handleAddOnUpdate(
                             { ...item, rateInfo, uom },

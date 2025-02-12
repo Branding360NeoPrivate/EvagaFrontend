@@ -168,29 +168,42 @@ const VendorDashboard = () => {
         {activeState === "Services Provided" && (
           <div className="w-full flex items-center justfiy-center flex-col gap-4">
             {allService?.length > 0 ? (
-              allService.map((item) => (
-                <ServiceCard
-                  key={item?._id || item?.title}
-                  image={
-                    item?.services?.[0]?.values?.CoverImage?.[0] ||
-                    item?.services?.[0]?.values?.ProductImage?.[0]
+              allService.map((item) => {
+                const getImageUrl = (imagePath) => {
+                  if (!imagePath) return null;
+                  // Check if the image path is already a full URL
+                  if (imagePath.startsWith("http")) {
+                    return imagePath; // Return the full URL as is
                   }
-                  title={
-                    item?.services?.[0]?.values?.Title ||
-                    item?.services?.[0]?.values?.FoodTruckName ||
-                    item?.services?.[0]?.values?.VenueName
-                  }
-                  yearofexp={item?.YearofExperience}
-                  category={item?.Category?.name}
-                  subCategory={item?.SubCategory?.name}
-                  desc={item?.AbouttheService}
-                  price={item?.services?.[0]?.values?.Price}
-                  InclusionData={item?.services?.[0]?.values?.Inclusions}
-                  DeliverablesData={item?.services?.[0]?.values?.Deliverables}
-                  AddOnData={item?.services?.[0]?.values?.AddOns}
-                  serviceId={item?._id}
-                />
-              ))
+                  // Otherwise, prepend the base URL
+                  return `${process.env.REACT_APP_API_Aws_Image_BASE_URL}${imagePath}`;
+                };
+                
+
+                return (
+                  <ServiceCard
+                    key={item?._id || item?.title}
+                    image={getImageUrl(
+                      item?.services?.[0]?.values?.CoverImage?.[0] ||
+                        item?.services?.[0]?.values?.ProductImage?.[0]
+                    )}
+                    title={
+                      item?.services?.[0]?.values?.Title ||
+                      item?.services?.[0]?.values?.FoodTruckName ||
+                      item?.services?.[0]?.values?.VenueName
+                    }
+                    yearofexp={item?.YearofExperience}
+                    category={item?.Category?.name}
+                    subCategory={item?.SubCategory?.name}
+                    desc={item?.AbouttheService}
+                    price={item?.services?.[0]?.values?.Price}
+                    InclusionData={item?.services?.[0]?.values?.Inclusions}
+                    DeliverablesData={item?.services?.[0]?.values?.Deliverables}
+                    AddOnData={item?.services?.[0]?.values?.AddOns}
+                    serviceId={item?._id}
+                  />
+                );
+              })
             ) : (
               <p className="text-textGray text-lg font-medium py-4">
                 No Services Listed

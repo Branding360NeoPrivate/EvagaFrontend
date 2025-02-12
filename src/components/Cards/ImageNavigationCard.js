@@ -6,6 +6,7 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
   const [currentIndex, setCurrentIndex] = useState(
     mediaUrls.indexOf(selectedUrl)
   );
+  console.log(mediaUrls);
 
   useEffect(() => {
     setCurrentIndex(mediaUrls.indexOf(selectedUrl));
@@ -13,7 +14,9 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
 
   const isImage = (url) => {
     const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "webp"];
-    return imageExtensions.includes(url?.split(".").pop()?.toLowerCase());
+    // Extract the file extension before the query parameters
+    const extension = url?.split("?")[0]?.split(".").pop()?.toLowerCase();
+    return imageExtensions.includes(extension);
   };
 
   const nextImage = (e) => {
@@ -48,14 +51,14 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
             <div key={index} className="cursor-pointer">
               {isImage(url) ? (
                 <img
-                  src={process.env.REACT_APP_API_Image_BASE_URL + url}
+                  src={process.env.REACT_APP_API_Aws_Image_BASE_URL + url}
                   alt={`Thumbnail ${index + 1}`}
                   className="w-[80px] h-[60px] object-cover rounded-md border-2 border-transparent hover:scale-110 hover:border-blue-500 transition-transform duration-200"
                   onClick={() => onMediaClick(url)}
                 />
               ) : (
                 <video
-                  src={process.env.REACT_APP_API_VIDEO_BASE_URL + url}
+                  src={process.env.REACT_APP_API_Aws_Image_BASE_URL + url}
                   className="w-[80px] h-[60px] object-cover rounded-md border-2 border-transparent hover:scale-110 hover:border-blue-500 transition-transform duration-200"
                   onClick={() => onMediaClick(url)}
                   muted
@@ -71,7 +74,7 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
         {isImage(selectedUrl) ? (
           <div className="group relative w-full aspect-[4/5] h-full flex items-center justify-center">
             <img
-              src={process.env.REACT_APP_API_Image_BASE_URL + selectedUrl}
+              src={process.env.REACT_APP_API_Aws_Image_BASE_URL + selectedUrl}
               alt="Selected Media"
               className="w-fit h-full object-cover rounded-md cursor-pointer aspect-[4/5]"
               onClick={() => setIsModalOpen(true)}
@@ -79,7 +82,9 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
           </div>
         ) : (
           <ModernVideoPlayer
-            selectedUrl={process.env.REACT_APP_API_VIDEO_BASE_URL + selectedUrl}
+            selectedUrl={
+              process.env.REACT_APP_API_Aws_Image_BASE_URL + selectedUrl
+            }
           />
         )}
       </div>
@@ -104,7 +109,7 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
               {isImage(mediaUrls[currentIndex]) ? (
                 <img
                   src={
-                    process.env.REACT_APP_API_Image_BASE_URL +
+                    process.env.REACT_APP_API_Aws_Image_BASE_URL +
                     mediaUrls[currentIndex]
                   }
                   alt="Zoomed Media"
@@ -114,7 +119,7 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
               ) : (
                 <ModernVideoPlayer
                   selectedUrl={
-                    process.env.REACT_APP_API_VIDEO_BASE_URL +
+                    process.env.REACT_APP_API_Aws_Image_BASE_URL +
                     mediaUrls[currentIndex]
                   }
                 />

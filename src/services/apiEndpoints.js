@@ -72,6 +72,9 @@ const apiEndpoints = {
       `user/update-user-one-address/${addressId}`,
     deleteOneAddress: (addressId) =>
       `user/delete-user-one-address/${addressId}`,
+    getUserAllAddress: (userId) => `user/get-user-all-address/${userId}`,
+    selectOneUserAddress: (userId, addressId) =>
+      `user/select-one-address/${userId}/${addressId}`,
   },
   category: {
     add: "category",

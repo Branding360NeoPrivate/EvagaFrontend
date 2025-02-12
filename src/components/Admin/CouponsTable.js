@@ -11,6 +11,7 @@ import useServices from "../../hooks/useServices";
 import EditCouponForm from "./EditCouponForm;";
 import { formatDate } from "../../utils/formatDate";
 import DeleteForm from "./DeleteForm";
+import { fetchCategories } from "../../context/redux/slices/categorySlice";
 
 const CouponsTable = memo(() => {
   const [page, setPage] = useState(1);
@@ -23,6 +24,19 @@ const CouponsTable = memo(() => {
   const deleteOneCoupons = useServices(adminActionsApi.deleteOneCoupons);
   const dispatch = useDispatch();
   const [isFetched, setIsFetched] = useState(false);
+  const { categories } = useSelector((state) => state.category);
+  const allCategoriesOption = { _id: "all", name: "All" };
+  const [isCategoriesFetched, setIsCategoriesFetched] = useState(false);
+
+  useEffect(() => {
+    if (!isCategoriesFetched && (!categories || categories.length === 0)) {
+      dispatch(fetchCategories()).then((response) => {
+        if (response.payload.length === 0) {
+          setIsCategoriesFetched(true);
+        }
+      });
+    }
+  }, [categories, isCategoriesFetched, dispatch]);
 
   const addCouponHandle = async ({
     code,
@@ -187,7 +201,7 @@ const CouponsTable = memo(() => {
         }
       >
         {modalType === "addCoupon" && (
-          <AddCouponForm onSubmit={addCouponHandle} />
+          <AddCouponForm onSubmit={addCouponHandle} categories={categories}/>
         )}
         {modalType === "editCoupon" && (
           <EditCouponForm

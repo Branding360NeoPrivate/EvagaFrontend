@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { useAuth } from "../context/AuthContext";
 
 const LoginWithGoogleForUser = ({ userGoogleLogin }) => {
-
   const dispatch = useDispatch();
   const { login } = useAuth();
 
@@ -16,13 +15,11 @@ const LoginWithGoogleForUser = ({ userGoogleLogin }) => {
       return;
     }
 
-
     window?.google?.accounts?.id?.initialize({
       client_id: clientId,
       callback: (response) => {
         console.log("Google callback triggered:", response);
         if (response && response.credential) {
-        
           handleGoogleLogin(response.credential);
         } else {
           console.error("No credential received in the Google response.");
@@ -32,7 +29,7 @@ const LoginWithGoogleForUser = ({ userGoogleLogin }) => {
 
     window?.google?.accounts?.id?.renderButton(
       document.getElementById("googleSignInButton"),
-      { theme: "outline", size: "large" }
+      { theme: "outline", size: "large", shape: "pill", width: "100%" }
     );
 
     window?.google?.accounts?.id?.prompt((notification) => {
@@ -43,7 +40,7 @@ const LoginWithGoogleForUser = ({ userGoogleLogin }) => {
   const handleGoogleLogin = async (token) => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_BASE_URL+"user/auth/google"}`,
+        `${process.env.REACT_APP_API_BASE_URL + "user/auth/google"}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

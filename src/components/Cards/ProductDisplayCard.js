@@ -64,17 +64,17 @@ function ProductDisplayCard({
   };
 
   return (
-    <div className="min-h-[300px] border rounded-lg shadow-sm flex flex-col md:flex-row gap-4 cursor-pointer">
+    <div className="h-[250px] border rounded-lg shadow-sm flex flex-col md:flex-row gap-4 cursor-pointer overflow-hidden">
       <img
-         src={process.env.REACT_APP_API_Image_BASE_URL + image}
+        src={image}
         alt={title}
-        className=" w-[30%] rounded-lg object-cover"
+        className=" w-[30%] h-[15rem] rounded-lg object-fit aspect-w-16 aspect-h-9"
         onClick={onClick}
       />
       <div className="w-full flex flex-col my-4" onClick={onClick}>
         <div className=" w-full flex flex-row items-center mb-1 justify-between">
           <div className="w-[100%] gap-0 ">
-            <h2 className="text-[1.8rem] font-medium text-primary">{title}</h2>
+            <h2 className="text-2xl font-medium text-primary">{title}</h2>
             <p className="text-base text-textGray">{category}</p>
           </div>
         </div>
