@@ -119,7 +119,7 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
       const businessId = vendorDetails?.businessDetails?._id;
       await vendorApi.addNewCategoryBusiness(businessId, data);
       toast.success("New category and subcategory added successfully!");
-      dispatch(fetchVendorProfile(Cookies.get("userId"))); // Refresh profile data
+      dispatch(fetchVendorProfile(vendorId)); // Refresh profile data
     } catch (error) {
       toast.error(
         "Failed to add new category and subcategory. Please try again."
@@ -362,11 +362,31 @@ console.log(vendorDetails?.businessDetails,'vendorDetails?.businessDetails');
                   defaultValues={businessDefaultValues}
                   editable={false}
                 />
-                <div>
+                    {businessDefaultValues?.categoriesOfServices && (
+                  <>
+                   
+                    <div className="flex justify-center">
+                      <Button
+                        className="hover:bg-primary hover:text-white flex flex-col "
+                        onClick={() => {
+                          handleOpenModal(
+                            "Add New Category And Sub-Category",
+                            formfields.vendorProfileDetails
+                              .categoryAndSubCategory
+                          );
+                        }}
+                      >
+                        <h4 className=" text-4xl font-bold">+</h4>
+                        <span>Add Category & Sub Category</span>
+                      </Button>
+                    </div>
+                  </>
+                )}
+                <div className="w-full">
                   {vendorDetails?.businessDetails?.categoriesOfServices &&
                     vendorDetails?.businessDetails?.categoriesOfServices
                       .length > 1 && (
-                      <div className="mt-4">
+                      <div className="mt-4 w-full">
                         <h3 className="font-bold text-lg">Categories</h3>
                         {vendorDetails?.businessDetails?.categoriesOfServices &&
                           vendorDetails?.businessDetails?.categoriesOfServices
@@ -376,10 +396,11 @@ console.log(vendorDetails?.businessDetails,'vendorDetails?.businessDetails');
                               return (
                                 <div
                                   key={category._id}
-                                  className="flex items-center gap-2"
+                                  className="flex items-center gap-2 w-full"
                                 >
                                   <SearchableCategoryAndSubcategoryDropdown
                                     defaultValues={categoryArray}
+                                    width={"full"}
                                   />
                                 </div>
                               );

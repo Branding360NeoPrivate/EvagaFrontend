@@ -48,7 +48,8 @@ function VendorCreateService() {
   const history = useNavigate();
   const CHUNK_SIZE = 5 * 1024 * 1024;
 
-  const uploadChunk = async (formData, chunkIndex) => { // use this later
+  const uploadChunk = async (formData, chunkIndex) => {
+    // use this later
     try {
       const response = await addNewService.callApi(
         Cookies.get("userId"),
@@ -371,7 +372,7 @@ function VendorCreateService() {
       toast.error("Failed to Get Form Value. Please try again.");
     }
   };
-  
+
   useEffect(() => {
     if (categories.length === 0) {
       dispatch(fetchCategories());
@@ -499,11 +500,6 @@ function VendorCreateService() {
   const handleClosInHouseCateringeMasterVenueModal = () => {
     setOpenInHouseCateringModal(false);
   };
-  useEffect(() => {
-    console.log("formInstances:", formInstances);
-    console.log("inHouseCateringPackageData:", inHouseCateringPackageData);
-    console.log("allFormsSaved:", allFormsSaved);
-  }, [formInstances, inHouseCateringPackageData]);
 
   const allFormsSaved = inhouseCategoringOrBoth
     ? formInstances.every((form) => form.saved) &&

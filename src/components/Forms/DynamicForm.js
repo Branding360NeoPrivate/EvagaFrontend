@@ -28,6 +28,8 @@ const DynamicForm = ({
   const [foodMenu, setFoodMenu] = useState([]);
   const totalNumberOfPhotoAllowed =
     process.env.REACT_APP_API_Number_of_Images_allowed || 10;
+    const totalNumberOfVideoAllowed =
+    process.env.REACT_APP_API_Number_of_Video_allowed || 10;
   const editorStyle = {
     backgroundColor: "#7575751a",
   };
@@ -292,32 +294,10 @@ const DynamicForm = ({
   const handleSingleFileChange = (key, file) => {
     setFormValues((prev) => ({
       ...prev,
-      [key]: file, // Save the file directly to the specified key
+      [key]: file,
     }));
   };
-  // const handleFileChange = (key, subKey, index, newFiles) => {
-  //   const portfolioKey = `${key}_${index}`;
-  //   setFormValues((prev) => {
-  //     const existingData = prev[portfolioKey] || { photos: [], videos: [] };
-
-  //     // Update photos or videos
-  //     const updatedValue = {
-  //       ...existingData,
-  //       [subKey]:
-  //         subKey === "videos"
-  //           ? [...(existingData[subKey] || []), newFiles[0]]
-  //           : [...(existingData[subKey] || []), ...newFiles],
-  //     };
-
-  //     return {
-  //       ...prev,
-  //       [portfolioKey]: updatedValue,
-  //     };
-  //   });
-  // };
-
-  // handleFileRemove: Removes specific files from photos or clears videos
-
+  
   const handleFileChange = (fieldKey, type, files) => {
     setFormValues((prev) => {
       const updatedField = {
@@ -327,29 +307,6 @@ const DynamicForm = ({
       return { ...prev, [fieldKey]: updatedField };
     });
   };
-  // const handleFileRemove = (key, index, subKey, fileIdx = null) => {
-  //   console.log(`Removing ${subKey} from ${key}_${index}`);
-  //   const portfolioKey = `${key}_${index}`; // Unique key: Portfolio_0, Portfolio_1
-
-  //   setFormValues((prev) => {
-  //     const existingData = prev[portfolioKey] || { photos: [], videos: [] };
-
-  //     const updatedValue = { ...existingData };
-
-  //     if (subKey === "videos") {
-  //       updatedValue[subKey] = []; // Clear videos
-  //     } else if (subKey === "photos" && fileIdx !== null) {
-  //       const updatedPhotos = [...existingData[subKey]];
-  //       updatedPhotos.splice(fileIdx, 1); // Remove specific photo
-  //       updatedValue[subKey] = updatedPhotos;
-  //     }
-
-  //     return {
-  //       ...prev,
-  //       [portfolioKey]: updatedValue,
-  //     };
-  //   });
-  // };
 
   const handleFileRemove = (fieldKey, type, fileIdx) => {
     setFormValues((prev) => {
@@ -362,7 +319,6 @@ const DynamicForm = ({
     });
   };
 
-  console.log(formValues);
   useEffect(() => {
     if (
       formValues?.CateringPolicy === "IN-house" ||
@@ -374,7 +330,7 @@ const DynamicForm = ({
       return setInhouseCategoringOrBoth(false);
     }
   }, [formValues?.CateringPolicy]);
-  console.log(formValues);
+
 
   return (
     <form
@@ -1827,12 +1783,13 @@ const DynamicForm = ({
                           <input
                             type="file"
                             accept="video/mp4, video/webm"
+                            multiple={totalNumberOfVideoAllowed}
                             onChange={(e) => {
                               const maxFileSize = 100 * 1024 * 1024; 
                               const selectedFiles = Array.from(e.target.files);
                               const existingVideos =
                                 formValues?.Portfolio?.videos || [];
-                              if (existingVideos.length > 6) {
+                              if (existingVideos.length > 10) {
                                 alert(
                                   "You can only upload max 6 video. Please remove the existing video before uploading a new one."
                                 );
@@ -1857,7 +1814,8 @@ const DynamicForm = ({
                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                             
                           />
-                           <p>Upload upto 6 Video</p>
+                           <p>Upload upto 10 Video</p>
+                           <p className="text-esm">*The total size of all videos should be less than 250 MB.</p>
                         </div>
                         {/* Render Videos */}
                         <div className="flex flex-wrap gap-1">

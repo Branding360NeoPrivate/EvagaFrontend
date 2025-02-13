@@ -131,6 +131,7 @@ const apiEndpoints = {
     getOneFees: (feeId) => `categoryFee/getCategoryFee/${feeId}`,
     editOneFees: (feeId) => `categoryFee/updateCategoryFee/${feeId}`,
     deleteOneFees: (feeId) => `categoryFee/deleteCategoryFee/${feeId}`,
+    getVendorByNameOrUserName: () => `adminAction/get-search-vendors`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",

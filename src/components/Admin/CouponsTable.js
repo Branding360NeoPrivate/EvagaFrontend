@@ -22,6 +22,9 @@ const CouponsTable = memo(() => {
   const getOneCoupons = useServices(adminActionsApi.getOneCoupons);
   const editOneCoupons = useServices(adminActionsApi.editOneCoupons);
   const deleteOneCoupons = useServices(adminActionsApi.deleteOneCoupons);
+  const getVendorByNameOrUserName = useServices(
+    adminActionsApi.getVendorByNameOrUserName
+  );
   const dispatch = useDispatch();
   const [isFetched, setIsFetched] = useState(false);
   const { categories } = useSelector((state) => state.category);
@@ -89,6 +92,15 @@ const CouponsTable = memo(() => {
     const response = await deleteOneCoupons.callApi(couponId);
     handleClose();
     dispatch(fetchCoupons());
+  };
+  const getVendorByNameOrUserNamehandle = async (searchTerm) => {
+    console.log(searchTerm);
+    
+    const formData = new FormData();
+    formData.append("searchTerm", searchTerm);
+    const response = await getVendorByNameOrUserName.callApi(formData);
+    console.log(response);
+    
   };
 
   useEffect(() => {
@@ -201,7 +213,7 @@ const CouponsTable = memo(() => {
         }
       >
         {modalType === "addCoupon" && (
-          <AddCouponForm onSubmit={addCouponHandle} categories={categories}/>
+          <AddCouponForm onSubmit={addCouponHandle} categories={categories} getVendors={getVendorByNameOrUserNamehandle}/>
         )}
         {modalType === "editCoupon" && (
           <EditCouponForm

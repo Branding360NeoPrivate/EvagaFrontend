@@ -9,7 +9,7 @@ import {
   Grid,
 } from "@mui/material";
 
-const AddCouponForm = ({ onSubmit,categories }) => {
+const AddCouponForm = ({ onSubmit,categories,getVendors }) => {
   const [coupon, setCoupon] = useState({
     code: "",
     startDate: "",
@@ -34,6 +34,7 @@ const AddCouponForm = ({ onSubmit,categories }) => {
   };
 
   const handleVendorSearch = (event) => {
+    // getVendors(event.target.value)
     setVendorSearch(event.target.value);
     // setFilteredVendors(
     //   vendors.filter((vendor) =>

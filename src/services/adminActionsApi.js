@@ -77,6 +77,11 @@ const adminActionsApi = {
     apiService.put(apiEndpoints.adminActions.editOneFees(feeId), formData),
   deleteOneFees: (feeId) =>
     apiService.delete(apiEndpoints.adminActions.deleteOneFees(feeId)),
+  getVendorByNameOrUserName: (formData) =>
+    apiService.get(
+      apiEndpoints.adminActions.getVendorByNameOrUserName,
+      formData
+    ),
 };
 
 export default adminActionsApi;
