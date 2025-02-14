@@ -308,6 +308,7 @@ const DynamicNav = () => {
           <MdOutlineSort className="text-2xl text-white" />
           <p>All</p>
         </span>
+        <Link to={"#"}>Evaga Xperience</Link>
         <Link to={"#"}>Blog</Link>
         <Link to={internalRoutes.wishlist}>Wishlist</Link>
         <Link to={"#"}>Community</Link>

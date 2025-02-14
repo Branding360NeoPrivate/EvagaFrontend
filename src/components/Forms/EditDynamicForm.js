@@ -2034,7 +2034,7 @@ const EditDynamicForm = ({
             };
 
             const normalized = typeMap[type] || type;
-            return normalized.replace(/\s+/g, "");
+            return normalized?.replace(/\s+/g, "");
           };
 
           const normalizedType = normalizeKey(selectedType);
