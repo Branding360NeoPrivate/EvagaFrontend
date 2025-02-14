@@ -233,8 +233,6 @@ const EditDynamicForm = ({
     }));
   };
 
-
-
   const handleFileChange = (fieldKey, type, files) => {
     setFormValues((prev) => {
       const updatedField = {

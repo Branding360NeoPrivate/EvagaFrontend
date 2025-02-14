@@ -87,6 +87,8 @@ const adminActionsApi = {
         },
       }
     ),
+  verifyVendorprofileByAdmin: (vendorId) =>
+    apiService.post(apiEndpoints.adminActions.verifyVendorprofile(vendorId)),
 };
 
 export default adminActionsApi;

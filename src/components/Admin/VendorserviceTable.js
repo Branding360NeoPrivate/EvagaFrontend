@@ -295,7 +295,7 @@ function VendorserviceTable({
       </Typography>
     ) : null;
   };
-  console.log(packageCredentials, "packageCredentials");
+
 
   if (status === "loading") {
     return <div className="text-center py-10">Loading vendor data...</div>;

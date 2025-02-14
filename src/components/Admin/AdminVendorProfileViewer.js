@@ -30,12 +30,23 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
   const [vendorDetails, setVendorDetails] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [activeSection, setActiveSection] = useState(null);
-  const updateProfileService = useServices(adminActionsApi.updateVendorProfileUpdateByAdmin);
-  const updateBankDetailsService = useServices(adminActionsApi.updateVendorBankDetailsByAdmin);
-  const updateBusinessService = useServices(adminActionsApi.updateVendorBusinessDetailsByAdmin);
-  const updateBioService = useServices(adminActionsApi.updateVendorBioUpdateByAdmin);
+  const updateProfileService = useServices(
+    adminActionsApi.updateVendorProfileUpdateByAdmin
+  );
+  const updateBankDetailsService = useServices(
+    adminActionsApi.updateVendorBankDetailsByAdmin
+  );
+  const updateBusinessService = useServices(
+    adminActionsApi.updateVendorBusinessDetailsByAdmin
+  );
+  const updateBioService = useServices(
+    adminActionsApi.updateVendorBioUpdateByAdmin
+  );
   const updateProfilePictureService = useServices(
     adminActionsApi.updateVendorProfilePicUpdateByAdmin
+  );
+  const verifyVendorprofileByAdminApi = useServices(
+    adminActionsApi.verifyVendorprofileByAdmin
   );
 
   useEffect(() => {
@@ -85,7 +96,7 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
     try {
       const response = await updateProfileService.callApi(vendorId, data);
       toast.success("Profile updated successfully!");
-      dispatch(fetchVendorProfile(vendorId)); 
+      dispatch(fetchVendorProfile(vendorId));
     } catch (error) {
       toast.error("Failed to update profile. Please try again.");
     }
@@ -105,7 +116,7 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
   const handleUpdateBusiness = async (data) => {
     try {
       console.log(data);
-      
+
       await updateBusinessService.callApi(vendorId, data);
       toast.success("Business details updated successfully!");
       dispatch(fetchVendorProfile(vendorId)); // Refresh profile data
@@ -140,14 +151,14 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
   const handleUpdateProfilePicture = async (data) => {
     try {
       console.log(data);
-      
+
       const profilePic = data.profilePicture[0];
       console.log("imageFile:", profilePic);
       const formData = new FormData();
       formData.append("profilePic", profilePic);
       await updateProfilePictureService.callApi(vendorId, formData);
       toast.success("Profile picture updated successfully!");
-      dispatch(fetchVendorProfile(vendorId)); 
+      dispatch(fetchVendorProfile(vendorId));
     } catch (error) {
       console.log("errror in update profile picture:", error);
 
@@ -179,6 +190,10 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
         console.error("Unknown section:", activeSection.name);
     }
     handleCloseModal();
+  };
+  const handleverifyVendorprofileByAdmin = async () => {
+    const response = await verifyVendorprofileByAdminApi.callApi(vendorId);
+    dispatch(fetchVendorProfile(vendorId));
   };
   const bioDefaultValues = useMemo(
     () =>
@@ -215,7 +230,7 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
       ),
     [vendorDetails]
   );
-console.log(vendorDetails?.businessDetails,'vendorDetails?.businessDetails');
+  console.log(vendorDetails?.businessDetails, "vendorDetails?.businessDetails");
 
   if (!profile)
     return <ErrorView status="loading" error={"Profile Details Not Found!"} />;
@@ -242,7 +257,7 @@ console.log(vendorDetails?.businessDetails,'vendorDetails?.businessDetails');
                     {vendorDetails.name.charAt(0).toUpperCase()}
                   </div>
                 )}
-                    <button
+                <button
                   className="hover:text-primary text-purpleSecondary font-bold"
                   onClick={() =>
                     handleOpenModal(
@@ -362,9 +377,8 @@ console.log(vendorDetails?.businessDetails,'vendorDetails?.businessDetails');
                   defaultValues={businessDefaultValues}
                   editable={false}
                 />
-                    {businessDefaultValues?.categoriesOfServices && (
+                {businessDefaultValues?.categoriesOfServices && (
                   <>
-                   
                     <div className="flex justify-center">
                       <Button
                         className="hover:bg-primary hover:text-white flex flex-col "
@@ -411,11 +425,11 @@ console.log(vendorDetails?.businessDetails,'vendorDetails?.businessDetails');
               </div>
             </div>
           </div>
+
           <DocumentUploader
             formfields={formfields.vendorProfileDetails.documents.fields}
             vendorDetails={vendorDetails.documents}
             vendorId={vendorId}
-            
           />
           {/* Documents Section */}
           <AdminVendorDocumentsVerification
@@ -423,7 +437,18 @@ console.log(vendorDetails?.businessDetails,'vendorDetails?.businessDetails');
             onDocumentVerified={handleDocumentVerified}
           />
 
-    
+          <div className="w-full flex items-center justify-center px-2 py-2">
+            {!profile?.vendor?.verificationStatus ? (
+              <button
+                className="btn-primary w-fit px-2"
+                onClick={handleverifyVendorprofileByAdmin}
+              >
+                Verify Vendor
+              </button>
+            ) : (
+              <p>Vendor is Verified</p>
+            )}
+          </div>
           <Modal open={openModal} onClose={handleCloseModal}>
             <Box
               sx={{
@@ -444,7 +469,7 @@ console.log(vendorDetails?.businessDetails,'vendorDetails?.businessDetails');
               {activeSection && (
                 <div>
                   <h2 className="font-bold text-lg mb-4">
-                  Edit: {activeSection.name}
+                    Edit: {activeSection.name}
                   </h2>
                   <ProfileFormGenerator
                     fields={activeSection.fields}

@@ -4,6 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { internalRoutes } from "../../utils/internalRoutes";
 import logo from "../../assets/Temporary Images/Evaga Logo.png";
 import cart from "../../assets/Temporary Images/cart.png";
+import bgImg from "../../assets/Temporary Images/Component 28.png";
 
 import { MdExitToApp } from "react-icons/md";
 import { LiaLanguageSolid } from "react-icons/lia";
@@ -308,7 +309,7 @@ const DynamicNav = () => {
           <MdOutlineSort className="text-2xl text-white" />
           <p>All</p>
         </span>
-        <Link to={"#"}>Evaga Xperience</Link>
+        <Link to={"#"} >Evaga Xperience</Link>
         <Link to={"#"}>Blog</Link>
         <Link to={internalRoutes.wishlist}>Wishlist</Link>
         <Link to={"#"}>Community</Link>

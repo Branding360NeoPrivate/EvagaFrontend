@@ -112,9 +112,9 @@ const VendorTable = memo(
                           : "text-red-500"
                       }`}
                     >
-                      {vendor.profileCompletion === 100
-                        ? "Complete"
-                        : "Incomplete"}
+                      {!vendor.verificationStatus 
+                        ? <p>Not Verified</p>
+                        : <p className="text-primary">Verified</p>}
                     </td>
                     <td className="  px-4 py-2">{vendor.phoneNumber}</td>
                     <td className="  px-4 py-2">{vendor.numberOfServices}</td>

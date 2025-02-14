@@ -134,6 +134,7 @@ const apiEndpoints = {
     editOneFees: (feeId) => `categoryFee/updateCategoryFee/${feeId}`,
     deleteOneFees: (feeId) => `categoryFee/deleteCategoryFee/${feeId}`,
     getVendorByNameOrUserName: `adminAction/get-search-vendors`,
+    verifyVendorprofile: (vendorId) => `vender/verify-vendor/${vendorId}`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",
