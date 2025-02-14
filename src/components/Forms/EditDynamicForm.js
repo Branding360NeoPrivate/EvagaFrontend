@@ -184,7 +184,7 @@ const EditDynamicForm = ({
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     try {
       const transformedData = fields?.map((field) => {
@@ -208,22 +208,7 @@ const EditDynamicForm = ({
             selectedValue: formValues[field.key],
           };
         }
-  //  if (field.type === "radio") {
-  //       console.log("inside the radio");
 
-  //       // Filter and transform the items for radio type
-  //       const filteredItems = formValues[`${field.key}_options`]?.filter(
-  //         (item) => item.checked
-  //       ).map((item) => item.value);
-
-  //       return {
-  //         label: field.label,
-  //         key: field.key,
-  //         type: field.type,
-  //         items: filteredItems || [],
-  //         selectedValue: filteredItems || [],
-  //       };
-  //     }
         return {
           label: field.label,
           key: field.key,
@@ -272,7 +257,7 @@ const EditDynamicForm = ({
       };
     });
   };
-  console.log(formValues, "formvalues");
+
 
   return (
     <form

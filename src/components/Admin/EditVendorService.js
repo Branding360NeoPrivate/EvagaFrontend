@@ -57,7 +57,8 @@ function EditVendorService({ serviceId }) {
     setSelectedSubCategory(response && response.SubCategory?._id);
     setSelectedCategory(response && response?.Category?._id);
   };
-  const updateServiceHandle = async () => {
+  const updateServiceHandle = async (e) => {
+    e.preventDefault()
     try {
       if (!abouttheService.trim()) {
         toast.error("Please fill in the 'About the Service' field.");
