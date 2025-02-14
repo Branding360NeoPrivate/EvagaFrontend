@@ -152,7 +152,7 @@ function ServiceDetailCard({
               <div className="mb-4 w-full">
                 <h3 className="text-xl font-meduim text-primary">{key}</h3>
                 <hr style={{ margin: "0.3rem 0" }} />
-                <div className="flex gap-2 mt-1">
+                <div className="flex gap-2 mt-1 flex-wrap">
                   {value?.map((event, index) => (
                     <span
                       key={index}

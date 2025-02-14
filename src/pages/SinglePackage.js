@@ -49,6 +49,14 @@ function SinglePackage() {
         allMedia.push(coverImage);
       }
     }
+    if (response?.data?.services?.[0]?.values?.ProductImage) {
+      const ProductImage = response.data.services[0].values.ProductImage;
+      if (Array.isArray(ProductImage)) {
+        allMedia.push(...ProductImage);
+      } else {
+        allMedia.push(ProductImage);
+      }
+    }
 
     if (response?.data?.services?.[0]?.values?.Portfolio?.photos) {
       const photos = response.data.services[0].values.Portfolio.photos;
@@ -95,7 +103,6 @@ function SinglePackage() {
   const addTocartHandle = async (defaultPrice, selectedsession, addOns) => {
     try {
       console.log(defaultPrice, selectedsession);
-      
 
       const formData = new FormData();
       formData.append("serviceId", serviceId);
@@ -129,7 +136,6 @@ function SinglePackage() {
       )
     );
   };
-  console.log(packageIncartStatus);
 
   useEffect(() => {
     isPackageInCart(cart, serviceId, packageId);
