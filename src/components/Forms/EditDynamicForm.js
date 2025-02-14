@@ -22,7 +22,9 @@ const EditDynamicForm = ({
   const [isEditing, setIsEditing] = useState(false);
   const [foodMenu, setFoodMenu] = useState([]);
   const totalNumberOfPhotoAllowed =
-    process.env.REACT_APP_API_Number_of_Images_allowed || 6;
+    process.env.REACT_APP_API_Number_of_Images_allowed || 30;
+  const totalNumberOfvideeAllowed =
+    process.env.REACT_APP_API_VIDEO_BASE_URL || 10;
   const editorStyle = {
     backgroundColor: "#7575751a",
   };
@@ -33,7 +35,7 @@ const EditDynamicForm = ({
     highSeason: [],
   });
 
-  const [formValues, setFormValues] = useState({}); 
+  const [formValues, setFormValues] = useState({});
 
   useEffect(() => {
     if (formData?.fields) {
@@ -43,7 +45,7 @@ const EditDynamicForm = ({
       }, {});
       setFormValues(initialValues);
     }
-  }, [formData]); 
+  }, [formData]);
 
   const handleChange = (key, value) => {
     setFormValues((prev) => {
@@ -184,7 +186,7 @@ const EditDynamicForm = ({
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
       const transformedData = fields?.map((field) => {
@@ -197,7 +199,7 @@ const EditDynamicForm = ({
 
         if (field.type === "radio") {
           console.log("inside the radio");
-          
+
           return {
             label: field.label,
             key: field.key,
@@ -243,7 +245,6 @@ const EditDynamicForm = ({
     });
   };
 
-
   const handleFileRemove = (fieldKey, type, fileIdx) => {
     setFormValues((prev) => {
       const updatedFiles = [...(prev[fieldKey]?.[type] || [])];
@@ -255,7 +256,6 @@ const EditDynamicForm = ({
       };
     });
   };
-
 
   return (
     <form
@@ -1736,15 +1736,16 @@ const EditDynamicForm = ({
                           <input
                             type="file"
                             accept="video/mp4, video/webm"
+                            multiple={totalNumberOfvideeAllowed}
                             onChange={(e) => {
                               const maxFileSize = 100 * 1024 * 1024; // 100 MB
                               const selectedFiles = Array.from(e.target.files);
 
                               const existingVideos =
                                 formValues?.Portfolio?.videos || [];
-                              if (existingVideos.length > 0) {
+                              if (existingVideos.length > 10) {
                                 alert(
-                                  "You can only upload one video. Please remove the existing video before uploading a new one."
+                                  "You can only upload !0 video. Please remove the existing video before uploading a new one."
                                 );
                                 return;
                               }
@@ -2002,10 +2003,9 @@ const EditDynamicForm = ({
               </div>
             </div>
           );
-        } 
-        else if (field.type === "sub-select") {
+        } else if (field.type === "sub-select") {
           const selectedType = formValues["Type"];
-        
+
           const normalizeKey = (type) => {
             const typeMap = {
               Bouquets: "Bouquet",
@@ -2015,19 +2015,19 @@ const EditDynamicForm = ({
               "Floral Installations": "FloralInstallation",
               Backdrops: "Backdrop",
             };
-        
+
             // Ensure `type` is always a string and apply the default fallback
             const normalized = (typeMap[type] || type || "").toString();
             return normalized.replace(/\s+/g, "");
           };
-        
+
           const normalizedType = normalizeKey(selectedType);
           const matchingKey = `${normalizedType}Type`;
-        
+
           if (String(field.key).trim() !== String(matchingKey).trim()) {
             return null;
           }
-        
+
           return (
             <div key={field._id} className="col-span-1 grid grid-cols-4 gap-4">
               <label className="text-primary text-base font-semibold">
@@ -2053,9 +2053,7 @@ const EditDynamicForm = ({
               </div>
             </div>
           );
-        }
-        
-        else if (
+        } else if (
           field.type === "radio" &&
           field.key === "CustomThemeRequest"
         ) {
