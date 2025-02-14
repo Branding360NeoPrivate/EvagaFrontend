@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import ModernVideoPlayer from "../../utils/ModernVideoPlayer ";
 import { motion, AnimatePresence } from "framer-motion";
+import videoThumbnil from "../../assets/Temporary Images/Original.jpg";
 function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(
     mediaUrls.indexOf(selectedUrl)
   );
-
 
   useEffect(() => {
     setCurrentIndex(mediaUrls.indexOf(selectedUrl));
@@ -57,12 +57,16 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
                   onClick={() => onMediaClick(url)}
                 />
               ) : (
-                <video
-                  src={process.env.REACT_APP_API_Aws_Image_BASE_URL + url}
-                  className="w-[80px] h-[60px] object-cover rounded-md border-2 border-transparent hover:scale-110 hover:border-blue-500 transition-transform duration-200"
+                <div
+                  className="relative w-[80px] h-[60px] object-cover rounded-md border-2 border-transparent hover:scale-110 hover:border-blue-500 transition-transform duration-200"
                   onClick={() => onMediaClick(url)}
-                  muted
-                />
+                >
+                  <img
+                    src={videoThumbnil}
+                    alt="Video Placeholder"
+                    className="w-full h-full object-cover rounded-md"
+                  />
+                </div>
               )}
             </div>
           ))}
