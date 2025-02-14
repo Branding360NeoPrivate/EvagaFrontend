@@ -75,6 +75,8 @@ const apiEndpoints = {
     getUserAllAddress: (userId) => `user/get-user-all-address/${userId}`,
     selectOneUserAddress: (userId, addressId) =>
       `user/select-one-address/${userId}/${addressId}`,
+    addToCart: (userId) => `cart/add-to-cart/${userId}`,
+    getUserCart: (userId) => `cart/get-user-cart/${userId}`,
   },
   category: {
     add: "category",
@@ -131,7 +133,7 @@ const apiEndpoints = {
     getOneFees: (feeId) => `categoryFee/getCategoryFee/${feeId}`,
     editOneFees: (feeId) => `categoryFee/updateCategoryFee/${feeId}`,
     deleteOneFees: (feeId) => `categoryFee/deleteCategoryFee/${feeId}`,
-    getVendorByNameOrUserName: () => `adminAction/get-search-vendors`,
+    getVendorByNameOrUserName: `adminAction/get-search-vendors`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",

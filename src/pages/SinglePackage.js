@@ -6,13 +6,22 @@ import { useParams } from "react-router-dom";
 import useServices from "../hooks/useServices";
 import packageApis from "../services/packageApis";
 import { motion } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import userApi from "../services/userApi";
+import Cookies from "js-cookie";
+import { fetchUserCart } from "../context/redux/slices/cartSlice";
+import { toast } from "react-toastify";
 function SinglePackage() {
+  const userId = Cookies.get("userId");
   const { serviceId, packageId } = useParams();
   const [images, setImages] = useState([]);
   const { allWishlist } = useSelector((state) => state.wishlist);
+  const { cart } = useSelector((state) => state.cart);
   const getAllPackages = useServices(packageApis.getOnePackage);
+  const addToCartApi = useServices(userApi.addPackageToUserCart);
+  const dispatch = useDispatch();
   const [singlePageData, setSinglePageData] = useState();
+  const [packageIncartStatus, setPackageIncartStatus] = useState(false);
   const [vendorProfile, setVendorProfile] = useState({ name: "", bio: "" });
   const [packageCategory, setpackageCategory] = useState({
     category: "",
@@ -32,8 +41,6 @@ function SinglePackage() {
     });
 
     const allMedia = [];
-
-    // Collect CoverImage
     if (response?.data?.services?.[0]?.values?.CoverImage) {
       const coverImage = response.data.services[0].values.CoverImage;
       if (Array.isArray(coverImage)) {
@@ -43,7 +50,6 @@ function SinglePackage() {
       }
     }
 
-    // Collect Portfolio.photos
     if (response?.data?.services?.[0]?.values?.Portfolio?.photos) {
       const photos = response.data.services[0].values.Portfolio.photos;
       if (Array.isArray(photos)) {
@@ -53,7 +59,6 @@ function SinglePackage() {
       }
     }
 
-    // Collect Portfolio.videos
     if (response?.data?.services?.[0]?.values?.Portfolio?.videos) {
       const videos = response.data.services[0].values.Portfolio.videos;
       if (Array.isArray(videos)) {
@@ -65,7 +70,15 @@ function SinglePackage() {
 
     setImages(allMedia);
   };
-
+  useEffect(() => {
+    if (userId && (!cart || cart.length === 0)) {
+      dispatch(fetchUserCart(userId)).then((response) => {
+        if (!response || response.length === 0) {
+          console.log("Server response is empty. No cart items fetched.");
+        }
+      });
+    }
+  }, [userId, cart, dispatch]);
   useEffect(() => {
     handlegetOnePackage();
   }, [serviceId, packageId]);
@@ -79,6 +92,48 @@ function SinglePackage() {
   const handleImageClick = (image) => {
     setSelectedImage(image);
   };
+  const addTocartHandle = async (defaultPrice, selectedsession, addOns) => {
+    try {
+      console.log(defaultPrice, selectedsession);
+      
+
+      const formData = new FormData();
+      formData.append("serviceId", serviceId);
+      formData.append("packageId", packageId);
+      formData.append("defaultPrice", defaultPrice);
+      formData.append("selectedSessions", JSON.stringify(selectedsession));
+      formData.append("addons", addOns);
+
+      const response = await addToCartApi.callApi(userId, formData);
+
+      if (!response) {
+        console.error("Failed to add to cart: No response from the API.");
+        return;
+      }
+
+      // Fetch updated cart
+      const cartResponse = await dispatch(fetchUserCart(userId));
+      if (!cartResponse || cartResponse.length === 0) {
+        console.log("Server response is empty. No cart items fetched.");
+      }
+      toast.success("Item Added To Cart");
+    } catch (error) {
+      console.error("An error occurred while adding to cart:", error);
+    }
+  };
+
+  const isPackageInCart = (cart, serviceId, packageId) => {
+    return setPackageIncartStatus(
+      cart?.items?.some(
+        (item) => item?.serviceId === serviceId && item?.packageId === packageId
+      )
+    );
+  };
+  console.log(packageIncartStatus);
+
+  useEffect(() => {
+    isPackageInCart(cart, serviceId, packageId);
+  }, [serviceId, packageId, cart]);
 
   return (
     <motion.div
@@ -115,7 +170,11 @@ function SinglePackage() {
         style={{ flex: "0.32" }}
       >
         <ServiceDetailCard
-          title={singlePageData?.services?.[0]?.values?.Title}
+          title={
+            singlePageData?.services?.[0]?.values?.Title ||
+            singlePageData?.services?.[0]?.values?.VenueName ||
+            singlePageData?.services?.[0]?.values?.FoodTruckName
+          }
           category={packageCategory.category}
           rating={0}
           reviews={0}
@@ -164,6 +223,8 @@ function SinglePackage() {
           addonsDetails={""}
           bio={vendorProfile.bio}
           renderPrice={singlePageData?.services?.[0]?.values}
+          addTocart={addTocartHandle}
+          packageIncart={packageIncartStatus}
         />
       </div>
     </motion.div>

@@ -13,14 +13,10 @@ const useServices = (apiFunction) => {
     try {
       let response;
       if (formData !== null) {
-        // If formData is provided, pass both params and formData
         response = await apiFunction(params, formData);
       } else {
-        // If only params is provided, pass it as is
         response = await apiFunction(params);
       }
-      // console.log("Response in useServices:", response);
-      console.log("log from use service");
 
       setData(response.data);
 

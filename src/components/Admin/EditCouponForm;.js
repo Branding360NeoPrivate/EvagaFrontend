@@ -7,10 +7,13 @@ import {
   InputLabel,
   Button,
   Grid,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import { formatDate } from "../../utils/formatDate";
+import useDebounce from "../../utils/useDebounce";
 
-const EditCouponForm = ({ existingCoupon, onUpdate }) => {
+const EditCouponForm = ({ existingCoupon, onUpdate, categories,vendorsList ,getVendors}) => {
   const [coupon, setCoupon] = useState({
     code: "",
     startDate: "",
@@ -20,9 +23,15 @@ const EditCouponForm = ({ existingCoupon, onUpdate }) => {
     discountAmount: "",
     discountPercentage: "",
     cap: "",
+    vendor: "",
+    autoApplyCoupon: false,
   });
+  console.log(existingCoupon);
 
   const [couponId, setCouponId] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const allCategoriesOption = { _id: "all", name: "All" };
+  const [vendorSearch, setVendorSearch] = useState("");
   useEffect(() => {
     if (existingCoupon) {
       setCoupon({
@@ -30,8 +39,11 @@ const EditCouponForm = ({ existingCoupon, onUpdate }) => {
         startDate: formatDate(existingCoupon.startDate),
         endDate: formatDate(existingCoupon.endDate),
         discountType: existingCoupon.discountAmount ? "amount" : "percentage",
+        autoApplyCoupon: existingCoupon?.applyAutoCoupon,
+        vendor: existingCoupon?.vendorId?._id,
       });
       setCouponId(existingCoupon?._id);
+      setSelectedCategory(existingCoupon?.categoryId);
     }
   }, [existingCoupon]);
 
@@ -39,7 +51,12 @@ const EditCouponForm = ({ existingCoupon, onUpdate }) => {
     const { name, value } = e.target;
     setCoupon({ ...coupon, [name]: value });
   };
-
+  const handleCheckboxChange = (event) => {
+    setCoupon({ ...coupon, autoApplyCoupon: event.target.checked });
+  };
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value);
+  };
   // Handle discount type change: clear old value when switching
   const handleDiscountTypeChange = (e) => {
     const newType = e.target.value;
@@ -52,6 +69,22 @@ const EditCouponForm = ({ existingCoupon, onUpdate }) => {
       cap: newType === "percentage" ? coupon.cap : "", // Clear cap when switching to amount
     });
   };
+  const debounce = useDebounce(vendorSearch);
+  const handleVendorSearch = async (event) => {
+    const searchTerm = event.target.value;
+    setVendorSearch(searchTerm);
+  };
+  useEffect(() => {
+    const fetchVendors = async () => {
+      try {
+        await getVendors(debounce);
+      } catch (error) {
+        console.error("Error fetching vendors:", error);
+      }
+    };
+
+    fetchVendors();
+  }, [debounce]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -68,7 +101,10 @@ const EditCouponForm = ({ existingCoupon, onUpdate }) => {
         discountPercentage:
           coupon.discountType === "percentage" ? coupon.discountPercentage : "",
         cap: coupon.discountType === "percentage" ? coupon.cap : "",
-        couponId
+        applyAutoCoupon: coupon.autoApplyCoupon,
+        vendor: coupon.vendor,
+        selectedCategory: selectedCategory,
+        couponId,
       });
     } else {
       console.warn("onUpdate is not defined");
@@ -90,7 +126,42 @@ const EditCouponForm = ({ existingCoupon, onUpdate }) => {
             required
           />
         </Grid>
-
+        {/* Category Selection */}
+        <Grid item xs={12}>
+          <FormControl fullWidth>
+            <InputLabel>Category</InputLabel>
+            <Select
+              value={selectedCategory}
+              onChange={handleCategoryChange}
+              required
+            >
+              {[allCategoriesOption, ...categories]?.map((category) => (
+                <MenuItem key={category._id} value={category._id}>
+                  {category.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        {/* Vendor Selection with Optional Search */}
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Search Vendor (Optional)"
+            value={vendorSearch}
+            onChange={handleVendorSearch}
+          />
+          <FormControl fullWidth>
+            <InputLabel>Vendor</InputLabel>
+            <Select name="vendor" value={coupon.vendor} onChange={handleChange}>
+              {vendorsList?.map((vendor) => (
+                <MenuItem key={vendor._id} value={vendor._id}>
+                  {vendor.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
         {/* Start Date */}
         <Grid item xs={6}>
           <TextField
@@ -189,7 +260,17 @@ const EditCouponForm = ({ existingCoupon, onUpdate }) => {
             />
           </Grid>
         )}
-
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={coupon.autoApplyCoupon}
+              onChange={handleCheckboxChange}
+              color="primary"
+            />
+          }
+          label="Apply Coupon Automatically"
+          style={{ marginTop: "12px" }}
+        />
         {/* Submit Button */}
         <Grid item xs={12}>
           <Button

@@ -12,17 +12,19 @@ import EditCouponForm from "./EditCouponForm;";
 import { formatDate } from "../../utils/formatDate";
 import DeleteForm from "./DeleteForm";
 import { fetchCategories } from "../../context/redux/slices/categorySlice";
+import useDebounce from "../../utils/useDebounce";
 
 const CouponsTable = memo(() => {
   const [page, setPage] = useState(1);
   const [oneCouponData, setOneCouponData] = useState();
+  const [vendorsList, setVendorsList] = useState(null);
   const [couponId, setCouponId] = useState(null);
   const { coupons } = useSelector((state) => state.coupon);
   const addCoupons = useServices(adminActionsApi.addCoupons);
   const getOneCoupons = useServices(adminActionsApi.getOneCoupons);
   const editOneCoupons = useServices(adminActionsApi.editOneCoupons);
   const deleteOneCoupons = useServices(adminActionsApi.deleteOneCoupons);
-  const getVendorByNameOrUserName = useServices(
+  const getVendorByName = useServices(
     adminActionsApi.getVendorByNameOrUserName
   );
   const dispatch = useDispatch();
@@ -49,6 +51,9 @@ const CouponsTable = memo(() => {
     discountAmount,
     discountPercentage,
     cap,
+    selectedCategory,
+    vendor,
+    applyAutoCoupon,
   }) => {
     const formData = new FormData();
     formData.append("code", code);
@@ -58,6 +63,9 @@ const CouponsTable = memo(() => {
     formData.append("discountAmount", discountAmount);
     formData.append("discountPercentage", discountPercentage);
     formData.append("cap", cap);
+    formData.append("vendorId", vendor);
+    formData.append("categoryId", selectedCategory);
+    formData.append("applyAutoCoupon", applyAutoCoupon);
     const response = await addCoupons.callApi(formData);
     handleClose();
     dispatch(fetchCoupons());
@@ -75,6 +83,9 @@ const CouponsTable = memo(() => {
     discountPercentage,
     cap,
     couponId,
+    selectedCategory,
+    vendor,
+    applyAutoCoupon,
   }) => {
     const formData = new FormData();
     formData.append("code", code);
@@ -84,6 +95,9 @@ const CouponsTable = memo(() => {
     formData.append("discountAmount", discountAmount);
     formData.append("discountPercentage", discountPercentage);
     formData.append("cap", cap);
+    formData.append("vendorId", vendor);
+    formData.append("categoryId", selectedCategory);
+    formData.append("applyAutoCoupon", applyAutoCoupon);
     const response = await editOneCoupons.callApi(couponId, formData);
     handleClose();
     dispatch(fetchCoupons());
@@ -94,13 +108,10 @@ const CouponsTable = memo(() => {
     dispatch(fetchCoupons());
   };
   const getVendorByNameOrUserNamehandle = async (searchTerm) => {
-    console.log(searchTerm);
-    
     const formData = new FormData();
     formData.append("searchTerm", searchTerm);
-    const response = await getVendorByNameOrUserName.callApi(formData);
-    console.log(response);
-    
+    const response = await getVendorByName.callApi(formData);
+    setVendorsList(response?.vendors ? response?.vendors : null);
   };
 
   useEffect(() => {
@@ -213,12 +224,20 @@ const CouponsTable = memo(() => {
         }
       >
         {modalType === "addCoupon" && (
-          <AddCouponForm onSubmit={addCouponHandle} categories={categories} getVendors={getVendorByNameOrUserNamehandle}/>
+          <AddCouponForm
+            onSubmit={addCouponHandle}
+            categories={categories}
+            getVendors={getVendorByNameOrUserNamehandle}
+            vendorsList={vendorsList}
+          />
         )}
         {modalType === "editCoupon" && (
           <EditCouponForm
             existingCoupon={oneCouponData}
             onUpdate={editOneCouponhandle}
+            categories={categories}
+            getVendors={getVendorByNameOrUserNamehandle}
+            vendorsList={vendorsList}
           />
         )}
         {modalType === "deleteCoupon" && (

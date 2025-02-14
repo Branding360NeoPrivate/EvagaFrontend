@@ -78,9 +78,14 @@ const adminActionsApi = {
   deleteOneFees: (feeId) =>
     apiService.delete(apiEndpoints.adminActions.deleteOneFees(feeId)),
   getVendorByNameOrUserName: (formData) =>
-    apiService.get(
+    apiService.post(
       apiEndpoints.adminActions.getVendorByNameOrUserName,
-      formData
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
     ),
 };
 

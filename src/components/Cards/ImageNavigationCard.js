@@ -6,7 +6,7 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
   const [currentIndex, setCurrentIndex] = useState(
     mediaUrls.indexOf(selectedUrl)
   );
-  console.log(mediaUrls);
+
 
   useEffect(() => {
     setCurrentIndex(mediaUrls.indexOf(selectedUrl));
@@ -76,7 +76,7 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
             <img
               src={process.env.REACT_APP_API_Aws_Image_BASE_URL + selectedUrl}
               alt="Selected Media"
-              className="w-fit h-full object-cover rounded-md cursor-pointer aspect-[4/5]"
+              className="w-fit h-full object-contain rounded-md cursor-pointer aspect-[4/5]"
               onClick={() => setIsModalOpen(true)}
             />
           </div>

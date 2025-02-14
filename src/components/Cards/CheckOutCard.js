@@ -1,17 +1,17 @@
 import React from "react";
 import CrossButton from "../../assets/Temporary Images/Cross.png";
 import Event from "../../assets/Temporary Images/image (4).png";
-function CheckOutCard() {
-    const data = 
-        {
-          id: 1,
-          title: "Technical Staff",
-          category: "Event Management and Staffing",
-          company: "Geeta Pvt Ltd",
-          price: "₹1,10,000.00",
-          image: Event
-        }
-      
+import formatCurrency from "../../utils/formatCurrency";
+function CheckOutCard({ price }) {
+  const data = {
+    id: 1,
+    title: "Technical Staff",
+    category: "Event Management and Staffing",
+    company: "Geeta Pvt Ltd",
+    price: "₹1,10,000.00",
+    image: Event,
+  };
+
   return (
     <div
       className="w-full flex items-center bg-white border border-gray-300 rounded-lg p-4  max-sm:w-full relative "
@@ -27,21 +27,22 @@ function CheckOutCard() {
         src={data.image}
         alt={data.title}
         className="object-cover rounded-lg"
-        style={{ width: "12rem", height: "10rem", borderRadius: "4.22px" ,objectFit:'contain'}}
+        style={{
+          width: "12rem",
+          height: "10rem",
+          borderRadius: "4.22px",
+          objectFit: "contain",
+        }}
       />
       <div className="flex-1 flex flex-col ml-8">
-        <h2 className="text-xl  font-semibold text-primary">
-          {data.title}
-        </h2>
+        <h2 className="text-xl  font-semibold text-primary">{data.title}</h2>
         <p className="text-normal  font-normal text-textGray">
           {data.category}
         </p>
-        <p className="text-normal font-normal text-primary">
-          {data.company}
-        </p>
+        <p className="text-normal font-normal text-primary">{data.company}</p>
       </div>
       <div className="text-xl font-semibold text-primary mr-8">
-        {data.price}
+        {formatCurrency(price)}
       </div>
     </div>
   );

@@ -13,13 +13,14 @@ import useServices from "../hooks/useServices";
 import userApi from "../services/userApi";
 import { toast } from "react-toastify";
 import { fetchUserProfile } from "../context/redux/slices/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import DeleteForm from "../components/Admin/DeleteForm";
 import CouponsCard from "../components/Cards/CouponsCard";
 import Cancel from "../assets/Temporary Images/CancelButton.png";
 import Add from "../assets/Temporary Images/AddButton2.png";
 import Tag from "../assets/Temporary Images/tags1.png";
+import { fetchUserCart } from "../context/redux/slices/cartSlice";
 function CheckOut() {
   const { auth } = useAuth();
   const history = useNavigate();
@@ -148,7 +149,16 @@ function CheckOut() {
       handleGetAllUserAddress();
     }
   }, [isEditingAddress, handleGetAllUserAddress]);
-
+  const { cart } = useSelector((state) => state.cart);
+  useEffect(() => {
+    if (userId && (!cart || cart.length === 0)) {
+      dispatch(fetchUserCart(userId)).then((response) => {
+        if (!response || response.length === 0) {
+          console.log("Server response is empty. No cart items fetched.");
+        }
+      });
+    }
+  }, [userId, cart, dispatch]);
   if (!auth?.isAuthenticated || auth?.role !== "user") {
     return (
       <motion.div
@@ -208,7 +218,9 @@ function CheckOut() {
             <div className="flex flex-col gap-4">
               <AddressSelector setIsEditingAddress={setIsEditingAddress} />
               <div className="flex flex-col gap-2">
-                <CheckOutCard />
+                {cart?.items?.map((item) => (
+                  <CheckOutCard price={item?.totalPrice} />
+                ))}
               </div>
             </div>
           )}
@@ -582,7 +594,9 @@ function CheckOut() {
                 className="w-full h-[40px] px-4 py-2 border rounded-lg focus:outline-none text-textGray"
               />
             </div>
-            <p className="text-primary text-normal font-medium text-xl mb-2">Available Offers</p>
+            <p className="text-primary text-normal font-medium text-xl mb-2">
+              Available Offers
+            </p>
             <CouponsCard />
             <div className="flex justify-end mt-4">
               <button

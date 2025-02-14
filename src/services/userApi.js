@@ -55,6 +55,10 @@ const userApi = {
     apiService.get(apiEndpoints.user.getUserAllAddress(userId)),
   selectOneUserAddress: (userId, addressId) =>
     apiService.post(apiEndpoints.user.selectOneUserAddress(userId, addressId)),
+  addPackageToUserCart: (userId, formData) =>
+    apiService.post(apiEndpoints.user.addToCart(userId), formData),
+  getUserCart: (userId) =>
+    apiService.get(apiEndpoints.user.getUserCart(userId)),
 };
 
 export default userApi;

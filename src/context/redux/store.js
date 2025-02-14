@@ -7,6 +7,7 @@ import userWishlistReducer from "./slices/wishlistSlice";
 import categoryReducer from "./slices/categorySlice";
 import couponReducer from "./slices/couponsSlice";
 import categoryFessReducer from "./slices/categoryFeesSlice";
+import userCartReducer from "./slices/cartSlice";
 import bannerReducer from "./slices/bannerSlice";
 import userSearchReducer from "./slices/userSearchSlice";
 import adminReducer from "./slices/adminSlice";
@@ -29,6 +30,7 @@ const store = configureStore({
     userProfile: userReducer,
     coupon: couponReducer,
     categoryFees: categoryFessReducer,
+    cart: userCartReducer,
   },
   devTools: process.env.REACT_APP_Server === "development"?true:false,
 });
