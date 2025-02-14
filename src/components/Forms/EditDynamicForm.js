@@ -1630,7 +1630,7 @@ const EditDynamicForm = ({
                             <img
                               src={
                                 process.env.REACT_APP_API_Aws_Image_BASE_URL +
-                                formValues[`${field.key}`]
+                                item
                               }
                               alt="Selected"
                               className="w-[10rem] rounded-md object-cover"
@@ -1946,7 +1946,6 @@ const EditDynamicForm = ({
           );
         } else if (field.type === "sub-multi-select") {
           const selectedType = formValues["Type"];
-          console.log(selectedType.trim(), field.key);
           if (
             String(field.key).trim() !==
             String(selectedType).replace(/\s+/g, "")
@@ -2020,9 +2019,10 @@ const EditDynamicForm = ({
               </div>
             </div>
           );
-        } else if (field.type === "sub-select") {
+        } 
+        else if (field.type === "sub-select") {
           const selectedType = formValues["Type"];
-
+        
           const normalizeKey = (type) => {
             const typeMap = {
               Bouquets: "Bouquet",
@@ -2032,17 +2032,19 @@ const EditDynamicForm = ({
               "Floral Installations": "FloralInstallation",
               Backdrops: "Backdrop",
             };
-
-            const normalized = typeMap[type] || type;
-            return normalized?.replace(/\s+/g, "");
+        
+            // Ensure `type` is always a string and apply the default fallback
+            const normalized = (typeMap[type] || type || "").toString();
+            return normalized.replace(/\s+/g, "");
           };
-
+        
           const normalizedType = normalizeKey(selectedType);
           const matchingKey = `${normalizedType}Type`;
+        
           if (String(field.key).trim() !== String(matchingKey).trim()) {
             return null;
           }
-
+        
           return (
             <div key={field._id} className="col-span-1 grid grid-cols-4 gap-4">
               <label className="text-primary text-base font-semibold">
@@ -2053,7 +2055,7 @@ const EditDynamicForm = ({
                 <select
                   value={formValues[field.key] || ""}
                   onChange={(e) => handleChange(field.key, e.target.value)}
-                  className="border-2  outline-none p-2 rounded-md text-textGray font-medium w-full"
+                  className="border-2 outline-none p-2 rounded-md text-textGray font-medium w-full"
                   required
                 >
                   <option value="" disabled>
@@ -2068,7 +2070,9 @@ const EditDynamicForm = ({
               </div>
             </div>
           );
-        } else if (
+        }
+        
+        else if (
           field.type === "radio" &&
           field.key === "CustomThemeRequest"
         ) {
