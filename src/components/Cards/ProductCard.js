@@ -44,12 +44,12 @@ function ProductCard({
   };
 
   return (
-    <div className="min-w-[265px] min-h-[340px] border rounded-lg bg-white overflow-hidden">
-      <div className="w-full h-[247px]" onClick={onClick}>
+    <div className="min-w-[250px] min-h-[340px] border rounded-lg bg-white overflow-hidden">
+      <div className="w-full h-[220px]" onClick={onClick}>
         <img
           src={popularimage}
           alt={title}
-          className="w-full h-full aspect-[4/5] rounded-t-md "
+          className="w-full h-full aspect-[4/5] object-cover rounded-t-md "
         />
       </div>
       <div className="p-2">

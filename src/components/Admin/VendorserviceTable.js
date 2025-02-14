@@ -9,6 +9,7 @@ import { Backdrop, Box, Fade, Modal, Typography } from "@mui/material";
 import parse from "html-react-parser";
 import apiClient from "../../services/apiClient";
 import { toast } from "react-toastify";
+import { CiEdit } from "react-icons/ci";
 function VendorserviceTable({
   onMenuSelect,
   selectedVendor,
@@ -144,7 +145,7 @@ function VendorserviceTable({
                   {value.photos.map((photo, index) => (
                     <img
                       key={index}
-                      src={process.env.REACT_APP_API_Image_BASE_URL + photo}
+                      src={process.env.REACT_APP_API_Aws_Image_BASE_URL + photo}
                       alt={`Portfolio Photo ${index + 1}`}
                       style={{
                         height: "15rem",
@@ -167,7 +168,7 @@ function VendorserviceTable({
                     <video
                       key={index}
                       controls
-                      src={process.env.REACT_APP_API_Image_BASE_URL + video}
+                      src={process.env.REACT_APP_API_Aws_Image_BASE_URL + video}
                       style={{ width: "15rem", margin: "10px 0" }}
                       loading="lazy"
                     >
@@ -200,7 +201,7 @@ function VendorserviceTable({
               <li key={index}>
                 {imageKeys.includes(key) && typeof item === "string" ? (
                   <img
-                    src={process.env.REACT_APP_API_Image_BASE_URL + item}
+                    src={process.env.REACT_APP_API_Aws_Image_BASE_URL + item}
                     alt={`${key} ${index + 1}`}
                     style={{
                       height: "15rem",
@@ -212,7 +213,7 @@ function VendorserviceTable({
                 ) : videoKeys.includes(key) && typeof item === "string" ? (
                   <video
                     controls
-                    src={process.env.REACT_APP_API_Image_BASE_URL + item}
+                    src={process.env.REACT_APP_API_Aws_Image_BASE_URL + item}
                     alt={`${key} ${index + 1}`}
                     style={{ width: "15rem", margin: "10px 0" }}
                     loading="lazy"
@@ -256,7 +257,7 @@ function VendorserviceTable({
     // Handle single values
     return imageKeys.includes(key) ? (
       <img
-        src={process.env.REACT_APP_API_Image_BASE_URL + value}
+        src={process.env.REACT_APP_API_Aws_Image_BASE_URL + value}
         alt={key}
         style={{ height: "15rem", margin: "10px 0", objectFit: "contain" }}
         loading="lazy"
@@ -264,7 +265,7 @@ function VendorserviceTable({
     ) : videoKeys.includes(key) ? (
       <video
         controls
-        src={process.env.REACT_APP_API_Image_BASE_URL + value}
+        src={process.env.REACT_APP_API_Aws_Image_BASE_URL + value}
         alt={key}
         style={{ width: "15rem", margin: "10px 0" }}
       />
@@ -349,7 +350,7 @@ function VendorserviceTable({
                 </td>
                 <td className="  px-4 py-2">{vendor.services?.length}</td>
                 <td className="  px-4 py-2">{vendor.YearofExperience}</td>
-                <td className="  px-4 py-2">
+                <td className=" flex items-center justfiy-center gap-2 px-4 py-2">
                   <button
                     className="text-blue-600 hover:underline"
                     onClick={() => [
@@ -359,6 +360,7 @@ function VendorserviceTable({
                   >
                     View
                   </button>
+                  <CiEdit className="text-xl font-medium cursor-pointer"/>
                 </td>
               </tr>
             ))}

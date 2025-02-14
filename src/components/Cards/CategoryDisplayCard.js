@@ -14,14 +14,14 @@ function CategoryDisplayCard({ image, text, onClick, catId }) {
   };
   return (
     <div
-      className="min-w-[140px] min-h-[120px]  flex flex-col items-center gap-3 cursor-pointer"
+      className="min-w-[140px] min-h-[120px]  flex flex-col items-center gap-2 cursor-pointer"
       onClick={() => handleSearch(catId, text)}
     >
       <div className="w-full  rounded-lg object-contain flex items-center justify-center">
         <img
           src={image && process.env.REACT_APP_API_Image_BASE_URL + image}
           alt="Category"
-          className="w-full object-fit "
+          className="w-[80%] object-fit "
         />
       </div>
       <p className="text-normal font-medium text-primary text-center break-words">
