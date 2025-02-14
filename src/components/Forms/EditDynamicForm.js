@@ -19,7 +19,6 @@ const EditDynamicForm = ({
   setOpenMasterVenueModal,
 }) => {
   const { fields = [] } = formData || {};
-  console.log(fields, "fields");
   const [isEditing, setIsEditing] = useState(false);
   const [foodMenu, setFoodMenu] = useState([]);
   const totalNumberOfPhotoAllowed =
@@ -34,17 +33,17 @@ const EditDynamicForm = ({
     highSeason: [],
   });
 
-  const [formValues, setFormValues] = useState({}); // Initialize as an empty object
+  const [formValues, setFormValues] = useState({}); 
 
   useEffect(() => {
     if (formData?.fields) {
       const initialValues = formData.fields.reduce((acc, field) => {
-        acc[field.key] = field.items || ""; 
+        acc[field.key] = field.items || "";
         return acc;
       }, {});
       setFormValues(initialValues);
     }
-  }, [formData]); // Run this effect whenever `formData` changes
+  }, [formData]); 
 
   const handleChange = (key, value) => {
     setFormValues((prev) => {
@@ -62,10 +61,10 @@ const EditDynamicForm = ({
       ) {
         return {
           ...prev,
-          [key]: value, // ✅ Store selected value as a string
+          [key]: value, // Update the selected value
           [`${key}_options`]: prev[key].map((item) => ({
             ...item,
-            checked: item.value === value, // ✅ Update checked dynamically
+            checked: item.value === value, // Dynamically update the checked status
           })),
         };
       }
@@ -196,19 +195,35 @@ const EditDynamicForm = ({
           }
         });
 
-
         if (field.type === "radio") {
+          console.log("inside the radio");
+          
           return {
             label: field.label,
             key: field.key,
             type: field.type,
-            items: formValues[`${field.key}_options`] 
+            items: formValues[`${field.key}_options`]
               ? formValues[`${field.key}_options`]
-              : field.items, 
-            selectedValue: formValues[field.key], 
+              : field.items,
+            selectedValue: formValues[field.key],
           };
         }
+  //  if (field.type === "radio") {
+  //       console.log("inside the radio");
 
+  //       // Filter and transform the items for radio type
+  //       const filteredItems = formValues[`${field.key}_options`]?.filter(
+  //         (item) => item.checked
+  //       ).map((item) => item.value);
+
+  //       return {
+  //         label: field.label,
+  //         key: field.key,
+  //         type: field.type,
+  //         items: filteredItems || [],
+  //         selectedValue: filteredItems || [],
+  //       };
+  //     }
         return {
           label: field.label,
           key: field.key,
@@ -233,28 +248,7 @@ const EditDynamicForm = ({
     }));
   };
 
-  // const handleFileChange = (key, subKey, index, newFiles) => {
-  //   console.log(`Handling ${subKey} at ${key}_${index}`);
-  //   const portfolioKey = `${key}_${index}`; // Unique key: Portfolio_0, Portfolio_1
 
-  //   setFormValues((prev) => {
-  //     const existingData = prev[portfolioKey] || { photos: [], videos: [] };
-
-  //     // Update photos or videos
-  //     const updatedValue = {
-  //       ...existingData,
-  //       [subKey]:
-  //         subKey === "videos"
-  //           ? [...(existingData[subKey] || []), newFiles[0]]
-  //           : [...(existingData[subKey] || []), ...newFiles],
-  //     };
-
-  //     return {
-  //       ...prev,
-  //       [portfolioKey]: updatedValue,
-  //     };
-  //   });
-  // };
 
   const handleFileChange = (fieldKey, type, files) => {
     setFormValues((prev) => {
@@ -265,29 +259,7 @@ const EditDynamicForm = ({
       return { ...prev, [fieldKey]: updatedField };
     });
   };
-  // const handleFileRemove = (key, index, subKey, fileIdx = null) => {
-  //   console.log(`Removing ${subKey} from ${key}_${index}`);
-  //   const portfolioKey = `${key}_${index}`;
 
-  //   setFormValues((prev) => {
-  //     const existingData = prev[portfolioKey] || { photos: [], videos: [] };
-
-  //     const updatedValue = { ...existingData };
-
-  //     if (subKey === "videos") {
-  //       updatedValue[subKey] = []; // Clear videos
-  //     } else if (subKey === "photos" && fileIdx !== null) {
-  //       const updatedPhotos = [...existingData[subKey]];
-  //       updatedPhotos.splice(fileIdx, 1); // Remove specific photo
-  //       updatedValue[subKey] = updatedPhotos;
-  //     }
-
-  //     return {
-  //       ...prev,
-  //       [portfolioKey]: updatedValue,
-  //     };
-  //   });
-  // };
 
   const handleFileRemove = (fieldKey, type, fileIdx) => {
     setFormValues((prev) => {
@@ -300,7 +272,7 @@ const EditDynamicForm = ({
       };
     });
   };
-  console.log(formValues, "formvalues", formValues?.Portfolio?.photos);
+  console.log(formValues, "formvalues");
 
   return (
     <form
@@ -1493,26 +1465,6 @@ const EditDynamicForm = ({
                 {field.label}:
               </label>
               <div className="col-span-3 flex  items-center justify-start gap-4 ">
-                {/* <div className="flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
-                  <input
-                    type={field.type}
-                    accept="image/*, application/pdf"
-                    id={`file-upload-${field.key}-${index}`}
-                    className="hidden"
-                    onChange={(e) =>
-                      handleImageChange(field.key, e.target.files[0])
-                    }
-                  />
-                  <label
-                    htmlFor={`file-upload-${field.key}-${index}`}
-                    className="cursor-pointer flex items-center justify-center flex-col"
-                  >
-                    <IoCloudUploadOutline className="text-primary text-2xl mb-4" />
-                    <p className="text-textGray">
-                      Drop your files or Browse files
-                    </p>
-                  </label>
-                </div> */}
                 <div className="relative cursor-pointer flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
                   <IoCloudUploadOutline className="text-primary text-2xl mb-4" />
                   <p className="text-textGray">
@@ -1526,12 +1478,21 @@ const EditDynamicForm = ({
                       handleSingleFileChange(field.key, selectedFiles);
                     }}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    required
                   />
                 </div>
                 {formValues?.[`${field.key}`] && (
-                  <span className="text-textGray bg-textLightGray flex p-1 rounded-md gap-1">
-                    <p>
+                  <span className="text-textGray bg-textLightGray flex p-1 rounded-md gap-2 items-center flex-col">
+                    {formValues[`${field.key}`] && (
+                      <img
+                        src={
+                          process.env.REACT_APP_API_Aws_Image_BASE_URL +
+                          formValues[`${field.key}`]
+                        }
+                        alt="Selected"
+                        className="w-[10rem] rounded-md object-cover"
+                      />
+                    )}
+                    {/* <p>
                       {Array.isArray(formValues[`${field.key}`]) &&
                       typeof formValues[`${field.key}`][0] === "string"
                         ? formValues[`${field.key}`][0].replace(
@@ -1539,10 +1500,10 @@ const EditDynamicForm = ({
                             ""
                           )
                         : formValues[`${field.key}`]?.[0]?.name}
-                    </p>
+                    </p> */}
 
                     <button
-                      onClick={() => handleChange(`${field.key}`, null)} // Remove specific file
+                      onClick={() => handleChange(`${field.key}`, null)}
                       className="px-3 py-1"
                     >
                       <ImCancelCircle />
@@ -1585,7 +1546,6 @@ const EditDynamicForm = ({
                         handleSingleFileChange(field.key, selectedFiles);
                       }}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      required
                     />
                   </div>
 
@@ -1595,7 +1555,17 @@ const EditDynamicForm = ({
                 </div>
                 {formValues?.[`${field.key}`] && (
                   <span className="text-textGray bg-textLightGray flex p-1 rounded-md gap-1">
-                    <p>{formValues[`${field.key}`]?.[0]?.name}</p>
+                    {formValues[`${field.key}`] && (
+                      <img
+                        src={
+                          process.env.REACT_APP_API_Aws_Image_BASE_URL +
+                          formValues[`${field.key}`]
+                        }
+                        alt="Selected"
+                        className="w-[10rem] rounded-md object-cover"
+                      />
+                    )}
+                    {/* <p>{formValues[`${field.key}`]?.[0]?.name}</p> */}
                     <button
                       onClick={() => handleChange(`${field.key}`, null)} // Remove specific file
                       className="px-3 py-1"
@@ -1641,7 +1611,6 @@ const EditDynamicForm = ({
                         ]);
                       }}
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      required
                     />
                   </div>
 
@@ -1657,6 +1626,16 @@ const EditDynamicForm = ({
                           key={idx}
                           className="text-textGray bg-textLightGray flex p-1 rounded-md justify-between items-center gap-1"
                         >
+                          {formValues[`${field.key}`] && (
+                            <img
+                              src={
+                                process.env.REACT_APP_API_Aws_Image_BASE_URL +
+                                formValues[`${field.key}`]
+                              }
+                              alt="Selected"
+                              className="w-[10rem] rounded-md object-cover"
+                            />
+                          )}
                           <p>{item?.name || "Uploaded File"}</p>
                           <button
                             className="text-primary hover:text-red-500"
@@ -1730,11 +1709,22 @@ const EditDynamicForm = ({
                                 key={photoIdx}
                                 className="text-textGray bg-textLightGray flex p-1 rounded-md gap-1"
                               >
-                                <p>
+                                {formValues[`${field.key}`] && (
+                                  <img
+                                    src={
+                                      process.env
+                                        .REACT_APP_API_Aws_Image_BASE_URL +
+                                      photo
+                                    }
+                                    alt="Selected"
+                                    className="w-[10rem] rounded-md object-cover"
+                                  />
+                                )}
+                                {/* <p>
                                   {typeof photo === "string"
                                     ? photo.replace(/^service\//, "")
                                     : photo?.name || "Invalid photo format"}
-                                </p>
+                                </p> */}
                                 <button
                                   onClick={() =>
                                     handleFileRemove(
@@ -1804,7 +1794,22 @@ const EditDynamicForm = ({
                                 key={videoIdx}
                                 className="text-textGray bg-textLightGray flex p-1 rounded-md gap-1"
                               >
-                                <p>
+                                {" "}
+                                {formValues[`${field.key}`] && (
+                                  <video controls>
+                                    <source
+                                      src={
+                                        process.env
+                                          .REACT_APP_API_Aws_Image_BASE_URL +
+                                        formValues?.Portfolio?.videos[0]
+                                      }
+                                      type="video/mp4"
+                                      alt="Selected"
+                                      className="w-[10rem] rounded-md object-cover"
+                                    />
+                                  </video>
+                                )}
+                                {/* <p>
                                   {Array.isArray(
                                     formValues?.Portfolio?.videos
                                   ) && formValues?.Portfolio?.videos.length > 0
@@ -1817,8 +1822,7 @@ const EditDynamicForm = ({
                                       : formValues?.Portfolio?.videos[0]
                                           ?.name || "Invalid videos format"
                                     : "No video available"}
-                                </p>
-
+                                </p> */}
                                 <button
                                   onClick={
                                     () =>
@@ -2172,8 +2176,6 @@ const EditDynamicForm = ({
             </div>
           );
         } else if (field.type === "radio") {
-
-
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-base font-semibold">

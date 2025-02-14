@@ -10,6 +10,8 @@ import parse from "html-react-parser";
 import apiClient from "../../services/apiClient";
 import { toast } from "react-toastify";
 import { CiEdit } from "react-icons/ci";
+import ReusableModal from "../Modal/Modal";
+import EditVendorService from "./EditVendorService";
 function VendorserviceTable({
   onMenuSelect,
   selectedVendor,
@@ -69,6 +71,13 @@ function VendorserviceTable({
   const [open1, setOpen1] = React.useState(false);
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
+  const [openResuableModal, setOpenResuableModal] = useState(false);
+  const handleOpenResuableModal = () => {
+    setOpenResuableModal(true);
+  };
+  const handleCloseResuableModal = () => {
+    setOpenResuableModal(false);
+  };
   const [serviceValue, setServiceValue] = useState();
   const handleGetOneServiceWithId = async (serviceId) => {
     const response = await getOneServiceByid.callApi(serviceId);
@@ -90,7 +99,7 @@ function VendorserviceTable({
       );
       handleClose1();
       toast.success("Package Status updated successfully");
-      handleGetOneServiceWithId(packageCredentials?.serviceId)
+      handleGetOneServiceWithId(packageCredentials?.serviceId);
     } catch (error) {
       console.error("Error in API Call:", error);
       toast.warning("Package Verification Failure");
@@ -286,6 +295,7 @@ function VendorserviceTable({
       </Typography>
     ) : null;
   };
+  console.log(packageCredentials, "packageCredentials");
 
   if (status === "loading") {
     return <div className="text-center py-10">Loading vendor data...</div>;
@@ -360,7 +370,16 @@ function VendorserviceTable({
                   >
                     View
                   </button>
-                  <CiEdit className="text-xl font-medium cursor-pointer"/>
+                  <CiEdit
+                    className="text-xl font-medium cursor-pointer"
+                    onClick={() => [
+                      handleOpenResuableModal(),
+                      setpackageCredentials({
+                        ...packageCredentials,
+                        serviceId: vendor?._id,
+                      }),
+                    ]}
+                  />
                 </td>
               </tr>
             ))}
@@ -554,6 +573,14 @@ function VendorserviceTable({
           </Box>
         </Fade>
       </Modal>
+      <ReusableModal
+        open={openResuableModal}
+        onClose={handleCloseResuableModal}
+        width={"90%"}
+        title={"Edit Service"}
+      >
+        <EditVendorService serviceId={packageCredentials?.serviceId} />
+      </ReusableModal>
     </div>
   );
 }

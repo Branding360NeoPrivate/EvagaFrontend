@@ -178,15 +178,25 @@ const VendorDashboard = () => {
                   // Otherwise, prepend the base URL
                   return `${process.env.REACT_APP_API_Aws_Image_BASE_URL}${imagePath}`;
                 };
-                
+                console.log(item?.services?.[0]?.values?.CoverImage);
 
                 return (
                   <ServiceCard
                     key={item?._id || item?.title}
-                    image={getImageUrl(
-                      item?.services?.[0]?.values?.CoverImage?.[0] ||
-                        item?.services?.[0]?.values?.ProductImage?.[0]
-                    )}
+                    image={
+                      process.env.REACT_APP_API_Aws_Image_BASE_URL +
+                      (
+                        Array.isArray(item?.services?.[0]?.values?.CoverImage)
+                          ? item?.services?.[0]?.values?.CoverImage?.[0]
+                          : item?.services?.[0]?.values?.CoverImage
+                      ) ||
+                      (
+                        Array.isArray(item?.services?.[0]?.values?.ProductImage)
+                          ? item?.services?.[0]?.values?.ProductImage?.[0]
+                          : item?.services?.[0]?.values?.ProductImage
+                      )
+                    }
+                    
                     title={
                       item?.services?.[0]?.values?.Title ||
                       item?.services?.[0]?.values?.FoodTruckName ||

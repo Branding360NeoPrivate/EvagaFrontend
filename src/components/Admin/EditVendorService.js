@@ -6,8 +6,7 @@ import { useParams } from "react-router-dom";
 import EditDynamicForm from "../../components/Forms/EditDynamicForm";
 import { toast } from "react-toastify";
 
-function VendorEditService() {
-  const { serviceId } = useParams();
+function EditVendorService({ serviceId }) {
   const getOneServiceByid = useServices(vendorApi.getOnevendorService);
   const [inHouseCateringMenuData, setInHouseCateringMenuData] = useState(null);
   const [masterMenuData, setMasterMenuData] = useState(null);
@@ -60,7 +59,6 @@ function VendorEditService() {
   };
   const updateServiceHandle = async () => {
     try {
-      // Validate inputs
       if (!abouttheService.trim()) {
         toast.error("Please fill in the 'About the Service' field.");
         return;
@@ -76,14 +74,11 @@ function VendorEditService() {
       }
 
       setLoading(true);
-
-      // Initialize FormData
       const formData = new FormData();
       formData.append("formTemplateId", selectedFormId);
       formData.append("AbouttheService", abouttheService);
       formData.append("YearofExperience", yearofExperience);
 
-      // Prepare services structure
       const services = formInstances.map((service, serviceIndex) => {
         const correspondingCateringPackages =
           inHouseCateringPackageData[serviceIndex] || [];
@@ -98,10 +93,9 @@ function VendorEditService() {
         };
       });
 
-      // Append services JSON string
+
       formData.append("services", JSON.stringify(services));
 
-      // Helper function to process file-specific fields
       const processFileFields = (key, value, serviceIndex) => {
         if (Array.isArray(value)) {
           value.forEach((item, itemIndex) => {
@@ -118,7 +112,6 @@ function VendorEditService() {
         }
       };
 
-      // Process each service and append only file-related fields
       services.forEach((service, serviceIndex) => {
         const values = service.values;
 
@@ -178,12 +171,10 @@ function VendorEditService() {
         });
       });
 
-      // Debugging FormData content
       for (let pair of formData.entries()) {
         console.log(`${pair[0]}:`, pair[1]);
       }
 
-      // API call to update service
       const response = await updateVendorServiceApi.callApi(
         serviceId,
         formData
@@ -220,38 +211,6 @@ function VendorEditService() {
     }
   }, [selectedCatgeory, selectedSubCatgeory]);
 
-  // useEffect(() => {
-  //   if (serviceValue?.services) {
-  //     const initialInstances = serviceValue.services.map((service) => ({
-  //       id: service._id,
-  //       data: formFeilds?.fields?.map((field) => {
-  //         if (field.type === "select") {
-  //           const selectedValue = service?.values?.[field.key];
-  //           return {
-  //             ...field,
-  //             items: Array.isArray(field.items)
-  //               ? [...new Set([selectedValue, ...field.items].filter(Boolean))]
-  //               : [],
-  //           };
-  //         } else if (field.type === "radio") {
-  //           const selectedValue = service?.values?.[field.key];
-
-  //           return {
-  //             ...field,
-  //             items: Array.isArray(field.items) ? field.items : [],
-  //           };
-  //         } else {
-  //           return {
-  //             ...field,
-  //             items: service?.values?.[field.key] || field.items || "",
-  //           };
-  //         }
-  //       }),
-  //       saved: false,
-  //     }));
-  //     setFormInstances(initialInstances);
-  //   }
-  // }, [serviceValue, formFeilds?.fields]);
   useEffect(() => {
     if (serviceValue?.services) {
       const initialInstances = serviceValue.services.map((service) => ({
@@ -272,7 +231,7 @@ function VendorEditService() {
               items: Array.isArray(field.items)
                 ? field.items.map((item) => ({
                     ...item,
-                    checked: item.value === selectedValue, // Mark as checked if the value matches
+                    checked: item.value === selectedValue, 
                   }))
                 : [],
             };
@@ -294,7 +253,7 @@ function VendorEditService() {
       <div className="w-11/12 flex items-start justify-start flex-col gap-2">
         <h6 className="text-primary text-xl font-medium">Create New Service</h6>
         <div className="w-full flex items-start justify-start flex-col border-2 border-textLightGray rounded-lg py-4 px-[5%] gap-4">
-          <div className="w-full gap-4 grid grid-cols-1 sm:grid-cols-2">
+          <div className="w-full gap-4 grid grid-cols-1 sm:grid-cols-1">
             <div className="w-full gap-4 grid grid-cols-1 md:grid-cols-4 text-primary">
               <p className="text-xl font-normal">Category</p>
               <input
@@ -346,7 +305,7 @@ function VendorEditService() {
           <div className="w-full flex items-start justify-start flex-col border-2 border-textLightGray rounded-lg py-4 px-[5%] gap-4">
             <div key={form.id} className="mb-4">
               <EditDynamicForm
-                formData={{ fields: form.data }} // Pass current form data
+                formData={{ fields: form.data }} 
                 key={form.id}
                 index={index}
                 setfiledFormData={(formData) => {
@@ -372,16 +331,14 @@ function VendorEditService() {
             </div>
           </div>
         ))}
-
-        {/* Buttons Section */}
-        {formInstances.every((form) => form.saved) && ( // Ensure all forms are saved
+        {formInstances.every((form) => form.saved) && ( 
           <div className="flex items-center justify-end w-full gap-4 mt-4">
-            <button
+            {/* <button
               className="btn-primary w-fit px-3 add-package-button"
               onClick={handleAddPackage}
             >
               Add Package
-            </button>
+            </button> */}
             {!loading ? (
               <button
                 onClick={updateServiceHandle}
@@ -399,4 +356,4 @@ function VendorEditService() {
   );
 }
 
-export default VendorEditService;
+export default EditVendorService;

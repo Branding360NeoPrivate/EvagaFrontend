@@ -84,8 +84,6 @@ function Home() {
     setSelectedImage(image);
   };
 
-
-
   return (
     <motion.div
       className=" flex flex-col justify-center items-center gap-4 w-full"
@@ -98,7 +96,7 @@ function Home() {
       }}
     >
       <div className="flex justify-center items-center contain-content w-[100%]">
-        <Slider bannerData={userBanner} height={'16em'} />
+        <Slider bannerData={userBanner} height={"16em"} />
       </div>
       <div className="w-[95%]  mx-12 gap-4">
         <h2 className="sub_heading">Browse by Category</h2>
@@ -129,12 +127,17 @@ function Home() {
           <HorizontalScroll speed={1} className="flex flex-row gap-8">
             {allPackages.map((service, index) => {
               const imageUrl =
-                service.serviceDetails?.values?.CoverImage?.[0] ||
-                service.serviceDetails?.values?.ProductImage?.[0];
+                (Array.isArray(service.serviceDetails?.values?.CoverImage)
+                  ? service.serviceDetails?.values?.CoverImage[0]
+                  : service.serviceDetails?.values?.CoverImage) ||
+                (Array.isArray(service.serviceDetails?.values?.ProductImage)
+                  ? service.serviceDetails?.values?.ProductImage[0]
+                  : service.serviceDetails?.values?.ProductImage);
 
               const popularimage = imageUrl?.startsWith("service/")
                 ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
                 : imageUrl;
+
               return (
                 <ProductCard
                   key={service?.serviceDetails?._id}

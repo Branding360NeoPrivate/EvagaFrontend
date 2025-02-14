@@ -166,7 +166,7 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
                 onChange={(e) => setDateInput(e.target.value)}
                 onClick={() => setShowCalendar(!showCalendar)}
                 placeholder="MM/DD/YYYY"
-                className="w-full py-2 px-3 border rounded-md text-gray-600 focus:outline-primary"
+                className="w-full py-2 px-1 border rounded-md text-gray-600 focus:outline-primary"
               />
     
               <button
