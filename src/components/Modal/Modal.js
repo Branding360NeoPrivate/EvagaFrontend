@@ -38,7 +38,8 @@ const ReusableModal = ({
       >
         <Box
           sx={style}
-          className={`sm:w-[90%] md:w-[80%] lg:w-[${width ? width : "45%"}] `}
+          className={`sm:w-[90%] md:w-[80%] lg:w-[${width}|| 45%]`}
+
         >
           <h2 className="text-xl font-semibold text-primary mb-4">{title}</h2>
           {children}

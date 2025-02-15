@@ -14,6 +14,7 @@ const FeedbackForm = () => {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm();
 
@@ -95,7 +96,7 @@ const FeedbackForm = () => {
           </label>
           <textarea
             className="w-full p-2 border rounded-md"
-            {...register("rating", { required: true })}
+            {...register("rating")}
           ></textarea>
           {errors.rating && (
             <p className="text-red-500">This field is required</p>
@@ -196,7 +197,7 @@ const FeedbackForm = () => {
           </label>
           <textarea
             className="w-full p-2 border rounded-md"
-            {...register("suggestions", { required: true })}
+            {...register("suggestions",)}
           ></textarea>
           {errors.suggestions && (
             <p className="text-red-500">This field is required</p>
@@ -291,7 +292,7 @@ const FeedbackForm = () => {
           </label>
           <textarea
             className="w-full p-2 border rounded-md"
-            {...register("customer", { required: true })}
+            {...register("customer")}
           ></textarea>
           {errors.customer && (
             <p className="text-red-500">This field is required</p>
@@ -326,7 +327,7 @@ const FeedbackForm = () => {
                 <input
                   type="checkbox"
                   value={option}
-                className="customCheckbox"
+                  className="customCheckbox"
                   {...register("unique", { required: true })}
                 />
                 <span>{option}</span>
@@ -355,7 +356,7 @@ const FeedbackForm = () => {
                 <input
                   type="checkbox"
                   value={option}
-                   className="customCheckbox"
+                  className="customCheckbox"
                   {...register("platform", { required: true })}
                 />
                 <span>{option}</span>
@@ -370,7 +371,7 @@ const FeedbackForm = () => {
           </label>
           <textarea
             className="w-full p-2 border rounded-md"
-            {...register("comments", { required: true })}
+            {...register("comments")}
           ></textarea>
           {errors.comments && (
             <p className="text-red-500">This field is required</p>
@@ -433,7 +434,7 @@ const FeedbackForm = () => {
                 <input
                   type="checkbox"
                   value={option}
-                    className="customCheckbox"
+                  className="customCheckbox"
                   {...register("serviceType", { required: true })}
                 />
                 <span>{option}</span>
@@ -521,7 +522,7 @@ const FeedbackForm = () => {
           </label>
           <textarea
             className="w-full p-2 border rounded-md text-textGray"
-            {...register("reason", { required: true })}
+            {...register("reason", )}
           ></textarea>
           {errors.reason && (
             <p className="text-red-500">This field is required</p>
@@ -552,23 +553,46 @@ const FeedbackForm = () => {
 
         <div>
           <label className="block mt-2 font-semibold text-primary">
-            Your Contact Details (Optional)
+            Please provide at least one contact detail
           </label>
+
+          {/* Email Field */}
           <label className="block">Email</label>
           <input
             type="email"
             placeholder="Enter your email"
-            {...register("email")}
+            {...register("email", {
+              validate: (value) =>
+                !!value ||
+                !!getValues("phone") ||
+                "At least one contact detail is required",
+            })}
             className="border p-2 w-full rounded-md text-textGray"
-          />
+          />   {errors.email && (
+            <p className="text-red-500">{errors.email.message}</p>
+          )}
+
+          {/* Phone Field */}
           <label className="block">Phone</label>
           <input
             type="text"
             placeholder="Enter your phone number"
-            {...register("phone")}
+            {...register("phone", {
+              validate: (value) =>
+                !!value ||
+                !!getValues("email") ||
+                "At least one contact detail is required",
+            })}
             className="border p-2 w-full rounded-md text-textGray"
           />
+
+          {/* Error Message */}
+       
+          {errors.phone && (
+            <p className="text-red-500">{errors.phone.message}</p>
+          )}
         </div>
+
         <button
           type="submit"
           className="w-full bg-primary text-white py-2 rounded-md hover:bg-blue-600"

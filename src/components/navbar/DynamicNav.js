@@ -18,16 +18,20 @@ import { MdOutlineSort } from "react-icons/md";
 import { useSelector } from "react-redux";
 import useDebounce from "../../utils/useDebounce";
 import Cookies from "js-cookie";
+import ReusableModal from "../Modal/Modal";
 const DynamicNav = () => {
   const { auth, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [modalType, setModalType] = useState("evagaXperience");
   const { categories } = useSelector((state) => state.category);
-    const [selectedCategory, setSelectedCategory] = useState(null);
-    const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-    const [search, setSearch] = useState();
-    const debounce = useDebounce(search);
-    const { searchTerm } = useSelector((state) => state.userSearch);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [search, setSearch] = useState();
+  const debounce = useDebounce(search);
+  const { searchTerm } = useSelector((state) => state.userSearch);
   const allCategoriesOption = { _id: "all", name: "All" };
   const menuItems = [
     {
@@ -68,6 +72,12 @@ const DynamicNav = () => {
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
   };
   const [isSliderOpen, setIsSliderOpen] = useState(false);
   const sliderRef = useRef(null);
@@ -309,10 +319,14 @@ const DynamicNav = () => {
           <MdOutlineSort className="text-2xl text-white" />
           <p>All</p>
         </span>
-        <Link to={"#"} >Evaga Xperience</Link>
+        <Link to={"#"} onClick={handleOpen}>
+          Evaga Xperience
+        </Link>
         <Link to={"#"}>Blog</Link>
         <Link to={internalRoutes.wishlist}>Wishlist</Link>
-        <Link to={"#"}>Community</Link>
+        <Link to={"#"} onClick={handleOpen}>
+          Community
+        </Link>
         <Link to={"#"}>Customer Service</Link>
       </div>
       <div
@@ -329,7 +343,7 @@ const DynamicNav = () => {
               onClick={() => [
                 handleCategorySelect(category),
                 setShouldRedirect(true),
-                toggleSlider()
+                toggleSlider(),
               ]}
             >
               {category?.name}
@@ -377,6 +391,33 @@ const DynamicNav = () => {
           padding: 10px;
         }
       `}</style>
+      <ReusableModal open={open} onClose={handleClose} width={"50%"}>
+      <div className="fixed font-[Poppins] inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white w-full  p-8 rounded-md ">
+        <div className="flex justify-end mb-4">
+          <button onClick={handleClose}>
+            {/* <img className="h-6" src={Cross} alt="close" /> */}
+          </button>
+        </div>
+        <h2 className="flex text-primary text-2xl font-semibold item-center justify-center mt-32">Coming Soon</h2>
+        <div className="mx-10 flex flex-col">
+          <p className="mt-2 text-primary font-semibold text-lg mt-4">Join the Waitlist</p>
+          <div className="flex mb-32">
+            <input
+              type="email"
+              placeholder="Enter your Email"
+              className="w-full mt-1 p-2 border rounded-lg"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <button className="w-[100px] border rounded-lg">
+              {/* <img src={Submit} alt="submit" /> */}
+            </button>
+          </div>  
+        </div>
+      </div>
+    </div>
+      </ReusableModal>
     </>
   );
 };

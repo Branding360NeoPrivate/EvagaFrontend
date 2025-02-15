@@ -101,7 +101,7 @@ function Home() {
       <div className="w-[95%]  mx-12 gap-4">
         <h2 className="sub_heading">Browse by Category</h2>
         <div className="flex flex-row gap-5 overflow-x-scroll no-scrollbar box-border">
-          <HorizontalScroll speed={1} className="flex flex-row gap-2">
+          <HorizontalScroll speed={1} className="flex flex-row gap-1">
             {categories?.map((item, index) => (
               <CategoryDisplayCard
                 key={index}
