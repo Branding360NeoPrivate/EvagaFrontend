@@ -41,9 +41,15 @@ function GstTable() {
     setOpen(false);
   };
   const getAllCategoryGstFeesHandle = async () => {
-    const response = await getAllCategoryGstFees.callApi();
-    setAllGst(response && response);
+    try {
+      const response = await getAllCategoryGstFees.callApi();
+      setAllGst(Array.isArray(response) ? response : []);
+    } catch (error) {
+      console.error("Error fetching GST fees:", error);
+      setAllGst([]); 
+    }
   };
+
   const addCategoryGstFeesApihandle = async ({
     categoryId,
     categoryName,
@@ -134,7 +140,7 @@ function GstTable() {
       </button>
       <TableComponet
         columns={columns}
-        data={allGst && allGst}
+        data={allGst}
         page={page}
         itemsPerPage={10}
         onPageChange={handlePageChange}
