@@ -41,4 +41,5 @@ export const internalRoutes = {
   cancellationPolicy: "/cancellation-policy",
   TermsAndConditions: "/terms-and-condition",
   feedbackForm: "/feedback-form",
+  customerService: "/customer-service",
 };

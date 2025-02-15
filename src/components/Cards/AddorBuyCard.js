@@ -12,8 +12,11 @@ import pkg from "../../assets/Temporary Images/package.png";
 import formatCurrency from "../../utils/formatCurrency";
 import { useNavigate } from "react-router-dom";
 import { internalRoutes } from "../../utils/internalRoutes";
+import { useAuth } from "../../context/AuthContext";
+import { toast } from "react-toastify";
 function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
   const navigate = useNavigate();
+  const { auth } = useAuth();
   const [pincode, setPincode] = useState("");
   const [date, setDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
@@ -132,11 +135,20 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
   }, []);
 
   const handleAddTocart = async () => {
-    addTocart(basePrice, selectedAddOns);
+    if (auth?.isAuthenticated && auth?.role === "user") {
+      try {
+        addTocart(basePrice, selectedAddOns);
+      } catch (error) {
+        toast.error("Failed to Add To Cart. Please try again.");
+        console.error(error);
+      }
+    } else {
+      toast.warning("You need to log in first to add items to the Cart.");
+    }
   };
 
   if (!renderPrice || Object.keys(renderPrice).length === 0) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
   return (
     <div className="flex items-start justify-start flex-col gap-2">
@@ -168,7 +180,7 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
                 placeholder="MM/DD/YYYY"
                 className="w-full py-2 px-1 border rounded-md text-gray-600 focus:outline-primary"
               />
-    
+
               <button
                 type="button"
                 onClick={() => setShowCalendar(!showCalendar)}
@@ -178,11 +190,10 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
               </button>
             </div>
 
-        
             {showCalendar && (
               <div className="absolute z-10">
                 <Calendar
-                  onChange={handleDateChange} 
+                  onChange={handleDateChange}
                   value={date}
                   className="react-calendar"
                 />

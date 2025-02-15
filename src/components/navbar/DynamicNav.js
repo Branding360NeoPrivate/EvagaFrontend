@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { internalRoutes } from "../../utils/internalRoutes";
 import logo from "../../assets/Temporary Images/Evaga Logo.png";
 import cart from "../../assets/Temporary Images/cart.png";
-import bgImg from "../../assets/Temporary Images/Component 28.png";
+import celebrate from "../../assets/Temporary Images/Animation - 1739604047964.gif";
 
 import { MdExitToApp } from "react-icons/md";
 import { LiaLanguageSolid } from "react-icons/lia";
@@ -19,6 +19,22 @@ import { useSelector } from "react-redux";
 import useDebounce from "../../utils/useDebounce";
 import Cookies from "js-cookie";
 import ReusableModal from "../Modal/Modal";
+import { Backdrop, Fade, Modal } from "@mui/material";
+import { Box } from "@mui/system";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+
+  bgcolor: "white",
+  border: "0px solid transparent",
+  boxShadow: 24,
+  p: 4,
+  borderRadius: "8px",
+  outline: "none",
+};
 const DynamicNav = () => {
   const { auth, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -327,7 +343,7 @@ const DynamicNav = () => {
         <Link to={"#"} onClick={handleOpen}>
           Community
         </Link>
-        <Link to={"#"}>Customer Service</Link>
+        <Link to={internalRoutes.customerService}>Customer Service</Link>
       </div>
       <div
         ref={sliderRef}
@@ -351,6 +367,48 @@ const DynamicNav = () => {
           ))}
         </ul>
       </div>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            timeout: 500,
+          },
+        }}
+      >
+        <Fade in={open}>
+          <Box sx={style}>
+            <div className="bg-white w-full rounded-md flex flex-col items-center justify-center ">
+              <img src={celebrate} alt="celebrate" className="object-fit " />
+
+              <h2 className="flex text-primary text-2xl font-semibold item-center justify-center mt-4">
+                Coming Soon
+              </h2>
+              <div className="mx-10 flex flex-col gap-2">
+                <p className="mt-2 text-primary font-semibold text-lg mt-4">
+                  Join the Waitlist
+                </p>
+                <div className="flex mb-32">
+                  <input
+                    type="email"
+                    placeholder="Enter your Email"
+                    className="w-full mt-1 p-2 border rounded-lg outline-none"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <button className="btn-primary w-fit px-2 border rounded-lg">
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </div>
+          </Box>
+        </Fade>
+      </Modal>
       <style jsx>{`
         .slider-button {
           padding: 10px 15px;
@@ -391,33 +449,6 @@ const DynamicNav = () => {
           padding: 10px;
         }
       `}</style>
-      <ReusableModal open={open} onClose={handleClose} width={"50%"}>
-      <div className="fixed font-[Poppins] inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white w-full  p-8 rounded-md ">
-        <div className="flex justify-end mb-4">
-          <button onClick={handleClose}>
-            {/* <img className="h-6" src={Cross} alt="close" /> */}
-          </button>
-        </div>
-        <h2 className="flex text-primary text-2xl font-semibold item-center justify-center mt-32">Coming Soon</h2>
-        <div className="mx-10 flex flex-col">
-          <p className="mt-2 text-primary font-semibold text-lg mt-4">Join the Waitlist</p>
-          <div className="flex mb-32">
-            <input
-              type="email"
-              placeholder="Enter your Email"
-              className="w-full mt-1 p-2 border rounded-lg"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <button className="w-[100px] border rounded-lg">
-              {/* <img src={Submit} alt="submit" /> */}
-            </button>
-          </div>  
-        </div>
-      </div>
-    </div>
-      </ReusableModal>
     </>
   );
 };

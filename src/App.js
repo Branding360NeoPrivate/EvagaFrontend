@@ -47,6 +47,7 @@ import AboutEvaga from "./pages/AboutEvaga";
 import RefundAndCancellation from "./pages/RefundAndCancellation";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import FeedBack from "./pages/FeedBack";
+import CustomerService from "./pages/CustomerService";
 const AppContent = () => {
   const { auth } = useAuth();
   const dispatch = useDispatch();
@@ -122,6 +123,7 @@ const AppContent = () => {
         <Route element={<RefundAndCancellation />} path={internalRoutes.cancellationPolicy} />
         <Route element={<TermsAndConditions />} path={internalRoutes.TermsAndConditions} />
         <Route element={<FeedBack />} path={internalRoutes.feedbackForm} />
+        <Route element={<CustomerService />} path={internalRoutes.customerService} />
         <Route
           element={<SinglePackage />}
           path={`${internalRoutes.SinglePackage + "/:serviceId/:packageId"}`}

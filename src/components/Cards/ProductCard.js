@@ -39,7 +39,7 @@ function ProductCard({
         console.error(error);
       }
     } else {
-      toast.info("You need to log in first to add items to the wishlist.");
+      toast.warning("You need to log in first to add items to the wishlist.");
     }
   };
 
