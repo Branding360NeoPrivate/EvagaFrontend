@@ -22,7 +22,7 @@ const AccordionCard = ({ title, summary, isExpanded, onToggle, panelId ,sn}) => 
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Typography>{summary}</Typography>
+        <Typography className="text-textGray">{summary}</Typography>
       </AccordionDetails>
     </Accordion>
   );
