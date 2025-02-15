@@ -11,7 +11,7 @@ function Banner({ image, height, category }) {
 
     navigate(`/search?${query}`);
   };
-console.log(height);
+
 
   return (
     <div className="w-full">

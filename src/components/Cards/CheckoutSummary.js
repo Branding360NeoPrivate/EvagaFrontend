@@ -2,7 +2,9 @@ import React from 'react'
 import Tag from "../../assets/Temporary Images/tags1.png";
 import CommentInfo from "../../assets/Temporary Images/comment-info1.png";
 import Add from "../../assets/Temporary Images/AddButton.png";
-function CheckoutSummary({openModal,setModalType}) {
+import formatCurrency from '../../utils/formatCurrency';
+function CheckoutSummary({totalOfcart,totalWithFee,platformFee, openModal,setModalType}) {
+  
   return (
     <div className="w-full max-sm:w-full h-[560px] mx-auto border rounded-[10px] border-gray-300  p-6 bg-white font-['Poppins']"> 
     <h2 className="text-xl font-semibold text-primary mb-4">Coupons</h2>
@@ -29,7 +31,7 @@ function CheckoutSummary({openModal,setModalType}) {
     <div className="border-b border-gray-300 pt-4 text-textGray text-[18px]">
       <div className="flex justify-between mb-2">
         <span className="text-normal font-medium">Item Total</span>
-        <span className="font-semibold">₹1,10,000.00</span>
+        <span className="font-semibold">{formatCurrency(totalOfcart)}</span>
       </div>
       <div className="text-normal flex justify-between mb-2">
         <span className="font-medium">Delivery Partner fee</span>
@@ -47,7 +49,7 @@ function CheckoutSummary({openModal,setModalType}) {
       </div>
       <div className="text-normal flex justify-between mb-2">
         <span className="font-medium">Platform Fee</span>
-        <span>₹2000.00</span>
+        <span>{formatCurrency(platformFee)}</span>
       </div>
       <div className="text-normal flex justify-between mb-2">
         <span className="flex text-normal"><span className="font-medium">GST & other Charges</span><img src={CommentInfo} className="h-4 mt-1 ml-1"/></span>
@@ -56,7 +58,7 @@ function CheckoutSummary({openModal,setModalType}) {
     </div>
       <div className="text-normal flex justify-between font-semibold mb-6 mt-6">
         <span className="text-primary text-xl">To Pay</span>
-        <span className="text-textGray text-[22px]">₹1,14,358.00</span>
+        <span className="text-textGray text-[22px]">{formatCurrency(totalWithFee)}</span>
       </div>
       
     <div className="flex justify-center items-center">

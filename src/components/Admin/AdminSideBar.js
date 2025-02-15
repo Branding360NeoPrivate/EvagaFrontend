@@ -34,7 +34,12 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
     {
       id: "Fee Breakdown by Category",
       label: "Fee Breakdown by Category",
-      icon: <FaRegMoneyBillAlt  />,
+      icon: <FaRegMoneyBillAlt />,
+    },
+    {
+      id: "Gst by Category",
+      label: "Gst by Category",
+      icon: <FaRegMoneyBillAlt />,
     },
     { id: "AdminUsers", label: "Admin Users", icon: <FaUserShield /> },
     { id: "SupportCenter", label: "Support Center", icon: <FaHeadset /> },

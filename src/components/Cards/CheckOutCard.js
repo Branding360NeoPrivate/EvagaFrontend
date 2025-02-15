@@ -2,7 +2,7 @@ import React from "react";
 import CrossButton from "../../assets/Temporary Images/Cross.png";
 import Event from "../../assets/Temporary Images/image (4).png";
 import formatCurrency from "../../utils/formatCurrency";
-function CheckOutCard({ price }) {
+function CheckOutCard({ price, image, title }) {
   const data = {
     id: 1,
     title: "Technical Staff",
@@ -24,7 +24,7 @@ function CheckOutCard({ price }) {
         <img src={CrossButton} alt="Close" className="w-6 h-6" />
       </button>
       <img
-        src={data.image}
+        src={process.env.REACT_APP_API_Aws_Image_BASE_URL + image}
         alt={data.title}
         className="object-cover rounded-lg"
         style={{
@@ -35,7 +35,7 @@ function CheckOutCard({ price }) {
         }}
       />
       <div className="flex-1 flex flex-col ml-8">
-        <h2 className="text-xl  font-semibold text-primary">{data.title}</h2>
+        <h2 className="text-xl  font-semibold text-primary">{title}</h2>
         <p className="text-normal  font-normal text-textGray">
           {data.category}
         </p>

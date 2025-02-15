@@ -135,11 +135,17 @@ const apiEndpoints = {
     deleteOneFees: (feeId) => `categoryFee/deleteCategoryFee/${feeId}`,
     getVendorByNameOrUserName: `adminAction/get-search-vendors`,
     verifyVendorprofile: (vendorId) => `vender/verify-vendor/${vendorId}`,
+    getAllCategoryGstFees: `gstPercentage/get-all-gst-percentage`,
+    addCategoryGstFees: `gstPercentage/add-gst-percentage`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",
     getOnePackage: (serviceId, packageId) =>
       `packages/get-one-package/${serviceId}/${packageId}`,
+  },
+  coupons: {
+    getAllCoupons: "coupons/get-all-coupons",
+    validateCoupons: "coupons/",
   },
 };
 

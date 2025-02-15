@@ -21,9 +21,11 @@ import Cancel from "../assets/Temporary Images/CancelButton.png";
 import Add from "../assets/Temporary Images/AddButton2.png";
 import Tag from "../assets/Temporary Images/tags1.png";
 import { fetchUserCart } from "../context/redux/slices/cartSlice";
+import couponApi from "../services/couponApi";
 function CheckOut() {
   const { auth } = useAuth();
   const history = useNavigate();
+  const [allCoupon, setAllCoupon] = useState();
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const addUserAddress = useServices(userApi.addUserAdress);
@@ -32,6 +34,7 @@ function CheckOut() {
   const getUserAllAddress = useServices(userApi.getUserAllAddress);
   const deleteOneAddress = useServices(userApi.deleteOneAddress);
   const selectOneUserAddress = useServices(userApi.selectOneUserAddress);
+  const getAllCoupon = useServices(couponApi.getAllValidCoupons);
   const [userAllAddress, setUserAllAddress] = useState(null);
   const [open, setOpen] = useState();
   const [modalType, setModalType] = useState("addAddress");
@@ -143,7 +146,14 @@ function CheckOut() {
       console.error("Error fetching user addresses:", error);
     }
   }, [isEditingAddress]);
-
+  const getAllCouponHandle = async () => {
+    const response = await getAllCoupon.callApi();
+    setAllCoupon(response);
+    console.log(response, "coupon");
+  };
+  useEffect(() => {
+    getAllCouponHandle();
+  }, []);
   useEffect(() => {
     if (isEditingAddress) {
       handleGetAllUserAddress();
@@ -159,6 +169,8 @@ function CheckOut() {
       });
     }
   }, [userId, cart, dispatch]);
+
+
   if (!auth?.isAuthenticated || auth?.role !== "user") {
     return (
       <motion.div
@@ -219,14 +231,32 @@ function CheckOut() {
               <AddressSelector setIsEditingAddress={setIsEditingAddress} />
               <div className="flex flex-col gap-2">
                 {cart?.items?.map((item) => (
-                  <CheckOutCard price={item?.totalPrice} />
+                  <CheckOutCard
+                    key={item?.packageId}
+                    price={item?.totalPrice}
+                    title={
+                      item?.packageDetails?.Title ||
+                      item?.packageDetails?.VenueName ||
+                      item?.packageDetails?.FoodTruckName
+                    }
+                    image={
+                      item?.packageDetails?.CoverImage?.[0] ||
+                      item?.packageDetails?.ProductImage?.[0]
+                    }
+                  />
                 ))}
               </div>
             </div>
           )}
         </div>
         <div className="flex-1 md:flex-[0.23] w-full">
-          <CheckoutSummary setModalType={setModalType} openModal={handleOpen} />
+          <CheckoutSummary
+            totalOfcart={cart?.totalOfCart}
+            platformFee={cart?.platformFee}
+            totalWithFee={cart?.totalWithFee}
+            setModalType={setModalType}
+            openModal={handleOpen}
+          />
         </div>
       </div>
       <ReusableModal
@@ -597,7 +627,9 @@ function CheckOut() {
             <p className="text-primary text-normal font-medium text-xl mb-2">
               Available Offers
             </p>
-            <CouponsCard />
+            {allCoupon?.map((item) => (
+              <CouponsCard key={item?.code} code={item?.code} />
+            ))}
             <div className="flex justify-end mt-4">
               <button
                 className="w-[67px] h-[30px] mr-12 mt-3"

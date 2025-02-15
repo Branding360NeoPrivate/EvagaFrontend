@@ -19,6 +19,7 @@ import {
 import BannerTable from "../../components/Admin/BannerTable";
 import CouponsTable from "../../components/Admin/CouponsTable";
 import FeeBreakdownbyCategory from "../../components/Admin/FeeBreakdownbyCategory";
+import GstTable from "../../components/Admin/GstTable";
 
 const AdminDashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState("Home");
@@ -173,6 +174,7 @@ const AdminDashboard = () => {
          {selectedMenu === "Banner" && <BannerTable/>}
          {selectedMenu === "Coupons" && <CouponsTable/>}
          {selectedMenu === "Fee Breakdown by Category" && <FeeBreakdownbyCategory/>}
+         {selectedMenu === "Gst by Category" && <GstTable/>}
       </div>
     </div>
   );

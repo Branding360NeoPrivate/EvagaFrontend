@@ -89,6 +89,10 @@ const adminActionsApi = {
     ),
   verifyVendorprofileByAdmin: (vendorId) =>
     apiService.post(apiEndpoints.adminActions.verifyVendorprofile(vendorId)),
+  getAllCategoryGstFees: (vendorId) =>
+    apiService.get(apiEndpoints.adminActions.getAllCategoryGstFees),
+  addCategoryGstFees: (formData) =>
+    apiService.post(apiEndpoints.adminActions.addCategoryGstFees, formData),
 };
 
 export default adminActionsApi;

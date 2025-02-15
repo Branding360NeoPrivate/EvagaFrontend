@@ -18,7 +18,6 @@ const LoginWithGoogleForUser = ({ userGoogleLogin }) => {
     window?.google?.accounts?.id?.initialize({
       client_id: clientId,
       callback: (response) => {
-        console.log("Google callback triggered:", response);
         if (response && response.credential) {
           handleGoogleLogin(response.credential);
         } else {
