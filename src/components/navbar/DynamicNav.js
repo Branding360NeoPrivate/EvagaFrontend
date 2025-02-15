@@ -18,7 +18,6 @@ import { MdOutlineSort } from "react-icons/md";
 import { useSelector } from "react-redux";
 import useDebounce from "../../utils/useDebounce";
 import Cookies from "js-cookie";
-import ReusableModal from "../Modal/Modal";
 import { Backdrop, Fade, Modal } from "@mui/material";
 import { Box } from "@mui/system";
 

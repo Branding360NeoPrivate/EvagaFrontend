@@ -1,0 +1,6 @@
+preBuild:
+  commands:
+    - npm ci
+build:
+  commands:
+    - npm run build
