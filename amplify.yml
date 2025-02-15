@@ -1,6 +1,16 @@
-preBuild:
-  commands:
-    - npm ci
-build:
-  commands:
-    - npm run build
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - yarn install # or npm install
+    build:
+      commands:
+        - yarn build # or npm run build
+  artifacts:
+    baseDirectory: build
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
