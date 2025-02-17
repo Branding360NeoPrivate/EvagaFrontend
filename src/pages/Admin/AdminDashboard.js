@@ -42,6 +42,14 @@ const AdminDashboard = () => {
     dispatch(addUser(response?.data));
     dispatch(totalUserCount(response?.count));
   };
+  const [term, setTerm] = useState("");
+
+  const handleSearch = (e) => {
+    setTerm(e.target.value);
+  };
+  useEffect(() => {
+    setTerm("");
+  }, [selectedMenu]);
   useEffect(() => {
     if (selectedMenu === "Client") handleGetAllUser();
   }, [selectedMenu]);
@@ -89,6 +97,8 @@ const AdminDashboard = () => {
             <input
               type="text"
               placeholder="Search"
+              value={term}
+              onChange={handleSearch}
               className="border border-gray-300 rounded-lg py-2 px-4 w-72 focus:outline-none focus:ring-2 focus:ring-purple-600"
             />
           </div>
@@ -122,6 +132,7 @@ const AdminDashboard = () => {
                 onMenuSelect={handleMenuSelect}
                 selectedVendor={selectedVendor}
                 setSelectedVendor={handleVendorSelect}
+                term={term}
               />
             </div>
           </>

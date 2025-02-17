@@ -2,10 +2,16 @@ import apiEndpoints from "./apiEndpoints";
 import apiService from "./apiService";
 
 const adminActionsApi = {
-  getAllVendorsWithProfileStatusAndService: () =>
+  getAllVendorsWithProfileStatusAndService: ({ queryPage, searchTerm,filter }) =>
     apiService.get(
-      apiEndpoints.adminActions.getAllVendorsWithProfileStatusAndService
+      apiEndpoints.adminActions.getAllVendorsWithProfileStatusAndService,
+      {
+        page: queryPage,
+        search: searchTerm,
+        filter:filter
+      }
     ),
+
   verifyVendorDocument: (documentId) =>
     apiService.post(apiEndpoints.adminActions.verifyVendorDocument(documentId)),
   updateVendorBankDetailsByAdmin: (vendorID, formData) =>

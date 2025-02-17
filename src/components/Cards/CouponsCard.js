@@ -5,15 +5,18 @@ const offersData = {
   link: "#",
 };
 
-function CouponsCard({code}) {
+function CouponsCard({ code, setCouponCode }) {
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" onClick={() => setCouponCode(code)}>
       <div className="p-4 border rounded-lg shadow-sm bg-white flex justify-between items-center cursor-pointer transition-colors focus:outline focus:outline-primary">
         <div>
           <p className="text-primary font-semibold">{code}</p>
           {/* <p className="text-textGray text-sm">{offersData.description}</p> */}
         </div>
-        <a href={offersData.link} className="text-primary font-medium underline">
+        <a
+          href={offersData.link}
+          className="text-primary font-medium underline"
+        >
           View T&Cs
         </a>
       </div>

@@ -4,11 +4,10 @@ import { FaFilter, FaSort } from "react-icons/fa";
 import AdminVendorTableModal from "./AdminVendorTableModal";
 import { fetchAllVendorsWithProfileStatusAndService } from "../../context/redux/slices/adminActionsSlice";
 import { Pagination, Stack } from "@mui/material";
+import useDebounce from "../../utils/useDebounce";
 
 const VendorTable = memo(
-  ({ onMenuSelect, selectedVendor, setSelectedVendor }) => {
-    console.log(selectedVendor, "selectedVendor");
-
+  ({ onMenuSelect, selectedVendor, setSelectedVendor, term }) => {
     const style = {
       "& .Mui-selected": {
         backgroundColor: "#6A1B9A !important",
@@ -16,15 +15,26 @@ const VendorTable = memo(
       },
     };
     const dispatch = useDispatch();
-    const { vendors, totalNumberOfVendors, status, error } = useSelector(
-      (state) => state.adminActions
-    );
+    const debounce = useDebounce(term);
+    const {
+      vendors,
+      totalNumberOfVendors,
+      totalNumberOfPageVendor,
+      status,
+      error,
+    } = useSelector((state) => state.adminActions);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showFilter, setShowFilter] = useState(false);
+    const [selectedFilter, setSelectedFilter] = useState("All Vendors");
 
-    useEffect(() => {
-      dispatch(fetchAllVendorsWithProfileStatusAndService());
-    }, [dispatch]);
+    const handleFilterClick = () => {
+      setShowFilter((prev) => !prev);
+    };
 
+    const handleFilterSelect = (filter) => {
+      setSelectedFilter(filter);
+      setShowFilter(false);
+    };
     const handleViewDetails = (vendor) => {
       setSelectedVendor(vendor);
       setIsModalOpen(true);
@@ -36,14 +46,25 @@ const VendorTable = memo(
     };
     const [page, setPage] = useState(1);
     const [count, setCount] = useState(0);
-    const itemsPerPage = 10;
 
     useEffect(() => {
-      setCount(Math.ceil(vendors?.length / itemsPerPage));
+      setCount(Math.ceil(totalNumberOfPageVendor));
     }, [vendors]);
     const handlePageChange = (event, value) => {
       setPage(value);
     };
+    const handleSearchAndPageChangeHandle = () => {
+      dispatch(
+        fetchAllVendorsWithProfileStatusAndService({
+          queryPage: page,
+          searchTerm: debounce,
+          filter:selectedFilter
+        })
+      );
+    };
+    useEffect(() => {
+      handleSearchAndPageChangeHandle();
+    }, [dispatch, page, debounce,selectedFilter]);
 
     if (status === "loading") {
       return <div className="text-center py-10">Loading vendor data...</div>;
@@ -58,13 +79,44 @@ const VendorTable = memo(
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-bold">Vendors</h2>
           <div className="flex gap-4 items-center">
-            <button
-              className="flex items-center gap-2 bg-primary
-           text-white px-4 py-2 rounded-lg hover:bg-highlightYellowPrimary hover:text-primary"
-            >
-              <FaFilter />
-              Filter
-            </button>
+            {/* Filter Button */}
+            <div className="relative">
+              <button
+                onClick={handleFilterClick}
+                className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-highlightYellowPrimary hover:text-primary"
+              >
+                <FaFilter />
+                {selectedFilter}
+              </button>
+
+              {/* Dropdown */}
+              {showFilter && (
+                <div className="absolute top-full mt-2 left-0 w-48 bg-white shadow-lg rounded-lg border">
+                  <ul className="divide-y divide-gray-200">
+                    <li
+                      className="p-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => handleFilterSelect("All Vendors")}
+                    >
+                      All Vendors
+                    </li>
+                    <li
+                      className="p-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => handleFilterSelect("Verified Vendors")}
+                    >
+                      Verified Vendors
+                    </li>
+                    <li
+                      className="p-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => handleFilterSelect("Registered Vendors")}
+                    >
+                      Registered Vendors
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            {/* Sort Button */}
             <button className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-highlightYellowPrimary hover:text-primary">
               <FaSort />
               Sort By
@@ -79,6 +131,7 @@ const VendorTable = memo(
               <tr className="bg-primary text-white">
                 <th className=" font-normal  px-4 py-2 rounded-s-md">No</th>
                 <th className="font-normal px-4 py-2">Name of Vendor</th>
+                <th className="font-normal px-4 py-2">UserName</th>
                 <th className="font-normal px-4 py-2">Category</th>
                 <th className="font-normal px-4 py-2">Profile Status</th>
                 <th className="font-normal px-4 py-2">Contact Number</th>
@@ -87,47 +140,47 @@ const VendorTable = memo(
               </tr>
             </thead>
             <tbody>
-              {vendors
-                ?.slice((page - 1) * 10, (page - 1) * 10 + 10)
-                .map((vendor, index) => (
-                  <tr key={index} className="text-center">
-                    <td className="  px-4 py-2">{index + 1}</td>
-                    <td className="  px-4 py-2">{vendor.name}</td>
-                    <td className="  px-4 py-2">
-                      {vendor?.businessDetails?.categoriesOfServices[0]
-                        ?.category[0]?.name
-                        ? `${
-                            vendor.businessDetails.categoriesOfServices[0]
-                              .category[0].name
-                          } + ${
-                            vendor.businessDetails.categoriesOfServices.length -
-                            1
-                          }`
-                        : "Not Available"}
-                    </td>
-                    <td
-                      className={`  px-4 py-2 font-medium ${
-                        vendor.profileCompletion === 100
-                          ? "text-green-500"
-                          : "text-red-500"
-                      }`}
+              {vendors.map((vendor, index) => (
+                <tr key={index} className="text-center">
+                  <td className="  px-4 py-2">{index + 1}</td>
+                  <td className="  px-4 py-2">{vendor.name}</td>
+                  <td className="  px-4 py-2">{vendor.userName}</td>
+                  <td className="  px-4 py-2">
+                    {vendor?.businessDetails?.categoriesOfServices[0]
+                      ?.category[0]?.name
+                      ? `${
+                          vendor.businessDetails.categoriesOfServices[0]
+                            .category[0].name
+                        } + ${
+                          vendor.businessDetails.categoriesOfServices.length - 1
+                        }`
+                      : "Not Available"}
+                  </td>
+                  <td
+                    className={`  px-4 py-2 font-medium ${
+                      vendor.profileCompletion === 100
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {!vendor.verificationStatus ? (
+                      <p>Not Verified</p>
+                    ) : (
+                      <p className="text-primary">Verified</p>
+                    )}
+                  </td>
+                  <td className="  px-4 py-2">{vendor.phoneNumber}</td>
+                  <td className="  px-4 py-2">{vendor.numberOfServices}</td>
+                  <td className="  px-4 py-2">
+                    <button
+                      className="text-blue-600 hover:underline"
+                      onClick={() => handleViewDetails(vendor)}
                     >
-                      {!vendor.verificationStatus 
-                        ? <p>Not Verified</p>
-                        : <p className="text-primary">Verified</p>}
-                    </td>
-                    <td className="  px-4 py-2">{vendor.phoneNumber}</td>
-                    <td className="  px-4 py-2">{vendor.numberOfServices}</td>
-                    <td className="  px-4 py-2">
-                      <button
-                        className="text-blue-600 hover:underline"
-                        onClick={() => handleViewDetails(vendor)}
-                      >
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                      View
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
           <div className="flex items-center justify-center w-full py-3">

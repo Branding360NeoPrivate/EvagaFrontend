@@ -27,6 +27,7 @@ function CheckOut() {
   const history = useNavigate();
   const [allCoupon, setAllCoupon] = useState();
   const [isEditingAddress, setIsEditingAddress] = useState(false);
+  const [couponCode, setCouponCode] = useState(null);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
   const addUserAddress = useServices(userApi.addUserAdress);
   const updateOneAddress = useServices(userApi.updateOneAddress);
@@ -149,7 +150,6 @@ function CheckOut() {
   const getAllCouponHandle = async () => {
     const response = await getAllCoupon.callApi();
     setAllCoupon(response);
-    console.log(response, "coupon");
   };
   useEffect(() => {
     getAllCouponHandle();
@@ -162,14 +162,20 @@ function CheckOut() {
   const { cart } = useSelector((state) => state.cart);
   useEffect(() => {
     if (userId && (!cart || cart.length === 0)) {
-      dispatch(fetchUserCart(userId)).then((response) => {
+      dispatch(fetchUserCart({ userId })).then((response) => {
         if (!response || response.length === 0) {
           console.log("Server response is empty. No cart items fetched.");
         }
       });
     }
   }, [userId, cart, dispatch]);
+  const handleApplyCoupon = (query) => {
+    console.log(query);
 
+    dispatch(
+      fetchUserCart({ userId: userId, query: { couponCode: "ffgfg123456" } })
+    );
+  };
 
   if (!auth?.isAuthenticated || auth?.role !== "user") {
     return (
@@ -253,9 +259,11 @@ function CheckOut() {
           <CheckoutSummary
             totalOfcart={cart?.totalOfCart}
             platformFee={cart?.platformFee}
-            totalWithFee={cart?.totalWithFee}
+            totalWithFee={cart?.totalAfterDiscount}
+            totalGst={cart?.totalGst}
             setModalType={setModalType}
             openModal={handleOpen}
+            discount={cart?.discount}
           />
         </div>
       </div>
@@ -619,7 +627,7 @@ function CheckOut() {
               <input
                 type="text"
                 placeholder="Enter Coupon code"
-                // value={updatedCode}
+                value={couponCode}
                 // onChange={handleChange}
                 className="w-full h-[40px] px-4 py-2 border rounded-lg focus:outline-none text-textGray"
               />
@@ -628,17 +636,24 @@ function CheckOut() {
               Available Offers
             </p>
             {allCoupon?.map((item) => (
-              <CouponsCard key={item?.code} code={item?.code} />
+              <CouponsCard
+                key={item?.code}
+                code={item?.code}
+                setCouponCode={setCouponCode}
+              />
             ))}
-            <div className="flex justify-end mt-4">
+            <div className="flex items-center justify-end mt-4 gap-2">
               <button
-                className="w-[67px] h-[30px] mr-12 mt-3"
+                className="btn-transparent-border w-fit px-2"
                 onClick={handleClose}
               >
-                <img src={Cancel} alt="cancel" />
+                Cancel
               </button>
-              <button className="w-[90px] object-contain" onClick={handleClose}>
-                <img src={Add} alt="add" />
+              <button
+                className="btn-primary w-fit px-2 object-contain"
+                onClick={() => [handleApplyCoupon(couponCode), handleClose()]}
+              >
+                Apply Coupon
               </button>
             </div>
           </div>

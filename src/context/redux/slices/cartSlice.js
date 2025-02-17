@@ -9,19 +9,38 @@ const initialState = {
 
 export const fetchUserCart = createAsyncThunk(
   "user/fetchUserCart",
-  async (userId, { rejectWithValue }) => {
+  async ({ userId, query = {} }, { rejectWithValue }) => {
+    console.log(userId, query);
+
     try {
-      const response = await userApi.getUserCart(userId);
+      if (!userId) {
+        throw new Error("User ID is required.");
+      }
+
+      const queryString = typeof query === 'object' && !Array.isArray(query)
+      ? `?${Object.entries(query)
+          .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value || '')}`)
+          .join('&')}`
+      : "";
+    
+
+      const response = await userApi.getUserCart(`${userId}${queryString}`);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.message);
+      const errorMessage = {
+        message: error.message || "An error occurred.",
+        status: error.response?.status || 500,
+        details: error.response?.data || null,
+      };
+      return rejectWithValue(errorMessage);
     }
   }
 );
+
 const userCartSlice = createSlice({
   name: "userCart",
   initialState,
-  reducers: {},
+
   extraReducers: (builder) => {
     builder
       .addCase(fetchUserCart.pending, (state) => {
@@ -38,4 +57,5 @@ const userCartSlice = createSlice({
   },
 });
 
+export const { applyCard } = userCartSlice.actions;
 export default userCartSlice.reducer;
