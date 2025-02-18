@@ -81,23 +81,29 @@ function UserProfile() {
       formData.append("name", data?.Name);
       formData.append("email", data?.Email);
       formData.append("phoneNumber", data?.Phone);
-  
+
       const response = await updateUserProfile.callApi(userId, formData);
-  
+
       if (response?.message === "User profile updated successfully") {
-        dispatch(fetchUserProfile(userId)); 
-        handleClose(); 
+        dispatch(fetchUserProfile(userId));
+        handleClose();
         toast.success(response?.message || "Profile updated successfully!");
       } else {
-        setErrorResponse(response?.error || "An error occurred while updating the profile.");
-        toast.error(response?.error || "Failed to update the profile. Please try again.");
+        setErrorResponse(
+          response?.error || "An error occurred while updating the profile."
+        );
+        toast.error(
+          response?.error || "Failed to update the profile. Please try again."
+        );
       }
     } catch (error) {
       console.error("Error updating user profile:", error);
-      toast.error("An error occurred while updating the profile. Please try again.");
+      toast.error(
+        "An error occurred while updating the profile. Please try again."
+      );
     }
   };
-  
+
   const handleAddUserAddress = async (data) => {
     try {
       const formData = new FormData();
@@ -139,7 +145,7 @@ function UserProfile() {
       console.error("Error fetching the address:", error);
     }
   };
-  
+
   const handleUpdateAddress = async (data) => {
     try {
       const formData = new FormData();
@@ -149,13 +155,13 @@ function UserProfile() {
       formData.append("addressLine2", data?.AddressLine2);
       formData.append("state", data?.State);
       formData.append("pinCode", data?.Pincode);
-  
+
       const response = await updateOneAddress.callApi(addressId, formData);
-  
+
       if (response) {
-        dispatch(fetchUserProfile(userId)); 
+        dispatch(fetchUserProfile(userId));
         toast.success(response?.message || "Address updated successfully!");
-        handleClose(); 
+        handleClose();
       } else {
         toast.error("Failed to update the address. Please try again.");
       }
@@ -164,7 +170,7 @@ function UserProfile() {
       toast.error("An error occurred while updating the address.");
     }
   };
-  
+
   const handleDeleteAddress = async () => {
     try {
       const response = await deleteOneAddress.callApi(addressId);
@@ -240,8 +246,8 @@ function UserProfile() {
   }
 
   return (
-    <div className="flex items-center justify-center flex-col w-full ">
-      <div className="w-[650px]  border border-gray-300 rounded-lg px-16 py-12 bg-white">
+    <div className="flex items-center justify-center flex-col w-full my-10 ">
+      <div className=" md:w-[650px]  border border-gray-300 rounded-lg px-2 md:px-16 py-12 bg-white">
         {/* Personal Info */}
         <div className="space-y-6">
           {[
@@ -251,7 +257,7 @@ function UserProfile() {
           ].map((item, index) => (
             <div
               key={index}
-              className="flex justify-between h-[50px] border-b border-[#f0f0f0]"
+              className="flex flex-col justify-start items-start gap-2 md:gap-0 md:flex-row md:justify-between md:h-[50px] border-b border-[#f0f0f0]"
             >
               <label className="text-purple-700 font-semibold mt-[12px]">
                 {item.label}
@@ -431,20 +437,23 @@ function UserProfile() {
               </span>
             </div>
 
-            <button type='submit' className="btn-primary w-fit px-2 mt-2" >
+            <button type="submit" className="btn-primary w-fit px-2 mt-2">
               Update Profile
             </button>
           </form>
         )}
         {modalType === "addAddress" && (
-          <form onSubmit={handleSubmit(handleAddUserAddress)}>
-            <div className="my-8 space-y-4">
-              <div className="flex justify-between sm:flex-col lg:flex-row">
+          <form
+            onSubmit={handleSubmit(handleAddUserAddress)}
+            className=" w-full flex flex-col justify-center items-center gap-5"
+          >
+            <div className="w-full my-8 space-y-4">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Name</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <span className=" w-full lg:w-auto flex items-start justify-start flex-col gap-1">
                   <input
                     type="text"
-                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
                     {...register("addressName", {
                       required: { value: true, message: "Name is required" },
                       minLength: {
@@ -464,12 +473,12 @@ function UserProfile() {
                   )}
                 </span>
               </div>{" "}
-              <div className="flex justify-between">
+              <div className="w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <span className="w-full lg:w-auto flex items-start justify-start flex-col gap-1">
                   <input
                     type="text"
-                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
                     {...register("Address", {
                       required: { value: true, message: "Address is required" },
                       minLength: {
@@ -489,12 +498,12 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address line 1</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <span className="w-full lg:w-auto flex items-start justify-start flex-col gap-1">
                   <input
                     type="text"
-                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
                     {...register("AddressLine1", {
                       required: {
                         value: true,
@@ -517,12 +526,12 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address line 2</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <span className="w-full lg:w-auto flex items-start justify-start flex-col gap-1">
                   <input
                     type="text"
-                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
                     {...register("AddressLine2", {
                       required: {
                         value: true,
@@ -545,12 +554,12 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">State</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <span className="w-full lg:w-auto flex items-start justify-start flex-col gap-1">
                   <input
                     type="text"
-                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
                     {...register("State", {
                       required: { value: true, message: "State is required" },
                       minLength: {
@@ -570,12 +579,12 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Pincode</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <span className="w-full lg:w-auto flex items-start justify-start flex-col gap-1">
                   <input
                     type="number"
-                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none "
+                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none "
                     {...register("Pincode", {
                       required: { value: true, message: "Pincode is required" },
                       minLength: {
@@ -603,14 +612,17 @@ function UserProfile() {
           </form>
         )}
         {modalType === "editAddress" && (
-          <form onSubmit={handleSubmit(handleUpdateAddress)}>
-            <div className="my-8 space-y-4">
-              <div className="flex justify-between sm:flex-col lg:flex-row">
+          <form
+            onSubmit={handleSubmit(handleUpdateAddress)}
+            className=" w-full flex flex-col justify-center items-center gap-5"
+          >
+            <div className="w-full my-8 space-y-4">
+              <div className="w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Name</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <span className="w-full lg:w-auto flex items-start justify-start flex-col gap-1">
                   <input
                     type="text"
-                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none "
                     {...register("addressName", {
                       required: { value: true, message: "Name is required" },
                       minLength: {
@@ -630,12 +642,12 @@ function UserProfile() {
                   )}
                 </span>
               </div>{" "}
-              <div className="flex justify-between">
+              <div className="w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <span className="w-full lg:w-auto flex items-start justify-start flex-col gap-1">
                   <input
                     type="text"
-                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none "
                     {...register("Address", {
                       required: { value: true, message: "Address is required" },
                       minLength: {
@@ -655,12 +667,12 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address line 1</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <span className="w-full lg:w-auto flex items-start justify-start flex-col gap-1">
                   <input
                     type="text"
-                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none "
                     {...register("AddressLine1", {
                       required: {
                         value: true,
@@ -683,12 +695,12 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address line 2</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <span className="w-full lg:w-auto flex items-start justify-start flex-col gap-1">
                   <input
                     type="text"
-                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none "
                     {...register("AddressLine2", {
                       required: {
                         value: true,
@@ -711,12 +723,12 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">State</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <span className="w-full lg:w-auto flex items-start justify-start flex-col gap-1">
                   <input
                     type="text"
-                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none "
                     {...register("State", {
                       required: { value: true, message: "State is required" },
                       minLength: {
@@ -736,12 +748,12 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Pincode</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <span className="w-full lg:w-auto flex items-start justify-start flex-col gap-1">
                   <input
                     type="number"
-                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none "
+                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none  "
                     {...register("Pincode", {
                       required: { value: true, message: "Pincode is required" },
                       minLength: {

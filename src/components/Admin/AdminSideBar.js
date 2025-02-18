@@ -8,17 +8,18 @@ import {
   FaBars,
   FaAngleRight,
   FaAngleLeft,
+  FaSitemap,
 } from "react-icons/fa";
 
 import MainLogo from "../../assets/Temporary Images/Evaga Logo.png";
 import useServices from "../../hooks/useServices";
 import adminApi from "../../services/adminApi";
 import { toast } from "react-toastify";
-import Cookies from 'js-cookie'
+import Cookies from "js-cookie";
 import { useAuth } from "../../context/AuthContext";
 const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
-  const userId=Cookies.get('userId')
-    const { auth, logout } = useAuth();
+  const userId = Cookies.get("userId");
+  const { auth, logout } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
   // const logout = useServices(adminApi.logout);
   const handleLogout = async (userId) => {
@@ -28,6 +29,11 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
   const menuItems = [
     { id: "Home", label: "Home", icon: <FaHome /> },
     { id: "Vendor", label: "Vendor", icon: <FaUsers /> },
+    {
+      id: "Categories/Sub-Categories",
+      label: "Categories / Sub-Categories",
+      icon: <FaSitemap />,
+    },
     { id: "Client", label: "Client", icon: <FaClipboardList /> },
     { id: "AdminUsers", label: "Admin Users", icon: <FaUserShield /> },
     { id: "SupportCenter", label: "Support Center", icon: <FaHeadset /> },

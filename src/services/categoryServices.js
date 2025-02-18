@@ -8,6 +8,10 @@ const categoryApi = {
     }),
 
   getCategories: () => apiService.get(apiEndpoints.category.getAll),
+  updateCategory: (catId, categoryData) =>
+    apiService.put(apiEndpoints.category.updateCategory(catId), categoryData),
+  deleteCategory: (catId) =>
+    apiService.delete(apiEndpoints.category.deleteCategory(catId)),
 
   addSubCategory: (subCategoryData) =>
     apiService.post(apiEndpoints.category.addSub, subCategoryData),
@@ -15,6 +19,15 @@ const categoryApi = {
   getSubCategoriesByCategory: (categoryId) =>
     apiService.get(
       apiEndpoints.category.getSubCategoriesByCategory(categoryId)
+    ),
+  getOneSubCategory: (subCategoryId) =>
+    apiService.get(apiEndpoints.category.getOneSubCategory(subCategoryId)),
+  deleteSubCategory: (subCategoryId) =>
+    apiService.delete(apiEndpoints.category.deleteSubCategory(subCategoryId)),
+  updateSubCategory: (subCategoryId, subCategoryData) =>
+    apiService.put(
+      apiEndpoints.category.updateSubCategory(subCategoryId),
+      subCategoryData
     ),
 };
 

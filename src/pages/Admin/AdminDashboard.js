@@ -16,6 +16,7 @@ import {
   addUser,
   totalUserCount,
 } from "../../context/redux/slices/adminActionsSlice";
+import CategoriesAndSubCategoriesSection from "../../components/Admin/CategoriesAndSubCategoriesSection";
 
 const AdminDashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState("Home");
@@ -138,6 +139,9 @@ const AdminDashboard = () => {
               vendorId={selectedVendor?._id}
             />
           </div>
+        )}
+        {selectedMenu === "Categories/Sub-Categories" && (
+          <CategoriesAndSubCategoriesSection />
         )}
         {selectedMenu === "Client" && (
           <>

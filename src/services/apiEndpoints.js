@@ -76,9 +76,15 @@ const apiEndpoints = {
   category: {
     add: "category",
     getAll: "categories",
+    updateCategory: (catId) => `/updateCategory/${catId}`,
+    deleteCategory: (catId) => `/deleteCategory/${catId}`,
+
     addSub: "addSubCategory",
     getSubCategoriesByCategory: (categoryId) =>
       `/getSubCategoriesByCategory/${categoryId}`,
+    getOneSubCategory: (subCategoryId) => `/getOneSubCategory/${subCategoryId}`,
+    deleteSubCategory: (subCategoryId) => `/deleteSubCategory/${subCategoryId}`,
+    updateSubCategory: (subCategoryId) => `/editSubCategory/${subCategoryId}`,
   },
   common: {
     getAllBanner: () => "banner/get-all-banner",

@@ -86,6 +86,19 @@ const DynamicNav = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    // Cleanup when component unmounts
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isMobileMenuOpen]);
+
   return (
     <>
       <nav className="sticky top-0 z-50 bg-purpleSecondary text-white shadow-lg w-full flex justify-between items-center flex-wrap px-4 md:px-10">
@@ -240,7 +253,9 @@ const DynamicNav = () => {
       </div>
       <div
         ref={sliderRef}
-        className={`slider rounded-r-md ${isSliderOpen ? "open z-50" : "closed z-50"}`}
+        className={`slider rounded-r-md ${
+          isSliderOpen ? "open z-50" : "closed z-50"
+        }`}
       >
         <ul className="rounded-r-md">
           <li>Home</li>
