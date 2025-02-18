@@ -38,6 +38,7 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
     "AddOns",
     "Capacity & Pricing",
     "SessionLength",
+    "SessionLength&Pricing",
     "Duration&Pricing",
     "OrderQuantity&Pricing",
     "Car Tarrifs",
