@@ -5,7 +5,6 @@ import { internalRoutes } from "../../utils/internalRoutes";
 import logo from "../../assets/Temporary Images/Evaga Logo.png";
 import cart from "../../assets/Temporary Images/cart.png";
 import celebrate from "../../assets/Temporary Images/Animation - 1739604047964.gif";
-
 import { MdExitToApp } from "react-icons/md";
 import { LiaLanguageSolid } from "react-icons/lia";
 import { MdKeyboardArrowDown } from "react-icons/md";
@@ -18,9 +17,13 @@ import { MdOutlineSort } from "react-icons/md";
 import { useSelector } from "react-redux";
 import useDebounce from "../../utils/useDebounce";
 import Cookies from "js-cookie";
-import ReusableModal from "../Modal/Modal";
 import { Backdrop, Fade, Modal } from "@mui/material";
-import { Box } from "@mui/system";
+import { Box, padding } from "@mui/system";
+import useServices from "../../hooks/useServices";
+import commonApis from "../../services/commonApis";
+import { app } from "../../firebase";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 const style = {
   position: "absolute",
@@ -32,8 +35,9 @@ const style = {
   border: "0px solid transparent",
   boxShadow: 24,
   p: 4,
-  borderRadius: "8px",
+  borderRadius: "1rem",
   outline: "none",
+  padding: "0px",
 };
 const DynamicNav = () => {
   const { auth, logout } = useAuth();
@@ -49,6 +53,14 @@ const DynamicNav = () => {
   const debounce = useDebounce(search);
   const { searchTerm } = useSelector((state) => state.userSearch);
   const allCategoriesOption = { _id: "all", name: "All" };
+  const addToWaitlistApi = useServices(commonApis.addToWaitlist);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
   const menuItems = [
     {
       label: "Services",
@@ -142,7 +154,21 @@ const DynamicNav = () => {
     },
     [searchTerm, selectedCategoryId, navigate]
   );
+  const onSubmit = async (data) => {
+    try {
+      const formdata = new FormData();
+      formdata.append("email", data.email);
 
+      const response = await addToWaitlistApi.callApi(formdata);
+
+      toast.success(response?.message || "Successfully added to the waitlist!");
+      reset();
+      handleClose();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast.error(error?.response?.message || "Something went wrong!");
+    }
+  };
   useEffect(() => {
     handleSearch(shouldRedirect);
     setShouldRedirect(false);
@@ -335,12 +361,18 @@ const DynamicNav = () => {
           <MdOutlineSort className="text-2xl text-white" />
           <p>All</p>
         </span>
-        <Link to={"#"} onClick={handleOpen}>
+        <Link
+          to={"#"}
+          onClick={() => [setModalType("evagaXperience"), handleOpen()]}
+        >
           Evaga Xperience
         </Link>
         <Link to={"#"}>Blog</Link>
         <Link to={internalRoutes.wishlist}>Wishlist</Link>
-        <Link to={"#"} onClick={handleOpen}>
+        <Link
+          to={"#"}
+          onClick={() => [setModalType("Community"), handleOpen()]}
+        >
           Community
         </Link>
         <Link to={internalRoutes.customerService}>Customer Service</Link>
@@ -381,31 +413,66 @@ const DynamicNav = () => {
         }}
       >
         <Fade in={open}>
-          <Box sx={style}>
-            <div className="bg-white w-full rounded-md flex flex-col items-center justify-center ">
-              <img src={celebrate} alt="celebrate" className="object-fit " />
+          <Box sx={style} className="sm:w-[90%] md:w-[70%] lg:w-[50%]">
+            {modalType === "Community" && (
+              <div className="bg-white w-full rounded-md flex flex-col items-center justify-center ">
+                <img
+                  src={celebrate}
+                  alt="celebrate"
+                  className="object-contain mt-4"
+                />
 
-              <h2 className="flex text-primary text-2xl font-semibold item-center justify-center mt-4">
-                Coming Soon
-              </h2>
-              <div className="mx-10 flex flex-col gap-2">
-                <p className="mt-2 text-primary font-semibold text-lg mt-4">
-                  Join the Waitlist
-                </p>
-                <div className="flex mb-32">
-                  <input
-                    type="email"
-                    placeholder="Enter your Email"
-                    className="w-full mt-1 p-2 border rounded-lg outline-none"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                  <button className="btn-primary w-fit px-2 border rounded-lg">
-                    Submit
-                  </button>
+                <h2 className="flex text-primary text-2xl font-semibold item-center justify-center mt-4">
+                  Coming Soon
+                </h2>
+                <div className="mx-10 flex flex-col gap-2">
+                  <p className="mt-2 text-primary font-semibold text-lg mt-4">
+                    Join the Waitlist
+                  </p>
+                  <div className="flex mb-32">
+                    <form
+                      className="flex items-center "
+                      onSubmit={handleSubmit(onSubmit)}
+                    >
+                      <div className="">
+                        <input
+                          type="email"
+                          placeholder="Enter your Email"
+                          className={`w-full p-2 border rounded-lg outline-none ${
+                            errors.email ? "border-red-500" : "border-gray-300"
+                          }`}
+                          {...register("email", {
+                            required: "Email is required",
+                            pattern: {
+                              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                              message: "Enter a valid email address",
+                            },
+                          })}
+                        />
+                        {errors.email && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {errors.email.message}
+                          </p>
+                        )}
+                      </div>
+                      <button
+                        type="submit"
+                        className="btn-primary w-fit px-2 border rounded-lg"
+                      >
+                        Submit
+                      </button>
+                    </form>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}{" "}
+            {modalType === "evagaXperience" && (
+              <div className="rounded-md bg-gradient-to-r from-[#6A1B9A] via-[#4A0072] to-[#6A1A9A] h-[20rem]  rounded-md flex flex-col items-center justify-center ">
+                <h2 className="text-white  flex text-primary text-4xl font-medium item-center justify-center mt-4">
+                  Coming Soon
+                </h2>
+              </div>
+            )}
           </Box>
         </Fade>
       </Modal>

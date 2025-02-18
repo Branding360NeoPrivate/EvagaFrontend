@@ -14,9 +14,9 @@ import MainLogo from "../../assets/Temporary Images/Evaga Logo.png";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { useAuth } from "../../context/AuthContext";
-import { FaChevronDown, FaChevronUp, FaRegImage } from "react-icons/fa6";
+import { FaChevronDown, FaChevronUp, FaRegImage, FaWpforms } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion";
-import { MdAttachMoney } from "react-icons/md";
+import { MdAttachMoney, MdOutlineFeed } from "react-icons/md";
 const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
   const { logout } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -72,6 +72,8 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
       ],
     },
     { id: "AdminUsers", label: "Admin Users", icon: <FaUserShield /> },
+    { id: "Feedback", label: "Feedback Form", icon: <FaWpforms  /> },
+    { id: "Waitlist", label: "Waitlist", icon: <MdOutlineFeed  /> },
     { id: "SupportCenter", label: "Support Center", icon: <FaHeadset /> },
   ];
 

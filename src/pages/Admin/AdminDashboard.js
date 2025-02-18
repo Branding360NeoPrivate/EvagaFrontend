@@ -20,6 +20,9 @@ import BannerTable from "../../components/Admin/BannerTable";
 import CouponsTable from "../../components/Admin/CouponsTable";
 import FeeBreakdownbyCategory from "../../components/Admin/FeeBreakdownbyCategory";
 import GstTable from "../../components/Admin/GstTable";
+import WaitlistTable from "../../components/Admin/waitlistTable";
+import FeedbackForm from "../../components/Forms/FeedbackForm";
+import FeedbackTable from "../../components/Admin/FeedbackTable";
 
 const AdminDashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState("Home");
@@ -198,6 +201,8 @@ const AdminDashboard = () => {
           <FeeBreakdownbyCategory />
         )}
         {selectedMenu === "Gst by Category" && <GstTable />}
+        {selectedMenu === "Feedback" && <FeedbackTable/>}
+        {selectedMenu === "Waitlist" && <WaitlistTable/>}
       </div>
     </div>
   );

@@ -1,6 +1,9 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
+import useServices from "../../hooks/useServices";
+import commonApis from "../../services/commonApis";
+import { toast } from "react-toastify";
 const FeedbackForm = () => {
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
@@ -10,17 +13,88 @@ const FeedbackForm = () => {
   const clickAnimation = {
     whileTap: { scale: 0.95 },
   };
-
+  const addFeedBackApi = useServices(commonApis.addFeedBack);
   const {
     register,
     handleSubmit,
-    getValues,
+    getValues,reset,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+  
+  
+    const {
+      email,
+      customer,
+      phone,
+      booking,
+      bookAgain,
+      comments,
+      contact_preference,
+      expectations,
+      experience,
+      information,
+      interact,
+      navigation,
+      platform,
+      rating,
+      reason,
+      recommend,
+      service,
+      serviceType,
+      suggestions,
+      support,
+      technical,
+      unique,
+      vendor,
+    } = data;
+  
+    // Prepare the form data
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("customer", customer);
+    formData.append("phone", phone);
+    formData.append("booking", booking);
+    formData.append("bookAgain", bookAgain);
+    formData.append("comments", comments);
+    formData.append("contact_preference", contact_preference);
+    formData.append("expectations", expectations);
+    formData.append("experience", experience);
+    formData.append("information", information);
+    formData.append("interact", interact);
+    formData.append("navigation", navigation);
+    formData.append("platform", platform.join(",")); // Assuming it's an array
+    formData.append("rating", rating);
+    formData.append("reason", reason);
+    formData.append("recommend", recommend);
+    formData.append("service", service);
+    formData.append("serviceType", serviceType.join(",")); // Assuming it's an array
+    formData.append("suggestions", suggestions);
+    formData.append("support", support);
+    formData.append("technical", technical.join(",")); // Assuming it's an array
+    formData.append("unique", unique.join(",")); // Assuming it's an array
+    formData.append("vendor", vendor);
+  
+    try {
+      // Make the API call
+      const response = await addFeedBackApi.callApi(formData);
+      console.log(response);
+      
+      // Show success message
+      toast.success(response?.message || "Successfully added to the Feedback!");
+  
+      // Reset the form data on success (assuming you have a way to reset the form)
+      reset(); // Replace this with your actual form reset function
+  
+    } catch (error) {
+      console.error("Error submitting feedback:", error);
+  
+      // Show error message
+      toast.error(error?.response?.data?.message || "Something went wrong!");
+    }
   };
+  
 
   return (
     <motion.div
@@ -197,7 +271,7 @@ const FeedbackForm = () => {
           </label>
           <textarea
             className="w-full p-2 border rounded-md"
-            {...register("suggestions",)}
+            {...register("suggestions")}
           ></textarea>
           {errors.suggestions && (
             <p className="text-red-500">This field is required</p>
@@ -522,7 +596,7 @@ const FeedbackForm = () => {
           </label>
           <textarea
             className="w-full p-2 border rounded-md text-textGray"
-            {...register("reason", )}
+            {...register("reason")}
           ></textarea>
           {errors.reason && (
             <p className="text-red-500">This field is required</p>
@@ -555,7 +629,6 @@ const FeedbackForm = () => {
           <label className="block mt-2 font-semibold text-primary">
             Please provide at least one contact detail
           </label>
-
           {/* Email Field */}
           <label className="block">Email</label>
           <input
@@ -568,10 +641,10 @@ const FeedbackForm = () => {
                 "At least one contact detail is required",
             })}
             className="border p-2 w-full rounded-md text-textGray"
-          />   {errors.email && (
+          />{" "}
+          {errors.email && (
             <p className="text-red-500">{errors.email.message}</p>
           )}
-
           {/* Phone Field */}
           <label className="block">Phone</label>
           <input
@@ -585,9 +658,7 @@ const FeedbackForm = () => {
             })}
             className="border p-2 w-full rounded-md text-textGray"
           />
-
           {/* Error Message */}
-       
           {errors.phone && (
             <p className="text-red-500">{errors.phone.message}</p>
           )}

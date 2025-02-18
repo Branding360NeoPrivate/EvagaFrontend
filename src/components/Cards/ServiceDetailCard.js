@@ -178,7 +178,7 @@ function ServiceDetailCard({
               <div className="mb-4 w-full flex items-center">
                 <h3 className="text-base font-medium text-primary">{key}</h3>
 
-                <span className=" text-textGray text-sm px-3 py-1 rounded-md">
+                <span className=" text-textGray text-normal px-3 py-1 rounded-md">
                   {value}
                 </span>
               </div>

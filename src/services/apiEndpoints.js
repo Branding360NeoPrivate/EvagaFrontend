@@ -84,6 +84,7 @@ const apiEndpoints = {
     addSub: "addSubCategory",
     getSubCategoriesByCategory: (categoryId) =>
       `/getSubCategoriesByCategory/${categoryId}`,
+   
   },
   common: {
     getAllBanner: () => "banner/get-all-banner",
@@ -92,6 +93,10 @@ const apiEndpoints = {
     addBanner: "banner/add-banner",
     updateOneBanner: "banner/update-one-banner/:bannerId",
     deleteOneBanner: "banner/delete-one-banner/:bannerId",
+    addtowaitlist:  `waitlist/add-to-waitlist`,
+    addfeedback:  `feedback/add-feedback`,
+    getallfeedback:  `feedback/get-all-feedback`,
+    getallwaitlist:  `waitlist/get-all-waitlist`,
   },
   admin: {
     register: "admin/registerAdmin",
