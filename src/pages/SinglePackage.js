@@ -36,7 +36,7 @@ function SinglePackage() {
     });
     setVendorProfile({
       ...vendorProfile,
-      name: response.getVendorDetails.name,
+      name: response.getVendorDetails.userName,
       bio: response.getVendorDetails.bio,
     });
 
