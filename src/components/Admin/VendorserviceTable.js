@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { CiEdit } from "react-icons/ci";
 import ReusableModal from "../Modal/Modal";
 import EditVendorService from "./EditVendorService";
+import { IoMdArrowRoundBack } from "react-icons/io";
 function VendorserviceTable({
   onMenuSelect,
   selectedVendor,
@@ -308,7 +309,9 @@ function VendorserviceTable({
   return (
     <div className="w-full px-6 py-4 bg-white shadow-md rounded-lg">
       {/* Header Section */}
+      <button onClick={()=>onMenuSelect("Vendor")} className="flex items-center justfiy-center gap-1 text-textGray font-medium"><IoMdArrowRoundBack /> back</button>
       <div className="flex justify-between items-center mb-4">
+        
         <h2 className="text-lg font-bold">Vendor Services</h2>
         <div className="flex gap-4 items-center">
           <button

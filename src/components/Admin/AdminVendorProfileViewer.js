@@ -16,8 +16,9 @@ import SearchableCategoryAndSubcategoryDropdown from "../../components/Inputs/Se
 import AdminVendorDocumentsVerification from "../../components/Admin/AdminVendorDocumentsVerification";
 import adminActionsApi from "../../services/adminActionsApi";
 import DocumentUploader from "../Forms/DocumentUploader";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
-const AdminVendorProfileViewer = ({ vendorId }) => {
+const AdminVendorProfileViewer = ({ vendorId,onMenuSelect }) => {
   const [currentVendorId, setCurrentVendorId] = useState(null);
   const dispatch = useDispatch();
   const { profile } = useSelector((state) => state.vendor);
@@ -237,6 +238,12 @@ const AdminVendorProfileViewer = ({ vendorId }) => {
 
   return (
     <div className="min-h-screen bg-backgroundOffWhite pt-10 text-primary">
+      <button
+        onClick={() => onMenuSelect("Vendor")}
+        className="flex items-center justfiy-center gap-1 text-textGray font-medium p-1 text-base"
+      >
+        <IoMdArrowRoundBack /> back
+      </button>
       {vendorDetails && (
         <div className="container mx-auto w-full rounded-lg space-y-6">
           {/* Header Section */}

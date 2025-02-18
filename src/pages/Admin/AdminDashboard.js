@@ -48,8 +48,15 @@ const AdminDashboard = () => {
     setTerm(e.target.value);
   };
   useEffect(() => {
-    setTerm("");
+    if (
+      !["Vendor", "vendorServiceAccess", "VendorDocumentVerification"].includes(
+        selectedMenu
+      )
+    ) {
+      setTerm("");
+    }
   }, [selectedMenu]);
+
   useEffect(() => {
     if (selectedMenu === "Client") handleGetAllUser();
   }, [selectedMenu]);
@@ -139,7 +146,10 @@ const AdminDashboard = () => {
         )}
         {selectedMenu === "VendorDocumentVerification" && (
           <div className="bg-white shadow rounded-lg">
-            <AdminVendorProfileViewer vendorId={selectedVendor?._id}/>
+            <AdminVendorProfileViewer
+              vendorId={selectedVendor?._id}
+              onMenuSelect={handleMenuSelect}
+            />
           </div>
         )}
 
@@ -182,10 +192,12 @@ const AdminDashboard = () => {
             </div>
           </>
         )}
-         {selectedMenu === "Banner" && <BannerTable/>}
-         {selectedMenu === "Coupons" && <CouponsTable/>}
-         {selectedMenu === "Fee Breakdown by Category" && <FeeBreakdownbyCategory/>}
-         {selectedMenu === "Gst by Category" && <GstTable/>}
+        {selectedMenu === "Banner" && <BannerTable />}
+        {selectedMenu === "Coupons" && <CouponsTable />}
+        {selectedMenu === "Fee Breakdown by Category" && (
+          <FeeBreakdownbyCategory />
+        )}
+        {selectedMenu === "Gst by Category" && <GstTable />}
       </div>
     </div>
   );

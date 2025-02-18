@@ -56,6 +56,7 @@ function ServiceDetailCard({
     EventType: event,
     TypesofFlavours: "",
     Inclusions: inclusion,
+    Languages: inclusion,
     Deliverables: deliverable,
     MealType: "",
     MealTime: "",
