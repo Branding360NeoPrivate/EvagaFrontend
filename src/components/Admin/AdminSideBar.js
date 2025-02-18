@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FaHome,
   FaUsers,
   FaClipboardList,
   FaUserShield,
   FaHeadset,
-  FaBars,
   FaAngleRight,
   FaAngleLeft,
   FaRegMoneyBillAlt,
@@ -15,31 +14,62 @@ import MainLogo from "../../assets/Temporary Images/Evaga Logo.png";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { useAuth } from "../../context/AuthContext";
-import { FaRegImage } from "react-icons/fa6";
+import { FaChevronDown, FaChevronUp, FaRegImage } from "react-icons/fa6";
+import { motion, AnimatePresence } from "framer-motion";
+import { MdAttachMoney } from "react-icons/md";
 const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
-  const userId = Cookies.get("userId");
-  const { auth, logout } = useAuth();
+  const { logout } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  // const logout = useServices(adminApi.logout);
-  const handleLogout = async (userId) => {
-    const response = await logout.callApi(userId);
-    toast.success(response?.message);
+
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const dropdownRef = useRef(null);
+
+  const handleDropdownToggle = (id) => {
+    setOpenDropdown(openDropdown === id ? null : id);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpenDropdown(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const menuItems = [
     { id: "Home", label: "Home", icon: <FaHome /> },
-    { id: "Vendor", label: "Vendor", icon: <FaUsers /> },
-    { id: "Client", label: "Client", icon: <FaClipboardList /> },
-    { id: "Banner", label: "Banner", icon: <FaRegImage /> },
-    { id: "Coupons", label: "Coupons", icon: <RiCoupon3Line /> },
     {
-      id: "Fee Breakdown by Category",
-      label: "Fee Breakdown by Category",
-      icon: <FaRegMoneyBillAlt />,
+      id: "User Management",
+      label: "User Management",
+      icon: <FaUsers />,
+      children: [
+        { id: "Vendor", label: "Vendor", icon: <FaUsers /> },
+        { id: "Client", label: "Client", icon: <FaClipboardList /> },
+      ],
     },
     {
-      id: "Gst by Category",
-      label: "Gst by Category",
+      id: "Website Management",
+      label: "Website Management",
       icon: <FaRegMoneyBillAlt />,
+      children: [
+        { id: "Banner", label: "Banner", icon: <FaRegImage /> },
+        { id: "Coupons", label: "Coupons", icon: <RiCoupon3Line /> },
+        {
+          id: "Fee Breakdown by Category",
+          label: "Fee Breakdown by Category",
+          icon: <FaRegMoneyBillAlt />,
+        },
+        {
+          id: "Gst by Category",
+          label: "Gst by Category",
+          icon: <MdAttachMoney />,
+        },
+      ],
     },
     { id: "AdminUsers", label: "Admin Users", icon: <FaUserShield /> },
     { id: "SupportCenter", label: "Support Center", icon: <FaHeadset /> },
@@ -51,7 +81,6 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
         isCollapsed ? "w-20" : "w-64"
       } h-full min-h-[100vh] flex flex-col transition-width duration-300`}
     >
-      {/* Toggle Button */}
       <button
         className="flex items-center justify-center p-4 hover:bg-purple-600 focus:outline-none"
         onClick={() => setIsCollapsed(!isCollapsed)}
@@ -64,19 +93,70 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
       </div>
 
       {/* Menu Items */}
-      <nav className="flex flex-col flex-grow">
-        {menuItems.map((item) => (
-          <button
-            key={item.id}
-            className={`flex items-center px-6 py-4 text-left font-medium hover:bg-purple-600 focus:outline-none ${
-              selectedMenu === item.id ? "bg-purple-600" : ""
-            }`}
-            onClick={() => onMenuSelect(item.id)}
-          >
-            <span className="mr-3 text-lg">{item.icon}</span>
-            {!isCollapsed && item.label}
-          </button>
-        ))}
+      <nav className="flex flex-col flex-grow" ref={dropdownRef}>
+        {menuItems.map((item) =>
+          item.children ? (
+            <div className="w-full" key={item.id}>
+              <button
+                className={`w-full flex items-center justify-between px-6 py-4 text-left font-medium hover:bg-purple-600 focus:outline-none ${
+                  selectedMenu === item.id || openDropdown === item.id
+                    ? "bg-purple-600"
+                    : ""
+                }`}
+                onClick={() => handleDropdownToggle(item.id)}
+              >
+                <div className="flex items-center">
+                  <span className="mr-3 text-lg">{item.icon}</span>
+                  {!isCollapsed && item.label}
+                </div>
+                {!isCollapsed && (
+                  <span className="ml-auto">
+                    {openDropdown === item.id ? (
+                      <FaChevronUp />
+                    ) : (
+                      <FaChevronDown />
+                    )}
+                  </span>
+                )}
+              </button>
+              <AnimatePresence>
+                {openDropdown === item.id && (
+                  <motion.div
+                    className="flex flex-col "
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {item.children.map((child) => (
+                      <button
+                        key={child.id}
+                        className={`ml-2 my-1 flex items-center px-6 py-4 text-left font-medium hover:bg-purple-600 focus:outline-none ${
+                          selectedMenu === child.id ? "bg-purple-600" : ""
+                        }`}
+                        onClick={() => onMenuSelect(child.id)}
+                      >
+                        <span className="mr-3 text-lg">{child.icon}</span>
+                        {!isCollapsed && child.label}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ) : (
+            <button
+              key={item.id}
+              className={`flex items-center px-6 py-4 text-left font-medium hover:bg-purple-600 focus:outline-none ${
+                selectedMenu === item.id ? "bg-purple-600" : ""
+              }`}
+              onClick={() => onMenuSelect(item.id)}
+            >
+              <span className="mr-3 text-lg">{item.icon}</span>
+              {!isCollapsed && item.label}
+            </button>
+          )
+        )}
       </nav>
 
       {/* Logout */}

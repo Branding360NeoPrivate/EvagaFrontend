@@ -48,6 +48,8 @@ import RefundAndCancellation from "./pages/RefundAndCancellation";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import FeedBack from "./pages/FeedBack";
 import CustomerService from "./pages/CustomerService";
+import PaymentPage from "./pages/PaymentPage";
+import OrderSucessPage from "./pages/OrderSucessPage";
 const AppContent = () => {
   const { auth } = useAuth();
   const dispatch = useDispatch();
@@ -118,6 +120,8 @@ const AppContent = () => {
         />
         <Route element={<Wishlist />} path={internalRoutes.wishlist} />
         <Route element={<CheckOut />} path={internalRoutes.checkout} />
+        <Route element={<PaymentPage />} path={internalRoutes.payment} />
+        <Route element={<OrderSucessPage />} path={internalRoutes.orderStatus} />
         <Route element={<PressRelease />} path={internalRoutes.pressReleases} />
         <Route element={<AboutEvaga />} path={internalRoutes.aboutUs} />
         <Route element={<RefundAndCancellation />} path={internalRoutes.cancellationPolicy} />

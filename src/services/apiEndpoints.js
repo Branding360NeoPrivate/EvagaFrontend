@@ -147,6 +147,9 @@ const apiEndpoints = {
     getAllCoupons: "coupons/get-all-coupons",
     validateCoupons: "coupons/",
   },
+  order: {
+    createOrder: (userId) => `order/create-order/${userId}`,
+  },
 };
 
 export default apiEndpoints;

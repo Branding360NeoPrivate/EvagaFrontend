@@ -3,14 +3,36 @@ import Tag from "../../assets/Temporary Images/tags1.png";
 import CommentInfo from "../../assets/Temporary Images/comment-info1.png";
 import Add from "../../assets/Temporary Images/AddButton.png";
 import formatCurrency from "../../utils/formatCurrency";
+import { useNavigate } from "react-router-dom";
 function CheckoutSummary({
   totalOfcart,
   totalWithFee,
   platformFee,
   totalGst,
   openModal,
-  setModalType,discount
+  setModalType,
+  discount,
+  paymentPageUrl,
+  onPlaceOrder, // Function to handle order creation
 }) {
+  const navigate = useNavigate();
+
+  const handlePlaceOrder = async () => {
+    if (paymentPageUrl) {
+      // Redirect to payment page if URL is provided
+      navigate(paymentPageUrl);
+    } else if (onPlaceOrder) {
+      try {
+        // Call the provided function if it's passed
+        await onPlaceOrder();
+        console.log("Order placed successfully");
+      } catch (error) {
+        console.error("Error while placing order:", error);
+      }
+    } else {
+      console.error("No action defined for placing the order.");
+    }
+  };
   return (
     <div className="w-full max-sm:w-full h-[560px] mx-auto border rounded-[10px] border-gray-300  p-6 bg-white font-['Poppins']">
       <h2 className="text-xl font-semibold text-primary mb-4">Coupons</h2>
@@ -71,7 +93,10 @@ function CheckoutSummary({
       </div>
 
       <div className="flex justify-center items-center">
-        <button className="w-[257px] px-4 py-2 bg-primary text-white rounded-md font-semibold hover:bg-purple-800">
+        <button
+          className="w-[257px] px-4 py-2 bg-primary text-white rounded-md font-semibold hover:bg-purple-800"
+          onClick={handlePlaceOrder}
+        >
           Place Order
         </button>
       </div>

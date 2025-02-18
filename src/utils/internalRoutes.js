@@ -4,6 +4,8 @@ export const internalRoutes = {
   searchresultPage: "/search",
   wishlist:"/wishlist",
   checkout:"/checkout",
+  payment:"/checkout/payment",
+  orderStatus:'/orderStatus',
   interest:"/select-your-interest",
   profile:"/user/profile",
 

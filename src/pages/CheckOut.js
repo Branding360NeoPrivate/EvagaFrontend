@@ -17,8 +17,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import DeleteForm from "../components/Admin/DeleteForm";
 import CouponsCard from "../components/Cards/CouponsCard";
-import Cancel from "../assets/Temporary Images/CancelButton.png";
-import Add from "../assets/Temporary Images/AddButton2.png";
 import Tag from "../assets/Temporary Images/tags1.png";
 import { fetchUserCart } from "../context/redux/slices/cartSlice";
 import couponApi from "../services/couponApi";
@@ -170,7 +168,7 @@ function CheckOut() {
     }
   }, [userId, cart, dispatch]);
   const handleApplyCoupon = (query) => {
-    console.log(query);
+
 
     dispatch(
       fetchUserCart({ userId: userId, query: { couponCode: "ffgfg123456" } })
@@ -264,6 +262,7 @@ function CheckOut() {
             setModalType={setModalType}
             openModal={handleOpen}
             discount={cart?.discount}
+            paymentPageUrl={internalRoutes.payment}
           />
         </div>
       </div>

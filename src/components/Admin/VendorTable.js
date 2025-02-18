@@ -140,7 +140,7 @@ const VendorTable = memo(
               </tr>
             </thead>
             <tbody>
-              {vendors.map((vendor, index) => (
+              {vendors?.map((vendor, index) => (
                 <tr key={index} className="text-center">
                   <td className="  px-4 py-2">{index + 1}</td>
                   <td className="  px-4 py-2">{vendor.name}</td>
