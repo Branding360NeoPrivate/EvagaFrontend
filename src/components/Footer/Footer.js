@@ -1,14 +1,6 @@
 import { companyDetails } from "../../utils/companyDetails";
 import { footerMenuItems } from "../../utils/footerMenuList";
-import { BsTwitterX } from "react-icons/bs";
-import { FaFacebook } from "react-icons/fa";
-import {
-  FaInstagram,
-  FaLinkedinIn,
-  FaSquareInstagram,
-  FaWhatsapp,
-} from "react-icons/fa6";
-import { FaXTwitter } from "react-icons/fa6";
+import { Link } from "react-router-dom";
 function Footer() {
   const backToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -32,9 +24,9 @@ function Footer() {
             <ul className="space-y-4">
               {footerMenuItems.leftMenu.map((item, index) => (
                 <li key={index}>
-                  <a href={item.path || "#"} className=" text-sm">
+                  <Link to={item.path || "#"} className=" text-sm">
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -42,57 +34,63 @@ function Footer() {
           {/* Column 2 */}
           <div>
             <h3 className="mb-2 font-semibold">Connect With Us</h3>
-            <div className="flex space-x-4">
+            <div className="flex flex-col  gap-2">
               <a
                 href="https://www.facebook.com/share/15UhbdRWh8/?mibextid=wwXIfr "
                 target="_blank"
                 aria-label="Facebook"
-                className="text-xl"
+                className="text-sm medium"
               >
-                <FaFacebook />
+                Facebook
               </a>
               <a
                 href="https://www.instagram.com/evagaentertainment/?igsh=MmcwdjJzMHUwd3k2&utm_source=qr"
                 target="_blank"
                 aria-label="Instagram"
-                className="text-xl"
+                className="text-sm medium"
               >
-                <FaInstagram />
+                Instagram
               </a>
               <a
                 href="https://www.linkedin.com/company/evaga-entertainment"
                 target="_blank"
                 aria-label="X"
-                className="text-xl"
+                className="text-sm medium"
               >
-                <FaLinkedinIn />
+                Linkedin
               </a>
               <a
                 href="https://whatsapp.com/channel/0029VaWXX585fM5adzGAzC1C"
                 target="_blank"
                 aria-label="X"
-                className="text-xl"
+                className="text-sm medium"
               >
-                <FaWhatsapp />
+                WhatsApp
               </a>{" "}
               <a
                 href="https://x.com/EvagaOfficial"
                 target="_blank"
                 aria-label="X"
-                className="text-xl"
+                className="text-sm medium"
               >
-                <BsTwitterX />
+                Twitter
+              </a>
+              <a
+                href="mailto:info@evagaentertainment.com"
+                aria-label="Email"
+                className="text-sm medium"
+              >
+                Email Support
               </a>
             </div>
           </div>
-          {/* Column 3 */}
           <div>
             <ul className="space-y-4">
               {footerMenuItems.midMenu.map((item, index) => (
                 <li key={index}>
-                  <a href={item.path || "#"} className="hover:text-highlight">
+                  <Link to={item.path || "#"} className="hover:text-highlight">
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -102,9 +100,9 @@ function Footer() {
             <ul className="space-y-4">
               {footerMenuItems.rightMenu.map((item, index) => (
                 <li key={index}>
-                  <a href={item.path || "#"} className="hover:text-highlight">
+                  <Link to={item.path || "#"} className="hover:text-highlight">
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -127,9 +125,9 @@ function Footer() {
             <ul className="space-y-4">
               {footerMenuItems.leftMenu.map((item, index) => (
                 <li key={index}>
-                  <a href={item.path || "#"} className=" text-sm">
+                  <Link to={item.path || "#"} className=" text-sm">
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -140,36 +138,74 @@ function Footer() {
           <ul className="space-y-4">
             {footerMenuItems.midMenu.map((item, index) => (
               <li key={index}>
-                <a href={item.path || "#"} className="hover:text-highlight">
+                <Link to={item.path || "#"} className="hover:text-highlight">
                   {item.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
           <ul className="space-y-4">
             {footerMenuItems.rightMenu.map((item, index) => (
               <li key={index}>
-                <a href={item.path || "#"} className="hover:text-highlight">
+                <Link to={item.path || "#"} className="hover:text-highlight">
                   {item.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
         </div>
 
-        <div className=" col-span-2 flex justify-start items-start gap-10 text-sm">
-          <h3 className="mb-2 font-semibold">Connect With Us</h3>
-          <div className="flex space-x-4">
-            <a href="#" aria-label="Facebook" className="text-xl">
-              <FaFacebook />
-            </a>
-            <a href="#" aria-label="Instagram" className="text-xl">
-              <FaSquareInstagram />
-            </a>
-            <a href="#" aria-label="X" className="text-xl">
-              <FaXTwitter />
-            </a>
-          </div>
+        <div className=" col-span-2 flex-col flex justify-start items-start gap-4 text-sm">
+          <h3 className=" font-semibold">Connect With Us</h3>
+          <div className="flex flex-col  gap-2">
+              <a
+                href="https://www.facebook.com/share/15UhbdRWh8/?mibextid=wwXIfr "
+                target="_blank"
+                aria-label="Facebook"
+                className="text-sm medium"
+              >
+                Facebook
+              </a>
+              <a
+                href="https://www.instagram.com/evagaentertainment/?igsh=MmcwdjJzMHUwd3k2&utm_source=qr"
+                target="_blank"
+                aria-label="Instagram"
+                className="text-sm medium"
+              >
+                Instagram
+              </a>
+              <a
+                href="https://www.linkedin.com/company/evaga-entertainment"
+                target="_blank"
+                aria-label="X"
+                className="text-sm medium"
+              >
+                Linkedin
+              </a>
+              <a
+                href="https://whatsapp.com/channel/0029VaWXX585fM5adzGAzC1C"
+                target="_blank"
+                aria-label="X"
+                className="text-sm medium"
+              >
+                WhatsApp
+              </a>{" "}
+              <a
+                href="https://x.com/EvagaOfficial"
+                target="_blank"
+                aria-label="X"
+                className="text-sm medium"
+              >
+                Twitter
+              </a>
+              <a
+                href="mailto:info@evagaentertainment.com"
+                aria-label="Email"
+                className="text-sm medium"
+              >
+                Email Support
+              </a>
+            </div>
         </div>
         <div className=" col-span-2">
           <div className="mt-4 text-sm">

@@ -4,6 +4,8 @@ export const internalRoutes = {
   searchresultPage: "/search",
   wishlist:"/wishlist",
   checkout:"/checkout",
+  payment:"/checkout/payment",
+  orderStatus:'/orderStatus',
   interest:"/select-your-interest",
   profile:"/user/profile",
 
@@ -39,5 +41,7 @@ export const internalRoutes = {
   becomeAVendor: "/become-a-vendor",
   vendorOnboarding: "/vendor-onboarding",
   cancellationPolicy: "/cancellation-policy",
+  TermsAndConditions: "/terms-and-condition",
   feedbackForm: "/feedback-form",
+  customerService: "/customer-service",
 };

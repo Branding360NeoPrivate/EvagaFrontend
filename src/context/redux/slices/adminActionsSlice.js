@@ -6,6 +6,7 @@ const initialState = {
   users: [],
   totalNumberOfVendors: 0,
   totalNumberOfUser: 0,
+  totalNumberOfPageVendor: 0,
   status: "idle",
   error: null,
 };
@@ -13,10 +14,11 @@ const initialState = {
 // Async thunk for fetching all vendors with profile status and service
 export const fetchAllVendorsWithProfileStatusAndService = createAsyncThunk(
   "adminActions/fetchAllVendorsWithProfileStatusAndService",
-  async (_, { rejectWithValue }) => {
+  async ({ queryPage, searchTerm,filter }, { rejectWithValue }) => {
     try {
-      const response =
-        await adminActionsApi.getAllVendorsWithProfileStatusAndService();
+      const response = await adminActionsApi.getAllVendorsWithProfileStatusAndService(
+        { queryPage, searchTerm,filter }
+      );
       console.log(
         "response for all vendors with profile status and service:",
         response
@@ -28,6 +30,7 @@ export const fetchAllVendorsWithProfileStatusAndService = createAsyncThunk(
     }
   }
 );
+
 
 // Async thunk for verifying vendor document
 export const verifyVendorDocument = createAsyncThunk(
@@ -62,6 +65,7 @@ const adminActionsSlice = createSlice({
         fetchAllVendorsWithProfileStatusAndService.fulfilled,
         (state, action) => {
           state.status = "succeeded";
+          state.totalNumberOfPageVendor = action.payload.totalPages;
           state.totalNumberOfVendors = action.payload.totalVendors;
           state.vendors = action.payload.data;
         }

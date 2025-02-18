@@ -21,6 +21,7 @@ const AddOnCounter = memo(
     };
 
     const handleIncrease = () => {
+      console.log('it should increase the quantity')
       setQuantity((prev) => prev + 1);
       onAdd();
     };

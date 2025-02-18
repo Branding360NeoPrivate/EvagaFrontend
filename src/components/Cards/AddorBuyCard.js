@@ -10,13 +10,21 @@ import session from "../../assets/Temporary Images/stopwatch 1.png";
 import order from "../../assets/Temporary Images/order.png";
 import pkg from "../../assets/Temporary Images/package.png";
 import formatCurrency from "../../utils/formatCurrency";
-function AddorBuyCard({ price, addonsPrice, addonsDetails, bio, renderPrice }) {
-  const [pincode, setPincode] = useState(""); // Initially empty pincode
-  const [date, setDate] = useState(new Date()); // Default calendar date
-  const [showCalendar, setShowCalendar] = useState(false); // To toggle calendar visibility
-  const [dateInput, setDateInput] = useState(""); // To handle direct date input
-  const [selectedTime, setSelectedTime] = useState("AM"); // To track selected time (AM or PM)
-
+import { useNavigate } from "react-router-dom";
+import { internalRoutes } from "../../utils/internalRoutes";
+import { useAuth } from "../../context/AuthContext";
+import { toast } from "react-toastify";
+function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
+  const navigate = useNavigate();
+  const { auth } = useAuth();
+  const [pincode, setPincode] = useState("");
+  const [date, setDate] = useState(new Date());
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [dateInput, setDateInput] = useState("");
+  const [selectedTime, setSelectedTime] = useState("AM");
+  const [basePrice, setBasePrice] = useState(
+    Number(renderPrice?.Price || renderPrice?.Pricing) || 0
+  );
   const handleDateChange = (newDate) => {
     setDate(newDate);
     setDateInput(newDate.toLocaleDateString());
@@ -30,6 +38,7 @@ function AddorBuyCard({ price, addonsPrice, addonsDetails, bio, renderPrice }) {
     "AddOns",
     "Capacity & Pricing",
     "SessionLength",
+    "SessionLength&Pricing",
     "Duration&Pricing",
     "OrderQuantity&Pricing",
     "Car Tarrifs",
@@ -66,10 +75,9 @@ function AddorBuyCard({ price, addonsPrice, addonsDetails, bio, renderPrice }) {
   const [selectedAddOns, setSelectedAddOns] = useState([]);
   const calculatedPrice = useMemo(() => {
     const basePrice = Number(renderPrice?.Price || renderPrice?.Pricing) || 0;
-
-
+    setBasePrice(basePrice);
     const addOnsPrice = selectedAddOns.reduce((total, addOn) => {
-      console.log(addOn);
+      console.log(addOn, total);
       if (addOn.type === "Package") {
         return total + Number(addOn.Rates || 0);
       }
@@ -127,13 +135,25 @@ function AddorBuyCard({ price, addonsPrice, addonsDetails, bio, renderPrice }) {
     });
   }, []);
 
+  const handleAddTocart = async () => {
+    if (auth?.isAuthenticated && auth?.role === "user") {
+      try {
+        addTocart(basePrice, selectedAddOns);
+      } catch (error) {
+        toast.error("Failed to Add To Cart. Please try again.");
+        console.error(error);
+      }
+    } else {
+      toast.warning("You need to log in first to add items to the Cart.");
+    }
+  };
+
   if (!renderPrice || Object.keys(renderPrice).length === 0) {
-    return <div>Loading...</div>; // Or any fallback UI
+    return <div>Loading...</div>;
   }
   return (
     <div className="flex items-start justify-start flex-col gap-2">
       <div className="max-w-md p-6 bg-white border-borderPrimary rounded-md border-2 ">
-        {/* Price Section */}
         <div className="text-center flex flex-row mb-6">
           <div>
             {" "}
@@ -150,19 +170,18 @@ function AddorBuyCard({ price, addonsPrice, addonsDetails, bio, renderPrice }) {
         </div>
 
         <div className="flex flex-row gap-4">
-          {/* Date & Calendar Section */}
           <div className=" mb-4 relative">
             <label className="block text-primary mb-2">Date</label>
             <div className="flex items-center">
-              {/* Date input field */}
               <input
                 type="text"
                 value={dateInput}
                 onChange={(e) => setDateInput(e.target.value)}
+                onClick={() => setShowCalendar(!showCalendar)}
                 placeholder="MM/DD/YYYY"
-                className="w-full py-2 px-3 border rounded-md text-gray-600 focus:outline-primary"
+                className="w-full py-2 px-1 border rounded-md text-gray-600 focus:outline-primary"
               />
-              {/* Calendar Icon */}
+
               <button
                 type="button"
                 onClick={() => setShowCalendar(!showCalendar)}
@@ -172,11 +191,10 @@ function AddorBuyCard({ price, addonsPrice, addonsDetails, bio, renderPrice }) {
               </button>
             </div>
 
-            {/* Calendar Popup */}
             {showCalendar && (
               <div className="absolute z-10">
                 <Calendar
-                  onChange={handleDateChange} // Update date state
+                  onChange={handleDateChange}
                   value={date}
                   className="react-calendar"
                 />
@@ -184,7 +202,6 @@ function AddorBuyCard({ price, addonsPrice, addonsDetails, bio, renderPrice }) {
             )}
           </div>
 
-          {/* Time Section */}
           <div className="mb-4">
             <label className=" block text-primary mb-2">Time</label>
             <div className="flex gap-2">
@@ -218,7 +235,6 @@ function AddorBuyCard({ price, addonsPrice, addonsDetails, bio, renderPrice }) {
           </div>
         </div>
 
-        {/* Location Section */}
         <div className="my-4 flex flex-row gap-2 justify-between ">
           <div className=" text-primary text-xl font-semibold pt-2 flex items-center justify-center gap-1">
             <span className="bg-textLightGray rounded-[50%] p-2">
@@ -270,8 +286,10 @@ function AddorBuyCard({ price, addonsPrice, addonsDetails, bio, renderPrice }) {
                     </p>
                   </div>
                   {value.map((item, idx) => {
-                    const isPackage = key === "Package"; // Determine if it's a package
-                    const rateInfo = isPackage ? item.Rates : item.Amount || item?.Rates;
+                    const isPackage = key === "Package";
+                    const rateInfo = isPackage
+                      ? item.Rates
+                      : item.Amount || item?.Rates;
                     const uom = isPackage ? item.days : item.Uom || item.UOM;
 
                     return (
@@ -282,7 +300,7 @@ function AddorBuyCard({ price, addonsPrice, addonsDetails, bio, renderPrice }) {
                         uom={uom}
                         note={item.Note || ""}
                         minQuantity={1}
-                        type={isPackage ? "Package" : key} // Pass type
+                        type={isPackage ? "Package" : key}
                         onAdd={() =>
                           handleAddOnUpdate(
                             { ...item, rateInfo, uom },
@@ -303,26 +321,23 @@ function AddorBuyCard({ price, addonsPrice, addonsDetails, bio, renderPrice }) {
                 </div>
               );
             }
-
-            // if (Array.isArray(value) && value.length > 0) {
-            //   return value.map((item, idx) => (
-            //     <AddOnCounter
-            //       key={`${key}-${idx}`}
-            //       itemName={item.Particulars}
-            //       rateInfo={`${item.Amount || ""}`}
-            //       uom={`${item.Uom || item.UOM || ""}`}
-            //       note={item.Note || ""}
-            //       minQuantity={1}
-            //       onAdd={() => handleAddOnUpdate(item, "add")}
-            //       onRemove={() => handleAddOnUpdate(item, "remove")}
-            //     />
-            //   ));
-            // }
           })}
         </div>
 
         <div className="space-y-3 mt-4">
-          <button className="btn-primary">Add to Cart</button>
+          {!packageIncart ? (
+            <button className="btn-primary" onClick={handleAddTocart}>
+              Add to Cart
+            </button>
+          ) : (
+            <button
+              className="btn-primary"
+              onClick={() => navigate(internalRoutes.checkout)}
+            >
+              Go to Cart
+            </button>
+          )}
+
           <button className="btn-primary">Buy Now</button>
         </div>
       </div>

@@ -129,7 +129,7 @@ const VendorDashboard = () => {
 
   return (
     <div className="flex items-center justify-center flex-col w-full gap-2 mt-10 mb-10">
-      <div className="w-11/12 flex flex-col md:flex-row items-start justify-center h-fit  gap-4">
+      <div className="w-[98%] flex flex-col md:flex-row items-start justify-center h-fit  gap-4">
         <div className="w-[100%] md:w-[70%] ">
           <Slider bannerData={vendorBanner} />
         </div>
@@ -168,29 +168,52 @@ const VendorDashboard = () => {
         {activeState === "Services Provided" && (
           <div className="w-full flex items-center justfiy-center flex-col gap-4">
             {allService?.length > 0 ? (
-              allService.map((item) => (
-                <ServiceCard
-                  key={item?._id || item?.title}
-                  image={
-                    item?.services?.[0]?.values?.CoverImage?.[0] ||
-                    item?.services?.[0]?.values?.ProductImage?.[0]
+              allService.map((item) => {
+                const getImageUrl = (imagePath) => {
+                  if (!imagePath) return null;
+                  // Check if the image path is already a full URL
+                  if (imagePath.startsWith("http")) {
+                    return imagePath; // Return the full URL as is
                   }
-                  title={
-                    item?.services?.[0]?.values?.Title ||
-                    item?.services?.[0]?.values?.FoodTruckName ||
-                    item?.services?.[0]?.values?.VenueName
-                  }
-                  yearofexp={item?.YearofExperience}
-                  category={item?.Category?.name}
-                  subCategory={item?.SubCategory?.name}
-                  desc={item?.AbouttheService}
-                  price={item?.services?.[0]?.values?.Price}
-                  InclusionData={item?.services?.[0]?.values?.Inclusions}
-                  DeliverablesData={item?.services?.[0]?.values?.Deliverables}
-                  AddOnData={item?.services?.[0]?.values?.AddOns}
-                  serviceId={item?._id}
-                />
-              ))
+                  // Otherwise, prepend the base URL
+                  return `${process.env.REACT_APP_API_Aws_Image_BASE_URL}${imagePath}`;
+                };
+                console.log(item?.services?.[0]?.values?.CoverImage);
+
+                return (
+                  <ServiceCard
+                    key={item?._id || item?.title}
+                    image={
+                      process.env.REACT_APP_API_Aws_Image_BASE_URL +
+                      (
+                        Array.isArray(item?.services?.[0]?.values?.CoverImage)
+                          ? item?.services?.[0]?.values?.CoverImage?.[0]
+                          : item?.services?.[0]?.values?.CoverImage
+                      ) ||
+                      (
+                        Array.isArray(item?.services?.[0]?.values?.ProductImage)
+                          ? item?.services?.[0]?.values?.ProductImage?.[0]
+                          : item?.services?.[0]?.values?.ProductImage
+                      )
+                    }
+                    
+                    title={
+                      item?.services?.[0]?.values?.Title ||
+                      item?.services?.[0]?.values?.FoodTruckName ||
+                      item?.services?.[0]?.values?.VenueName
+                    }
+                    yearofexp={item?.YearofExperience}
+                    category={item?.Category?.name}
+                    subCategory={item?.SubCategory?.name}
+                    desc={item?.AbouttheService}
+                    price={item?.services?.[0]?.values?.Price}
+                    InclusionData={item?.services?.[0]?.values?.Inclusions}
+                    DeliverablesData={item?.services?.[0]?.values?.Deliverables}
+                    AddOnData={item?.services?.[0]?.values?.AddOns}
+                    serviceId={item?._id}
+                  />
+                );
+              })
             ) : (
               <p className="text-textGray text-lg font-medium py-4">
                 No Services Listed

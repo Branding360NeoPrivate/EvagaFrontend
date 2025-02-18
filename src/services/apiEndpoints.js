@@ -72,6 +72,11 @@ const apiEndpoints = {
       `user/update-user-one-address/${addressId}`,
     deleteOneAddress: (addressId) =>
       `user/delete-user-one-address/${addressId}`,
+    getUserAllAddress: (userId) => `user/get-user-all-address/${userId}`,
+    selectOneUserAddress: (userId, addressId) =>
+      `user/select-one-address/${userId}/${addressId}`,
+    addToCart: (userId) => `cart/add-to-cart/${userId}`,
+    getUserCart: (userId) => `cart/get-user-cart/${userId}`,
   },
   category: {
     add: "category",
@@ -93,6 +98,10 @@ const apiEndpoints = {
     addBanner: "banner/add-banner",
     updateOneBanner: "banner/update-one-banner/:bannerId",
     deleteOneBanner: "banner/delete-one-banner/:bannerId",
+    addtowaitlist: `waitlist/add-to-waitlist`,
+    addfeedback: `feedback/add-feedback`,
+    getallfeedback: `feedback/get-all-feedback`,
+    getallwaitlist: `waitlist/get-all-waitlist`,
   },
   admin: {
     register: "admin/registerAdmin",
@@ -120,11 +129,36 @@ const apiEndpoints = {
       `adminAction/update-vendor-bio-details/${vendorID}`,
     updateVendorProfilePicUpdateByAdmin: (vendorID) =>
       `adminAction/update-vendor-profilepic-details/${vendorID}`,
+    addBanner: "banner/add-banner",
+    editBanner: (bannerId) => `banner/update-one-banner/${bannerId}`,
+    getOneBanner: (bannerId) => `banner/get-one-banner-by-id/${bannerId}`,
+    deleteBanner: (bannerId) => `banner/delete-one-banner/${bannerId}`,
+    getAllCoupons: `coupons/get-all-coupons`,
+    addCoupons: `coupons/create-one-coupons`,
+    getOneCoupons: (couponId) => `coupons/get-one-coupons/${couponId}`,
+    editOneCoupons: (couponId) => `coupons/edit-one-coupons/${couponId}`,
+    deleteOneCoupons: (couponId) => `coupons/delete-one-coupons/${couponId}`,
+    getAllCategoryFees: `categoryFee/getCategoryFees`,
+    addCategoryFees: `categoryFee/createCategoryFee`,
+    getOneFees: (feeId) => `categoryFee/getCategoryFee/${feeId}`,
+    editOneFees: (feeId) => `categoryFee/updateCategoryFee/${feeId}`,
+    deleteOneFees: (feeId) => `categoryFee/deleteCategoryFee/${feeId}`,
+    getVendorByNameOrUserName: `adminAction/get-search-vendors`,
+    verifyVendorprofile: (vendorId) => `vender/verify-vendor/${vendorId}`,
+    getAllCategoryGstFees: `gstPercentage/get-all-gst-percentage`,
+    addCategoryGstFees: `gstPercentage/add-gst-percentage`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",
     getOnePackage: (serviceId, packageId) =>
       `packages/get-one-package/${serviceId}/${packageId}`,
+  },
+  coupons: {
+    getAllCoupons: "coupons/get-all-coupons",
+    validateCoupons: "coupons/",
+  },
+  order: {
+    createOrder: (userId) => `order/create-order/${userId}`,
   },
 };
 

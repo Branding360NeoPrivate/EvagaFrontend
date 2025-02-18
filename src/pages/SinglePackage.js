@@ -6,13 +6,22 @@ import { useParams } from "react-router-dom";
 import useServices from "../hooks/useServices";
 import packageApis from "../services/packageApis";
 import { motion } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import userApi from "../services/userApi";
+import Cookies from "js-cookie";
+import { fetchUserCart } from "../context/redux/slices/cartSlice";
+import { toast } from "react-toastify";
 function SinglePackage() {
+  const userId = Cookies.get("userId");
   const { serviceId, packageId } = useParams();
   const [images, setImages] = useState([]);
   const { allWishlist } = useSelector((state) => state.wishlist);
+  const { cart } = useSelector((state) => state.cart);
   const getAllPackages = useServices(packageApis.getOnePackage);
+  const addToCartApi = useServices(userApi.addPackageToUserCart);
+  const dispatch = useDispatch();
   const [singlePageData, setSinglePageData] = useState();
+  const [packageIncartStatus, setPackageIncartStatus] = useState(false);
   const [vendorProfile, setVendorProfile] = useState({ name: "", bio: "" });
   const [packageCategory, setpackageCategory] = useState({
     category: "",
@@ -27,13 +36,11 @@ function SinglePackage() {
     });
     setVendorProfile({
       ...vendorProfile,
-      name: response.getVendorDetails.name,
+      name: response.getVendorDetails.userName,
       bio: response.getVendorDetails.bio,
     });
 
     const allMedia = [];
-
-    // Collect CoverImage
     if (response?.data?.services?.[0]?.values?.CoverImage) {
       const coverImage = response.data.services[0].values.CoverImage;
       if (Array.isArray(coverImage)) {
@@ -42,8 +49,15 @@ function SinglePackage() {
         allMedia.push(coverImage);
       }
     }
+    if (response?.data?.services?.[0]?.values?.ProductImage) {
+      const ProductImage = response.data.services[0].values.ProductImage;
+      if (Array.isArray(ProductImage)) {
+        allMedia.push(...ProductImage);
+      } else {
+        allMedia.push(ProductImage);
+      }
+    }
 
-    // Collect Portfolio.photos
     if (response?.data?.services?.[0]?.values?.Portfolio?.photos) {
       const photos = response.data.services[0].values.Portfolio.photos;
       if (Array.isArray(photos)) {
@@ -53,7 +67,6 @@ function SinglePackage() {
       }
     }
 
-    // Collect Portfolio.videos
     if (response?.data?.services?.[0]?.values?.Portfolio?.videos) {
       const videos = response.data.services[0].values.Portfolio.videos;
       if (Array.isArray(videos)) {
@@ -65,50 +78,19 @@ function SinglePackage() {
 
     setImages(allMedia);
   };
-
+  useEffect(() => {
+    if (userId && (!cart || cart.length === 0)) {
+      dispatch(fetchUserCart(userId)).then((response) => {
+        if (!response || response.length === 0) {
+          console.log("Server response is empty. No cart items fetched.");
+        }
+      });
+    }
+  }, [userId, cart, dispatch]);
   useEffect(() => {
     handlegetOnePackage();
   }, [serviceId, packageId]);
 
-  const weddingPhotographyData = [
-    {
-      title: "Wedding Photography",
-      category: "Photography",
-      rating: 3.9,
-      reviews: 353,
-      experience: 5,
-      companyName: "Geeta Pvt Ltd.",
-      price: "₹ 1,01,000.00",
-      eventData: ["Weddings", "Engagement"],
-      inclusionData: [
-        "Posed Photos",
-        "Bridal Portraits",
-        "Reception Highlights",
-      ],
-      deliverableData: [
-        "500 Edited Photos",
-        "2hr Wedding Film",
-        "100 Photo Album Book",
-        "5 Instagram reels",
-      ],
-      terms: [
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-        "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.",
-        "It has survived not only five centuries.",
-      ],
-    },
-  ];
-  const AddorBuyDetails = [
-    {
-      price: "₹1,01,000.00",
-      pincode: "123456",
-      addonsPrice: "10,000.00",
-      addonsDetails: [
-        { title: "Drone", description: "Sky drone for aerial shots" },
-        { title: "Lighting Setup", description: "Professional lighting setup" },
-      ],
-    },
-  ];
   const [selectedImage, setSelectedImage] = useState(null);
   useEffect(() => {
     if (images && images.length > 0) {
@@ -118,6 +100,46 @@ function SinglePackage() {
   const handleImageClick = (image) => {
     setSelectedImage(image);
   };
+  const addTocartHandle = async (defaultPrice, selectedsession, addOns) => {
+    try {
+      console.log(defaultPrice, selectedsession);
+
+      const formData = new FormData();
+      formData.append("serviceId", serviceId);
+      formData.append("packageId", packageId);
+      formData.append("defaultPrice", defaultPrice);
+      formData.append("selectedSessions", JSON.stringify(selectedsession));
+      formData.append("addons", addOns);
+
+      const response = await addToCartApi.callApi(userId, formData);
+
+      if (!response) {
+        console.error("Failed to add to cart: No response from the API.");
+        return;
+      }
+
+      // Fetch updated cart
+      const cartResponse = await dispatch(fetchUserCart(userId));
+      if (!cartResponse || cartResponse.length === 0) {
+        console.log("Server response is empty. No cart items fetched.");
+      }
+      toast.success("Item Added To Cart");
+    } catch (error) {
+      console.error("An error occurred while adding to cart:", error);
+    }
+  };
+
+  const isPackageInCart = (cart, serviceId, packageId) => {
+    return setPackageIncartStatus(
+      cart?.items?.some(
+        (item) => item?.serviceId === serviceId && item?.packageId === packageId
+      )
+    );
+  };
+
+  useEffect(() => {
+    isPackageInCart(cart, serviceId, packageId);
+  }, [serviceId, packageId, cart]);
 
   return (
     <motion.div
@@ -132,7 +154,7 @@ function SinglePackage() {
     >
       <div
         className=" flex justify-center items-start flex-col"
-        style={{ flex: "0.4" }}
+        style={{ flex: "0.35" }}
       >
         <ImageNavigationCard
           mediaUrls={images}
@@ -154,7 +176,11 @@ function SinglePackage() {
         style={{ flex: "0.32" }}
       >
         <ServiceDetailCard
-          title={singlePageData?.services?.[0]?.values?.Title}
+          title={
+            singlePageData?.services?.[0]?.values?.Title ||
+            singlePageData?.services?.[0]?.values?.VenueName ||
+            singlePageData?.services?.[0]?.values?.FoodTruckName
+          }
           category={packageCategory.category}
           rating={0}
           reviews={0}
@@ -172,6 +198,8 @@ function SinglePackage() {
             singlePageData?.services?.[0]?.values?.["Duration&Pricing"]?.[0]
               ?.Amount ||
             singlePageData?.services?.[0]?.values?.["SessionLength"]?.[0]
+              ?.Amount ||
+            singlePageData?.services?.[0]?.values?.["SessionLength&Pricing"]?.[0]
               ?.Amount ||
             singlePageData?.services?.[0]?.values?.["QtyPricing"]?.[0]?.Rates
           }
@@ -203,6 +231,8 @@ function SinglePackage() {
           addonsDetails={""}
           bio={vendorProfile.bio}
           renderPrice={singlePageData?.services?.[0]?.values}
+          addTocart={addTocartHandle}
+          packageIncart={packageIncartStatus}
         />
       </div>
     </motion.div>

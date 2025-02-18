@@ -47,10 +47,18 @@ const userApi = {
     apiService.post(apiEndpoints.user.addUserAdress(userId), formData),
   getOneAddress: (addressId) =>
     apiService.get(apiEndpoints.user.getOneAddress(addressId)),
-  updateOneAddress: (addressId,formData) =>
-    apiService.put(apiEndpoints.user.updateOneAddress(addressId),formData),
+  updateOneAddress: (addressId, formData) =>
+    apiService.put(apiEndpoints.user.updateOneAddress(addressId), formData),
   deleteOneAddress: (addressId) =>
     apiService.delete(apiEndpoints.user.deleteOneAddress(addressId)),
+  getUserAllAddress: (userId) =>
+    apiService.get(apiEndpoints.user.getUserAllAddress(userId)),
+  selectOneUserAddress: (userId, addressId) =>
+    apiService.post(apiEndpoints.user.selectOneUserAddress(userId, addressId)),
+  addPackageToUserCart: (userId, formData) =>
+    apiService.post(apiEndpoints.user.addToCart(userId), formData),
+  getUserCart: (userId) =>
+    apiService.get(apiEndpoints.user.getUserCart(userId)),
 };
 
 export default userApi;

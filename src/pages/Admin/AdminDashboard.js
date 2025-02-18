@@ -16,6 +16,13 @@ import {
   addUser,
   totalUserCount,
 } from "../../context/redux/slices/adminActionsSlice";
+import BannerTable from "../../components/Admin/BannerTable";
+import CouponsTable from "../../components/Admin/CouponsTable";
+import FeeBreakdownbyCategory from "../../components/Admin/FeeBreakdownbyCategory";
+import GstTable from "../../components/Admin/GstTable";
+import WaitlistTable from "../../components/Admin/waitlistTable";
+import FeedbackForm from "../../components/Forms/FeedbackForm";
+import FeedbackTable from "../../components/Admin/FeedbackTable";
 import CategoriesAndSubCategoriesSection from "../../components/Admin/CategoriesAndSubCategoriesSection";
 
 const AdminDashboard = () => {
@@ -39,6 +46,21 @@ const AdminDashboard = () => {
     dispatch(addUser(response?.data));
     dispatch(totalUserCount(response?.count));
   };
+  const [term, setTerm] = useState("");
+
+  const handleSearch = (e) => {
+    setTerm(e.target.value);
+  };
+  useEffect(() => {
+    if (
+      !["Vendor", "vendorServiceAccess", "VendorDocumentVerification"].includes(
+        selectedMenu
+      )
+    ) {
+      setTerm("");
+    }
+  }, [selectedMenu]);
+
   useEffect(() => {
     if (selectedMenu === "Client") handleGetAllUser();
   }, [selectedMenu]);
@@ -73,7 +95,6 @@ const AdminDashboard = () => {
       dispatch(fetchAdminDetails(auth.userId));
     }
   }, [dispatch, auth.userId]);
-  console.log(selectedMenu, "selectedMenu");
 
   return (
     <div className="flex h-auto bg-gray-100">
@@ -87,6 +108,8 @@ const AdminDashboard = () => {
             <input
               type="text"
               placeholder="Search"
+              value={term}
+              onChange={handleSearch}
               className="border border-gray-300 rounded-lg py-2 px-4 w-72 focus:outline-none focus:ring-2 focus:ring-purple-600"
             />
           </div>
@@ -120,13 +143,17 @@ const AdminDashboard = () => {
                 onMenuSelect={handleMenuSelect}
                 selectedVendor={selectedVendor}
                 setSelectedVendor={handleVendorSelect}
+                term={term}
               />
             </div>
           </>
         )}
         {selectedMenu === "VendorDocumentVerification" && (
           <div className="bg-white shadow rounded-lg">
-            <AdminVendorProfileViewer vendorId={selectedVendor?._id} />
+            <AdminVendorProfileViewer
+              vendorId={selectedVendor?._id}
+              onMenuSelect={handleMenuSelect}
+            />
           </div>
         )}
 
@@ -172,6 +199,14 @@ const AdminDashboard = () => {
             </div>
           </>
         )}
+        {selectedMenu === "Banner" && <BannerTable />}
+        {selectedMenu === "Coupons" && <CouponsTable />}
+        {selectedMenu === "Fee Breakdown by Category" && (
+          <FeeBreakdownbyCategory />
+        )}
+        {selectedMenu === "Gst by Category" && <GstTable />}
+        {selectedMenu === "Feedback" && <FeedbackTable />}
+        {selectedMenu === "Waitlist" && <WaitlistTable />}
       </div>
     </div>
   );

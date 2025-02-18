@@ -1,103 +1,150 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaFilter, FaSort } from "react-icons/fa";
 import AdminVendorTableModal from "./AdminVendorTableModal";
 import { fetchAllVendorsWithProfileStatusAndService } from "../../context/redux/slices/adminActionsSlice";
 import { Pagination, Stack } from "@mui/material";
+import useDebounce from "../../utils/useDebounce";
 
-const VendorTable = ({ onMenuSelect, selectedVendor, setSelectedVendor }) => {
-  const style={
-
-      '& .Mui-selected': {
-        backgroundColor: '#6A1B9A !important',
-        color: 'white',
+const VendorTable = memo(
+  ({ onMenuSelect, selectedVendor, setSelectedVendor, term }) => {
+    const style = {
+      "& .Mui-selected": {
+        backgroundColor: "#6A1B9A !important",
+        color: "white",
       },
+    };
+    const dispatch = useDispatch();
+    const debounce = useDebounce(term);
+    const {
+      vendors,
+      totalNumberOfVendors,
+      totalNumberOfPageVendor,
+      status,
+      error,
+    } = useSelector((state) => state.adminActions);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showFilter, setShowFilter] = useState(false);
+    const [selectedFilter, setSelectedFilter] = useState("All Vendors");
 
-    
+    const handleFilterClick = () => {
+      setShowFilter((prev) => !prev);
+    };
 
-  }
-  const dispatch = useDispatch();
-  const { vendors, totalNumberOfVendors, status, error } = useSelector(
-    (state) => state.adminActions
-  );
-  const [isModalOpen, setIsModalOpen] = useState(false); // Control modal visibility
+    const handleFilterSelect = (filter) => {
+      setSelectedFilter(filter);
+      setShowFilter(false);
+    };
+    const handleViewDetails = (vendor) => {
+      setSelectedVendor(vendor);
+      setIsModalOpen(true);
+    };
 
-  // Fetch vendor data from Redux store
-  useEffect(() => {
-    dispatch(fetchAllVendorsWithProfileStatusAndService());
-  }, [dispatch]);
+    const handleCloseModal = () => {
+      setIsModalOpen(false);
+      setSelectedVendor(null);
+    };
+    const [page, setPage] = useState(1);
+    const [count, setCount] = useState(0);
 
-  // Open modal with vendor details
-  const handleViewDetails = (vendor) => {
-    setSelectedVendor(vendor);
-    setIsModalOpen(true);
-  };
+    useEffect(() => {
+      setCount(Math.ceil(totalNumberOfPageVendor));
+    }, [vendors]);
+    const handlePageChange = (event, value) => {
+      setPage(value);
+    };
+    const handleSearchAndPageChangeHandle = () => {
+      dispatch(
+        fetchAllVendorsWithProfileStatusAndService({
+          queryPage: page,
+          searchTerm: debounce,
+          filter:selectedFilter
+        })
+      );
+    };
+    useEffect(() => {
+      handleSearchAndPageChangeHandle();
+    }, [dispatch, page, debounce,selectedFilter]);
 
-  // Close modal
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedVendor(null);
-  };
-  const [page, setPage] = useState(1);
-  const [count, setCount] = useState(0);
-  const itemsPerPage = 10;
+    if (status === "loading") {
+      return <div className="text-center py-10">Loading vendor data...</div>;
+    }
 
-  // Update the total pages count whenever the product array changes
-  useEffect(() => {
-    setCount(Math.ceil(vendors?.length / itemsPerPage)); // Use Math.ceil for better accuracy
-  }, [vendors]);
-  const handlePageChange = (event, value) => {
-    setPage(value);
-  };
+    if (status === "failed") {
+      return <div className="text-center py-10">Error: {error}</div>;
+    }
+    return (
+      <div className="w-full px-6 py-4 bg-white shadow-md rounded-lg">
+        {/* Header Section */}
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-bold">Vendors</h2>
+          <div className="flex gap-4 items-center">
+            {/* Filter Button */}
+            <div className="relative">
+              <button
+                onClick={handleFilterClick}
+                className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-highlightYellowPrimary hover:text-primary"
+              >
+                <FaFilter />
+                {selectedFilter}
+              </button>
 
-  if (status === "loading") {
-    return <div className="text-center py-10">Loading vendor data...</div>;
-  }
+              {/* Dropdown */}
+              {showFilter && (
+                <div className="absolute top-full mt-2 left-0 w-48 bg-white shadow-lg rounded-lg border">
+                  <ul className="divide-y divide-gray-200">
+                    <li
+                      className="p-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => handleFilterSelect("All Vendors")}
+                    >
+                      All Vendors
+                    </li>
+                    <li
+                      className="p-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => handleFilterSelect("Verified Vendors")}
+                    >
+                      Verified Vendors
+                    </li>
+                    <li
+                      className="p-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => handleFilterSelect("Registered Vendors")}
+                    >
+                      Registered Vendors
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
 
-  if (status === "failed") {
-    return <div className="text-center py-10">Error: {error}</div>;
-  }
-  return (
-    <div className="w-full px-6 py-4 bg-white shadow-md rounded-lg">
-      {/* Header Section */}
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold">Vendors</h2>
-        <div className="flex gap-4 items-center">
-          <button
-            className="flex items-center gap-2 bg-primary
-           text-white px-4 py-2 rounded-lg hover:bg-highlightYellowPrimary hover:text-primary"
-          >
-            <FaFilter />
-            Filter
-          </button>
-          <button className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-highlightYellowPrimary hover:text-primary">
-            <FaSort />
-            Sort By
-          </button>
+            {/* Sort Button */}
+            <button className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-highlightYellowPrimary hover:text-primary">
+              <FaSort />
+              Sort By
+            </button>
+          </div>
         </div>
-      </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="table-auto w-full ">
-          <thead className="  ">
-            <tr className="bg-primary text-white">
-              <th className=" font-normal  px-4 py-2 rounded-s-md">No</th>
-              <th className="font-normal px-4 py-2">Name of Vendor</th>
-              <th className="font-normal px-4 py-2">Category</th>
-              <th className="font-normal px-4 py-2">Profile Status</th>
-              <th className="font-normal px-4 py-2">Contact Number</th>
-              <th className="font-normal px-4 py-2">No. of Services</th>
-              <th className="font-normal px-4 py-2 rounded-e-md">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {vendors
-              ?.slice((page - 1) * 10, (page - 1) * 10 + 10)
-              .map((vendor, index) => (
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full ">
+            <thead className="  ">
+              <tr className="bg-primary text-white">
+                <th className=" font-normal  px-4 py-2 rounded-s-md">No</th>
+                <th className="font-normal px-4 py-2">Name of Vendor</th>
+                <th className="font-normal px-4 py-2">UserName</th>
+                <th className="font-normal px-4 py-2">Category</th>
+                <th className="font-normal px-4 py-2">Profile Status</th>
+                <th className="font-normal px-4 py-2">Contact Number</th>
+                <th className="font-normal px-4 py-2">No. of Services</th>
+                <th className="font-normal px-4 py-2 rounded-e-md">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {vendors?.map((vendor, index) => (
                 <tr key={index} className="text-center">
                   <td className="  px-4 py-2">{index + 1}</td>
                   <td className="  px-4 py-2">{vendor.name}</td>
+                  <td className="  px-4 py-2">{vendor.userName}</td>
                   <td className="  px-4 py-2">
                     {vendor?.businessDetails?.categoriesOfServices[0]
                       ?.category[0]?.name
@@ -116,9 +163,11 @@ const VendorTable = ({ onMenuSelect, selectedVendor, setSelectedVendor }) => {
                         : "text-red-500"
                     }`}
                   >
-                    {vendor.profileCompletion === 100
-                      ? "Complete"
-                      : "Incomplete"}
+                    {!vendor.verificationStatus ? (
+                      <p>Not Verified</p>
+                    ) : (
+                      <p className="text-primary">Verified</p>
+                    )}
                   </td>
                   <td className="  px-4 py-2">{vendor.phoneNumber}</td>
                   <td className="  px-4 py-2">{vendor.numberOfServices}</td>
@@ -132,51 +181,52 @@ const VendorTable = ({ onMenuSelect, selectedVendor, setSelectedVendor }) => {
                   </td>
                 </tr>
               ))}
-          </tbody>
-        </table>
-        <div className="flex items-center justify-center w-full py-3">
-          <Stack spacing={2}>
-            <Pagination
-              count={count}
-              page={page}
-              onChange={handlePageChange}
-              sx={style}
-            />
-          </Stack>
-        </div>
-      </div>
-
-      {/* CustomModal for Viewing Vendor Details */}
-      <AdminVendorTableModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        title=""
-      >
-        {selectedVendor && (
-          <div className=" flex justify-center items-center gap-5">
-            <button
-              className=" btn-primary"
-              onClick={(e) => {
-                e.preventDefault();
-                onMenuSelect("vendorServiceAccess");
-              }}
-            >
-              Vendor Services
-            </button>
-            <button
-              className=" btn-primary"
-              onClick={(e) => {
-                e.preventDefault();
-                onMenuSelect("VendorDocumentVerification");
-              }}
-            >
-              Document Verification
-            </button>
+            </tbody>
+          </table>
+          <div className="flex items-center justify-center w-full py-3">
+            <Stack spacing={2}>
+              <Pagination
+                count={count}
+                page={page}
+                onChange={handlePageChange}
+                sx={style}
+              />
+            </Stack>
           </div>
-        )}
-      </AdminVendorTableModal>
-    </div>
-  );
-};
+        </div>
+
+        {/* CustomModal for Viewing Vendor Details */}
+        <AdminVendorTableModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          title=""
+        >
+          {selectedVendor && (
+            <div className=" flex justify-center items-center gap-5">
+              <button
+                className=" btn-primary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onMenuSelect("vendorServiceAccess");
+                }}
+              >
+                Vendor Services
+              </button>
+              <button
+                className=" btn-primary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onMenuSelect("VendorDocumentVerification");
+                }}
+              >
+                Document Verification
+              </button>
+            </div>
+          )}
+        </AdminVendorTableModal>
+      </div>
+    );
+  }
+);
 
 export default VendorTable;

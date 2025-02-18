@@ -39,23 +39,23 @@ function ProductCard({
         console.error(error);
       }
     } else {
-      toast.info("You need to log in first to add items to the wishlist.");
+      toast.warning("You need to log in first to add items to the wishlist.");
     }
   };
 
   return (
-    <div className="min-w-[295px] min-h-[356px] border rounded-lg bg-white overflow-hidden">
-      <div className="w-full h-[247px]" onClick={onClick}>
+    <div className="min-w-[250px] min-h-[340px] border rounded-lg bg-white overflow-hidden">
+      <div className="w-full h-[220px]" onClick={onClick}>
         <img
           src={popularimage}
           alt={title}
-          className="w-full h-full rounded-t-md "
+          className="w-full h-full aspect-[4/5] object-cover rounded-t-md "
         />
       </div>
       <div className="p-2">
         <div className="flex justify-between items-center" onClick={onClick}>
           <div className="w-[82%] flex flex-col justify-start">
-            <span className="text-[18px] font-semibold text-primary">
+            <span className="text-normal font-medium text-primary">
               {title}
             </span>
             <span className="text-sm text-gray-600 mt-1">{category}</span>

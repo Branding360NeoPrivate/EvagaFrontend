@@ -46,11 +46,27 @@ function VendorCreateService() {
 
   const dispatch = useDispatch();
   const history = useNavigate();
+  const CHUNK_SIZE = 5 * 1024 * 1024;
+
+  const uploadChunk = async (formData, chunkIndex) => {
+    // use this later
+    try {
+      const response = await addNewService.callApi(
+        Cookies.get("userId"),
+        formData
+      );
+      console.log(`Chunk ${chunkIndex} uploaded successfully`, response);
+      return response;
+    } catch (error) {
+      console.error(`Failed to upload chunk ${chunkIndex}`, error);
+      throw error;
+    }
+  };
+
   const addNewServiceHandle = async () => {
     try {
       if (!abouttheService.trim()) {
         toast.error("Please fill in the 'About the Service' field.");
-        return;
         return;
       }
 
@@ -60,7 +76,6 @@ function VendorCreateService() {
         yearofExperience <= 0
       ) {
         toast.error("Please enter a valid 'Year(s) of Experience'.");
-        return;
         return;
       }
       setLoading(true);
@@ -347,7 +362,6 @@ function VendorCreateService() {
           }
         });
       });
-      console.log(services, "service");
 
       const response = await addNewService.callApi(userId, formData);
       toast.success(response?.message);
@@ -358,6 +372,7 @@ function VendorCreateService() {
       toast.error("Failed to Get Form Value. Please try again.");
     }
   };
+
   useEffect(() => {
     if (categories.length === 0) {
       dispatch(fetchCategories());
@@ -438,25 +453,25 @@ function VendorCreateService() {
     }
   };
   const handleAddPInHouseCateringPackage = (groupIndex) => {
-    console.log(groupIndex, 'groupIndex');
-  
+    console.log(groupIndex, "groupIndex");
+
     setInHouseCateringPackageDataData((prev) => {
       // Ensure the group exists
       const newData = [...prev];
       if (!newData[groupIndex]) {
         newData[groupIndex] = []; // Initialize the group if it doesn't exist
       }
-  
+
       // Add the new package to the target group
       newData[groupIndex] = [
         ...newData[groupIndex],
         { id: Date.now(), saved: false, data: null },
       ];
-  
+
       return newData;
     });
   };
-  
+
   const handleRemoveForm = (index) => {
     console.log(index, formInstances);
     setFormInstances((prev) => {
@@ -469,8 +484,6 @@ function VendorCreateService() {
   const handleCreateService = () => {
     // const savedData = JSON.parse(localStorage.getItem("savedFormData")) || [];
     // console.log("Submitting Service with Data:", savedData);
-    console.log("Filled Data:", filedFormData);
-    console.log("updatedInstance:", formInstances, formInstances.length);
   };
 
   // Master Venue Modal Functionality
@@ -487,11 +500,6 @@ function VendorCreateService() {
   const handleClosInHouseCateringeMasterVenueModal = () => {
     setOpenInHouseCateringModal(false);
   };
-  useEffect(() => {
-    console.log("formInstances:", formInstances);
-    console.log("inHouseCateringPackageData:", inHouseCateringPackageData);
-    console.log("allFormsSaved:", allFormsSaved);
-  }, [formInstances, inHouseCateringPackageData]);
 
   const allFormsSaved = inhouseCategoringOrBoth
     ? formInstances.every((form) => form.saved) &&
@@ -501,7 +509,9 @@ function VendorCreateService() {
   return (
     <div className="w-full flex items-center justify-center flex-col gap-4 my-4 relative">
       <div className="w-11/12 flex items-start justify-start flex-col">
-        <h6 className="text-primary text-base font-medium">Create New Service</h6>
+        <h6 className="text-primary text-base font-medium">
+          Create New Service
+        </h6>
 
         <div className="w-full flex items-start justify-start flex-col border-2 border-textLightGray rounded-lg py-4 px-[5%] gap-4">
           <div className="w-full gap-4 grid grid-cols-1 cursor-pointer">
@@ -590,7 +600,9 @@ function VendorCreateService() {
         )}
       </div>
       <div className="w-11/12 flex items-start justify-start flex-col">
-        <h6 className="text-primary text-base font-semibold">Create Package(s)</h6>
+        <h6 className="text-primary text-base font-semibold">
+          Create Package(s)
+        </h6>
         {formInstances.map((form, index) => (
           <div className="w-full flex items-start justify-start flex-col border-2 border-textLightGray rounded-lg py-4 px-[5%] gap-4">
             <div key={form.id} className="mb-4">

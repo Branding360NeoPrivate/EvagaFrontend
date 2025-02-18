@@ -12,10 +12,8 @@ export const fetchBanner = createAsyncThunk(
   "banner/fetchBanner",
   async (_, { rejectWithValue }) => {
     try {
-      console.log("hittig  for banner:");
       const response = await commonApis.getAllBanner();
-      console.log("response for banner:", response);
-      return response.data;
+      return response.data?.banners;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -25,9 +23,7 @@ export const fetchUserBanner = createAsyncThunk(
   "banner/fetchUserBanner",
   async (_, { rejectWithValue }) => {
     try {
-      console.log("hittig  for banner:");
       const response = await commonApis.getUserBanner();
-      console.log("response for banner:", response);
       return response.data?.banners;
     } catch (error) {
       return rejectWithValue(error.message);

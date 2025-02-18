@@ -1,10 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
-import SearchableCategoryAndSubcategoryDropdown from "../../components/Inputs/SearchableCategoryAndSubcategoryDropdown";
+import React, { useEffect, useState } from "react";
 import useServices from "../../hooks/useServices";
 import vendorApi from "../../services/vendorApi";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import DynamicForm from "../../components/Forms/DynamicForm";
 import EditDynamicForm from "../../components/Forms/EditDynamicForm";
 import { toast } from "react-toastify";
 
@@ -23,7 +21,6 @@ function VendorEditService() {
   const [menuFeilds, setMenuFeilds] = useState([]);
   const [selectedCatgeory, setSelectedCategory] = useState();
   const [selectedSubCatgeory, setSelectedSubCategory] = useState();
-  const { categories, subCategories } = useSelector((state) => state.category);
   const [inHouseCateringPackageData, setInHouseCateringPackageDataData] =
     useState([]);
   const [selectedFormId, setselectedFormId] = useState();
@@ -68,23 +65,28 @@ function VendorEditService() {
         toast.error("Please fill in the 'About the Service' field.");
         return;
       }
-  
-      if (!yearofExperience.trim() || isNaN(yearofExperience) || yearofExperience <= 0) {
+
+      if (
+        !yearofExperience.trim() ||
+        isNaN(yearofExperience) ||
+        yearofExperience <= 0
+      ) {
         toast.error("Please enter a valid 'Year(s) of Experience'.");
         return;
       }
-  
+
       setLoading(true);
-  
+
       // Initialize FormData
       const formData = new FormData();
       formData.append("formTemplateId", selectedFormId);
       formData.append("AbouttheService", abouttheService);
       formData.append("YearofExperience", yearofExperience);
-  
+
       // Prepare services structure
       const services = formInstances.map((service, serviceIndex) => {
-        const correspondingCateringPackages = inHouseCateringPackageData[serviceIndex] || [];
+        const correspondingCateringPackages =
+          inHouseCateringPackageData[serviceIndex] || [];
         return {
           values: service.data || [],
           menuTemplateId: menuFeilds?._id,
@@ -95,10 +97,10 @@ function VendorEditService() {
           ),
         };
       });
-  
+
       // Append services JSON string
       formData.append("services", JSON.stringify(services));
-  
+
       // Helper function to process file-specific fields
       const processFileFields = (key, value, serviceIndex) => {
         if (Array.isArray(value)) {
@@ -115,11 +117,11 @@ function VendorEditService() {
           formData.append(`${key}_${serviceIndex}`, value);
         }
       };
-  
+
       // Process each service and append only file-related fields
       services.forEach((service, serviceIndex) => {
         const values = service.values;
-  
+
         values.forEach((value) => {
           switch (value.key) {
             case "CoverImage":
@@ -130,48 +132,63 @@ function VendorEditService() {
             case "ProductImage":
               processFileFields(value.key, value.items, serviceIndex);
               break;
-  
+
             case "Portfolio":
               if (value.items && typeof value.items === "object") {
                 // Handle Portfolio photos
                 if (Array.isArray(value.items.photos)) {
                   value.items.photos.forEach((photo, photoIndex) => {
                     if (photo instanceof File) {
-                      formData.append(`Portfolio_photos_${serviceIndex}_${photoIndex}`, photo);
+                      formData.append(
+                        `Portfolio_photos_${serviceIndex}_${photoIndex}`,
+                        photo
+                      );
                     } else if (typeof photo === "string") {
-                      formData.append(`Portfolio_photos_${serviceIndex}_${photoIndex}`, photo);
+                      formData.append(
+                        `Portfolio_photos_${serviceIndex}_${photoIndex}`,
+                        photo
+                      );
                     }
                   });
                 }
-  
+
                 // Handle Portfolio videos
                 if (Array.isArray(value.items.videos)) {
                   value.items.videos.forEach((video, videoIndex) => {
                     if (video instanceof File) {
-                      formData.append(`Portfolio_videos_${serviceIndex}_${videoIndex}`, video);
+                      formData.append(
+                        `Portfolio_videos_${serviceIndex}_${videoIndex}`,
+                        video
+                      );
                     } else if (typeof video === "string") {
-                      formData.append(`Portfolio_videos_${serviceIndex}_${videoIndex}`, video);
+                      formData.append(
+                        `Portfolio_videos_${serviceIndex}_${videoIndex}`,
+                        video
+                      );
                     }
                   });
                 }
               }
               break;
-  
+
             default:
               // Skip non-file fields like Title, Price, etc.
               console.log(`Skipping non-file field: ${value.key}`);
           }
         });
       });
-  
+
       // Debugging FormData content
       for (let pair of formData.entries()) {
         console.log(`${pair[0]}:`, pair[1]);
       }
-  
+
       // API call to update service
-      const response = await updateVendorServiceApi.callApi(serviceId, formData);
-  
+      const response = await updateVendorServiceApi.callApi(
+        serviceId,
+        formData
+      );
+
       setLoading(false);
       console.log(response);
       toast.success("Service updated successfully!");
@@ -191,9 +208,6 @@ function VendorEditService() {
   const handleRemoveForm = (index) => {
     setFormInstances((prev) => prev.filter((_, i) => i !== index));
   };
-console.log(formInstances.length,'formInstances.length');
-
-
   useEffect(() => {
     handleGetOneServiceWithId();
   }, [serviceId]);
@@ -274,7 +288,7 @@ console.log(formInstances.length,'formInstances.length');
       setFormInstances(initialInstances);
     }
   }, [serviceValue, formFeilds?.fields]);
-  
+
   return (
     <div className="w-full flex items-center justify-center flex-col gap-4 my-4 relative">
       <div className="w-11/12 flex items-start justify-start flex-col gap-2">
@@ -347,7 +361,7 @@ console.log(formInstances.length,'formInstances.length');
                 setOpenMasterVenueModal={setOpenMasterVenueModal}
               />
 
-              {form.saved && formInstances.length >1 && (
+              {form.saved && formInstances.length > 1 && (
                 <button
                   className="btn-danger mt-2"
                   onClick={() => handleRemoveForm(index)}

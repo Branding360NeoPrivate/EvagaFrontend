@@ -36,7 +36,10 @@ const ReusableModal = ({
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style} className={" sm:w-[90%] md:w-[80%] lg:w-[50%]"}>
+        <Box
+          sx={style}
+          className={`sm:w-[90%] md:w-[80%] lg:w-[${width}|| 45%]`}
+        >
           <h2 className="text-xl font-semibold text-primary mb-4">{title}</h2>
           {children}
         </Box>

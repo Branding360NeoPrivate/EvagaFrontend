@@ -3,7 +3,7 @@ import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import Banner from "../Banner/Banner";
 
-function Slider({ bannerData }) {
+function Slider({ bannerData,height }) {
   const responsive = {
     0: {
       items: 1,
@@ -30,7 +30,7 @@ function Slider({ bannerData }) {
           key={item?.BannerId}
           image={item?.BannerUrl}
           category={item?.categoryId}
-          height={'20rem'}
+          height={height}
         />
       ))}
     </AliceCarousel>

@@ -12,6 +12,7 @@ function Banner({ image, height, category }) {
     navigate(`/search?${query}`);
   };
 
+
   return (
     <div className="w-full">
       <img
@@ -20,7 +21,7 @@ function Banner({ image, height, category }) {
         }
         alt="Banner"
         className={
-          height ? `object-fill w-full h-[${height}]` :
+          height ? `object-fill w-full h-[16rem]` :
           "object-fill w-full "
         }
         onClick={category ? () => handleSearch() : undefined}

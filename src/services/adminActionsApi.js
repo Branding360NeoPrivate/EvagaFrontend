@@ -2,10 +2,16 @@ import apiEndpoints from "./apiEndpoints";
 import apiService from "./apiService";
 
 const adminActionsApi = {
-  getAllVendorsWithProfileStatusAndService: () =>
+  getAllVendorsWithProfileStatusAndService: ({ queryPage, searchTerm,filter }) =>
     apiService.get(
-      apiEndpoints.adminActions.getAllVendorsWithProfileStatusAndService
+      apiEndpoints.adminActions.getAllVendorsWithProfileStatusAndService,
+      {
+        page: queryPage,
+        search: searchTerm,
+        filter:filter
+      }
     ),
+
   verifyVendorDocument: (documentId) =>
     apiService.post(apiEndpoints.adminActions.verifyVendorDocument(documentId)),
   updateVendorBankDetailsByAdmin: (vendorID, formData) =>
@@ -38,6 +44,61 @@ const adminActionsApi = {
         },
       }
     ),
+  addBanner: (formData) =>
+    apiService.post(apiEndpoints.adminActions.addBanner, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
+  getOneBanner: (bannerId) =>
+    apiService.get(apiEndpoints.adminActions.getOneBanner(bannerId)),
+  editBanner: (bannerId, formData) =>
+    apiService.post(apiEndpoints.adminActions.editBanner(bannerId), formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
+
+  deleteBanner: (bannerId) =>
+    apiService.delete(apiEndpoints.adminActions.deleteBanner(bannerId)),
+  getAllCoupons: () => apiService.get(apiEndpoints.adminActions.getAllCoupons),
+  addCoupons: (formData) =>
+    apiService.post(apiEndpoints.adminActions.addCoupons, formData),
+  getOneCoupons: (couponId) =>
+    apiService.get(apiEndpoints.adminActions.getOneCoupons(couponId)),
+  editOneCoupons: (couponId, formData) =>
+    apiService.put(
+      apiEndpoints.adminActions.editOneCoupons(couponId),
+      formData
+    ),
+  deleteOneCoupons: (couponId) =>
+    apiService.delete(apiEndpoints.adminActions.deleteOneCoupons(couponId)),
+  getAllCategoryFees: () =>
+    apiService.get(apiEndpoints.adminActions.getAllCategoryFees),
+  addCategoryFees: (formData) =>
+    apiService.post(apiEndpoints.adminActions.addCategoryFees, formData),
+  getOneFees: (feeId) =>
+    apiService.get(apiEndpoints.adminActions.getOneFees(feeId)),
+  editOneFees: (feeId, formData) =>
+    apiService.put(apiEndpoints.adminActions.editOneFees(feeId), formData),
+  deleteOneFees: (feeId) =>
+    apiService.delete(apiEndpoints.adminActions.deleteOneFees(feeId)),
+  getVendorByNameOrUserName: (formData) =>
+    apiService.post(
+      apiEndpoints.adminActions.getVendorByNameOrUserName,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    ),
+  verifyVendorprofileByAdmin: (vendorId) =>
+    apiService.post(apiEndpoints.adminActions.verifyVendorprofile(vendorId)),
+  getAllCategoryGstFees: (vendorId) =>
+    apiService.get(apiEndpoints.adminActions.getAllCategoryGstFees),
+  addCategoryGstFees: (formData) =>
+    apiService.post(apiEndpoints.adminActions.addCategoryGstFees, formData),
 };
 
 export default adminActionsApi;
