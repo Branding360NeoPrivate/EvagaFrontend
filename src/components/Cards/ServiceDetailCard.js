@@ -140,7 +140,7 @@ function ServiceDetailCard({
       </div>
 
       {/* Event */}
-      {keysToRender.map((key, index) => {
+      {keysToRender?.map((key, index) => {
         const value = DataToRender?.[key];
 
         if (Array.isArray(value) && value.length > 0) {
