@@ -54,12 +54,12 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
                   src={process.env.REACT_APP_API_Aws_Image_BASE_URL + url}
                   alt={`Thumbnail ${index + 1}`}
                   className="w-[80px] h-[60px] object-cover rounded-md border-2 border-transparent hover:scale-110 hover:border-blue-500 transition-transform duration-200"
-                  onClick={() => onMediaClick(url)}
+                  onClick={() => [onMediaClick(url), setIsModalOpen(true)]}
                 />
               ) : (
                 <div
                   className="relative w-[80px] h-[60px] object-cover rounded-md border-2 border-transparent hover:scale-110 hover:border-blue-500 transition-transform duration-200"
-                  onClick={() => onMediaClick(url)}
+                  onClick={() => [onMediaClick(url), setIsModalOpen(true)]}
                 >
                   <img
                     src={videoThumbnil}
@@ -89,6 +89,7 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
             selectedUrl={
               process.env.REACT_APP_API_Aws_Image_BASE_URL + selectedUrl
             }
+            
           />
         )}
       </div>
