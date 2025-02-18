@@ -160,6 +160,8 @@ function Home() {
                       ?.Amount ||
                     service.serviceDetails?.values?.["SessionLength"]?.[0]
                       ?.Amount ||
+                    service.serviceDetails?.values?.["SessionLength&Pricing"]?.[0]
+                      ?.Amount ||
                     service.serviceDetails?.values?.["QtyPricing"]?.[0]?.Rates
                   }
                   rating={0}

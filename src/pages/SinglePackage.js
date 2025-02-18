@@ -199,6 +199,8 @@ function SinglePackage() {
               ?.Amount ||
             singlePageData?.services?.[0]?.values?.["SessionLength"]?.[0]
               ?.Amount ||
+            singlePageData?.services?.[0]?.values?.["SessionLength&Pricing"]?.[0]
+              ?.Amount ||
             singlePageData?.services?.[0]?.values?.["QtyPricing"]?.[0]?.Rates
           }
           eventData={singlePageData?.services?.[0]?.values?.EventType}
