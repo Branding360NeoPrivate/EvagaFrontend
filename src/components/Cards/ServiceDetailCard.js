@@ -80,8 +80,7 @@ function ServiceDetailCard({
       toast.info("You need to log in first to add items to the wishlist.");
     }
   };
- 
-  
+
   return (
     <div className="  bg-white p-4 w-full max-w-3xl">
       {/* Header */}
@@ -179,7 +178,7 @@ function ServiceDetailCard({
           </h3>
           <hr style={{ margin: "0.3rem 0" }} />
 
-          {parse(tAndC ? tAndC : "")}
+          <div className="terms-conditions">{parse(tAndC ? tAndC : "")}</div>
         </div>
       </div>
     </div>
