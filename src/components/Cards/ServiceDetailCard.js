@@ -44,6 +44,12 @@ function ServiceDetailCard({
     "MenuBreakUp",
     "Description",
     "DurationofStall",
+    "Languages",
+    "LocationType",
+    "LocationTypePreferred",
+    "AudienceInteraction",
+    "StageRequired",
+    "MultipleSets",
   ];
   const iconMapping = {
     "Event Type": event,
@@ -136,11 +142,11 @@ function ServiceDetailCard({
       {/* Event */}
       {keysToRender.map((key, index) => {
         const value = DataToRender?.[key];
-        if (Array.isArray(value) && value.length > 0) {
-          console.log(value, key);
 
+        if (Array.isArray(value) && value.length > 0) {
+          // If value is an array, render as a list
           return (
-            <div className="flex gap-4 items-start justify-start">
+            <div className="flex gap-4 items-start justify-start" key={index}>
               <span className="bg-textLightGray p-2 rounded-[50%]">
                 <img
                   src={iconMapping[key]}
@@ -149,22 +155,37 @@ function ServiceDetailCard({
                 />
               </span>
               <div className="mb-4 w-full">
-                <h3 className="text-xl font-meduim text-primary">{key}</h3>
+                <h3 className="text-xl font-medium text-primary">{key}</h3>
                 <hr style={{ margin: "0.3rem 0" }} />
                 <div className="flex gap-2 mt-1 flex-wrap">
-                  {value?.map((event, index) => (
+                  {value?.map((item, idx) => (
                     <span
-                      key={index}
+                      key={idx}
                       className="bg-gray-200 text-textGray text-sm px-3 py-1 rounded-md"
                     >
-                      {event}
+                      {item}
                     </span>
                   ))}
                 </div>
               </div>
             </div>
           );
+        } else if (typeof value === "string") {
+          // If value is a string, render directly
+          return (
+            <div className="flex gap-4 items-start justify-start" key={index}>
+              <div className="mb-4 w-full flex items-center">
+                <h3 className="text-base font-medium text-primary">{key}</h3>
+
+                <span className=" text-textGray text-sm px-3 py-1 rounded-md">
+                  {value}
+                </span>
+              </div>
+            </div>
+          );
         }
+
+        return null; // Return nothing if the value is neither an array nor a string
       })}
 
       {/* Terms & Conditions */}

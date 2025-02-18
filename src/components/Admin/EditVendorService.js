@@ -31,8 +31,8 @@ function EditVendorService({ serviceId }) {
   ) => {
     try {
       setLoading(true);
-      setyearofExperience("");
-      setAbouttheService("");
+      // setyearofExperience("");
+      // setAbouttheService("");
       const response = await selectedCategoryForm.callApi(catId, subCatId);
       setFormFeilds(response?.Form);
       setMenuFeilds(response?.Menu && response?.Menu);
@@ -52,8 +52,8 @@ function EditVendorService({ serviceId }) {
   const handleGetOneServiceWithId = async () => {
     const response = await getOneServiceByid.callApi(serviceId);
     setServiceValue(response && response);
-    setyearofExperience(response && response.YearofExperience);
-    setAbouttheService(response && response.AbouttheService);
+    setyearofExperience(response.YearofExperience && response.YearofExperience);
+    setAbouttheService(response.AbouttheService && response.AbouttheService);
     setSelectedSubCategory(response && response.SubCategory?._id);
     setSelectedCategory(response && response?.Category?._id);
   };
