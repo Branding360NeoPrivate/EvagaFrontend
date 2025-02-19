@@ -152,10 +152,15 @@ const apiEndpoints = {
     validateCoupons: "coupons/",
   },
   order: {
-    createOrder: (userId) => `order/create-order/${userId}`,
+    createOrder: (userId) => `createorder/create-order/${userId}`,
     validateOrder: `validateOrder/validate-order`,
     getpaymentdetailsbyuserid: (orderId) =>
       `getPaymentDetails/get-full-payment-deatils-by-orderId/${orderId}`,
+    getallneworder: `order/new-order`,
+    getallcancelledorder: `order/cancelled-order`,
+    getallongoingorder: `order/ongoing-order`,
+    getallcompleteorder: `order/completed-order`,
+    getallconfirmedorder: `order/confirmed-order`,
   },
 };
 

@@ -23,6 +23,11 @@ import GstTable from "../../components/Admin/GstTable";
 import WaitlistTable from "../../components/Admin/waitlistTable";
 import FeedbackForm from "../../components/Forms/FeedbackForm";
 import FeedbackTable from "../../components/Admin/FeedbackTable";
+import NewOrdertable from "../../components/Admin/NewOrdertable";
+import ConfirmOrder from "../../components/Admin/ConfirmOrder";
+import OngoingOrder from "../../components/Admin/OngoingOrder";
+import CompletedOrder from "../../components/Admin/CompletedOrder";
+import CancelledOrder from "../../components/Admin/CancelledOrder";
 
 const AdminDashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState("Home");
@@ -201,8 +206,13 @@ const AdminDashboard = () => {
           <FeeBreakdownbyCategory />
         )}
         {selectedMenu === "Gst by Category" && <GstTable />}
-        {selectedMenu === "Feedback" && <FeedbackTable/>}
-        {selectedMenu === "Waitlist" && <WaitlistTable/>}
+        {selectedMenu === "Feedback" && <FeedbackTable />}
+        {selectedMenu === "Waitlist" && <WaitlistTable />}
+        {selectedMenu === "New Orders" && <NewOrdertable />}
+        {selectedMenu === "Confirmed Orders" && <ConfirmOrder />}
+        {selectedMenu === "Ongoing Orders" && <OngoingOrder />}
+        {selectedMenu === "Completed Orders" && <CompletedOrder />}
+        {selectedMenu === "Cancelled Orders" && <CancelledOrder />}
       </div>
     </div>
   );

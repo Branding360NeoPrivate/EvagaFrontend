@@ -8,15 +8,24 @@ import {
   FaAngleRight,
   FaAngleLeft,
   FaRegMoneyBillAlt,
+  FaBorderAll,
 } from "react-icons/fa";
 import { RiCoupon3Line } from "react-icons/ri";
 import MainLogo from "../../assets/Temporary Images/Evaga Logo.png";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { useAuth } from "../../context/AuthContext";
-import { FaChevronDown, FaChevronUp, FaRegImage, FaWpforms } from "react-icons/fa6";
+import {
+  FaChevronDown,
+  FaChevronUp,
+  FaFirstOrder,
+  FaFirstOrderAlt,
+  FaRegImage,
+  FaWpforms,
+} from "react-icons/fa6";
+import { GrCompliance } from "react-icons/gr";
 import { motion, AnimatePresence } from "framer-motion";
-import { MdAttachMoney, MdOutlineFeed } from "react-icons/md";
+import { MdAttachMoney, MdBorderClear, MdOutlineFeed } from "react-icons/md";
 const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
   const { logout } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -71,9 +80,37 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
         },
       ],
     },
+    {
+      id: "Orders",
+      label: "Orders",
+      icon: <FaRegMoneyBillAlt />,
+      children: [
+        { id: "New Orders", label: "New Orders", icon: <FaBorderAll /> },
+        {
+          id: "Confirmed Orders",
+          label: "Confirmed Orders",
+          icon: <FaFirstOrder />,
+        },
+        {
+          id: "Ongoing Orders",
+          label: "Ongoing Orders",
+          icon: <FaFirstOrderAlt />,
+        },
+        {
+          id: "Completed Orders",
+          label: "Completed Orders",
+          icon: <GrCompliance  />,
+        },
+        {
+          id: "Cancelled Orders",
+          label: "Cancelled Orders",
+          icon: <MdBorderClear />,
+        },
+      ],
+    },
     { id: "AdminUsers", label: "Admin Users", icon: <FaUserShield /> },
-    { id: "Feedback", label: "Feedback Form", icon: <FaWpforms  /> },
-    { id: "Waitlist", label: "Waitlist", icon: <MdOutlineFeed  /> },
+    { id: "Feedback", label: "Feedback Form", icon: <FaWpforms /> },
+    { id: "Waitlist", label: "Waitlist", icon: <MdOutlineFeed /> },
     { id: "SupportCenter", label: "Support Center", icon: <FaHeadset /> },
   ];
 
