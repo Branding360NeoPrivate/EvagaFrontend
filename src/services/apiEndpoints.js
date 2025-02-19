@@ -84,7 +84,6 @@ const apiEndpoints = {
     addSub: "addSubCategory",
     getSubCategoriesByCategory: (categoryId) =>
       `/getSubCategoriesByCategory/${categoryId}`,
-   
   },
   common: {
     getAllBanner: () => "banner/get-all-banner",
@@ -93,10 +92,10 @@ const apiEndpoints = {
     addBanner: "banner/add-banner",
     updateOneBanner: "banner/update-one-banner/:bannerId",
     deleteOneBanner: "banner/delete-one-banner/:bannerId",
-    addtowaitlist:  `waitlist/add-to-waitlist`,
-    addfeedback:  `feedback/add-feedback`,
-    getallfeedback:  `feedback/get-all-feedback`,
-    getallwaitlist:  `waitlist/get-all-waitlist`,
+    addtowaitlist: `waitlist/add-to-waitlist`,
+    addfeedback: `feedback/add-feedback`,
+    getallfeedback: `feedback/get-all-feedback`,
+    getallwaitlist: `waitlist/get-all-waitlist`,
   },
   admin: {
     register: "admin/registerAdmin",
@@ -154,6 +153,9 @@ const apiEndpoints = {
   },
   order: {
     createOrder: (userId) => `order/create-order/${userId}`,
+    validateOrder: `validateOrder/validate-order`,
+    getpaymentdetailsbyuserid: (orderId) =>
+      `getPaymentDetails/get-full-payment-deatils-by-orderId/${orderId}`,
   },
 };
 

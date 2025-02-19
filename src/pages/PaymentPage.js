@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CheckoutSummary from "../components/Cards/CheckoutSummary";
 import { internalRoutes } from "../utils/internalRoutes";
 import { fetchUserCart } from "../context/redux/slices/cartSlice";
@@ -7,14 +7,15 @@ import Cookies from "js-cookie";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
 import useServices from "../hooks/useServices";
 import orderApis from "../services/orderApis";
-import { load } from "@cashfreepayments/cashfree-js";
+import userApi from "../services/userApi";
+
 function PaymentPage() {
   const { auth } = useAuth();
   const dispatch = useDispatch();
   const userId = Cookies.get("userId");
+  const [userData, setUserData] = useState();
   const history = useNavigate();
   const { cart } = useSelector((state) => state.cart);
   useEffect(() => {
@@ -27,6 +28,8 @@ function PaymentPage() {
     }
   }, [userId, cart, dispatch]);
   const createOrderApi = useServices(orderApis.createUserOrder);
+  const validateOrderApi = useServices(orderApis.valiDateUserOrder);
+  const getUserProfileApi = useServices(userApi.getUserProfile);
 
   //cashfree payment initilization
   //   const createOrderHandle = async () => {
@@ -57,7 +60,16 @@ function PaymentPage() {
   //         console.error("Error in Order Creation or Payment:", error);
   //     }
   // };
-
+  const getUserdetailhandle = async () => {
+    const response = await getUserProfileApi.callApi(userId);
+    setUserData(response);
+    console.log(response, "response");
+  };
+  useEffect(() => {
+    if (userId) {
+      getUserdetailhandle();
+    }
+  }, [userId]);
   const loadScript = (src) => {
     return new Promise((resolve) => {
       const script = document.createElement("script");
@@ -70,19 +82,15 @@ function PaymentPage() {
 
   const createOrderHandle = async () => {
     try {
-      // Step 1: Call API to create an order (from your backend)
       const response = await createOrderApi.callApi(userId);
-      console.log("Order Creation Response:", response);
 
-      // Step 2: Extract orderId & amount from response
-      const { order_id, amount, currency } = response; // Ensure backend sends amount & currency
+      const { order_id, amount, currency } = response;
 
       if (!order_id || !amount) {
         console.error("Missing order_id or amount");
         return;
       }
 
-      // Step 3: Load Razorpay SDK
       const isScriptLoaded = await loadScript(
         "https://checkout.razorpay.com/v1/checkout.js"
       );
@@ -91,39 +99,33 @@ function PaymentPage() {
         return;
       }
 
-      // Step 4: Initialize Razorpay Checkout
       const options = {
-        key: process.env.REACT_APP_RAZORPAY_KEY_ID, // Use your Razorpay Key ID
-        amount: amount, // Amount in paisa (backend should send correct amount)
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+        amount: amount,
         currency: currency || "INR",
-        name: "Your Brand Name",
+        name: "Evaga Entertainment ",
         description: "Order Payment",
-        order_id: order_id, // Razorpay order ID
+        order_id: order_id,
+        method: "wallet",
         handler: async (response) => {
-          console.log("Payment Success:", response);
+          const formdata = new FormData();
+          formdata.append("orderId", response.razorpay_order_id);
+          formdata.append("paymentId", response.razorpay_payment_id);
+          formdata.append("razorpaySignature", response.razorpay_signature);
+          await validateOrderApi.callApi(formdata);
 
-          // Step 5: Send Payment Verification to Backend
-          // await axios.post("/api/verify-payment", {
-          //   order_id: response.razorpay_order_id,
-          //   payment_id: response.razorpay_payment_id,
-          //   razorpay_signature: response.razorpay_signature,
-          // });
-
-          // alert("Payment Successful!");
-          // window.location.href = `/orderStatus?order_id=${response.razorpay_order_id}`;
+          window.location.href = `${internalRoutes.orderStatus}?order_id=${response.razorpay_order_id}`;
         },
         prefill: {
-          name: "Test User",
-          email: "test@example.com",
-          contact: "9999999999",
+          name: userData?.name,
+          email: userData?.email,
+          contact: userData?.phoneNumber,
         },
         theme: { color: "#3399cc" },
       };
 
       const razorpay = new window.Razorpay(options);
       razorpay.open();
-
-      console.log("Payment Modal Opened Successfully");
     } catch (error) {
       console.error("Error in Order Creation or Payment:", error);
     }

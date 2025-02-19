@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 
-import { Document, Page } from "react-pdf";
 import { useDispatch } from "react-redux";
 import { verifyVendorDocument } from "../../context/redux/slices/adminActionsSlice";
 import Box from "@mui/material/Box";
@@ -9,12 +8,11 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { toast } from "react-toastify";
 
+import { Document, Page } from "react-pdf";
 import { pdfjs } from "react-pdf";
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url
-).toString();
 
+pdfjs.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
 
 const style = {
   position: "absolute",
@@ -65,7 +63,7 @@ function AdminVendorDocumentsVerification({ documents, onDocumentVerified }) {
     setNumPages(numPages);
   };
   console.log(`${imagesBaseUrl}/${selectedDocument?.documentUrl}`);
-  
+
   if (!documents || documents.length === 0) {
     return <p>No documents found.</p>;
   }
@@ -95,7 +93,9 @@ function AdminVendorDocumentsVerification({ documents, onDocumentVerified }) {
               <p className="font-medium text-gray-700">
                 {doc.documentName
                   .split(/(?=[A-Z])/)
-                  .map((word) => word?.charAt(0)?.toUpperCase() + word?.slice(1))
+                  .map(
+                    (word) => word?.charAt(0)?.toUpperCase() + word?.slice(1)
+                  )
                   .join(" ")}
               </p>
             </div>
