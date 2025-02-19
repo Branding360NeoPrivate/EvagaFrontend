@@ -8,12 +8,13 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { toast } from "react-toastify";
-import { pdfjs } from "react-pdf";
 
+import { pdfjs } from "react-pdf";
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
   import.meta.url
 ).toString();
+
 
 const style = {
   position: "absolute",
@@ -135,7 +136,7 @@ function AdminVendorDocumentsVerification({ documents, onDocumentVerified }) {
               <h2>{selectedDocument.documentName}</h2>
               {selectedDocument.documentUrl.endsWith(".pdf") ? (
                 <Document
-                  file={`${imagesBaseUrl}/${selectedDocument.documentUrl}`}
+                  file={`${imagesBaseUrl}${selectedDocument.documentUrl}`}
                   onLoadSuccess={onDocumentLoadSuccess}
                 >
                   {Array.from({ length: numPages }, (_, index) => (
@@ -144,7 +145,7 @@ function AdminVendorDocumentsVerification({ documents, onDocumentVerified }) {
                 </Document>
               ) : (
                 <img
-                  src={`${imagesBaseUrl}/${selectedDocument.documentUrl}`}
+                  src={`${imagesBaseUrl}${selectedDocument.documentUrl}`}
                   alt={selectedDocument.documentName}
                   className="w-full h-full"
                 />
