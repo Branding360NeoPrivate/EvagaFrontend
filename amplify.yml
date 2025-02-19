@@ -3,9 +3,8 @@ frontend:
   phases:
     preBuild:
       commands:
-        - rm -rf node_modules package-lock.json yarn.lock .cache
-        - npm cache clean --force
-        - yarn cache clean
+        - nvm use 20 || nvm install 20  # Ensure Node.js 20 is used
+        - node -v  # Verify the Node.js version
         - yarn install # or npm install
     build:
       commands:
