@@ -58,7 +58,11 @@ function AdminVendorDocumentsVerification({ documents, onDocumentVerified }) {
       toast.error("Failed to verify document.");
     }
   };
+  const [numPages, setNumPages] = useState(null);
 
+  const onDocumentLoadSuccess = ({ numPages }) => {
+    setNumPages(numPages);
+  };
   if (!documents || documents.length === 0) {
     return <p>No documents found.</p>;
   }
@@ -79,21 +83,21 @@ function AdminVendorDocumentsVerification({ documents, onDocumentVerified }) {
             Status
           </span>
         </div>
-        {documents.map((doc) => (
+        {documents?.map((doc) => (
           <div
-            key={doc._id || doc.documentName}
+            key={doc?._id || doc?.documentName}
             className="grid grid-cols-4 border-b pb-3 pt-5 mb-2"
           >
             <div className="flex justify-between items-center mb-2">
               <p className="font-medium text-gray-700">
                 {doc.documentName
                   .split(/(?=[A-Z])/)
-                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                  .map((word) => word?.charAt(0)?.toUpperCase() + word?.slice(1))
                   .join(" ")}
               </p>
             </div>
             <div className="flex flex-col justify-center items-center space-x-2">
-              {doc.documentUrl && (
+              {doc?.documentUrl && (
                 <button
                   onClick={() => openModal(doc)}
                   className="text-sm mb-2 text-blue-500"
@@ -130,8 +134,11 @@ function AdminVendorDocumentsVerification({ documents, onDocumentVerified }) {
               {selectedDocument.documentUrl.endsWith(".pdf") ? (
                 <Document
                   file={`${imagesBaseUrl}/${selectedDocument.documentUrl}`}
+                  onLoadSuccess={onDocumentLoadSuccess}
                 >
-                  <Page pageNumber={1} />
+                  {Array.from({ length: numPages }, (_, index) => (
+                    <Page key={`page_${index + 1}`} pageNumber={index + 1} />
+                  ))}
                 </Document>
               ) : (
                 <img

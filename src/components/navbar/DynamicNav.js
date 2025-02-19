@@ -54,12 +54,28 @@ const DynamicNav = () => {
   const { searchTerm } = useSelector((state) => state.userSearch);
   const allCategoriesOption = { _id: "all", name: "All" };
   const addToWaitlistApi = useServices(commonApis.addToWaitlist);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm();
+  const dropdownRef = useRef(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const menuItems = [
     {
@@ -254,12 +270,57 @@ const DynamicNav = () => {
           </button>
           {/* User Controls */}
           {auth.isAuthenticated ? (
-            <div className="flex items-center space-x-4">
-              <Link to={`/${auth.role}/profile`}>
-                <span className="text-lg font-medium capitalize border px-3 py-2 rounded-md">
-                  My Profile
-                </span>
-              </Link>
+            <div className="relative flex items-center space-x-4" ref={dropdownRef}>
+              {auth.role === "user" ? (
+                <div className="relative">
+                  <span
+                    onClick={() => setDropdownOpen((prev) => !prev)}
+                    className="cursor-pointer text-lg font-medium capitalize border px-3 py-2 rounded-md flex items-center"
+                  >
+                    My Profile
+                    <span className="ml-2">
+                      <svg
+                        className={`w-4 h-4 transition-transform ${
+                          dropdownOpen ? "rotate-180" : "rotate-0"
+                        }`}
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </span>
+                  </span>
+                  {dropdownOpen && (
+                    <div className="absolute right-0 mt-2 bg-white border rounded-md shadow-lg w-40">
+                      <Link
+                        to={internalRoutes.profile}
+                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      >
+                        My Profile
+                      </Link>
+                      <Link
+                        to={internalRoutes.order}
+                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      >
+                        Orders
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <Link to={`/${auth.role}/profile`}>
+                  <span className="text-lg font-medium capitalize border px-3 py-2 rounded-md">
+                    My Profile
+                  </span>
+                </Link>
+              )}
               <button
                 onClick={logout}
                 className="text-2xl text-white hover:text-red-500 font-bold"
@@ -274,6 +335,7 @@ const DynamicNav = () => {
               </button>
             </Link>
           )}
+
           {(!auth?.isAuthenticated || auth?.role == "user") && (
             <Link to={internalRoutes.checkout}>
               <img

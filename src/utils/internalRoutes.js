@@ -8,6 +8,7 @@ export const internalRoutes = {
   orderStatus:'/orderStatus',
   interest:"/select-your-interest",
   profile:"/user/profile",
+  order:"/user/order",
 
   userSignup: "/user/signup",
   userLogin: "/user/login",

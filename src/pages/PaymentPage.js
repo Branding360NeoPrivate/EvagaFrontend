@@ -28,34 +28,106 @@ function PaymentPage() {
   }, [userId, cart, dispatch]);
   const createOrderApi = useServices(orderApis.createUserOrder);
 
+  //cashfree payment initilization
+  //   const createOrderHandle = async () => {
+  //     try {
+  //         // Step 1: Call API to create an order
+  //         const response = await createOrderApi.callApi(userId);
+  //         console.log("Order Creation Response:", response);
+
+  //         // Step 2: Extract orderId & paymentSessionId from response
+  //         const { order_id, payment_session_id } = response;
+
+  //         if (!order_id || !payment_session_id) {
+  //             console.error("Missing order_id or payment_session_id");
+  //             return;
+  //         }
+
+  //         // Step 3: Load Cashfree SDK
+  //         const cashfree = await load({ mode: "sandbox" }); // Use "production" for live mode
+
+  //         // Step 4: Open Cashfree Payment Modal
+  //         await cashfree.checkout({
+  //             paymentSessionId: payment_session_id
+  //         });
+
+  //         console.log("Payment Modal Opened Successfully");
+
+  //     } catch (error) {
+  //         console.error("Error in Order Creation or Payment:", error);
+  //     }
+  // };
+
+  const loadScript = (src) => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
   const createOrderHandle = async () => {
     try {
-        // Step 1: Call API to create an order
-        const response = await createOrderApi.callApi(userId);
-        console.log("Order Creation Response:", response);
+      // Step 1: Call API to create an order (from your backend)
+      const response = await createOrderApi.callApi(userId);
+      console.log("Order Creation Response:", response);
 
-        // Step 2: Extract orderId & paymentSessionId from response
-        const { order_id, payment_session_id } = response;
+      // Step 2: Extract orderId & amount from response
+      const { order_id, amount, currency } = response; // Ensure backend sends amount & currency
 
-        if (!order_id || !payment_session_id) {
-            console.error("Missing order_id or payment_session_id");
-            return;
-        }
+      if (!order_id || !amount) {
+        console.error("Missing order_id or amount");
+        return;
+      }
 
-        // Step 3: Load Cashfree SDK
-        const cashfree = await load({ mode: "sandbox" }); // Use "production" for live mode
+      // Step 3: Load Razorpay SDK
+      const isScriptLoaded = await loadScript(
+        "https://checkout.razorpay.com/v1/checkout.js"
+      );
+      if (!isScriptLoaded) {
+        console.error("Failed to load Razorpay script.");
+        return;
+      }
 
-        // Step 4: Open Cashfree Payment Modal
-        await cashfree.checkout({
-            paymentSessionId: payment_session_id
-        });
+      // Step 4: Initialize Razorpay Checkout
+      const options = {
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID, // Use your Razorpay Key ID
+        amount: amount, // Amount in paisa (backend should send correct amount)
+        currency: currency || "INR",
+        name: "Your Brand Name",
+        description: "Order Payment",
+        order_id: order_id, // Razorpay order ID
+        handler: async (response) => {
+          console.log("Payment Success:", response);
 
-        console.log("Payment Modal Opened Successfully");
+          // Step 5: Send Payment Verification to Backend
+          // await axios.post("/api/verify-payment", {
+          //   order_id: response.razorpay_order_id,
+          //   payment_id: response.razorpay_payment_id,
+          //   razorpay_signature: response.razorpay_signature,
+          // });
 
+          // alert("Payment Successful!");
+          // window.location.href = `/orderStatus?order_id=${response.razorpay_order_id}`;
+        },
+        prefill: {
+          name: "Test User",
+          email: "test@example.com",
+          contact: "9999999999",
+        },
+        theme: { color: "#3399cc" },
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+
+      console.log("Payment Modal Opened Successfully");
     } catch (error) {
-        console.error("Error in Order Creation or Payment:", error);
+      console.error("Error in Order Creation or Payment:", error);
     }
-};
+  };
 
   if (!auth?.isAuthenticated || auth?.role !== "user") {
     return (
