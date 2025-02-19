@@ -30,7 +30,7 @@ function PaymentPage() {
   const createOrderApi = useServices(orderApis.createUserOrder);
   const validateOrderApi = useServices(orderApis.valiDateUserOrder);
   const getUserProfileApi = useServices(userApi.getUserProfile);
-
+  const paymentMethod = ["Cards", "Upi", "Netbanking", "Wallet", "Emi"];
   //cashfree payment initilization
   //   const createOrderHandle = async () => {
   //     try {
@@ -82,6 +82,22 @@ function PaymentPage() {
 
   const createOrderHandle = async () => {
     try {
+      let storedOrderId = localStorage.getItem("razorpay_order_id");
+
+      if (!storedOrderId) {
+        // Step 1: Create order on backend only if there's no stored order
+        const response = await createOrderApi.callApi(userId);
+        console.log("Order Creation Response:", response);
+
+        if (!response || !response.order_id) {
+          console.error("Missing order_id or amount");
+          return;
+        }
+
+        storedOrderId = response.order_id;
+        localStorage.setItem("razorpay_order_id", storedOrderId);
+      }
+
       const response = await createOrderApi.callApi(userId);
 
       const { order_id, amount, currency } = response;
@@ -161,17 +177,26 @@ function PaymentPage() {
         <h2 className="text-2xl text-primary font-medium">
           Select a Payment Method
         </h2>
-        <div className="w-[90%] rounded-md border-2 border-textLightGray h-[20rem] p-4 flex items-start justify-start flex-col gap-1">
-          <h3 className="text-primary text-xl font-medium">
-            Debit & Credit Card
-          </h3>
-          <hr className="border-textLightGray w-full" />
-          <h3 className="text-primary text-xl font-medium">
-            Another Payment Method
-          </h3>
-          <hr className="border-textLightGray w-full" />
-
-          <button className="btn-secondary w-fit p-1 px-2">Add Card</button>
+        <div className="w-[90%] selectAddress rounded-md border-2 border-textLightGray h-[20rem] p-4 flex items-start justify-start flex-col gap-1">
+          {paymentMethod?.map((item, index) => (
+            <label
+              key={index}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "8px",
+              }}
+              className="text-primary font-medium"
+            >
+              <input
+                type="radio"
+                name="payment"
+                value={item}
+                style={{ marginRight: "8px" }}
+              />
+              {item}
+            </label>
+          ))}
         </div>
       </div>
 

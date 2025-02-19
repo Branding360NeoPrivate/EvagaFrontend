@@ -5,6 +5,13 @@ function Footer() {
   const backToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+  const email = "info@evagaentertainment.com"; // Replace with your support email address
+  const subject = "Support Request"; // Customize the email subject
+  const body = "Hello Support Team,\n\nI need assistance with..."; // Customize the email body
+
+  const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+    email
+  )}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
   return (
     <footer className="bg-purpleSecondary text-backgroundOffWhite pb-10 font-semibold w-full mt-6">
@@ -76,9 +83,10 @@ function Footer() {
                 Twitter
               </a>
               <a
-                href="mailto:info@evagaentertainment.com"
+                href="#"
                 aria-label="Email"
                 className="text-sm medium"
+                onClick={() => window.open(gmailLink, "_blank")}
               >
                 Email Support
               </a>
@@ -158,54 +166,54 @@ function Footer() {
         <div className=" col-span-2 flex-col flex justify-start items-start gap-4 text-sm">
           <h3 className=" font-semibold">Connect With Us</h3>
           <div className="flex flex-col  gap-2">
-              <a
-                href="https://www.facebook.com/share/15UhbdRWh8/?mibextid=wwXIfr "
-                target="_blank"
-                aria-label="Facebook"
-                className="text-sm medium"
-              >
-                Facebook
-              </a>
-              <a
-                href="https://www.instagram.com/evagaentertainment/?igsh=MmcwdjJzMHUwd3k2&utm_source=qr"
-                target="_blank"
-                aria-label="Instagram"
-                className="text-sm medium"
-              >
-                Instagram
-              </a>
-              <a
-                href="https://www.linkedin.com/company/evaga-entertainment"
-                target="_blank"
-                aria-label="X"
-                className="text-sm medium"
-              >
-                Linkedin
-              </a>
-              <a
-                href="https://whatsapp.com/channel/0029VaWXX585fM5adzGAzC1C"
-                target="_blank"
-                aria-label="X"
-                className="text-sm medium"
-              >
-                WhatsApp
-              </a>{" "}
-              <a
-                href="https://x.com/EvagaOfficial"
-                target="_blank"
-                aria-label="X"
-                className="text-sm medium"
-              >
-                Twitter
-              </a>
-              <a
-                href="mailto:info@evagaentertainment.com"
-                aria-label="Email"
-                className="text-sm medium"
-              >
-                Email Support
-              </a>
-            </div>
+            <a
+              href="https://www.facebook.com/share/15UhbdRWh8/?mibextid=wwXIfr "
+              target="_blank"
+              aria-label="Facebook"
+              className="text-sm medium"
+            >
+              Facebook
+            </a>
+            <a
+              href="https://www.instagram.com/evagaentertainment/?igsh=MmcwdjJzMHUwd3k2&utm_source=qr"
+              target="_blank"
+              aria-label="Instagram"
+              className="text-sm medium"
+            >
+              Instagram
+            </a>
+            <a
+              href="https://www.linkedin.com/company/evaga-entertainment"
+              target="_blank"
+              aria-label="X"
+              className="text-sm medium"
+            >
+              Linkedin
+            </a>
+            <a
+              href="https://whatsapp.com/channel/0029VaWXX585fM5adzGAzC1C"
+              target="_blank"
+              aria-label="X"
+              className="text-sm medium"
+            >
+              WhatsApp
+            </a>{" "}
+            <a
+              href="https://x.com/EvagaOfficial"
+              target="_blank"
+              aria-label="X"
+              className="text-sm medium"
+            >
+              Twitter
+            </a>
+            <a
+              href="mailto:info@evagaentertainment.com"
+              aria-label="Email"
+              className="text-sm medium"
+            >
+              Email Support
+            </a>
+          </div>
         </div>
         <div className=" col-span-2">
           <div className="mt-4 text-sm">
