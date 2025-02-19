@@ -3,6 +3,9 @@ frontend:
   phases:
     preBuild:
       commands:
+        - rm -rf node_modules package-lock.json yarn.lock .cache
+        - npm cache clean --force
+        - yarn cache clean
         - yarn install # or npm install
     build:
       commands:
