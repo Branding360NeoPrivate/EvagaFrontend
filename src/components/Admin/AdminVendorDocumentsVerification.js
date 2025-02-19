@@ -63,6 +63,8 @@ function AdminVendorDocumentsVerification({ documents, onDocumentVerified }) {
   const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
   };
+  console.log(`${imagesBaseUrl}/${selectedDocument?.documentUrl}`);
+  
   if (!documents || documents.length === 0) {
     return <p>No documents found.</p>;
   }
