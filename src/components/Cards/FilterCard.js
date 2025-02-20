@@ -18,10 +18,10 @@ function FilterCard({ filters, onFilterChange, onSliderChange }) {
     <div className="flex flex-col gap-2">
       <span className="flex items-center justify-start gap-2 border-b-2 pb-1 mb-1">
         <img src={filter} alt="filter" className="object-contain h-[1.5rem]" />
-        <h2 className="text-xl font-medium mt-2 text-primary">Filter</h2>
+        <h2 className="text-base font-medium mt-2 text-primary">Filter</h2>
       </span>
       <div>
-        <h2 className="font-medium text-xl mb-2 text-primary">Event Type</h2>
+        <h2 className="font-medium text-normal mb-2 text-primary">Event Type</h2>
         <div className="text-textGray flex flex-col gap-2">
           {[
             "Wedding",
@@ -32,7 +32,7 @@ function FilterCard({ filters, onFilterChange, onSliderChange }) {
           ].map((type) => (
             <label
               key={type}
-              className="block text-base flex items-center justify-start filtercheckbox"
+              className="block text-sm flex items-center justify-start filtercheckbox"
             >
               <input
                 type="checkbox"
@@ -47,10 +47,10 @@ function FilterCard({ filters, onFilterChange, onSliderChange }) {
       </div>
 
       <div>
-        <h2 className="font-medium text-xl mb-2 text-primary">Location Type</h2>
+        <h2 className="font-medium text-normal mb-2 text-primary">Location Type</h2>
         <div className="text-textGray">
           {["Indoor", "Outdoor", "Both"].map((type) => (
-            <label key={type} className="block text-[18px] filtercheckbox">
+            <label key={type} className="block text-sm filtercheckbox">
               <input
                 type="checkbox"
                 checked={filters.locationTypes.includes(type)}
@@ -64,7 +64,7 @@ function FilterCard({ filters, onFilterChange, onSliderChange }) {
       </div>
 
       <div className="w-full pr-4">
-        <h2 className="font-medium text-lg text-primary mb-4">Price</h2>
+        <h2 className="font-medium text-normal text-primary mb-4">Price</h2>
 
 
         <Slider
@@ -100,9 +100,9 @@ function FilterCard({ filters, onFilterChange, onSliderChange }) {
             },
           }}
         />
-        <div className="flex justify-between mt-4 text-primary font-bold">
-          <span>₹{filters.priceRange[0].toLocaleString()}</span>
-          <span>₹{filters.priceRange[1].toLocaleString()}</span>
+        <div className="flex justify-between mt-4  text-primary font-bold">
+          <span className="text-sm">₹{filters.priceRange[0].toLocaleString()}</span>
+          <span className="text-sm">₹{filters.priceRange[1].toLocaleString()}</span>
         </div>
       </div>
     </div>

@@ -211,8 +211,8 @@ input[type="number"] {
 /* Base styles for the checkbox */
 .filtercheckbox input[type="checkbox"] {
   appearance: none; /* Removes default checkbox styling */
-  width: 25px;
-  height: 25px;
+  width: 14px;
+  height:14px;
   border: 2px solid #6a1b9a; /* Purple border */
   border-radius: 4px; /* Rounded corners */
   outline: none; /* Removes focus outline */
@@ -228,13 +228,13 @@ input[type="number"] {
 .filtercheckbox input[type="checkbox"]:checked::after {
   content: "";
   width: 6px;
-  height: 13px;
+  height: 8px;
   border: solid #6a1b9a;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
   position: absolute;
-  top: 2px;
-  left: 6px;
+  top: 0px;
+  left: 2px;
 }
 .selectAddress input[type="radio"]:hover {
   border-color:#6A1B9A !important;
