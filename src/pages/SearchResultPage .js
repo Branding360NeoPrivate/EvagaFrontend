@@ -180,6 +180,7 @@ function SearchResultPage() {
                 searchResult.map((item) => { 
                   const imageUrl =
                   item.serviceDetails?.values?.CoverImage?.[0] ||
+                  item.serviceDetails?.values?.CoverImage ||
                   item.serviceDetails?.values?.ProductImage?.[0];
                   const popularimage = imageUrl?.startsWith("service/")
                     ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl

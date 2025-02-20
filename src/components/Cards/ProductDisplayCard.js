@@ -127,6 +127,7 @@ function ProductDisplayCard({
                   eventData?.values?.["OrderQuantity&Pricing"]?.[0]?.Rates ||
                   eventData?.values?.["Duration&Pricing"]?.[0]?.Amount ||
                   eventData?.values?.["SessionLength"]?.[0]?.Amount ||
+                  eventData?.values?.["SessionLength&Pricing"]?.[0]?.Amount ||
                   eventData?.values?.Package?.[0]?.Rates ||
                   eventData?.values?.QtyPricing?.[0]?.Rates
               )

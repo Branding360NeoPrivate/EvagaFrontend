@@ -71,6 +71,27 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
     "Prices & Duration": "prices-duration-icon-url",
     "Price && MOQ": "price-moq-icon-url",
   };
+  const [formattedTime, setFormattedTime] = useState('');
+
+  const handleTimeChange = (event) => {
+    let timeValue = event.target.value;
+    let [hours, minutes] = timeValue.split(':');
+
+    let period = 'AM';
+    if (hours > 12) {
+      hours = hours - 12;
+      period = 'PM';
+    } else if (hours == 0) {
+      hours = 12;
+      period = 'AM';
+    } else if (hours == 12) {
+      period = 'PM';
+    }
+
+    let formattedTime12Hour = `${hours}:${minutes} ${period}`;
+    setFormattedTime(formattedTime12Hour);
+    console.log("Time in 12-hour format:", formattedTime12Hour);
+  };
   const [quantity, setQuantity] = useState(1);
   const [selectedAddOns, setSelectedAddOns] = useState([]);
   const calculatedPrice = useMemo(() => {
@@ -208,6 +229,7 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
               <input
                 type="time"
                 className="w-full py-2 px-3 border rounded-md text-gray-600 focus:outline-primary"
+                onChange={handleTimeChange}
               />
               <div className="flex ">
                 <button
