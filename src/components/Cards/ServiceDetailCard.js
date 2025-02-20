@@ -93,8 +93,8 @@ function ServiceDetailCard({
       {/* Header */}
       <div className=" w-full flex flex-row items-center mb-4">
         <div className="w-[80%] ">
-          <h2 className="text-2xl font-semibold text-primary">{title}</h2>
-          <p className="text-base  text-textGray">{category}</p>
+          <h2 className="text-xl font-semibold text-primary">{title}</h2>
+          <p className="text-normal  text-textGray">{category}</p>
         </div>
         <div className="w-[20%] text-right">
           <div className="flex flex-col items-end justify-end gap-1">
@@ -111,7 +111,7 @@ function ServiceDetailCard({
       {/* Company Name */}
       <div className="w-full flex flex-row  items-center justify-between">
         <div className=" text-lg font-semibold text-primary mb-4">
-          <h3 className="text-xl font-semibold ">{companyName}</h3>
+          <h3 className="text-normal font-semibold ">{companyName}</h3>
         </div>
         <div className="flex flex-col items-center justify-center gap-1">
           <img src={Year} alt="share" className="object-contain h-[1.5rem]" />
@@ -133,11 +133,11 @@ function ServiceDetailCard({
       <hr style={{ margin: "0.2rem 0" }} />
 
       {/* Price */}
-      <div className="flex flex-row">
-        <div className="text-lg font-medium text-primary pt-2 pr-2">Price</div>
-        <div className="text-2xl font-bold text-primary mb-4">
+      <div className="flex flex-row items-center">
+        <p className="text-lg font-medium text-primary pt-2 pr-2">Price</p>
+        <p className="text-xl font-bold text-primary ">
           {formatCurrency(price)}
-        </div>
+        </p>
       </div>
 
       {/* Event */}
@@ -147,7 +147,7 @@ function ServiceDetailCard({
         if (Array.isArray(value) && value.length > 0) {
           // If value is an array, render as a list
           return (
-            <div className="flex gap-4 items-start justify-start" key={index}>
+            <div className=" mt-4 flex gap-4 items-start justify-start" key={index}>
               <span className="bg-textLightGray p-2 rounded-[50%]">
                 <img
                   src={iconMapping[key]}
@@ -156,7 +156,7 @@ function ServiceDetailCard({
                 />
               </span>
               <div className="mb-4 w-full">
-                <h3 className="text-xl font-medium text-primary">{key}</h3>
+              <h3 className="text-normal font-meduim text-primary">{key}</h3>
                 <hr style={{ margin: "0.3rem 0" }} />
                 <div className="flex gap-2 mt-1 flex-wrap">
                   {value?.map((item, idx) => (
@@ -176,7 +176,7 @@ function ServiceDetailCard({
           return (
             <div className="flex gap-4 items-start justify-start" key={index}>
               <div className="mb-4 w-full flex items-center">
-                <h3 className="text-base font-medium text-primary">{key}</h3>
+              <h3 className="text-normal font-meduim text-primary">{key}</h3>
 
                 <span className=" text-textGray text-normal px-3 py-1 rounded-md">
                   {value}
@@ -195,7 +195,7 @@ function ServiceDetailCard({
           <img src={terms} alt="event" className="object-contain h-[1.5rem]" />
         </span>
         <div className="w-full text-textGray">
-          <h3 className="text-xl font-meduim text-primary">
+          <h3 className="text-normal font-meduim text-primary">
             Terms & Conditions
           </h3>
           <hr style={{ margin: "0.3rem 0" }} />

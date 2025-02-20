@@ -24,7 +24,7 @@ function CategoryDisplayCard({ image, text, onClick, catId }) {
           className="w-[70%] object-fit "
         />
       </div>
-      <p className="text-normal font-medium text-primary text-center break-words">
+      <p className="text-sm font-medium text-primary text-center break-words">
         {text ? text : "Default Text"}
       </p>
     </div>

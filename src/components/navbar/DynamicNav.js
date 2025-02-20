@@ -265,11 +265,14 @@ const DynamicNav = () => {
         <div className="hidden lg:flex items-center justify-center gap-5">
           <button className="flex items-center">
             <TbLanguageHiragana className="text-3xl text-white" />
-            <MdKeyboardArrowDown />
+            <MdKeyboardArrowDown className="text-2xl text-white" />
           </button>
           {/* User Controls */}
           {auth.isAuthenticated ? (
-            <div className="relative flex items-center space-x-4" ref={dropdownRef}>
+            <div
+              className="relative flex items-center space-x-4"
+              ref={dropdownRef}
+            >
               {auth.role === "user" ? (
                 <div className="relative">
                   <span
@@ -414,30 +417,40 @@ const DynamicNav = () => {
           </div>
         )}
       </nav>
-      <div className="bg-primary px-[2.5%] flex items-center justify-start gap-12 text-white flex-wrap gap-y-2">
-        <span
-          className="flex items-center justify-center gap-2 text-white cursor-pointer"
-          onClick={toggleSlider}
-        >
-          <MdOutlineSort className="text-2xl text-white" />
-          <p>All</p>
-        </span>
-        <Link
-          to={"#"}
-          onClick={() => [setModalType("evagaXperience"), handleOpen()]}
-        >
-          Evaga Xperience
-        </Link>
-        <Link to={"#"}>Blog</Link>
-        <Link to={internalRoutes.wishlist}>Wishlist</Link>
-        <Link
-          to={"#"}
-          onClick={() => [setModalType("Community"), handleOpen()]}
-        >
-          Community
-        </Link>
-        <Link to={internalRoutes.customerService}>Customer Service</Link>
-      </div>
+      {(auth.role === "user" || !auth.isAuthenticated) && (
+        <div className="bg-primary px-[2.5%] flex items-center justify-start gap-12 text-white flex-wrap gap-y-2">
+          <span
+            className="flex items-center justify-center gap-2 text-white cursor-pointer text-normal py-1"
+            onClick={toggleSlider}
+          >
+            <MdOutlineSort className="text-2xl text-white" />
+            <p>All</p>
+          </span>
+          <Link
+            to={"#"}
+            onClick={() => [setModalType("evagaXperience"), handleOpen()]}
+            className="py-1"
+          >
+            Evaga Xperience
+          </Link>
+          <Link to={"#"} className="py-1">
+            Blog
+          </Link>
+          <Link to={internalRoutes.wishlist} className="py-1">
+            Wishlist
+          </Link>
+          <Link
+            to={"#"}
+            onClick={() => [setModalType("Community"), handleOpen()]}
+            className="py-1"
+          >
+            Community
+          </Link>
+          <Link to={internalRoutes.customerService} className="py-1">
+            Customer Service
+          </Link>
+        </div>
+      )}
       <div
         ref={sliderRef}
         className={`slider rounded-r-md ${

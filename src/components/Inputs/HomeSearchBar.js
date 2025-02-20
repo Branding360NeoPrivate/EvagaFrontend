@@ -8,6 +8,7 @@ import useDebounce from "../../utils/useDebounce";
 import useServices from "../../hooks/useServices";
 import packageApis from "../../services/packageApis";
 import { useNavigate } from "react-router-dom";
+import { CiSearch } from "react-icons/ci";
 
 function HomeSearchBar({ cities, value, onChange }) {
   const dispatch = useDispatch();
@@ -126,8 +127,9 @@ function HomeSearchBar({ cities, value, onChange }) {
   })(Cookies.set);
 
   return (
+  
     <div
-      className="w-[200px] lg:w-[40vw] xl:w-[50vw] h-[45px] flex justify-start bg-gray-100 items-center rounded-md relative"
+      className="w-[200px] lg:w-[40vw] xl:w-[50vw] h-[45px] flex justify-start bg-gray-100 items-center rounded-lg relative"
       ref={dropdownRef}
     >
       <div
@@ -168,6 +170,7 @@ function HomeSearchBar({ cities, value, onChange }) {
           setSearch(e.target.value),
         ]}
       />
+
     </div>
   );
 }

@@ -175,16 +175,16 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
   return (
     <div className="flex items-start justify-start flex-col gap-2">
       <div className="max-w-md p-6 bg-white border-borderPrimary rounded-md border-2 ">
-        <div className="text-center flex flex-row mb-6">
+        <div className="text-center flex flex-row mb-6 flex items-center justify-start">
           <div>
             {" "}
-            <p className="text-primary font-semibold pr-2 pt-2 text-xl  w-full ">
+            <p className="text-primary font-semibold pr-2  text-xl  w-full ">
               Price{" "}
             </p>
           </div>
           <div>
             {" "}
-            <p className="text-3xl font-bold text-primary pl-2 w-full">
+            <p className="text-2xl font-bold text-primary  w-full">
               {formatCurrency(calculatedPrice)}
             </p>
           </div>
@@ -266,7 +266,7 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
                 className="h-[1.5rem] object-fit"
               />
             </span>
-            <p className="text-primary font-semibold text-xl">Location</p>
+            <p className="text-primary font-semibold text-normal">Location</p>
           </div>
           <div className="flex items-end">
             <input
@@ -280,7 +280,7 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
         </div>
         {renderPrice?.SecurityDeposit && (
           <span className="flex items-center justify-between py-2">
-            <p className="text-primary font-semibold text-xl">
+            <p className="text-primary font-semibold text-normal">
               Security Deposit
             </p>
             <p className="text-textGray">
@@ -303,7 +303,7 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
                         className="h-[1.5rem] object-fit"
                       />
                     </span>
-                    <p className="text-primary font-semibold text-xl">
+                    <p className="text-primary font-semibold text-normal">
                       {key === "AddOns" ? "Recommended Add-Ons " : key}
                     </p>
                   </div>
@@ -364,7 +364,7 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
         </div>
       </div>
       <span className="">
-        <h3 className="text-xl font-medium text-primary">Seller Bio</h3>
+        <h3 className="text-normal font-medium text-primary">Seller Bio</h3>
         <p className="text-textGray text-sm">{bio}</p>
       </span>
     </div>

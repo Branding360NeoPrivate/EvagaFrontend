@@ -184,21 +184,7 @@ function Home() {
           </HorizontalScroll>
         </div>
       </div>
-      {/* <div className="w-11/12 overflow-x-scroll no-scrollbar box-border mx-12">
-        <div className="flex flex-row gap-5 p-5">
-          {recentData.map((card, index) => (
-            <RecentlyViewedCard
-              key={index}
-              recentimage={card.pic}
-              title={card.title}
-              category={card.category}
-              price={card.price}
-              rating={card.rating}
-              reviews={card.reviews}
-            />
-          ))}
-        </div>
-      </div> */}
+  
     </motion.div>
   );
 }

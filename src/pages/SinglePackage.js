@@ -162,7 +162,7 @@ function SinglePackage() {
           onMediaClick={handleImageClick}
         />
         <span className="pl-[22%]">
-          <h3 className="text-xl font-medium text-primary">
+          <h3 className="text-normal font-medium text-primary">
             About the Service
           </h3>
           <p className="text-textGray text-sm">

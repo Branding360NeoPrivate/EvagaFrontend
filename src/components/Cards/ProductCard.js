@@ -44,8 +44,8 @@ function ProductCard({
   };
 
   return (
-    <div className="min-w-[250px] min-h-[340px] border rounded-lg bg-white overflow-hidden">
-      <div className="w-full h-[220px]" onClick={onClick}>
+    <div className="min-w-[250px] min-h-[300px] border rounded-lg bg-white overflow-hidden">
+      <div className="w-full h-[180px]" onClick={onClick}>
         <img
           src={popularimage}
           alt={title}
@@ -58,21 +58,21 @@ function ProductCard({
             <span className="text-normal font-medium text-primary">
               {title}
             </span>
-            <span className="text-sm text-gray-600 mt-1">{category}</span>
+            <span className="text-esm text-gray-600 mt-1">{category}</span>
           </div>
           <div className="w-[18%] flex flex-col items-center text-yellow-500">
             <div className="flex items-center justify-center gap-1 ">
               <span>⭐</span>
-              <span className="text-[14px]">{rating}</span>
+              <span className="text-esm">{rating}</span>
             </div>
 
-            <span className="text-gray-500 text-[14px] ml-1">({reviews})</span>
+            <span className="text-gray-500 text-esm ml-1">({reviews})</span>
           </div>
         </div>
         <div className="flex items-center justify-between mt-4">
-          <p className="text-xl font-bold text-primary flex items-center justify-center">
+          <p className="text-normal font-bold text-primary flex items-center justify-center">
             {price ? formatCurrency(price) : "comming soon"}{" "}
-            <span className=" text-sm font-medium text-gray-600 flex items-center justfiy-center gap-2">
+            <span className=" text-esm font-medium text-gray-600 flex items-center justfiy-center gap-2">
               <p>/- </p>Starting
             </span>
           </p>
