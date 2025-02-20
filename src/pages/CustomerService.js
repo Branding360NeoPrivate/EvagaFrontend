@@ -8,7 +8,7 @@ function CustomerService() {
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : null);
   };
-  const email = "support@example.com"; // Replace with your support email address
+  const email = "info@evagaentertainment.com"; // Replace with your support email address
   const subject = "Support Request"; // Customize the email subject
   const body = "Hello Support Team,\n\nI need assistance with..."; // Customize the email body
 

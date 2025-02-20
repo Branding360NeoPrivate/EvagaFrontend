@@ -169,7 +169,7 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
           </div>
         </div>
 
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-col gap-4">
           <div className=" mb-4 relative">
             <label className="block text-primary mb-2">Date</label>
             <div className="flex items-center">
