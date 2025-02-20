@@ -178,6 +178,8 @@ function SearchResultPage() {
             <div className="flex flex-col gap-6">
               {searchResult?.length > 0 ? (
                 searchResult.map((item) => { 
+                  console.log(item,'item');
+                  
                   const imageUrl =
                   item.serviceDetails?.values?.CoverImage?.[0] ||
                   item.serviceDetails?.values?.CoverImage ||

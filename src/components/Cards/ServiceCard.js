@@ -22,7 +22,7 @@ function ServiceCard({
   return (
     <div className="w-full grid grid-cols-1 lg:grid-cols-4 gap-4 border-borderSecondary border-2 rounded-md rounded-l-lg">
       <img
-        src={image ? image: ServiceImage}
+        src={image ? image : ServiceImage}
         alt="Service Image"
         className="rounded w-full md:w-auto h-[20rem] object-cover w-full"
       />
@@ -35,16 +35,7 @@ function ServiceCard({
             {yearofexp ? yearofexp : "5"} years
           </p>
         </span>
-        <TruncateText
-          text={
-            desc
-              ? desc
-              : `Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text ever
-          since the 1500s, when an.`
-          }
-          maxLines={2}
-        />
+        <TruncateText text={desc ? desc : ``} maxLines={2} />
         {InclusionData && (
           <div className="flex items-start justify-center gap-4">
             <p className="text-xl font-semibold text-primary">Inclusions</p>

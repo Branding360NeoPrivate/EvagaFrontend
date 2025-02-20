@@ -178,7 +178,7 @@ const VendorDashboard = () => {
                   // Otherwise, prepend the base URL
                   return `${process.env.REACT_APP_API_Aws_Image_BASE_URL}${imagePath}`;
                 };
-                console.log(item?.services?.[0]?.values?.CoverImage);
+           
 
                 return (
                   <ServiceCard
