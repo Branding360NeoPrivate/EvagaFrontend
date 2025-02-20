@@ -453,7 +453,7 @@ function VendorCreateService() {
     }
   };
   const handleAddPInHouseCateringPackage = (groupIndex) => {
-    console.log(groupIndex, "groupIndex");
+ 
 
     setInHouseCateringPackageDataData((prev) => {
       // Ensure the group exists
@@ -473,10 +473,10 @@ function VendorCreateService() {
   };
 
   const handleRemoveForm = (index) => {
-    console.log(index, formInstances);
+ 
     setFormInstances((prev) => {
       const updated = prev.filter((_, i) => i !== index);
-      console.log("After Update:", updated);
+   
       return updated;
     });
   };
@@ -617,7 +617,7 @@ function VendorCreateService() {
                     data: formData,
                     saved: true,
                   };
-                  console.log(updatedInstances, "updatedInstances");
+             
                   setFormInstances(updatedInstances);
                 }}
                 setOpenMasterVenueModal={setOpenMasterVenueModal}

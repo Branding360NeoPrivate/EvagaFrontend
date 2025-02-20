@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import useServices from "../../hooks/useServices";
 import vendorApi from "../../services/vendorApi";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import EditDynamicForm from "../../components/Forms/EditDynamicForm";
 import { toast } from "react-toastify";
 
@@ -26,6 +26,7 @@ function VendorEditService() {
   const [selectedFormId, setselectedFormId] = useState();
   const [serviceValue, setServiceValue] = useState();
   const [openMasterVenueModal, setOpenMasterVenueModal] = useState(false);
+  const history = useNavigate();
   const getSelectedCategoryAndSubCategoryFormhandle = async (
     catId,
     subCatId
@@ -192,6 +193,7 @@ function VendorEditService() {
       setLoading(false);
       console.log(response);
       toast.success("Service updated successfully!");
+      history("/vendor/dashboard");
     } catch (error) {
       setLoading(false);
       console.error("Error updating service:", error);

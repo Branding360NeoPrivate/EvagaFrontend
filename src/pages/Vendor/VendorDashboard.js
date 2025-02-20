@@ -76,7 +76,7 @@ const VendorDashboard = () => {
 
   useEffect(() => {
     if (!vendorBanner || vendorBanner.length === 0) {
-      console.log("vendor banner");
+    
 
       dispatch(fetchVendorBanner());
     }
@@ -121,7 +121,7 @@ const VendorDashboard = () => {
   useEffect(() => {
     getMonthlyBookedDates();
   }, [activeMonth, activeYear]);
-  console.log(allService, "allService");
+
 
   if (status === "loading" || status === "failed") {
     return <ErrorView status={status} error={error} />;
@@ -169,34 +169,21 @@ const VendorDashboard = () => {
           <div className="w-full flex items-center justfiy-center flex-col gap-4">
             {allService?.length > 0 ? (
               allService.map((item) => {
-                const getImageUrl = (imagePath) => {
-                  if (!imagePath) return null;
-                  // Check if the image path is already a full URL
-                  if (imagePath.startsWith("http")) {
-                    return imagePath; // Return the full URL as is
-                  }
-                  // Otherwise, prepend the base URL
-                  return `${process.env.REACT_APP_API_Aws_Image_BASE_URL}${imagePath}`;
-                };
-           
+              
+                const coverImage = Array.isArray(item?.services?.[0]?.values?.CoverImage)
+                  ? item?.services?.[0]?.values?.CoverImage[0]
+                  : item?.services?.[0]?.values?.CoverImage;
 
+                const productImage = Array.isArray(item?.services?.[0]?.values?.ProductImage)
+                  ? item?.services?.[0]?.values?.ProductImage[0]
+                  : item?.services?.[0]?.values?.ProductImage;
                 return (
                   <ServiceCard
                     key={item?._id || item?.title}
                     image={
                       process.env.REACT_APP_API_Aws_Image_BASE_URL +
-                      (
-                        Array.isArray(item?.services?.[0]?.values?.CoverImage)
-                          ? item?.services?.[0]?.values?.CoverImage?.[0]
-                          : item?.services?.[0]?.values?.CoverImage
-                      ) ||
-                      (
-                        Array.isArray(item?.services?.[0]?.values?.ProductImage)
-                          ? item?.services?.[0]?.values?.ProductImage?.[0]
-                          : item?.services?.[0]?.values?.ProductImage
-                      )
+                      (coverImage || productImage)
                     }
-                    
                     title={
                       item?.services?.[0]?.values?.Title ||
                       item?.services?.[0]?.values?.FoodTruckName ||
