@@ -63,7 +63,6 @@ const DynamicNav = () => {
   } = useForm();
   const dropdownRef = useRef(null);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -330,7 +329,7 @@ const DynamicNav = () => {
             </div>
           ) : (
             <Link to={internalRoutes?.userLogin}>
-              <button className="bg-highlightYellow max-w-[200px] w-[200px] px-6 py-3 text-primary font-semibold text-lg rounded-md">
+              <button className="bg-highlightYellow max-w-[200px]  px-6 py-3 text-primary font-semibold text-lg rounded-md">
                 Sign In
               </button>
             </Link>

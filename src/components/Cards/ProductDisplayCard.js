@@ -64,14 +64,14 @@ function ProductDisplayCard({
   };
 
   return (
-    <div className="h-[250px] border rounded-lg shadow-sm flex flex-col md:flex-row gap-4 cursor-pointer overflow-hidden">
+    <div className="h-[240px] border rounded-lg shadow-sm flex flex-col md:flex-row gap-4 cursor-pointer overflow-hidden">
       <img
         src={image}
         alt={title}
         className=" w-[30%] h-[15rem] rounded-lg object-fit aspect-w-16 aspect-h-9"
         onClick={onClick}
       />
-      <div className="w-full flex flex-col my-4" onClick={onClick}>
+      <div className="w-full h-[90%] overflow-hidden flex flex-col my-4 pb-2" onClick={onClick}>
         <div className=" w-full flex flex-row items-center mb-1 justify-between">
           <div className="w-[100%] gap-0 ">
             <h2 className="text-normal font-medium text-primary">{title}</h2>

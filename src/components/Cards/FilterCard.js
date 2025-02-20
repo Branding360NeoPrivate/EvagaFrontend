@@ -15,7 +15,7 @@ function FilterCard({ filters, onFilterChange, onSliderChange }) {
   const minPrice = 0;
   const maxPrice = 1000000;
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 ">
       <span className="flex items-center justify-start gap-2 border-b-2 pb-1 mb-1">
         <img src={filter} alt="filter" className="object-contain h-[1.5rem]" />
         <h2 className="text-base font-medium mt-2 text-primary">Filter</h2>
@@ -32,7 +32,7 @@ function FilterCard({ filters, onFilterChange, onSliderChange }) {
           ].map((type) => (
             <label
               key={type}
-              className="block text-sm flex items-center justify-start filtercheckbox"
+              className="block text-sm flex items-center justify-start filtercheckbox leading-6"
             >
               <input
                 type="checkbox"
@@ -50,7 +50,7 @@ function FilterCard({ filters, onFilterChange, onSliderChange }) {
         <h2 className="font-medium text-normal mb-2 text-primary">Location Type</h2>
         <div className="text-textGray">
           {["Indoor", "Outdoor", "Both"].map((type) => (
-            <label key={type} className="block text-sm filtercheckbox">
+            <label key={type} className="block text-sm filtercheckbox leading-6">
               <input
                 type="checkbox"
                 checked={filters.locationTypes.includes(type)}
@@ -63,7 +63,7 @@ function FilterCard({ filters, onFilterChange, onSliderChange }) {
         </div>
       </div>
 
-      <div className="w-full pr-4">
+      <div className="w-[90%] pr-4">
         <h2 className="font-medium text-normal text-primary mb-4">Price</h2>
 
 
