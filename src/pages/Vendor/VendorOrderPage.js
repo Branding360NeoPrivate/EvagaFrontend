@@ -60,7 +60,7 @@ export default function VendorOrderPage() {
         </span>
         {activeState === "New Order" && (
           <div className="w-full h-[50vh] flex items-center justfiy-center flex-col gap-4">
-            <OrderVenderCard
+            {/* <OrderVenderCard
               buttons={[
                 <button
                   key="cancel"
@@ -78,7 +78,7 @@ export default function VendorOrderPage() {
                   Accept Order
                 </button>,
               ]}
-            />
+            /> */}
           </div>
         )}{" "}
         {activeState === "Confirmed Order" && (

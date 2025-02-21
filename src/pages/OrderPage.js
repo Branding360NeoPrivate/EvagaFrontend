@@ -4,7 +4,7 @@ import orderApis from "../services/orderApis";
 import useServices from "../hooks/useServices";
 import Cookies from "js-cookie";
 export const OrderPage = (props) => {
-  const [activeState, setActivestate] = useState("Ongoing Order");
+  const [activeState, setActivestate] = useState("New Orders");
   const [allOrder, setAllOrder] = useState([]);
   const getOrderByUserIdApi = useServices(orderApis.getOrderByUserId);
   const userId = Cookies.get("userId");
@@ -82,12 +82,12 @@ export const OrderPage = (props) => {
         )}{" "}
         {activeState === "Confirmed Orders" && (
           <div className="w-full h-[50vh] flex items-center justfiy-center flex-col gap-4">
-            <OrderVenderCard />
+            {/* <OrderVenderCard /> */}
           </div>
         )}{" "}
         {activeState === "Ongoing Order" && (
           <div className="w-full h-[50vh] flex items-center justfiy-center flex-col gap-4">
-            <OrderVenderCard />
+            {/* <OrderVenderCard /> */}
           </div>
         )}
         {activeState === "Completed order" && (
