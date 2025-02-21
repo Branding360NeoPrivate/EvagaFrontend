@@ -51,9 +51,13 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
             <div key={index} className="cursor-pointer">
               {isImage(url) ? (
                 <img
-                  src={process.env.REACT_APP_API_Aws_Image_BASE_URL + url}
+                  src={
+                    process.env.REACT_APP_API_Aws_Image_BASE_URL +
+                    url.replace("images/", "thumbnails/")
+                  }
                   alt={`Thumbnail ${index + 1}`}
                   className="w-[80px] h-[60px] object-cover rounded-md border-2 border-transparent hover:scale-110 hover:border-blue-500 transition-transform duration-200"
+                  loading="lazy"
                   onClick={() => [onMediaClick(url), setIsModalOpen(true)]}
                 />
               ) : (
@@ -75,12 +79,15 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
 
       {/* Main Media View */}
       <div className="flex-1 flex items-center justify-center relative">
-        {isImage(selectedUrl) ? (
+        {!selectedUrl ? (
+          <div className="w-full h-full bg-gray-200 animate-pulse rounded-md"></div>
+        ) : isImage(selectedUrl) ? (
           <div className="group relative w-full aspect-[4/5] h-full flex items-center justify-center">
             <img
               src={process.env.REACT_APP_API_Aws_Image_BASE_URL + selectedUrl}
               alt="Selected Media"
               className="w-fit h-full object-contain rounded-md cursor-pointer aspect-[4/5]"
+              loading="lazy"
               onClick={() => setIsModalOpen(true)}
             />
           </div>
@@ -89,7 +96,6 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
             selectedUrl={
               process.env.REACT_APP_API_Aws_Image_BASE_URL + selectedUrl
             }
-            
           />
         )}
       </div>

@@ -63,26 +63,13 @@ function Home() {
   }, [allPackages]);
 
   useEffect(() => {
-    if (!banner || banner.length === 0) {
+    if (!userBanner || userBanner.length === 0) {
+      console.log('banner');
+      
       dispatch(fetchUserBanner());
     }
-  }, [dispatch, banner]);
+  }, [dispatch, userBanner]);
 
-  const images = [
-    NavImage,
-    NavImage,
-    NavImage,
-    NavImage,
-    NavImage,
-    NavImage,
-    NavImage,
-    NavImage,
-  ];
-
-  const [selectedImage, setSelectedImage] = useState(images[0]);
-  const handleImageClick = (image) => {
-    setSelectedImage(image);
-  };
 
   return (
     <motion.div
