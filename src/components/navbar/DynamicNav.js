@@ -21,10 +21,9 @@ import { Backdrop, Fade, Modal } from "@mui/material";
 import { Box, padding } from "@mui/system";
 import useServices from "../../hooks/useServices";
 import commonApis from "../../services/commonApis";
-import { app } from "../../firebase";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-
+import { motion } from "framer-motion";
 const style = {
   position: "absolute",
   top: "50%",
@@ -62,6 +61,10 @@ const DynamicNav = () => {
     reset,
   } = useForm();
   const dropdownRef = useRef(null);
+  const hoverAnimation = {
+    rest: { borderColor: "transparent", borderWidth: 0 },
+    hover: { borderColor: "white", borderWidth: 0.5 },
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -419,36 +422,107 @@ const DynamicNav = () => {
       </nav>
       {(auth.role === "user" || !auth.isAuthenticated) && (
         <div className="bg-primary px-[2.5%] flex items-center justify-start gap-12 text-white flex-wrap gap-y-2">
-          <span
+          <motion.span
             className="flex items-center justify-center gap-2 text-white cursor-pointer text-normal py-1"
             onClick={toggleSlider}
+            initial="rest"
+            whileHover="hover"
+            animate="rest"
+            variants={hoverAnimation}
+            style={{
+              borderRadius: "4px",
+              borderStyle: "solid",
+              padding: "4px",
+            }}
           >
             <MdOutlineSort className="text-2xl text-white" />
             <p>All</p>
-          </span>
-          <Link
-            to={"#"}
-            onClick={() => [setModalType("evagaXperience"), handleOpen()]}
+          </motion.span>
+
+          <motion.div
             className="py-1"
+            initial="rest"
+            whileHover="hover"
+            animate="rest"
+            variants={hoverAnimation}
+            style={{
+              borderRadius: "4px",
+              borderStyle: "solid",
+              padding: "4px",
+            }}
           >
-            Evaga Xperience
-          </Link>
-          <Link to={"#"} className="py-1">
-            Blog
-          </Link>
-          <Link to={internalRoutes.wishlist} className="py-1">
-            Wishlist
-          </Link>
-          <Link
-            to={"#"}
-            onClick={() => [setModalType("Community"), handleOpen()]}
+            <Link
+              to={"#"}
+              onClick={() => [setModalType("evagaXperience"), handleOpen()]}
+            >
+              Evaga Xperience
+            </Link>
+          </motion.div>
+
+          <motion.div
             className="py-1"
+            initial="rest"
+            whileHover="hover"
+            animate="rest"
+            variants={hoverAnimation}
+            style={{
+              borderRadius: "4px",
+              borderStyle: "solid",
+              padding: "4px",
+            }}
           >
-            Community
-          </Link>
-          <Link to={internalRoutes.customerService} className="py-1">
-            Customer Service
-          </Link>
+            <Link to={"#"}>Blog</Link>
+          </motion.div>
+
+          <motion.div
+            className="py-1"
+            initial="rest"
+            whileHover="hover"
+            animate="rest"
+            variants={hoverAnimation}
+            style={{
+              borderRadius: "4px",
+              borderStyle: "solid",
+              padding: "4px",
+            }}
+          >
+            <Link to={internalRoutes.wishlist}>Wishlist</Link>
+          </motion.div>
+
+          <motion.div
+            className="py-1"
+            initial="rest"
+            whileHover="hover"
+            animate="rest"
+            variants={hoverAnimation}
+            style={{
+              borderRadius: "4px",
+              borderStyle: "solid",
+              padding: "4px",
+            }}
+          >
+            <Link
+              to={"#"}
+              onClick={() => [setModalType("Community"), handleOpen()]}
+            >
+              Community
+            </Link>
+          </motion.div>
+
+          <motion.div
+            className="py-1"
+            initial="rest"
+            whileHover="hover"
+            animate="rest"
+            variants={hoverAnimation}
+            style={{
+              borderRadius: "4px",
+              borderStyle: "solid",
+              padding: "4px",
+            }}
+          >
+            <Link to={internalRoutes.customerService}>Customer Service</Link>
+          </motion.div>
         </div>
       )}
       <div

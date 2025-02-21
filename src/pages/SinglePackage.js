@@ -22,7 +22,11 @@ function SinglePackage() {
   const dispatch = useDispatch();
   const [singlePageData, setSinglePageData] = useState();
   const [packageIncartStatus, setPackageIncartStatus] = useState(false);
-  const [vendorProfile, setVendorProfile] = useState({ name: "", bio: "" });
+  const [vendorProfile, setVendorProfile] = useState({
+    name: "",
+    bio: "",
+    vendorId: "",
+  });
   const [packageCategory, setpackageCategory] = useState({
     category: "",
     subcategory: "",
@@ -38,7 +42,9 @@ function SinglePackage() {
       ...vendorProfile,
       name: response.getVendorDetails.userName,
       bio: response.getVendorDetails.bio,
+      vendorId: response.data.vendorId,
     });
+    ;
 
     const allMedia = [];
     if (response?.data?.services?.[0]?.values?.CoverImage) {
@@ -78,6 +84,7 @@ function SinglePackage() {
 
     setImages(allMedia);
   };
+  console.log(vendorProfile)
   useEffect(() => {
     if (userId && (!cart || cart.length === 0)) {
       dispatch(fetchUserCart(userId)).then((response) => {
@@ -100,16 +107,19 @@ function SinglePackage() {
   const handleImageClick = (image) => {
     setSelectedImage(image);
   };
-  const addTocartHandle = async (defaultPrice, selectedsession, addOns) => {
+  const addTocartHandle = async (defaultPrice, selectedsession,date,time,pincode) => {
     try {
-      console.log(defaultPrice, selectedsession);
+      console.log(defaultPrice, selectedsession,date,time,pincode);
 
       const formData = new FormData();
       formData.append("serviceId", serviceId);
       formData.append("packageId", packageId);
-      formData.append("defaultPrice", defaultPrice);
+      formData.append("date", date);
+      formData.append("time", time);
+      formData.append("pincode", pincode);
+      formData.append("vendorId", vendorProfile?.vendorId);
+      formData.append("defaultPrice", Number(defaultPrice));
       formData.append("selectedSessions", JSON.stringify(selectedsession));
-      formData.append("addons", addOns);
 
       const response = await addToCartApi.callApi(userId, formData);
 
@@ -199,8 +209,9 @@ function SinglePackage() {
               ?.Amount ||
             singlePageData?.services?.[0]?.values?.["SessionLength"]?.[0]
               ?.Amount ||
-            singlePageData?.services?.[0]?.values?.["SessionLength&Pricing"]?.[0]
-              ?.Amount ||
+            singlePageData?.services?.[0]?.values?.[
+              "SessionLength&Pricing"
+            ]?.[0]?.Amount ||
             singlePageData?.services?.[0]?.values?.["QtyPricing"]?.[0]?.Rates
           }
           eventData={singlePageData?.services?.[0]?.values?.EventType}

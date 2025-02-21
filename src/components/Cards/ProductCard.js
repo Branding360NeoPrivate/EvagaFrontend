@@ -51,7 +51,7 @@ function ProductCard({
           alt={title}
           className="w-full h-full object-cover rounded-t-md"
           style={{
-            aspectRatio: "4 / 5", // Safari fallback
+            aspectRatio: "4 / 5", 
             objectFit: "cover",
             display: "block",
           }}

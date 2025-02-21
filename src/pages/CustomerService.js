@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AccordionCard from "../components/Cards/AccordionCard";
+import { Link } from "react-router-dom";
 
 function CustomerService() {
   const [activeTab, setActiveTab] = useState("faq");
@@ -8,12 +9,13 @@ function CustomerService() {
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : null);
   };
-  const email = "info@evagaentertainment.com"; // Replace with your support email address
-  const subject = "Support Request"; // Customize the email subject
-  const body = "Hello Support Team,\n\nI need assistance with..."; // Customize the email body
+  const email = "info@evagaentertainment.com";
+  const subject = "Support Request";
+  const body = "Hello Support Team,\n\nI need assistance with...";
 
-  const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
+  const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+    email
+  )}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
   const faqData = [
     {
@@ -107,23 +109,19 @@ function CustomerService() {
           Order Related Query
         </p>{" "}
         <p
-          className={
-            activeTab === "orderRelQry"
-              ? "text-primary cursor-pointer font-medium"
-              : "text-textGray cursor-pointer font-medium"
-          }
+          className={"text-textGray cursor-pointer font-medium"}
           // onClick={() => setActiveTab("orderRelQry")}
         >
-          Whatsapp Support
+          <Link
+            to={"https://whatsapp.com/channel/0029VaWXX585fM5adzGAzC1C"}
+            target="_blank"
+          >
+            Whatsapp Support
+          </Link>
         </p>{" "}
         <p
-          className={
-            activeTab === "orderRelQry"
-              ? "text-primary cursor-pointer font-medium"
-              : "text-textGray cursor-pointer font-medium"
-          }
+          className={"text-textGray cursor-pointer font-medium"}
           onClick={() => window.open(gmailLink, "_blank")}
-        
         >
           Email Support
         </p>

@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { internalRoutes } from "../../utils/internalRoutes";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
+
 function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
   const navigate = useNavigate();
   const { auth } = useAuth();
@@ -21,7 +22,6 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
   const [date, setDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const [dateInput, setDateInput] = useState("");
-  const [selectedTime, setSelectedTime] = useState("AM");
   const [basePrice, setBasePrice] = useState(
     Number(renderPrice?.Price || renderPrice?.Pricing) || 0
   );
@@ -31,9 +31,6 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
     setShowCalendar(false);
   };
 
-  const handleTimeSelect = (time) => {
-    setSelectedTime(time);
-  };
   const keysToRender = [
     "AddOns",
     "Capacity & Pricing",
@@ -71,27 +68,38 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
     "Prices & Duration": "prices-duration-icon-url",
     "Price && MOQ": "price-moq-icon-url",
   };
-  const [formattedTime, setFormattedTime] = useState('');
+  const [formattedTime, setFormattedTime] = useState("");
+  const [selectedTime, setSelectedTime] = useState(""); // AM/PM
 
   const handleTimeChange = (event) => {
     let timeValue = event.target.value;
-    let [hours, minutes] = timeValue.split(':');
+    let [hours, minutes] = timeValue.split(":");
 
-    let period = 'AM';
-    if (hours > 12) {
-      hours = hours - 12;
-      period = 'PM';
-    } else if (hours == 0) {
+    let period = "AM";
+    if (parseInt(hours) > 12) {
+      hours = parseInt(hours) - 12;
+      period = "PM";
+    } else if (hours === "00") {
       hours = 12;
-      period = 'AM';
-    } else if (hours == 12) {
-      period = 'PM';
+      period = "AM";
+    } else if (hours === "12") {
+      period = "PM";
     }
 
-    let formattedTime12Hour = `${hours}:${minutes} ${period}`;
+    const formattedTime12Hour = `${hours}:${minutes} ${period}`;
     setFormattedTime(formattedTime12Hour);
-    console.log("Time in 12-hour format:", formattedTime12Hour);
+    setSelectedTime(period);
   };
+  console.log(formattedTime, "setSelectedTime");
+
+  const handleTimeSelect = (period) => {
+    if (formattedTime) {
+      const [time] = formattedTime.split(" ");
+      setFormattedTime(`${time} ${period}`);
+      setSelectedTime(period);
+    }
+  };
+
   const [quantity, setQuantity] = useState(1);
   const [selectedAddOns, setSelectedAddOns] = useState([]);
   const calculatedPrice = useMemo(() => {
@@ -157,9 +165,18 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
   }, []);
 
   const handleAddTocart = async () => {
+    const missingFields = [];
+    if (!dateInput) missingFields.push("Date");
+    if (!pincode) missingFields.push("Pin Code");
+    if (!formattedTime) missingFields.push("Time");
+
+    if (missingFields.length > 0) {
+      toast.warning(`${missingFields.join(", ")} is required.`);
+      return;
+    }
     if (auth?.isAuthenticated && auth?.role === "user") {
       try {
-        addTocart(basePrice, selectedAddOns);
+        addTocart(basePrice, selectedAddOns, dateInput, formattedTime, pincode);
       } catch (error) {
         toast.error("Failed to Add To Cart. Please try again.");
         console.error(error);
@@ -225,29 +242,29 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
 
           <div className="mb-4">
             <label className=" block text-primary mb-2">Time</label>
-            <div className="flex gap-2">
+            <div className="flex items-center justify-center gap-2">
               <input
                 type="time"
                 className="w-full py-2 px-3 border rounded-md text-gray-600 focus:outline-primary"
                 onChange={handleTimeChange}
               />
-              <div className="flex ">
+              <div className="flex  gap-2">
                 <button
                   onClick={() => handleTimeSelect("AM")}
-                  className={`px-2 py-1 font-bold rounded ${
+                  className={`px-3 py-1 font-bold rounded ${
                     selectedTime === "AM"
-                      ? "bg-yellow-300 text-primary"
-                      : "bg-gray-200 text-gray-600"
+                      ? "bg-yellow-300 text-primary py-2"
+                      : "bg-gray-200 text-gray-600 py-2"
                   }`}
                 >
                   AM
                 </button>
                 <button
                   onClick={() => handleTimeSelect("PM")}
-                  className={`px-2 py-1 font-bold rounded ${
+                  className={`px-3 py-1 font-bold rounded ${
                     selectedTime === "PM"
-                      ? "bg-yellow-300 text-primary"
-                      : "bg-gray-200 text-gray-600"
+                      ? "bg-yellow-300 text-primary py-2"
+                      : "bg-gray-200 text-gray-600 py-2"
                   }`}
                 >
                   PM

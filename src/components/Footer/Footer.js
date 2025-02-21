@@ -5,9 +5,9 @@ function Footer() {
   const backToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-  const email = "info@evagaentertainment.com"; // Replace with your support email address
-  const subject = "Support Request"; // Customize the email subject
-  const body = "Hello Support Team,\n\nI need assistance with..."; // Customize the email body
+  const email = "info@evagaentertainment.com"; 
+  const subject = "Support Request"; 
+  const body = "Hello Support Team,\n\nI need assistance with..."; 
 
   const gmailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
     email

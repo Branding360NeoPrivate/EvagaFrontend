@@ -19,6 +19,8 @@ const orderApis = {
     apiService.get(apiEndpoints.order.getallcompleteorder),
   getAllConfirmedOrder: () =>
     apiService.get(apiEndpoints.order.getallconfirmedorder),
+  getOrderByUserId: (userId) =>
+    apiService.get(apiEndpoints.order.getorderbyuserid(userId)),
 };
 
 export default orderApis;

@@ -18,6 +18,7 @@ function OrderVenderCard({
   DeliverablesData,
   AddOnData,
   price,
+  buttons = [],
 }) {
   const [openModal, setOpenModal] = useState(false);
 
@@ -99,11 +100,10 @@ function OrderVenderCard({
           <MdOutlineReportGmailerrorred />
           <p>Report a concern</p>
         </span>
-        <span className="flex items-center justify-between gap-3 w-full">
-          <button className="btn-transparent-border" onClick={handleOpenModal}>
-            Cancel Booking
-          </button>
-          <button className="btn-primary">Start Service</button>
+        <span className="flex items-center justify-end gap-3 w-full">
+          {buttons.map((button, index) => (
+            <span key={index}>{button}</span>
+          ))}
         </span>
       </div>
       <ReusableModal

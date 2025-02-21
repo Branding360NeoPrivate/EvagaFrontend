@@ -20,6 +20,7 @@ import CouponsCard from "../components/Cards/CouponsCard";
 import Tag from "../assets/Temporary Images/tags1.png";
 import { fetchUserCart } from "../context/redux/slices/cartSlice";
 import couponApi from "../services/couponApi";
+import orderApis from "../services/orderApis";
 function CheckOut() {
   const { auth } = useAuth();
   const history = useNavigate();
@@ -39,6 +40,19 @@ function CheckOut() {
   const [modalType, setModalType] = useState("addAddress");
   const dispatch = useDispatch();
   const userId = Cookies.get("userId");
+  const [userData, setUserData] = useState();
+  const createOrderApi = useServices(orderApis.createUserOrder);
+  const validateOrderApi = useServices(orderApis.valiDateUserOrder);
+  const getUserProfileApi = useServices(userApi.getUserProfile);
+  const getUserdetailhandle = async () => {
+    const response = await getUserProfileApi.callApi(userId);
+    setUserData(response);
+  };
+  useEffect(() => {
+    if (userId) {
+      getUserdetailhandle();
+    }
+  }, [userId]);
   const handleOpen = () => {
     setOpen(true);
   };
@@ -168,12 +182,88 @@ function CheckOut() {
     }
   }, [userId, cart, dispatch]);
   const handleApplyCoupon = (query) => {
-
-
     dispatch(
       fetchUserCart({ userId: userId, query: { couponCode: "ffgfg123456" } })
     );
   };
+  const loadScript = (src) => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const createOrderHandle = async () => {
+    try {
+      let storedOrderId = localStorage.getItem("razorpay_order_id");
+
+      if (!storedOrderId) {
+        // Step 1: Create order on backend only if there's no stored order
+        const response = await createOrderApi.callApi(userId);
+        console.log("Order Creation Response:", response);
+
+        if (!response || !response.order_id) {
+          console.error("Missing order_id or amount");
+          return;
+        }
+
+        storedOrderId = response.order_id;
+        localStorage.setItem("razorpay_order_id", storedOrderId);
+      }
+
+      const response = await createOrderApi.callApi(userId);
+
+      const { order_id, amount, currency } = response;
+
+      if (!order_id || !amount) {
+        console.error("Missing order_id or amount");
+        return;
+      }
+
+      const isScriptLoaded = await loadScript(
+        "https://checkout.razorpay.com/v1/checkout.js"
+      );
+      if (!isScriptLoaded) {
+        console.error("Failed to load Razorpay script.");
+        return;
+      }
+
+      const options = {
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+        amount: amount,
+        currency: currency || "INR",
+        name: "Evaga Entertainment ",
+        description: "Order Payment",
+        order_id: order_id,
+        method: "wallet",
+        handler: async (response) => {
+          const formdata = new FormData();
+          formdata.append("orderId", response.razorpay_order_id);
+          formdata.append("paymentId", response.razorpay_payment_id);
+          formdata.append("razorpaySignature", response.razorpay_signature);
+          await validateOrderApi.callApi(formdata);
+
+          window.location.href = `${internalRoutes.orderStatus}?order_id=${response.razorpay_order_id}`;
+        },
+        prefill: {
+          name: userData?.name,
+          email: userData?.email,
+          contact: userData?.phoneNumber,
+        },
+        theme: { color: "#3399cc" },
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+    } catch (error) {
+      console.error("Error in Order Creation or Payment:", error);
+    }
+  };
+  console.log(cart);
+  
 
   if (!auth?.isAuthenticated || auth?.role !== "user") {
     return (
@@ -196,6 +286,25 @@ function CheckOut() {
         >
           Login
         </button>
+      </motion.div>
+    );
+  }
+  if (!cart || cart?.items?.length === 0 ||cart?.message === 'Cart not found') {
+    return (
+      <motion.div
+        className="flex items-center justify-center flex-col gap-3 w-full h-[50vh]"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{
+          opacity: { duration: 0.8, ease: "easeInOut" },
+          scale: { duration: 0.5, ease: "easeOut" },
+        }}
+      >
+        <p className="text-primary text-xl text-textGray">
+          Your Cart Is Empty
+        </p>
+     
       </motion.div>
     );
   }
@@ -262,7 +371,7 @@ function CheckOut() {
             setModalType={setModalType}
             openModal={handleOpen}
             discount={cart?.discount}
-            paymentPageUrl={internalRoutes.payment}
+            onPlaceOrder={createOrderHandle}
           />
         </div>
       </div>

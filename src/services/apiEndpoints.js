@@ -161,6 +161,7 @@ const apiEndpoints = {
     getallongoingorder: `order/ongoing-order`,
     getallcompleteorder: `order/completed-order`,
     getallconfirmedorder: `order/confirmed-order`,
+    getorderbyuserid:(userId)=> `userOrder/get-order-by-user-Id/${userId}`,
   },
 };
 
