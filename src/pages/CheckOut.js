@@ -21,6 +21,7 @@ import Tag from "../assets/Temporary Images/tags1.png";
 import { fetchUserCart } from "../context/redux/slices/cartSlice";
 import couponApi from "../services/couponApi";
 import orderApis from "../services/orderApis";
+import { IoMdArrowRoundBack } from "react-icons/io";
 function CheckOut() {
   const { auth } = useAuth();
   const history = useNavigate();
@@ -28,10 +29,12 @@ function CheckOut() {
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [couponCode, setCouponCode] = useState(null);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [userSelectedAddress, setUserSelectedAddress] = useState(null);
   const addUserAddress = useServices(userApi.addUserAdress);
   const updateOneAddress = useServices(userApi.updateOneAddress);
   const getOneUserAddress = useServices(userApi.getOneAddress);
   const getUserAllAddress = useServices(userApi.getUserAllAddress);
+  const getUserSelectedAddressApi = useServices(userApi.getUserSelectedAddress);
   const deleteOneAddress = useServices(userApi.deleteOneAddress);
   const selectOneUserAddress = useServices(userApi.selectOneUserAddress);
   const getAllCoupon = useServices(couponApi.getAllValidCoupons);
@@ -143,13 +146,17 @@ function CheckOut() {
   };
   const handleDeleteOneUserAddress = async () => {
     const response = await deleteOneAddress.callApi(selectedAddressId);
-    console.log(response);
     handleClose();
     handleGetAllUserAddress();
   };
   const handleSelectOneAddressWithUserId = async (addressId) => {
-    const response = await selectOneUserAddress.callApi(userId, addressId);
-    console.log(response);
+    try {
+      const response = await selectOneUserAddress.callApi(userId, addressId);
+      handleGetAllUserAddress();
+      setIsEditingAddress(false);
+    } catch (error) {
+      console.log("error while selecting address");
+    }
   };
   const handleGetAllUserAddress = useCallback(async () => {
     try {
@@ -159,6 +166,15 @@ function CheckOut() {
       console.error("Error fetching user addresses:", error);
     }
   }, [isEditingAddress]);
+  const getUserSelectedAddressApiHandle = async () => {
+    const response = await getUserSelectedAddressApi.callApi(userId);
+    setUserSelectedAddress(response ? response?.addresses : null);
+  };
+  useEffect(() => {
+    if (!isEditingAddress) {
+      getUserSelectedAddressApiHandle();
+    }
+  }, [!isEditingAddress]);
   const getAllCouponHandle = async () => {
     const response = await getAllCoupon.callApi();
     setAllCoupon(response);
@@ -183,7 +199,7 @@ function CheckOut() {
   }, [userId, cart, dispatch]);
   const handleApplyCoupon = (query) => {
     dispatch(
-      fetchUserCart({ userId: userId, query: { couponCode: "ffgfg123456" } })
+      fetchUserCart({ userId: userId, query: { couponCode: couponCode } })
     );
   };
   const loadScript = (src) => {
@@ -262,8 +278,8 @@ function CheckOut() {
       console.error("Error in Order Creation or Payment:", error);
     }
   };
-  console.log(cart);
-  
+console.log(cart);
+
 
   if (!auth?.isAuthenticated || auth?.role !== "user") {
     return (
@@ -289,7 +305,11 @@ function CheckOut() {
       </motion.div>
     );
   }
-  if (!cart || cart?.items?.length === 0 ||cart?.message === 'Cart not found') {
+  if (
+    !cart ||
+    cart?.items?.length === 0 ||
+    cart?.message === "Cart not found"
+  ) {
     return (
       <motion.div
         className="flex items-center justify-center flex-col gap-3 w-full h-[50vh]"
@@ -301,10 +321,7 @@ function CheckOut() {
           scale: { duration: 0.5, ease: "easeOut" },
         }}
       >
-        <p className="text-primary text-xl text-textGray">
-          Your Cart Is Empty
-        </p>
-     
+        <p className="text-primary text-xl text-textGray">Your Cart Is Empty</p>
       </motion.div>
     );
   }
@@ -314,6 +331,12 @@ function CheckOut() {
         <div className="flex-1 md:flex-[0.72] flex flex-col gap-4 w-full">
           {isEditingAddress ? (
             <div className="flex flex-col gap-4">
+              <span
+                className="flex items-center justify-start gap-1 text-textGray cursor-pointer"
+                onClick={() => setIsEditingAddress(false)}
+              >
+                <IoMdArrowRoundBack /> Back
+              </span>
               <span className="flex items-center justify-between w-full">
                 <h2 className="text-xl font-medium text-primary">
                   Select a Delivery Address
@@ -335,13 +358,17 @@ function CheckOut() {
                     onEditFunction={handleGetOneAddress}
                     setSelectedAddressId={setSelectedAddressId}
                     selectAddress={handleSelectOneAddressWithUserId}
+                    selected={item?.selected}
                   />
                 ))}
               </div>
             </div>
           ) : (
             <div className="flex flex-col gap-4">
-              <AddressSelector setIsEditingAddress={setIsEditingAddress} />
+              <AddressSelector
+                setIsEditingAddress={setIsEditingAddress}
+                userAddress={userSelectedAddress}
+              />
               <div className="flex flex-col gap-2">
                 {cart?.items?.map((item) => (
                   <CheckOutCard
@@ -372,6 +399,8 @@ function CheckOut() {
             openModal={handleOpen}
             discount={cart?.discount}
             onPlaceOrder={createOrderHandle}
+            selectedAddress={userSelectedAddress}
+            coupondiscount={cart?.discount}
           />
         </div>
       </div>

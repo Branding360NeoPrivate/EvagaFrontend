@@ -175,6 +175,8 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
       return;
     }
     if (auth?.isAuthenticated && auth?.role === "user") {
+      console.log(basePrice, selectedAddOns);
+
       try {
         addTocart(basePrice, selectedAddOns, dateInput, formattedTime, pincode);
       } catch (error) {

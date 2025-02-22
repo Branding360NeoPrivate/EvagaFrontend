@@ -18,6 +18,7 @@ export const SelectAddressCard = ({
         <input
           type="radio"
           id="selectaddress"
+          checked={selected===true}
           onClick={() => [selectAddress(address?._id)]}
         />
         <span className="flex items-start justify-start flex-col gap-1">

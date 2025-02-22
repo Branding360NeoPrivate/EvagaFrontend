@@ -44,8 +44,6 @@ function SinglePackage() {
       bio: response.getVendorDetails.bio,
       vendorId: response.data.vendorId,
     });
-    ;
-
     const allMedia = [];
     if (response?.data?.services?.[0]?.values?.CoverImage) {
       const coverImage = response.data.services[0].values.CoverImage;
@@ -84,10 +82,9 @@ function SinglePackage() {
 
     setImages(allMedia);
   };
-  console.log(vendorProfile)
   useEffect(() => {
     if (userId && (!cart || cart.length === 0)) {
-      dispatch(fetchUserCart(userId)).then((response) => {
+      dispatch(fetchUserCart({userId})).then((response) => {
         if (!response || response.length === 0) {
           console.log("Server response is empty. No cart items fetched.");
         }
@@ -107,10 +104,14 @@ function SinglePackage() {
   const handleImageClick = (image) => {
     setSelectedImage(image);
   };
-  const addTocartHandle = async (defaultPrice, selectedsession,date,time,pincode) => {
+  const addTocartHandle = async (
+    defaultPrice,
+    selectedsession,
+    date,
+    time,
+    pincode
+  ) => {
     try {
-      console.log(defaultPrice, selectedsession,date,time,pincode);
-
       const formData = new FormData();
       formData.append("serviceId", serviceId);
       formData.append("packageId", packageId);
@@ -123,16 +124,12 @@ function SinglePackage() {
 
       const response = await addToCartApi.callApi(userId, formData);
 
-      if (!response) {
-        console.error("Failed to add to cart: No response from the API.");
-        return;
-      }
+      dispatch(fetchUserCart({userId})).then((response) => {
+        if (!response || response.length === 0) {
+          console.log("Server response is empty. No cart items fetched.");
+        }
+      });
 
-      // Fetch updated cart
-      const cartResponse = await dispatch(fetchUserCart(userId));
-      if (!cartResponse || cartResponse.length === 0) {
-        console.log("Server response is empty. No cart items fetched.");
-      }
       toast.success("Item Added To Cart");
     } catch (error) {
       console.error("An error occurred while adding to cart:", error);

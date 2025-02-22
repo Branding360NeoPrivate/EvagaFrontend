@@ -21,6 +21,44 @@ const orderApis = {
     apiService.get(apiEndpoints.order.getallconfirmedorder),
   getOrderByUserId: (userId) =>
     apiService.get(apiEndpoints.order.getorderbyuserid(userId)),
+  getOrderByUserId: (userId) =>
+    apiService.get(apiEndpoints.order.getorderbyuserid(userId)),
+  getNewOrderByVendorId: (vendorId) =>
+    apiService.get(apiEndpoints.order.getneworderbyvendorid(vendorId)),
+  getConfirmedOrderByVendorId: (vendorId) =>
+    apiService.get(apiEndpoints.order.getconfirmedorderbyvendorid(vendorId)),
+  getvendoractiveorders: (vendorId) =>
+    apiService.get(apiEndpoints.order.getVendorActiveOrders(vendorId)),
+  getAllCompletedOrders: (vendorId) =>
+    apiService.get(apiEndpoints.order.getAllCompletedOrders(vendorId)),
+  getAllCancelledOrders: (vendorId) =>
+    apiService.get(apiEndpoints.order.getAllCancelledOrders(vendorId)),
+  AcceptUserOrderbyorderId: (orderId, id) =>
+    apiService.post(apiEndpoints.order.acceptUserOrderbyorderId(orderId, id)),
+  StartUserOrderbyorderId: (orderId, id) =>
+    apiService.post(apiEndpoints.order.startUserOrderbyorderId(orderId, id)),
+  EndUserorderbyorderId: (orderId, id) =>
+    apiService.post(apiEndpoints.order.endUserorderbyorderId(orderId, id)),
+  VerifyStartServicebyorderId: (orderId, id, formdata) =>
+    apiService.post(
+      apiEndpoints.order.verifyStartServicebyorderId(orderId, id),
+      formdata,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    ),
+  verifyEndServiceOrderId: (orderId, id, formdata) =>
+    apiService.post(
+      apiEndpoints.order.verifyEndServiceorderId(orderId, id),
+      formdata,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    ),
 };
 
 export default orderApis;

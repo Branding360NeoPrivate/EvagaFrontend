@@ -73,6 +73,7 @@ const apiEndpoints = {
     deleteOneAddress: (addressId) =>
       `user/delete-user-one-address/${addressId}`,
     getUserAllAddress: (userId) => `user/get-user-all-address/${userId}`,
+    getUserSelectedAddress: (userId) => `user/get-user-selected-address/${userId}`,
     selectOneUserAddress: (userId, addressId) =>
       `user/select-one-address/${userId}/${addressId}`,
     addToCart: (userId) => `cart/add-to-cart/${userId}`,
@@ -162,6 +163,16 @@ const apiEndpoints = {
     getallcompleteorder: `order/completed-order`,
     getallconfirmedorder: `order/confirmed-order`,
     getorderbyuserid:(userId)=> `userOrder/get-order-by-user-Id/${userId}`,
+    getneworderbyvendorid:(vendorId)=> `vendorOrder/get-new-order-by-vendor-Id/${vendorId}`,
+    getconfirmedorderbyvendorid:(vendorId)=> `vendorOrder/get-confirmed-order-by-vendor-Id/${vendorId}`,
+    getVendorActiveOrders:(vendorId)=> `vendorOrder/getVendorActiveOrders/${vendorId}`,
+    getAllCompletedOrders:(vendorId)=> `vendorOrder/getAllCompletedOrders/${vendorId}`,
+    getAllCancelledOrders:(vendorId)=> `vendorOrder/getAllCancelledOrders/${vendorId}`,
+    acceptUserOrderbyorderId:(orderId,id)=> `vendorOrder/acceptUserOrder/${orderId}/${id}`,
+    startUserOrderbyorderId:(orderId,id)=> `vendorOrder/startUserOrder/${orderId}/${id}`,
+    endUserorderbyorderId:(orderId,id)=> `vendorOrder/endUserOrder/${orderId}/${id}`,
+    verifyEndServiceorderId:(orderId,id)=> `vendorOrder/verifyEndService/${orderId}/${id}`,
+    verifyStartServicebyorderId:(orderId,id)=> `vendorOrder/verifyStartService/${orderId}/${id}`,
   },
 };
 

@@ -4,6 +4,7 @@ import CommentInfo from "../../assets/Temporary Images/comment-info1.png";
 import Add from "../../assets/Temporary Images/AddButton.png";
 import formatCurrency from "../../utils/formatCurrency";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 function CheckoutSummary({
   totalOfcart,
   totalWithFee,
@@ -13,11 +14,17 @@ function CheckoutSummary({
   setModalType,
   discount,
   paymentPageUrl,
-  onPlaceOrder, // Function to handle order creation
+  onPlaceOrder,
+  selectedAddress,
+  coupondiscount,
 }) {
   const navigate = useNavigate();
 
   const handlePlaceOrder = async () => {
+    if (!selectedAddress) {
+      toast.error("Please select an address before placing the order!");
+      return;
+    }
     if (paymentPageUrl) {
       // Redirect to payment page if URL is provided
       navigate(paymentPageUrl);
@@ -59,20 +66,33 @@ function CheckoutSummary({
         </div>
         <div className="text-normal flex justify-between mb-2">
           <span className="font-medium">Discount on MRP</span>
-          <span>{formatCurrency(discount)}</span>
+          <span>{formatCurrency(0)}</span>
         </div>
         <div className="text-normal flex justify-between mb-2">
           <span className="font-medium">Coupon Discount</span>
           <span>
-            <a
-              href="#"
-              className="text-primary"
-              onClick={() => [setModalType("applyCoupon"), openModal()]}
-            >
-              Apply Coupon
-            </a>
+            {coupondiscount ? (
+              <span className=" font-semibold">
+                {coupondiscount} - {formatCurrency(coupondiscount)}
+                <button
+                  className="ml-2 text-red-500 text-sm"
+                  // onClick={() => removeAppliedCoupon()}
+                >
+                  Remove
+                </button>
+              </span>
+            ) : (
+              <a
+                href="#"
+                className="text-primary"
+                onClick={() => [setModalType("applyCoupon"), openModal()]}
+              >
+                Apply Coupon
+              </a>
+            )}
           </span>
         </div>
+
         <div className="text-normal flex justify-between mb-2">
           <span className="font-medium">Platform Fee</span>
           <span>{formatCurrency(platformFee)}</span>

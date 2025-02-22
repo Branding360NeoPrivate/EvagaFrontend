@@ -8,10 +8,17 @@ import {
 import formatCurrency from "../../utils/formatCurrency";
 import ReusableModal from "../Modal/Modal";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { formatDate } from "../../utils/formatDate";
 function OrderVenderCard({
   title,
   image,
   yearofexp,
+  orderId,
+  date,
+  time,
+  userName,
+  phone,
+  email,
   category,
   desc,
   InclusionData,
@@ -30,49 +37,45 @@ function OrderVenderCard({
     setOpenModal(false);
   };
   return (
-    <div className="w-full grid grid-cols-4 gap-1 border-borderSecondary border-2 rounded-md rounded-l-lg">
+    <div className="w-full h-[24rem] grid grid-cols-4 gap-4 border-borderSecondary border-2 rounded-md rounded-l-lg">
       <img
         src={image ? image : ServiceImage}
         alt="Service Image"
-        className="rounded-l-lg"
+        className="rounded-l-lg object-fit w-full h-[24rem] "
       />
+
       <div className="col-span-2 flex items-start justify-start flex-col py-2 px-1 gap-2">
         <div className="grid grid-cols-3 gap-4">
           <h5 className="text-primary font-semibold text-xl col-span-2">
             {title ? title : "Hospitality Staff"}
           </h5>
           <p className="text-primary font-semibold">
-            Order ID:{yearofexp ? yearofexp : " 445311"}
+            Order ID:{orderId && orderId}
           </p>
         </div>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <span className="text-primary font-semibold flex ">
             Scheduled Date:
-            <p className="text-textGray">
-              {yearofexp ? yearofexp : "22/10/2024"}
-            </p>
+            <p className="text-textGray">{date && formatDate(date)}</p>
           </span>
           <span className="text-primary font-semibold flex ">
             Scheduled Time:
-            <p className="text-textGray">
-              {yearofexp ? yearofexp : "10:30 AM"}
-            </p>
+            <p className="text-textGray">{time && time}</p>
           </span>
         </div>
         <p className="text-primary">Customer Details</p>
         <div className="grid grid-cols-2 gap-4">
           <span className="text-primary font-semibold flex ">
             Name:
-            <p className="text-textGray">
-              {yearofexp ? yearofexp : "Shobhit Agarwal"}
-            </p>
+            <p className="text-textGray">{userName && userName}</p>
           </span>
-
           <span className="text-primary font-semibold flex ">
             Ph.Number:
-            <p className="text-textGray">
-              {yearofexp ? yearofexp : "+91 98880 99811"}
-            </p>
+            <p className="text-textGray">{phone && phone}</p>
+          </span>{" "}
+          <span className="text-primary font-semibold flex ">
+            Email:
+            <p className="text-textGray">{email && email}</p>
           </span>
         </div>
         <div className="grid grid-cols-1 gap-4">
