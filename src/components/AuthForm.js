@@ -387,7 +387,7 @@ const AuthForm = ({ stages, formType, handleFormSubmit, role }) => {
             onClick={() => setShowPassword(!showPassword)}
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 focus:outline-none"
           >
-            {showPassword ? <FaEyeSlash className="text-textGray"/> : <FaEye className="text-textGray"/>}
+            {showPassword ? <FaEye className="text-textGray"/>  :<FaEyeSlash className="text-textGray"/> }
           </button>
         )}
       </div>
