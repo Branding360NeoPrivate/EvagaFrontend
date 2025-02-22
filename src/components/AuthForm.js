@@ -11,11 +11,12 @@ import vendorApi from "../services/vendorApi";
 import Cookies from "js-cookie";
 import userApi from "../services/userApi";
 import { useAuth } from "../context/AuthContext";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 const AuthForm = ({ stages, formType, handleFormSubmit, role }) => {
   const [currentStage, setCurrentStage] = useState(0);
   const [isOtpVerified, setIsOtpVerified] = useState(false);
   const [otpSentResponse, setOtpSentResponse] = useState(null);
-
+  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
@@ -119,7 +120,6 @@ const AuthForm = ({ stages, formType, handleFormSubmit, role }) => {
       (field) => field.name === "confirmPassword"
     );
     const hasOtp = currentFields.some((field) => field.name === "otp");
-
 
     try {
       // Special case: Forgot password flow or flows requiring OTP
@@ -370,13 +370,27 @@ const AuthForm = ({ stages, formType, handleFormSubmit, role }) => {
     }
 
     return (
-      <input
-        type={field?.type}
-        defaultValue={field?.def || ""}
-        min={field?.min}
-        {...register(field?.name, field?.validation)}
-        className="w-full px-4 py-2 border rounded-md bg-gray-100 focus:outline-none"
-      />
+      <div className="relative w-full">
+        <input
+          type={
+            field?.type === "password" && showPassword ? "text" : field?.type
+          }
+          defaultValue={field?.def || ""}
+          min={field?.min}
+          {...register(field?.name, field?.validation)}
+          className="w-full px-4 py-2 border rounded-md bg-gray-100 focus:outline-none"
+        />
+
+        {field?.type === "password" && (
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 focus:outline-none"
+          >
+            {showPassword ? <FaEyeSlash className="text-textGray"/> : <FaEye className="text-textGray"/>}
+          </button>
+        )}
+      </div>
     );
   };
 

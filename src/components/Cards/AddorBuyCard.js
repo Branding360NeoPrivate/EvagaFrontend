@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css"; // Default styles for React Calendar
 import { FaCalendarAlt } from "react-icons/fa"; // Import calendar icon
@@ -19,6 +19,19 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
   const navigate = useNavigate();
   const { auth } = useAuth();
   const [pincode, setPincode] = useState("");
+  const calendarRef = useRef(null);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+        setShowCalendar(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   const [date, setDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const [dateInput, setDateInput] = useState("");
@@ -90,7 +103,6 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
     setFormattedTime(formattedTime12Hour);
     setSelectedTime(period);
   };
-  console.log(formattedTime, "setSelectedTime");
 
   const handleTimeSelect = (period) => {
     if (formattedTime) {
@@ -210,7 +222,7 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
         </div>
 
         <div className="flex flex-col gap-4">
-          <div className=" mb-4 relative">
+          <div className=" mb-4 relative" ref={calendarRef}>
             <label className="block text-primary mb-2">Date</label>
             <div className="flex items-center">
               <input

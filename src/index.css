@@ -327,3 +327,32 @@ input[type="number"] {
   margin-bottom: 0.5rem; /* Adds spacing between items */
 }
 
+/* Custom scrollbar for all browsers */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #6A1B9A, #B85DAA); /* Gradient thumb */
+  border-radius: 10px;
+  border: 2px solid transparent; /* Space between thumb and track */
+  background-clip: padding-box; /* Makes the gradient effect sharp */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth animation */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #9A3EC9, #C77CC7); /* Hover gradient */
+  box-shadow: 0 0 5px rgba(106, 27, 154, 0.8); /* Glow effect */
+
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f3f3f3;
+  border-radius: 10px;
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin; /* Thin scrollbar for Firefox */
+  scrollbar-color: #6A1B9A #f3f3f3; /* Thumb and track for Firefox */
+}
+

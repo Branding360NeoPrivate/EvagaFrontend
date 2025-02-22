@@ -46,35 +46,39 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
   return (
     <div className="flex w-full h-[400px] rounded-md overflow-hidden p-5 bg-white">
       <div className="w-[20%] h-full overflow-y-scroll no-scrollbar">
-        <div className="flex flex-col gap-2 p-2">
-          {mediaUrls.map((url, index) => (
-            <div key={index} className="cursor-pointer">
-              {isImage(url) ? (
-                <img
-                  src={
-                    process.env.REACT_APP_API_Aws_Image_BASE_URL +
-                    url.replace("images/", "thumbnails/")
-                  }
-                  alt={`Thumbnail ${index + 1}`}
-                  className="w-[80px] h-[60px] object-cover rounded-md border-2 border-transparent hover:scale-110 hover:border-blue-500 transition-transform duration-200"
-                  loading="lazy"
-                  onClick={() => [onMediaClick(url), setIsModalOpen(true)]}
-                />
-              ) : (
-                <div
-                  className="relative w-[80px] h-[60px] object-cover rounded-md border-2 border-transparent hover:scale-110 hover:border-blue-500 transition-transform duration-200"
-                  onClick={() => [onMediaClick(url), setIsModalOpen(true)]}
-                >
-                  <img
-                    src={videoThumbnil}
-                    alt="Video Placeholder"
-                    className="w-full h-full object-cover rounded-md"
-                  />
-                </div>
-              )}
-            </div>
-          ))}
+      <div
+  className="flex flex-col gap-2 p-2 h-[300px] overflow-y-auto overflow-x-hidden custom-scrollbar"
+>
+  {mediaUrls.map((url, index) => (
+    <div key={index} className="cursor-pointer">
+      {isImage(url) ? (
+        <img
+          src={
+            process.env.REACT_APP_API_Aws_Image_BASE_URL +
+            url.replace("images/", "thumbnails/")
+          }
+          alt={`Thumbnail ${index + 1}`}
+          className="w-[80px] h-[60px] object-cover rounded-md border-2 border-transparent hover:scale-110 hover:border-blue-500 transition-transform duration-200"
+          loading="lazy"
+          onClick={() => [onMediaClick(url), setIsModalOpen(true)]}
+        />
+      ) : (
+        <div
+          className="relative w-[80px] h-[60px] object-cover rounded-md border-2 border-transparent hover:scale-110 hover:border-blue-500 transition-transform duration-200"
+          onClick={() => [onMediaClick(url), setIsModalOpen(true)]}
+        >
+          <img
+            src={videoThumbnil}
+            alt="Video Placeholder"
+            className="w-full h-full object-cover rounded-md"
+          />
         </div>
+      )}
+    </div>
+  ))}
+</div>
+
+
       </div>
 
       {/* Main Media View */}

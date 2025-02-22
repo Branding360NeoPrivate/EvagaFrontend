@@ -44,7 +44,7 @@ function ProductCard({
   };
 
   return (
-    <div className="w-[250px] h-auto border rounded-lg bg-white overflow-hidden flex-shrink-0">
+    <div className="w-[250px] h-auto border rounded-lg bg-white overflow-hidden flex-shrink-0 cursor-pointer">
       <div className="w-full h-[180px]" onClick={onClick}>
         <img
           src={popularimage}
