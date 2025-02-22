@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 import { CiEdit } from "react-icons/ci";
 import ReusableModal from "../Modal/Modal";
 import EditVendorService from "./EditVendorService";
-import { IoMdArrowRoundBack } from "react-icons/io";
+import { IoMdArrowRoundBack, IoMdCloseCircleOutline } from "react-icons/io";
 function VendorserviceTable({
   onMenuSelect,
   selectedVendor,
@@ -405,6 +405,10 @@ function VendorserviceTable({
         <Fade in={open}>
           <Box sx={style} className="w-[90%] sm:w-[80%]">
             <div className="flex items-center justify-center flex-col w-full p-4 gap-2">
+              <span className="w-full flex items-center justify-end text-textGray text-2xl cursor-pointer"  onClick={handleClose}>
+
+            <IoMdCloseCircleOutline className="float-right"/>
+              </span>
               <div className="flex items-center justify-center  gap-4 w-full">
                 <span
                   className="flex items-center justify-start gap-2 w-full"

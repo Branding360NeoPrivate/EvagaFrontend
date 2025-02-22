@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { height } from "@mui/system";
+import { IoMdCloseCircleOutline } from "react-icons/io";
 
 const style = {
   position: "absolute",
@@ -41,7 +42,10 @@ const ReusableModal = ({
           className={`sm:w-[90%] md:w-[80%] lg:w-[${width}|| 45%]`}
 
         >
-          <h2 className="text-xl font-semibold text-primary mb-4">{title}</h2>
+          <span className="flex items-center justify-between w-full">
+          <h2 className="text-xl font-semibold text-primary mb-4">{title?title:""}</h2>
+          <IoMdCloseCircleOutline className='text-textGray text-2xl cursor-pointer' onClick={onClose}/>
+          </span>
           {children}
         </Box>
       </Modal>
