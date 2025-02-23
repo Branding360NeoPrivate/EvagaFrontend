@@ -185,6 +185,7 @@ const EditDynamicForm = ({
     }));
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -1475,15 +1476,7 @@ const EditDynamicForm = ({
                         className="w-[10rem] rounded-md object-cover"
                       />
                     )}
-                    {/* <p>
-                      {Array.isArray(formValues[`${field.key}`]) &&
-                      typeof formValues[`${field.key}`][0] === "string"
-                        ? formValues[`${field.key}`][0].replace(
-                            /^service\//,
-                            ""
-                          )
-                        : formValues[`${field.key}`]?.[0]?.name}
-                    </p> */}
+            
 
                     <button
                       onClick={() => handleChange(`${field.key}`, null)}
@@ -1538,17 +1531,21 @@ const EditDynamicForm = ({
                 </div>
                 {formValues?.[`${field.key}`] && (
                   <span className="text-textGray bg-textLightGray flex p-1 rounded-md gap-1">
-                    {formValues[`${field.key}`] && (
-                      <img
-                        src={
-                          process.env.REACT_APP_API_Aws_Image_BASE_URL +
-                          formValues[`${field.key}`]
-                        }
-                        alt="Selected"
-                        className="w-[10rem] rounded-md object-cover"
-                      />
-                    )}
-                    {/* <p>{formValues[`${field.key}`]?.[0]?.name}</p> */}
+                    <img
+                      src={
+                        typeof formValues[`${field.key}`] === "string"
+                          ? process.env.REACT_APP_API_Aws_Image_BASE_URL +
+                            formValues[`${field.key}`]
+                          : URL?.createObjectURL(formValues[`${field.key}`])
+                      }
+                      alt="Selected"
+                      className="w-[10rem] rounded-md object-cover"
+                    />
+                    {/* Display the name if the value is a File */}
+                    {typeof formValues[`${field.key}`] === "object" &&
+                      formValues[`${field.key}`]?.name && (
+                        <p>{formValues[`${field.key}`].name}</p>
+                      )}
                     <button
                       onClick={() => handleChange(`${field.key}`, null)} // Remove specific file
                       className="px-3 py-1"
@@ -1609,17 +1606,21 @@ const EditDynamicForm = ({
                           key={idx}
                           className="text-textGray bg-textLightGray flex p-1 rounded-md justify-between items-center gap-1"
                         >
-                          {formValues[`${field.key}`] && (
-                            <img
-                              src={
-                                process.env.REACT_APP_API_Aws_Image_BASE_URL +
-                                item
-                              }
-                              alt="Selected"
-                              className="w-[10rem] rounded-md object-cover"
-                            />
-                          )}
-                          <p>{item?.name || "Uploaded File"}</p>
+                          <img
+                            src={
+                              typeof item === "string"
+                                ? process.env.REACT_APP_API_Aws_Image_BASE_URL +
+                                  item
+                                : URL?.createObjectURL(item)
+                            }
+                            alt="Selected"
+                            className="w-[10rem] rounded-md object-cover"
+                          />
+                          <p>
+                            {typeof item === "object" && item?.name
+                              ? item.name
+                              : "Uploaded File"}
+                          </p>
                           <button
                             className="text-primary hover:text-red-500"
                             onClick={() => {
@@ -1692,22 +1693,17 @@ const EditDynamicForm = ({
                                 key={photoIdx}
                                 className="text-textGray bg-textLightGray flex p-1 rounded-md gap-1"
                               >
-                                {formValues[`${field.key}`] && (
-                                  <img
-                                    src={
-                                      process.env
-                                        .REACT_APP_API_Aws_Image_BASE_URL +
-                                      photo
-                                    }
-                                    alt="Selected"
-                                    className="w-[10rem] rounded-md object-cover"
-                                  />
-                                )}
-                                {/* <p>
-                                  {typeof photo === "string"
-                                    ? photo.replace(/^service\//, "")
-                                    : photo?.name || "Invalid photo format"}
-                                </p> */}
+                                <img
+                                  src={
+                                    typeof photo === "string"
+                                      ? process.env
+                                          .REACT_APP_API_Aws_Image_BASE_URL +
+                                        photo
+                                      : URL?.createObjectURL(photo)
+                                  }
+                                  alt="Selected"
+                                  className="w-[10rem] rounded-md object-cover"
+                                />
                                 <button
                                   onClick={() =>
                                     handleFileRemove(
@@ -1778,43 +1774,29 @@ const EditDynamicForm = ({
                                 key={videoIdx}
                                 className="text-textGray bg-textLightGray flex p-1 rounded-md gap-1"
                               >
-                                {" "}
-                                {formValues[`${field.key}`] && (
-                                  <video controls>
-                                    <source
-                                      src={
-                                        process.env
-                                          .REACT_APP_API_Aws_Image_BASE_URL +
-                                        formValues?.Portfolio?.videos[0]
-                                      }
-                                      type="video/mp4"
-                                      alt="Selected"
-                                      className="w-[10rem] rounded-md object-cover"
-                                    />
-                                  </video>
-                                )}
-                                {/* <p>
-                                  {Array.isArray(
-                                    formValues?.Portfolio?.videos
-                                  ) && formValues?.Portfolio?.videos.length > 0
-                                    ? typeof formValues?.Portfolio
-                                        ?.videos[0] === "string"
-                                      ? formValues?.Portfolio?.videos[0].replace(
-                                          /^service\//,
-                                          ""
-                                        )
-                                      : formValues?.Portfolio?.videos[0]
-                                          ?.name || "Invalid videos format"
-                                    : "No video available"}
-                                </p> */}
+                                <video
+                                  controls
+                                  className="w-[10rem] rounded-md object-cover"
+                                >
+                                  <source
+                                    src={
+                                      typeof video === "string"
+                                        ? process.env
+                                            .REACT_APP_API_Aws_Image_BASE_URL +
+                                          video
+                                        : URL?.createObjectURL(video)
+                                    }
+                                    type="video/mp4"
+                                    alt="Selected"
+                                  />
+                                </video>
                                 <button
-                                  onClick={
-                                    () =>
-                                      handleFileRemove(
-                                        field.key,
-                                        "videos",
-                                        videoIdx
-                                      ) // No index
+                                  onClick={() =>
+                                    handleFileRemove(
+                                      field.key,
+                                      "videos",
+                                      videoIdx
+                                    )
                                   }
                                   className="px-3 py-1"
                                 >

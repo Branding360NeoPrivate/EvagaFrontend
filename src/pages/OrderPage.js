@@ -3,6 +3,7 @@ import OrderVenderCard from "../components/Cards/OrderVenderCard";
 import orderApis from "../services/orderApis";
 import useServices from "../hooks/useServices";
 import Cookies from "js-cookie";
+import { internalRoutes } from "../utils/internalRoutes";
 export const OrderPage = (props) => {
   const [activeState, setActivestate] = useState("New Orders");
   const [allOrder, setAllOrder] = useState([]);
@@ -75,9 +76,65 @@ export const OrderPage = (props) => {
         </span>
         {activeState === "New Orders" && (
           <div className="w-full min-h-[50vh] flex items-center justfiy-center flex-col gap-4">
-            {allOrder?.map((item) => (
-              <OrderVenderCard />
-            ))}
+            {allOrder?.map((item) => {
+              const imageUrl =
+                (Array.isArray(item.packageDetails?.CoverImage)
+                  ? item.packageDetails?.CoverImage[0]
+                  : item.packageDetails?.CoverImage) ||
+                (Array.isArray(item.packageDetails?.ProductImage)
+                  ? item.packageDetails?.ProductImage[0]
+                  : item.packageDetails?.ProductImage);
+
+              const popularimage = imageUrl?.startsWith("service/")
+                ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
+                : imageUrl;
+
+              return (
+                <OrderVenderCard
+                  title={item?.packageDetails?.Title}
+                  orderId={item?.orderId}
+                  image={popularimage}
+                  time={item?.time}
+                  date={item?.date}
+                  userName={item?.userProfile?.name}
+                  phone={item?.userProfile?.phoneNumber}
+                  email={item?.userProfile?.email}
+                  redirectUrl={internalRoutes?.orderDetail+`/${item?.orderId}`+`/${item?._id}`}
+                  // buttons={[
+                  //   item?.otp && new Date(item?.otpExpiry) > new Date() ? (
+                  //     <button
+                  //       key="verify"
+                  //       className="btn-primary px-2"
+                  //       onClick={() => [
+                  //         handleOpenModal(item?.otp),
+                  //         setModalType("verifyendorder"),
+                  //         setOrderIdAndItemId({
+                  //           ...orderIdAndItemId,
+                  //           orderId: item?.orderId,
+                  //           id: item?._id,
+                  //         }),
+                  //       ]}
+                  //     >
+                  //       Verify OTP
+                  //     </button>
+                  //   ) : (
+                  //     <button
+                  //       key="start"
+                  //       className="btn-primary px-2"
+                  //       onClick={() =>
+                  //         EndUserorderbyorderIdApiHandle(
+                  //           item?.orderId,
+                  //           item?._id
+                  //         )
+                  //       }
+                  //     >
+                  //       End Service
+                  //     </button>
+                  //   ),
+                  // ]}
+                />
+              );
+            })}
           </div>
         )}{" "}
         {activeState === "Confirmed Orders" && (

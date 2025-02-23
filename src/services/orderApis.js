@@ -23,6 +23,10 @@ const orderApis = {
     apiService.get(apiEndpoints.order.getorderbyuserid(userId)),
   getOrderByUserId: (userId) =>
     apiService.get(apiEndpoints.order.getorderbyuserid(userId)),
+  getOneUserOrderByOrderId: (orderId, itemId) =>
+    apiService.get(
+      apiEndpoints.order.getoneuserorderbyorderid(orderId, itemId)
+    ),
   getNewOrderByVendorId: (vendorId) =>
     apiService.get(apiEndpoints.order.getneworderbyvendorid(vendorId)),
   getConfirmedOrderByVendorId: (vendorId) =>

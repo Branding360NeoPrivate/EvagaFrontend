@@ -8,25 +8,23 @@ import orderApis from "../../services/orderApis";
 import formatCurrency from "../../utils/formatCurrency";
 import ReusableModal from "../Modal/Modal";
 const PriceBreakdown = ({
-  userPrice,
-  gstRate,
-  platformFeeRate,
-  gatewayFeeRate,
+  totalPrice, // Base price for the user
+  gstAmount, // GST amount paid by the user
+  gstPercentage, // GST percentage for calculations
+  platformFee, // Platform fee for the user
+  platformGstAmount, // GST on the platform fee
+  gatewayFeeRate, // Gateway fee rate for calculations
 }) => {
-  // Adjust vendor price by removing 12% from the user price
-  const vendorPrice = userPrice / 1.12; // Removing the 12% markup
+  const vendorPrice = totalPrice * (1 - Number(gstPercentage) / 100);
+  console.log(vendorPrice, totalPrice);
 
-  // Calculations
-  const totalGSTUser = userPrice * gstRate; // GST for user
-  const totalGSTVendor = vendorPrice * gstRate; // GST for vendor
-  const platformFeesUser = userPrice * platformFeeRate; // Platform fees for user
-  const platformFeesVendor = vendorPrice * platformFeeRate; // Platform fees for vendor
-  const gatewayFeesUser = userPrice * gatewayFeeRate; // Gateway fees for user
-  const gatewayFeesVendor = vendorPrice * gatewayFeeRate; // Gateway fees for vendor
+  const vendorGST = vendorPrice * (Number(gstPercentage) / 100);
 
-  // Admin Calculations
-  const adminDifference = userPrice - vendorPrice; // Difference between user and vendor price
-  const adminShare = adminDifference - (platformFeesUser - platformFeesVendor); // Admin share after subtracting fees
+  const adminGST = gstAmount - vendorGST;
+
+  const gatewayFeesVendor =
+    (totalPrice + platformFee + gstAmount) * gatewayFeeRate;
+  const adminShare = platformFee + platformGstAmount + adminGST;
 
   return (
     <div className="p-6">
@@ -42,7 +40,7 @@ const PriceBreakdown = ({
               Vendor
             </th>
             <th className="border border-gray-300 px-4 py-2 text-left">
-              Admin
+              Evaga
             </th>
           </tr>
         </thead>
@@ -52,63 +50,75 @@ const PriceBreakdown = ({
               Total Base Price
             </td>
             <td className="border border-gray-300 px-4 py-2">
-              ₹{userPrice.toFixed(2)}
+              ₹{totalPrice?.toFixed(2)}
             </td>
             <td className="border border-gray-300 px-4 py-2">
-              ₹{vendorPrice.toFixed(2)}
+              ₹{vendorPrice?.toFixed(2)}
             </td>
             <td className="border border-gray-300 px-4 py-2">
-              ₹{adminDifference.toFixed(2)}
+              ₹{(totalPrice - vendorPrice)?.toFixed(2)}
             </td>
           </tr>
           <tr>
             <td className="border border-gray-300 px-4 py-2">Total GST</td>
             <td className="border border-gray-300 px-4 py-2">
-              ₹{totalGSTUser.toFixed(2)}
+              ₹{gstAmount?.toFixed(2)}
             </td>
             <td className="border border-gray-300 px-4 py-2">
-              ₹{totalGSTVendor.toFixed(2)}
+              ₹{vendorGST?.toFixed(2)}
             </td>
             <td className="border border-gray-300 px-4 py-2">
-              ₹{(totalGSTUser - totalGSTVendor).toFixed(2)}
+              ₹{adminGST?.toFixed(2)}
             </td>
           </tr>
           <tr>
             <td className="border border-gray-300 px-4 py-2">Platform Fees</td>
             <td className="border border-gray-300 px-4 py-2">
-              ₹{platformFeesUser.toFixed(2)}
+              ₹{platformFee?.toFixed(2)}
+            </td>
+            <td className="border border-gray-300 px-4 py-2">N/A</td>
+            <td className="border border-gray-300 px-4 py-2">
+              ₹{platformFee?.toFixed(2)}
+            </td>
+          </tr>
+          <tr>
+            <td className="border border-gray-300 px-4 py-2">
+              Platform Fees GST
             </td>
             <td className="border border-gray-300 px-4 py-2">
-              ₹{platformFeesVendor.toFixed(2)}
+              ₹{platformGstAmount?.toFixed(2)}
             </td>
+            <td className="border border-gray-300 px-4 py-2">N/A</td>
             <td className="border border-gray-300 px-4 py-2">
-              ₹{(platformFeesUser - platformFeesVendor).toFixed(2)}
+              ₹{platformGstAmount?.toFixed(2)}
             </td>
           </tr>
           <tr>
             <td className="border border-gray-300 px-4 py-2">Gateway Fees</td>
+            <td className="border border-gray-300 px-4 py-2">N/A</td>
             <td className="border border-gray-300 px-4 py-2">
-              ₹{gatewayFeesUser.toFixed(2)}
+              ₹{gatewayFeesVendor?.toFixed(2)}
             </td>
-            <td className="border border-gray-300 px-4 py-2">
-              ₹{gatewayFeesVendor.toFixed(2)}
-            </td>
-            <td className="border border-gray-300 px-4 py-2">
-              ₹{(gatewayFeesUser - gatewayFeesVendor).toFixed(2)}
-            </td>
+            <td className="border border-gray-300 px-4 py-2">N/A</td>
           </tr>
           <tr className="bg-gray-50">
             <td className="border border-gray-300 px-4 py-2 font-bold">
               Final Amount
             </td>
             <td className="border border-gray-300 px-4 py-2 font-bold">
-              ₹{(userPrice + totalGSTUser + platformFeesUser).toFixed(2)}
+              ₹
+              {(
+                totalPrice +
+                gstAmount +
+                platformFee +
+                platformGstAmount
+              )?.toFixed(2)}
             </td>
             <td className="border border-gray-300 px-4 py-2 font-bold">
-              ₹{(vendorPrice + totalGSTVendor - platformFeesVendor).toFixed(2)}
+              ₹{(vendorPrice + gatewayFeesVendor+vendorGST)?.toFixed(2)}
             </td>
             <td className="border border-gray-300 px-4 py-2 font-bold">
-              ₹{adminShare.toFixed(2)}
+              ₹{adminShare?.toFixed(2)}
             </td>
           </tr>
         </tbody>
@@ -117,6 +127,7 @@ const PriceBreakdown = ({
   );
 };
 
+const gatewayFeeRate = 0.02;
 function NewOrdertable() {
   const [page, setPage] = useState(1);
   const [allOrder, setAllOrder] = useState([]);
@@ -145,17 +156,17 @@ function NewOrdertable() {
   };
   function setOneOrderhandle(orderId) {
     // Filter the order matching the given user ID
-    const matchingOrder = allOrder.find(order => order._id === orderId);
+    const matchingOrder = allOrder.find((order) => order._id === orderId);
 
     if (matchingOrder) {
-        console.log("Matching Order:", matchingOrder);
-        setOneOrder(matchingOrder)
-        // return matchingOrder;
+      console.log("Matching Order:", matchingOrder);
+      setOneOrder(matchingOrder);
+      // return matchingOrder;
     } else {
-        console.log("No order found for the given user ID.");
-        return null;
+      console.log("No order found for the given user ID.");
+      return null;
     }
-}
+  }
   useEffect(() => {
     getAllNewOrderHandle();
   }, []);
@@ -181,7 +192,13 @@ function NewOrdertable() {
     {
       label: "Amount",
       key: "totalAmount",
-      render: (row) => formatCurrency(row?.totalAmount),
+      render: (row) =>
+        formatCurrency(
+          row?.totalAmount +
+            row?.totalGst +
+            row?.items?.[0]?.platformFee +
+            row?.items?.[0]?.platformGstAmount
+        ),
     },
     {
       label: "Status",
@@ -199,7 +216,7 @@ function NewOrdertable() {
             onClick={() => [
               handleOpenModal(),
               setModalType("viewOrder"),
-              setOneOrderhandle(row?._id)
+              setOneOrderhandle(row?._id),
             ]}
           />
           <CiEdit
@@ -223,7 +240,7 @@ function NewOrdertable() {
     },
   ];
   console.log(oneOrder);
-  
+
   return (
     <div>
       {" "}
@@ -241,15 +258,23 @@ function NewOrdertable() {
       >
         {modalType === "viewOrder" && (
           <PriceBreakdown
-          userPrice={1000}
-          gstRate={0.18}
-          platformFeeRate={0.02}
-          gatewayFeeRate={0.02} // 2% Gateway fees
-        />
+            totalPrice={oneOrder.totalAmount}
+            gstAmount={oneOrder?.totalGst}
+            gstPercentage={oneOrder?.items?.[0]?.gstPercentage}
+            platformFee={oneOrder?.items?.[0]?.platformFee}
+            platformGstAmount={oneOrder?.items?.[0]?.platformGstAmount}
+            gatewayFeeRate={gatewayFeeRate}
+          />
         )}
       </ReusableModal>
     </div>
   );
 }
 
+// totalPrice, // Base price for the user
+// gstAmount, // GST amount paid by the user
+// gstPercentage, // GST percentage for calculations
+// platformFee, // Platform fee for the user
+// platformGstAmount, // GST on the platform fee
+// gatewayFeeRate, // Gateway fee rate for calculations
 export default NewOrdertable;

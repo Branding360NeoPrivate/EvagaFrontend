@@ -96,7 +96,7 @@ const DynamicNav = () => {
       roles: ["vendor"],
     },
     {
-      label: "Community",
+      label: "Vendor Community",
       path: internalRoutes.vendorCommunity,
       roles: ["vendor"],
     },
@@ -256,6 +256,15 @@ const DynamicNav = () => {
                         isActive ? "text-white" : "text-[#FAFAFA4D]"
                       } hover:text-gray-300`
                     }
+                    onClick={(e) => {
+                      if (item.label === "Vendor Community") {
+                        e.preventDefault(); // Prevent navigation
+                        handleOpen()
+                        setModalType("evagaXperience") // Call a function to open the modal
+                      } else {
+                        closeMobileMenu(); // Use the current functionality
+                      }
+                    }}
                   >
                     {item.label}
                   </NavLink>

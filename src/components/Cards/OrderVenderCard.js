@@ -9,6 +9,8 @@ import formatCurrency from "../../utils/formatCurrency";
 import ReusableModal from "../Modal/Modal";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { formatDate } from "../../utils/formatDate";
+import { useNavigate } from "react-router-dom";
+
 function OrderVenderCard({
   title,
   image,
@@ -25,9 +27,11 @@ function OrderVenderCard({
   DeliverablesData,
   AddOnData,
   price,
+  redirectUrl,
   buttons = [],
 }) {
   const [openModal, setOpenModal] = useState(false);
+  const navigate = useNavigate();
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -36,15 +40,26 @@ function OrderVenderCard({
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+
+  const handleNavigate = () => {
+    if (redirectUrl) navigate(redirectUrl);
+  };
+
   return (
-    <div className="w-full h-[24rem] grid grid-cols-4 gap-4 border-borderSecondary border-2 rounded-md rounded-l-lg">
+    <div className="w-full h-[24rem] grid grid-cols-4 gap-4 border-borderSecondary border-2 rounded-md rounded-l-lg ">
       <img
         src={image ? image : ServiceImage}
         alt="Service Image"
         className="rounded-l-lg object-fit w-full h-[24rem] "
+        onClick={redirectUrl ? handleNavigate : undefined}
       />
 
-      <div className="col-span-2 flex items-start justify-start flex-col py-2 px-1 gap-2">
+      <div
+        className={`col-span-2 flex items-start justify-start flex-col py-2 px-1 gap-2 ${
+          redirectUrl ? "cursor-pointer" : ""
+        }`}
+        onClick={redirectUrl ? handleNavigate : undefined}
+      >
         <div className="grid grid-cols-3 gap-4">
           <h5 className="text-primary font-semibold text-xl col-span-2">
             {title ? title : "Hospitality Staff"}
