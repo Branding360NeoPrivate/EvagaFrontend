@@ -52,6 +52,7 @@ import PaymentPage from "./pages/PaymentPage";
 import OrderSucessPage from "./pages/OrderSucessPage";
 import OrderPage from "./pages/OrderPage";
 import UserOrderDetailPage from "./pages/userOrderDetailPage";
+import VendorService from "./pages/Vendor/VendorService";
 const AppContent = () => {
   const { auth } = useAuth();
   const dispatch = useDispatch();
@@ -130,6 +131,7 @@ const AppContent = () => {
         <Route element={<TermsAndConditions />} path={internalRoutes.TermsAndConditions} />
         <Route element={<FeedBack />} path={internalRoutes.feedbackForm} />
         <Route element={<CustomerService />} path={internalRoutes.customerService} />
+        <Route element={<VendorService />} path={internalRoutes.vendorSupport} />
         <Route element={<OrderPage />} path={internalRoutes.order} />
         <Route element={<UserOrderDetailPage />} path={`${internalRoutes.orderDetail+ "/:orderId/:itemId"}`} />
         <Route
