@@ -33,8 +33,8 @@ function VendorEditService() {
   ) => {
     try {
       setLoading(true);
-      setyearofExperience("");
-      setAbouttheService("");
+      // setyearofExperience("");
+      // setAbouttheService("");
       const response = await selectedCategoryForm.callApi(catId, subCatId);
       setFormFeilds(response?.Form);
       setMenuFeilds(response?.Menu && response?.Menu);
