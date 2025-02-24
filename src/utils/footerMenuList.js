@@ -2,11 +2,11 @@ import { internalRoutes } from "./internalRoutes";
 export const footerMenuItems = {
   leftMenu: [
     { label: "About Evaga", path: internalRoutes.aboutUs },
-    { label: "Careers", path: internalRoutes.careers },
+    // { label: "Careers", path: internalRoutes.careers },
     { label: "Press Releases", path: internalRoutes.pressReleases },
-    { label: "Advertise with Us", path: internalRoutes.advertiseWithUs },
+    // { label: "Advertise with Us", path: internalRoutes.advertiseWithUs },
     // { label: "Grievance Officer", path: internalRoutes.grievanceOfficer },
-    { label: "Popular Searches", path: internalRoutes.popularSearches },
+    // { label: "Popular Searches", path: internalRoutes.popularSearches },
   ],
   midMenu: [
     { label: "Evaga Community", path: internalRoutes.evagaCommunity },

@@ -215,16 +215,17 @@ function CheckOut() {
 
   const createOrderHandle = async (numofParts) => {
     console.log(numofParts);
-    
+
     try {
       let storedOrderId = localStorage.getItem("razorpay_order_id");
 
       if (!storedOrderId) {
-        // Step 1: Create order on backend only if there's no stored order
-
+        const formData = new FormData();
+        formData.append("numberOfPart",numofParts)
         const response = await createOrderApi.callApi(
           userId,
-          numofParts ? numofParts : 1
+          numofParts ? numofParts : 1,
+          formData
         );
         console.log("Order Creation Response:", response);
 
@@ -285,7 +286,6 @@ function CheckOut() {
       console.error("Error in Order Creation or Payment:", error);
     }
   };
- 
 
   if (!auth?.isAuthenticated || auth?.role !== "user") {
     return (

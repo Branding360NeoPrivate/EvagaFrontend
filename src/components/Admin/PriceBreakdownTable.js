@@ -88,7 +88,7 @@ const PriceBreakdown = ({
           <tr>
             <td className="border border-gray-300 px-4 py-2">Gateway Fees</td>
             <td className="border border-gray-300 px-4 py-2">N/A</td>
-            <td className="border border-gray-300 px-4 py-2">
+            <td className="border border-gray-300 px-4 py-2 text-red-500">
               ₹{gatewayFeesVendor?.toFixed(2)}
             </td>
             <td className="border border-gray-300 px-4 py-2">N/A</td>
@@ -106,8 +106,8 @@ const PriceBreakdown = ({
                 platformGstAmount
               )?.toFixed(2)}
             </td>
-            <td className="border border-gray-300 px-4 py-2 font-bold">
-              ₹{(vendorPrice + gatewayFeesVendor + vendorGST)?.toFixed(2)}
+            <td className="border border-gray-300 px-4 py-2 font-bold ">
+              ₹{(vendorPrice - gatewayFeesVendor + vendorGST)?.toFixed(2)}
             </td>
             <td className="border border-gray-300 px-4 py-2 font-bold">
               ₹{adminShare?.toFixed(2)}
