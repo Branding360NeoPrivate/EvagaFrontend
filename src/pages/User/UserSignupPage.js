@@ -36,7 +36,7 @@ function UserSignupPage() {
     const token = response.credential;
 
     const result = await userGoogleLogin.callApi(token);
-    console.log(result,'result');
+    console.log(result, "result");
   };
 
   // const handleGoogleLogin = async (token) => {
@@ -50,10 +50,9 @@ function UserSignupPage() {
   //   });
   //   return response.json();
   // };
-  
 
   return (
-    <div className=" w-full min-h-[100vh] flex justify-center items-center">
+    <div className=" w-full md:min-h-[100vh] flex flex-col-reverse pt-10 md:pt-0 md:flex-row justify-center items-center">
       <div className=" flex-1 flex items-center justify-center w-[90%]">
         <img
           src={userSignUp}
@@ -94,7 +93,6 @@ function UserSignupPage() {
             <div className="w-full">
               <LoginWithGoogleForUser userGoogleLogin={handleGoogleLogin} />
             </div>
-
           </div>
         </AuthBox>
       </div>

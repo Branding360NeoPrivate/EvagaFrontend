@@ -8,6 +8,7 @@ import {
   FaAngleRight,
   FaAngleLeft,
   FaRegMoneyBillAlt,
+  FaSitemap,
 } from "react-icons/fa";
 import { RiCoupon3Line } from "react-icons/ri";
 import MainLogo from "../../assets/Temporary Images/Evaga Logo.png";

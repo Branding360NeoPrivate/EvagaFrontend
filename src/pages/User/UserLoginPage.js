@@ -30,18 +30,21 @@ function UserLoginPage() {
   };
   const handleGoogleLogin = async (token) => {
     console.log("Token received:", token);
-    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL+"user/auth/google"}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token }),
-    });
+    const response = await fetch(
+      `${process.env.REACT_APP_API_BASE_URL + "user/auth/google"}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      }
+    );
     return response.json();
   };
 
   return (
-    <div className=" w-full h-[100vh] flex justify-center items-center">
+    <div className=" w-full md:h-[100vh] flex flex-col-reverse pt-10 md:pt-0 md:flex-row justify-center items-center">
       <div className=" flex-1 flex items-center justify-center w-[90%]">
         <img
           src={userLogin}

@@ -44,7 +44,7 @@ function AdminLoginPage() {
   };
 
   return (
-    <div className=" w-full h-auto md:h-[100vh] flex flex-col md:flex-row justify-center items-center gap-4">
+    <div className=" w-full h-auto md:h-[100vh] flex flex-col-reverse pt-10 md:pt-0 md:flex-row justify-center items-center gap-4">
       <div className=" w-full md:w-[50%] h-full flex justify-center items-center bg-highlight">
         <img
           className="w-full md:w-auto md:h-full object-contain "

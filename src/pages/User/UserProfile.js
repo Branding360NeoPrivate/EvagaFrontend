@@ -612,17 +612,14 @@ function UserProfile() {
           </form>
         )}
         {modalType === "editAddress" && (
-          <form
-            onSubmit={handleSubmit(handleUpdateAddress)}
-            className=" w-full flex flex-col justify-center items-center gap-5"
-          >
-            <div className="w-full my-8 space-y-4">
-              <div className="w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+          <form onSubmit={handleSubmit(handleUpdateAddress)}>
+            <div className="my-8 space-y-4">
+              <div className="flex justify-between sm:flex-col lg:flex-row">
                 <label className="text-textGray text-xl">Name</label>
-                <span className="w-full lg:w-auto flex items-start justify-start flex-col gap-1">
+                <span className="flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
-                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none "
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
                     {...register("addressName", {
                       required: { value: true, message: "Name is required" },
                       minLength: {
@@ -642,12 +639,12 @@ function UserProfile() {
                   )}
                 </span>
               </div>{" "}
-              <div className="w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className="flex justify-between">
                 <label className="text-textGray text-xl">Address</label>
-                <span className="w-full lg:w-auto flex items-start justify-start flex-col gap-1">
+                <span className="flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
-                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none "
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
                     {...register("Address", {
                       required: { value: true, message: "Address is required" },
                       minLength: {
@@ -667,12 +664,12 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className="flex justify-between">
                 <label className="text-textGray text-xl">Address line 1</label>
-                <span className="w-full lg:w-auto flex items-start justify-start flex-col gap-1">
+                <span className="flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
-                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none "
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
                     {...register("AddressLine1", {
                       required: {
                         value: true,
@@ -695,12 +692,12 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className="flex justify-between">
                 <label className="text-textGray text-xl">Address line 2</label>
-                <span className="w-full lg:w-auto flex items-start justify-start flex-col gap-1">
+                <span className="flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
-                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none "
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
                     {...register("AddressLine2", {
                       required: {
                         value: true,
@@ -723,12 +720,12 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className="flex justify-between">
                 <label className="text-textGray text-xl">State</label>
-                <span className="w-full lg:w-auto flex items-start justify-start flex-col gap-1">
+                <span className="flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
-                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none "
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
                     {...register("State", {
                       required: { value: true, message: "State is required" },
                       minLength: {
@@ -748,12 +745,12 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className="flex justify-between">
                 <label className="text-textGray text-xl">Pincode</label>
-                <span className="w-full lg:w-auto flex items-start justify-start flex-col gap-1">
+                <span className="flex items-start justify-start flex-col gap1">
                   <input
                     type="number"
-                    className="w-[300px] sm:w-full lg:w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none  "
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none "
                     {...register("Pincode", {
                       required: { value: true, message: "Pincode is required" },
                       minLength: {

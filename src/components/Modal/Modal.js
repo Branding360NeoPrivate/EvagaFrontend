@@ -11,6 +11,7 @@ const ReusableModal = ({
   title,
   description,
   children,
+  width,
   height,
 }) => {
   const style = {

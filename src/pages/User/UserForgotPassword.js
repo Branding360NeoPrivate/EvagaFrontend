@@ -10,7 +10,7 @@ import useServices from "../../hooks/useServices";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 function UserForgotPassword() {
-    const hsitory = useNavigate();
+  const hsitory = useNavigate();
   const userNewPassword = useServices(userApi.resetpassword);
   const [countdown, setCountdown] = useState(5);
   const [isPasswordResetSuccess, setIsPasswordResetSuccess] = useState(false);
@@ -41,7 +41,7 @@ function UserForgotPassword() {
     console.log(response);
   };
   return (
-    <div className=" w-full h-[100vh] flex justify-center items-center">
+    <div className=" w-full md:h-[100vh] flex flex-col-reverse pt-10 md:pt-0 md:flex-row justify-center items-center">
       <div className=" flex-1 flex items-center justify-center w-[90%]">
         <img
           src={userLogin}
@@ -51,7 +51,7 @@ function UserForgotPassword() {
       </div>
       <div className=" flex-1 flex justify-center items-center">
         <AuthBox>
-        <div className="text-center">
+          <div className="text-center">
             <h4 className="text-primary text-3xl">Reset Password</h4>
             <h4 className="text-primary text-xl">Enter your details</h4>
           </div>
@@ -94,7 +94,7 @@ function UserForgotPassword() {
                 Or
               </span>
             </div>
-            
+
             {/* <button className=" btn-primary flex justify-center items-center gap-2">
                   <FcGoogle /> Login With Google
                 </button> */}
