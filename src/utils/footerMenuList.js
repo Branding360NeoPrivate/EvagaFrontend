@@ -13,7 +13,7 @@ export const footerMenuItems = {
     { label: "Become a Vendor", path: internalRoutes.vendorSignup },
     { label: "Vendor Login", path: internalRoutes.vendorLogin },
     { label: "Terms and Condition", path: internalRoutes.TermsAndConditions },
-    { label: "Privacy and Policy", path: internalRoutes.privacyAndPolicy },
+    { label: "Privacy Policy", path: internalRoutes.privacyAndPolicy },
   ],
   rightMenu: [
     { label: "Cancellation Policy", path: internalRoutes.cancellationPolicy },
