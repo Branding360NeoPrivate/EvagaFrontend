@@ -22,17 +22,22 @@ function CheckoutSummary({
 }) {
   const navigate = useNavigate();
 
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+
   const handlePlaceOrder = async () => {
+    if (isPlacingOrder) return; // Prevent multiple invocations
+
+    setIsPlacingOrder(true); // Set the state to prevent further clicks
+
     if (!selectedAddress) {
       toast.error("Please select an address before placing the order!");
+      setIsPlacingOrder(false);
       return;
     }
     if (paymentPageUrl) {
-      // Redirect to payment page if URL is provided
       navigate(paymentPageUrl);
     } else if (onPlaceOrder) {
       try {
-        // Call the provided function if it's passed
         await onPlaceOrder(partialPaymentPart);
         console.log("Order placed successfully");
       } catch (error) {
@@ -41,8 +46,9 @@ function CheckoutSummary({
     } else {
       console.error("No action defined for placing the order.");
     }
-  };
 
+    setIsPlacingOrder(false); // Re-enable the button after the process completes
+  };
   const [partialPaymentPart, setPartialPaymentPart] = useState(1);
   const [partialAmount, setPartialAmount] = useState(null);
   // Function to calculate partial payment amounts
@@ -150,8 +156,9 @@ function CheckoutSummary({
         <button
           className="w-[257px] px-4 py-2 bg-primary text-white rounded-md font-semibold hover:bg-purple-800"
           onClick={handlePlaceOrder}
+          disabled={isPlacingOrder} // Disable the button during the process
         >
-          Place Order
+          {isPlacingOrder ? "Processing..." : "Place Order"}
         </button>
       </div>
       {partialPaymentPart > 1 && partialAmount && (

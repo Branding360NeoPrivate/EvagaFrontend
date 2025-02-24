@@ -53,6 +53,9 @@ import OrderSucessPage from "./pages/OrderSucessPage";
 import OrderPage from "./pages/OrderPage";
 import UserOrderDetailPage from "./pages/userOrderDetailPage";
 import VendorService from "./pages/Vendor/VendorService";
+import PrivacyAndPolicy from "./pages/PrivacyAndPolicy";
+import Careers from "./pages/Careers";
+import AdvertisewithUs from "./pages/AdvertisewithUs";
 const AppContent = () => {
   const { auth } = useAuth();
   const dispatch = useDispatch();
@@ -129,6 +132,9 @@ const AppContent = () => {
         <Route element={<AboutEvaga />} path={internalRoutes.aboutUs} />
         <Route element={<RefundAndCancellation />} path={internalRoutes.cancellationPolicy} />
         <Route element={<TermsAndConditions />} path={internalRoutes.TermsAndConditions} />
+        <Route element={<PrivacyAndPolicy />} path={internalRoutes.privacyAndPolicy} />
+        <Route element={<Careers />} path={internalRoutes.careers} />
+        <Route element={<AdvertisewithUs />} path={internalRoutes.advertiseWithUs} />
         <Route element={<FeedBack />} path={internalRoutes.feedbackForm} />
         <Route element={<CustomerService />} path={internalRoutes.customerService} />
         <Route element={<VendorService />} path={internalRoutes.vendorSupport} />

@@ -213,8 +213,8 @@ function CheckOut() {
     });
   };
 
-  const createOrderHandle = async (partialPaymentPart) => {
-    console.log(partialPaymentPart);
+  const createOrderHandle = async (numofParts) => {
+    console.log(numofParts);
     
     try {
       let storedOrderId = localStorage.getItem("razorpay_order_id");
@@ -224,7 +224,7 @@ function CheckOut() {
 
         const response = await createOrderApi.callApi(
           userId,
-          partialPaymentPart ? partialPaymentPart : 1
+          numofParts ? numofParts : 1
         );
         console.log("Order Creation Response:", response);
 
@@ -285,7 +285,7 @@ function CheckOut() {
       console.error("Error in Order Creation or Payment:", error);
     }
   };
-  console.log();
+ 
 
   if (!auth?.isAuthenticated || auth?.role !== "user") {
     return (
