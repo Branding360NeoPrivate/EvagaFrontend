@@ -98,6 +98,9 @@ const apiEndpoints = {
     addfeedback: `feedback/add-feedback`,
     getallfeedback: `feedback/get-all-feedback`,
     getallwaitlist: `waitlist/get-all-waitlist`,
+    createQuery: `Query/create`,
+    getuserQuery:(userId)=> `Query/user/${userId}`,
+    getvendorQuery:(userId)=> `Query/vendor/${userId}`,
   },
   admin: {
     register: "admin/registerAdmin",
@@ -154,7 +157,7 @@ const apiEndpoints = {
     validateCoupons: "coupons/",
   },
   order: {
-    createOrder: (userId) => `createorder/create-order/${userId}`,
+    createOrder: (userId,numofParts) => `createorder/create-order/${userId}/${numofParts}`,
     validateOrder: `validateOrder/validate-order`,
     getpaymentdetailsbyuserid: (orderId) =>
       `getPaymentDetails/get-full-payment-deatils-by-orderId/${orderId}`,

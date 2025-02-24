@@ -24,7 +24,7 @@ function CheckOutCard({ price, image, title }) {
         <img src={CrossButton} alt="Close" className="w-6 h-6" />
       </button>
       <img
-        src={process.env.REACT_APP_API_Aws_Image_BASE_URL + image}
+        src={ image}
         alt={data.title}
         className="object-cover rounded-lg"
         style={{

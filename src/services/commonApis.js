@@ -11,6 +11,12 @@ const commonApis = {
     apiService.post(apiEndpoints.common.addfeedback, formdata),
   getAllFeedBack: () => apiService.get(apiEndpoints.common.getallfeedback),
   getAllAaitlist: () => apiService.get(apiEndpoints.common.getallwaitlist),
+  CreateQuery: (formdata) =>
+    apiService.post(apiEndpoints.common.createQuery, formdata),
+  GetuserQuery: (userId) =>
+    apiService.get(apiEndpoints.common.getuserQuery(userId)),
+  GetvendorQuery: (userId) =>
+    apiService.get(apiEndpoints.common.getvendorQuery(userId)),
 };
 
 export default commonApis;

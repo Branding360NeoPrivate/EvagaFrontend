@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Tag from "../../assets/Temporary Images/tags1.png";
 import CommentInfo from "../../assets/Temporary Images/comment-info1.png";
 import Add from "../../assets/Temporary Images/AddButton.png";
 import formatCurrency from "../../utils/formatCurrency";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import PaymentOptions from "../../utils/PaymentOptions";
 function CheckoutSummary({
   totalOfcart,
   totalWithFee,
@@ -17,6 +18,7 @@ function CheckoutSummary({
   onPlaceOrder,
   selectedAddress,
   coupondiscount,
+  cart,
 }) {
   const navigate = useNavigate();
 
@@ -31,7 +33,7 @@ function CheckoutSummary({
     } else if (onPlaceOrder) {
       try {
         // Call the provided function if it's passed
-        await onPlaceOrder();
+        await onPlaceOrder(partialPaymentPart);
         console.log("Order placed successfully");
       } catch (error) {
         console.error("Error while placing order:", error);
@@ -40,8 +42,40 @@ function CheckoutSummary({
       console.error("No action defined for placing the order.");
     }
   };
+
+  const [partialPaymentPart, setPartialPaymentPart] = useState(1);
+  const [partialAmount, setPartialAmount] = useState(null);
+  // Function to calculate partial payment amounts
+  const calculatePartialPayments = (total, parts) => {
+    if (parts === 1) {
+      return [total];
+    } else if (parts === 2) {
+      return [total * 0.8, total * 0.2]; // 80%, 20%
+    } else if (parts === 3) {
+      return [total * 0.5, total * 0.3, total * 0.2]; // 50%, 30%, 20%
+    }
+    return [];
+  };
+
+  const paymentDetails = useMemo(() => {
+    if (partialPaymentPart > 1) {
+      // Only calculate for partial payments
+      return calculatePartialPayments(totalWithFee, partialPaymentPart);
+    }
+    return [];
+  }, [totalWithFee, partialPaymentPart]);
+  useEffect(() => {
+    if (partialPaymentPart > 1) {
+      // Store only partial payments in state
+      setPartialAmount(paymentDetails);
+    } else {
+      setPartialAmount(null); // Clear the state for full payment
+    }
+  }, [partialPaymentPart, paymentDetails]);
+
   return (
-    <div className="w-full max-sm:w-full h-[560px] mx-auto border rounded-[10px] border-gray-300  p-6 bg-white font-['Poppins']">
+    <div className="w-full max-sm:w-full min-h-[560px] mx-auto border rounded-[10px] border-gray-300  p-6 bg-white font-['Poppins']">
+      <PaymentOptions cart={cart} setNumberOfPart={setPartialPaymentPart} />
       <h2 className="text-xl font-semibold text-primary mb-4">Coupons</h2>
       <div className="flex items-center mb-6">
         <img src={Tag} alt="tag1" />
@@ -120,6 +154,43 @@ function CheckoutSummary({
           Place Order
         </button>
       </div>
+      {partialPaymentPart > 1 && partialAmount && (
+        <div className="partial-payments bg-[#CACACA] p-2 px-3 mt-2 rounded-md text-textGray">
+          <h3 className="flex">
+            Partial Payment Breakdown: <p>Total Parts: {partialPaymentPart}</p>
+          </h3>
+
+          <ul>
+            {partialAmount.map((amount, index) => {
+              const percentage =
+                partialPaymentPart === 2
+                  ? index === 0
+                    ? 80
+                    : 20
+                  : index === 0
+                  ? 50
+                  : index === 1
+                  ? 30
+                  : 20;
+
+              return (
+                <li key={index}>
+                  {percentage}%: {formatCurrency(amount)}
+                </li>
+              );
+            })}
+          </ul>
+          {partialPaymentPart === 3 && (
+            <p>
+              The second payment will be paid in 30 days, and the third payment
+              must be paid before 14 days.
+            </p>
+          )}
+          {partialPaymentPart === 2 && (
+            <p>The second payment must be paid before 14 days.</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

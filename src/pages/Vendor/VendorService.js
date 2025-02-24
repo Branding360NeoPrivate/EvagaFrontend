@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import AccordionCard from "../../components/Cards/AccordionCard";
-
+import NonOrderRelatedQuery from "../../components/Cards/NonOrderRelatedQuery";
+import useServices from "../../hooks/useServices";
+import commonApis from "../../services/commonApis";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 function VendorService() {
+  const userId = Cookies.get("userId");
   const [activeTab, setActiveTab] = useState("faq");
   const [expanded, setExpanded] = useState(null);
 
@@ -90,6 +95,31 @@ function VendorService() {
         "Yes! We encourage customers to share their experiences to help others make informed decisions.",
     },
   ];
+  const CreateQueryApi = useServices(commonApis.CreateQuery);
+  const CreateQueryApiHandle = async (data) => {
+    if (!userId) {
+      toast.warn("Please log in to create a query.");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("userId", userId);
+      formData.append("role", "Venders");
+      formData.append("subject", data?.subject);
+      formData.append("query", data?.query);
+
+      const response = await CreateQueryApi.callApi(formData);
+
+      if (response) {
+        toast.success("Query Submitted successfully!");
+      } else {
+        toast.error("Failed to create query. Please try again later.");
+      }
+    } catch (error) {
+      toast.error("An error occurred. Please try again later.");
+    }
+  };
 
   return (
     <div className="flex items-start justify-between px-[2%] py-[2%] w-full">
@@ -148,6 +178,9 @@ function VendorService() {
         </p>
       </div>
       <div className="flex-[0.67]">
+        {activeTab === "nonOrderRelQry" && (
+          <NonOrderRelatedQuery saveForm={CreateQueryApiHandle} />
+        )}
         {activeTab === "faq" &&
           faqData?.map((item, index) => (
             <AccordionCard

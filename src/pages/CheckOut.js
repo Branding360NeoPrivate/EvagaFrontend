@@ -22,6 +22,7 @@ import { fetchUserCart } from "../context/redux/slices/cartSlice";
 import couponApi from "../services/couponApi";
 import orderApis from "../services/orderApis";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import PaymentOptions from "../utils/PaymentOptions";
 function CheckOut() {
   const { auth } = useAuth();
   const history = useNavigate();
@@ -212,13 +213,19 @@ function CheckOut() {
     });
   };
 
-  const createOrderHandle = async () => {
+  const createOrderHandle = async (partialPaymentPart) => {
+    console.log(partialPaymentPart);
+    
     try {
       let storedOrderId = localStorage.getItem("razorpay_order_id");
 
       if (!storedOrderId) {
         // Step 1: Create order on backend only if there's no stored order
-        const response = await createOrderApi.callApi(userId);
+
+        const response = await createOrderApi.callApi(
+          userId,
+          partialPaymentPart ? partialPaymentPart : 1
+        );
         console.log("Order Creation Response:", response);
 
         if (!response || !response.order_id) {
@@ -278,8 +285,7 @@ function CheckOut() {
       console.error("Error in Order Creation or Payment:", error);
     }
   };
-console.log(cart);
-
+  console.log();
 
   if (!auth?.isAuthenticated || auth?.role !== "user") {
     return (
@@ -370,21 +376,31 @@ console.log(cart);
                 userAddress={userSelectedAddress}
               />
               <div className="flex flex-col gap-2">
-                {cart?.items?.map((item) => (
-                  <CheckOutCard
-                    key={item?.packageId}
-                    price={item?.totalPrice}
-                    title={
-                      item?.packageDetails?.Title ||
-                      item?.packageDetails?.VenueName ||
-                      item?.packageDetails?.FoodTruckName
-                    }
-                    image={
-                      item?.packageDetails?.CoverImage?.[0] ||
-                      item?.packageDetails?.ProductImage?.[0]
-                    }
-                  />
-                ))}
+                {cart?.items?.map((item) => {
+                  const imageUrl =
+                    (Array.isArray(item?.packageDetails?.CoverImage)
+                      ? item?.packageDetails?.CoverImage[0]
+                      : item?.packageDetails?.CoverImage) ||
+                    (Array.isArray(item?.packageDetails?.ProductImage)
+                      ? item?.packageDetails?.ProductImage[0]
+                      : item?.packageDetails?.ProductImage);
+
+                  const popularimage = imageUrl?.startsWith("service/")
+                    ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
+                    : imageUrl;
+                  return (
+                    <CheckOutCard
+                      key={item?.packageId}
+                      price={item?.totalPrice}
+                      title={
+                        item?.packageDetails?.Title ||
+                        item?.packageDetails?.VenueName ||
+                        item?.packageDetails?.FoodTruckName
+                      }
+                      image={popularimage}
+                    />
+                  );
+                })}
               </div>
             </div>
           )}
@@ -401,6 +417,7 @@ console.log(cart);
             onPlaceOrder={createOrderHandle}
             selectedAddress={userSelectedAddress}
             coupondiscount={cart?.discount}
+            cart={cart}
           />
         </div>
       </div>

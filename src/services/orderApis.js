@@ -2,8 +2,8 @@ import apiService from "./apiService";
 import apiEndpoints from "./apiEndpoints";
 
 const orderApis = {
-  createUserOrder: (userId, formdata) =>
-    apiService.post(apiEndpoints.order.createOrder(userId)),
+  createUserOrder: (userId, numofParts) =>
+    apiService.post(apiEndpoints.order.createOrder(userId, numofParts)),
   valiDateUserOrder: (formdata) =>
     apiService.post(apiEndpoints.order.validateOrder, formdata),
   getPaymentDetailsByOrderId: (orderId) =>
