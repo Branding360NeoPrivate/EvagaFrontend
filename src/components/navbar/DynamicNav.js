@@ -448,7 +448,7 @@ const DynamicNav = () => {
             <p>All</p>
           </motion.span>
 
-          <motion.div
+          {/* <motion.div
             className="py-1"
             initial="rest"
             whileHover="hover"
@@ -466,9 +466,9 @@ const DynamicNav = () => {
             >
               Evaga Xperience
             </Link>
-          </motion.div>
+          </motion.div> */}
 
-          <motion.div
+          {/* <motion.div
             className="py-1"
             initial="rest"
             whileHover="hover"
@@ -481,7 +481,7 @@ const DynamicNav = () => {
             }}
           >
             <Link to={"#"}>Blog</Link>
-          </motion.div>
+          </motion.div> */}
 
           <motion.div
             className="py-1"
@@ -498,7 +498,7 @@ const DynamicNav = () => {
             <Link to={internalRoutes.wishlist}>Wishlist</Link>
           </motion.div>
 
-          <motion.div
+          {/* <motion.div
             className="py-1"
             initial="rest"
             whileHover="hover"
@@ -516,7 +516,7 @@ const DynamicNav = () => {
             >
               Community
             </Link>
-          </motion.div>
+          </motion.div> */}
 
           <motion.div
             className="py-1"
