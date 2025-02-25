@@ -28,7 +28,7 @@ const DynamicForm = ({
   const [foodMenu, setFoodMenu] = useState([]);
   const totalNumberOfPhotoAllowed =
     process.env.REACT_APP_API_Number_of_Images_allowed || 10;
-    const totalNumberOfVideoAllowed =
+  const totalNumberOfVideoAllowed =
     process.env.REACT_APP_API_Number_of_Video_allowed || 10;
   const editorStyle = {
     backgroundColor: "#7575751a",
@@ -297,7 +297,7 @@ const DynamicForm = ({
       [key]: file,
     }));
   };
-  
+
   const handleFileChange = (fieldKey, type, files) => {
     setFormValues((prev) => {
       const updatedField = {
@@ -330,7 +330,6 @@ const DynamicForm = ({
       return setInhouseCategoringOrBoth(false);
     }
   }, [formValues?.CateringPolicy]);
-
 
   return (
     <form
@@ -894,9 +893,36 @@ const DynamicForm = ({
                     {/* UOM */}
                     <div className="flex flex-col items-center justify-center gap-2">
                       <label className="text-textGray font-medium">UOM</label>
-                      <p className="text-textGray text-base">
+                      <select
+                        value={formValues[field.key] || ""}
+                        onChange={(e) =>
+                          handleObjectChange(
+                            field.key,
+                            index,
+                            "UOM",
+                            e.target.value
+                          )
+                        }
+                        className="border-2  outline-none p-2 rounded-md text-textGray font-medium w-full"
+                        required
+                      >
+                        <option value="" disabled>
+                          Select an option
+                        </option>
+                        {[
+                          "Per Hour",
+                          "Per Session",
+                          "Per Package",
+                          "Per Unit",
+                        ].map((item, index) => (
+                          <option key={index} value={item}>
+                            {item}
+                          </option>
+                        ))}
+                      </select>
+                      {/* <p className="text-textGray text-base">
                         {item["UOM"] || ""}
-                      </p>
+                      </p> */}
                     </div>
                   </div>
                 ))}
@@ -1744,9 +1770,9 @@ const DynamicForm = ({
                             }}
                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                           />
-                            <p>Upload upto 30 Images</p>
+                          <p>Upload upto 30 Images</p>
                         </div>
-                      
+
                         <div className="flex flex-wrap gap-1">
                           {(formValues?.Portfolio?.photos || [])?.map(
                             (photo, photoIdx) => (
@@ -1785,7 +1811,7 @@ const DynamicForm = ({
                             accept="video/mp4, video/webm"
                             multiple={totalNumberOfVideoAllowed}
                             onChange={(e) => {
-                              const maxFileSize = 100 * 1024 * 1024; 
+                              const maxFileSize = 100 * 1024 * 1024;
                               const selectedFiles = Array.from(e.target.files);
                               const existingVideos =
                                 formValues?.Portfolio?.videos || [];
@@ -1812,10 +1838,12 @@ const DynamicForm = ({
                               ); // No index
                             }}
                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                            
                           />
-                           <p>Upload upto 10 Video</p>
-                           <p className="text-esm">*The total size of all videos should be less than 250 MB.</p>
+                          <p>Upload upto 10 Video</p>
+                          <p className="text-esm">
+                            *The total size of all videos should be less than
+                            250 MB.
+                          </p>
                         </div>
                         {/* Render Videos */}
                         <div className="flex flex-wrap gap-1">

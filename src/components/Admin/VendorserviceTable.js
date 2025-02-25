@@ -13,6 +13,7 @@ import { CiEdit } from "react-icons/ci";
 import ReusableModal from "../Modal/Modal";
 import EditVendorService from "./EditVendorService";
 import { IoMdArrowRoundBack, IoMdCloseCircleOutline } from "react-icons/io";
+import { formatDate } from "../../utils/formatDate";
 function VendorserviceTable({
   onMenuSelect,
   selectedVendor,
@@ -463,7 +464,7 @@ function VendorserviceTable({
                   <h3 className="text-primary font-bold text-xl">
                     Created At :
                   </h3>
-                  <p className="text-textGray">Photography & Videography</p>
+                  <p className="text-textGray">{formatDate(serviceValue?.createdAt)}</p>
                 </span>
                 <span
                   className="flex items-center justify-start gap-2 w-full"

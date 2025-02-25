@@ -99,8 +99,8 @@ const apiEndpoints = {
     getallfeedback: `feedback/get-all-feedback`,
     getallwaitlist: `waitlist/get-all-waitlist`,
     createQuery: `Query/create`,
-    getuserQuery:(userId)=> `Query/user/${userId}`,
-    getvendorQuery:(userId)=> `Query/vendor/${userId}`,
+    getuserQuery: (userId) => `Query/user/${userId}`,
+    getvendorQuery: (userId) => `Query/vendor/${userId}`,
   },
   admin: {
     register: "admin/registerAdmin",
@@ -146,6 +146,7 @@ const apiEndpoints = {
     verifyVendorprofile: (vendorId) => `vender/verify-vendor/${vendorId}`,
     getAllCategoryGstFees: `gstPercentage/get-all-gst-percentage`,
     addCategoryGstFees: `gstPercentage/add-gst-percentage`,
+    getVendorPackageList:(vendorId,categoryId)=> `/adminAction/getVendorPackageList/${vendorId}/${categoryId}`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",
@@ -157,7 +158,8 @@ const apiEndpoints = {
     validateCoupons: "coupons/",
   },
   order: {
-    createOrder: (userId,numofParts) => `createorder/create-order/${userId}/${numofParts}`,
+    createOrder: (userId, numofParts) =>
+      `createorder/create-order/${userId}/${numofParts}`,
     validateOrder: `validateOrder/validate-order`,
     getpaymentdetailsbyuserid: (orderId) =>
       `getPaymentDetails/get-full-payment-deatils-by-orderId/${orderId}`,

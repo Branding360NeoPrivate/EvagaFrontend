@@ -99,12 +99,19 @@ const VendorDashboard = () => {
     console.log("response in get monthly booked dates:", response);
     if (response && response.success && response.bookings) {
       setBookings(response.bookings);
-      const allDates = response.bookings.map((booking) =>
-        extractDates(booking.startDate, booking.endDate)
-      );
+    
+      const allDates = response.bookings.map((booking) => {
+        const startDate = booking.startDate;
+        const endDate = booking.endDate || booking.startDate; 
+        return extractDates(startDate, endDate);
+      });
+    
+      console.log(allDates);
+    
       const flattenedDates = allDates.flat();
       setBlockedDatesFromBackend(flattenedDates);
     }
+    
   };
 
   const blockedDates = blockedDatesFromBackend.map((date) => {

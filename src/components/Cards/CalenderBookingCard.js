@@ -7,8 +7,10 @@ import useServices from "../../hooks/useServices";
 import vendorApi from "../../services/vendorApi";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import { formatDate } from "../../utils/formatDate";
 
 function CalenderBookingCard({ booking, getMonthlyBookedDates }) {
+  const [modalType, setModalType] = useState("edit");
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const { register, handleSubmit, reset } = useForm();
 
@@ -22,9 +24,11 @@ function CalenderBookingCard({ booking, getMonthlyBookedDates }) {
     if (isEditModalOpen) {
       reset({
         startDate: new Date(booking.startDate).toISOString().split("T")[0],
-        endDate: new Date(booking.endDate).toISOString().split("T")[0],
+        endDate: new Date(booking.endDate || booking.startDate)
+          .toISOString()
+          .split("T")[0],
         startTime: booking.startTime,
-        endTime: booking.endTime,
+        endTime: booking.endTime || booking.startTime,
       });
     }
   }, [isEditModalOpen, booking, reset]);
@@ -65,10 +69,19 @@ function CalenderBookingCard({ booking, getMonthlyBookedDates }) {
 
   return (
     <div className="bg-textLightGray py-2 px-2 w-full flex flex-col justify-center items-center gap-2 rounded-md ">
-      {booking?.startDate && booking?.endDate ? (
+      {booking?.startDate && (booking?.endDate || booking?.startDate) ? (
         <>
-          <div className="flex items-center justify-center self-end gap-1">
-            <button onClick={handleEditClick} className="ml-2">
+          <div className="flex items-center justify-center text-sm self-end gap-1">
+            <button
+              onClick={() => [handleEditClick(), setModalType("view")]}
+              className="ml-2"
+            >
+              View
+            </button>{" "}
+            <button
+              onClick={() => [handleEditClick(), setModalType("edit")]}
+              className="ml-2"
+            >
               <FiEdit2 />
             </button>
           </div>
@@ -91,15 +104,20 @@ function CalenderBookingCard({ booking, getMonthlyBookedDates }) {
             </span>
             <div className="col-span-3 px-4 py-2 bg-white flex flex-col items-start justify-center text-primary font-medium rounded-md">
               <span className="flex justify-center items-center">
-                To: {new Date(booking.endDate).getDate()}{" "}
-                {new Date(booking.endDate).toLocaleString("default", {
-                  month: "short",
-                })}
+                To: {new Date(booking.endDate || booking?.startDate).getDate()}{" "}
+                {new Date(booking.endDate || booking?.startDate).toLocaleString(
+                  "default",
+                  {
+                    month: "short",
+                  }
+                )}
               </span>
 
               <span className="flex items-center justify-center gap-1 text-base text-primary font-medium">
                 <MdAccessTime />
-                <p className="text-sm">{booking.endTime}</p>
+                <p className="text-sm">
+                  {booking.endTime || booking?.startTime}
+                </p>
               </span>
             </div>
           </div>
@@ -108,57 +126,115 @@ function CalenderBookingCard({ booking, getMonthlyBookedDates }) {
           <ReusableModal
             open={isEditModalOpen}
             onClose={handleCloseModal}
-            title="Edit Booking"
+            title={modalType === "edit" ? "Edit Booking" : "View Booking"}
           >
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className=" flex flex-col gap-4"
-            >
-              <div className=" grid grid-cols-2">
-                <label>Start Date: </label>
-                <input
-                  className=" outline rounded-md px-2"
-                  type="date"
-                  {...register("startDate")}
-                />
-              </div>
-              <div className=" grid grid-cols-2">
-                <label>Start Time: </label>
-                <input
-                  className=" outline rounded-md px-2"
-                  type="time"
-                  {...register("startTime")}
-                />
-              </div>
-              <div className=" grid grid-cols-2">
-                <label>End Date: </label>
-                <input
-                  className=" outline rounded-md px-2"
-                  type="date"
-                  {...register("endDate")}
-                />
-              </div>
-              <div className=" grid grid-cols-2">
-                <label>End Time: </label>
-                <input
-                  className=" outline rounded-md px-2"
-                  type="time"
-                  {...register("endTime")}
-                />
-              </div>
-              <br />
-              <button type="submit" className="btn-primary">
-                Save
-              </button>
-              <button
-                type="button"
-                onClick={handleCloseModal}
-                className="border-2 border-primary py-1 text-primary hover:bg-primary hover:text-white 
-                font-semibold rounded-md"
+            {modalType === "edit" && (
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className=" flex flex-col gap-4"
               >
-                Cancel
-              </button>
-            </form>
+                <div className=" grid grid-cols-2">
+                  <label>Start Date: </label>
+                  <input
+                    className=" outline rounded-md px-2"
+                    type="date"
+                    {...register("startDate")}
+                  />
+                </div>
+                <div className=" grid grid-cols-2">
+                  <label>Start Time: </label>
+                  <input
+                    className=" outline rounded-md px-2"
+                    type="time"
+                    {...register("startTime")}
+                  />
+                </div>
+                <div className=" grid grid-cols-2">
+                  <label>End Date: </label>
+                  <input
+                    className=" outline rounded-md px-2"
+                    type="date"
+                    {...register("endDate")}
+                  />
+                </div>
+                <div className=" grid grid-cols-2">
+                  <label>End Time: </label>
+                  <input
+                    className=" outline rounded-md px-2"
+                    type="time"
+                    {...register("endTime")}
+                  />
+                </div>
+                <br />
+                <button type="submit" className="btn-primary">
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCloseModal}
+                  className="border-2 border-primary py-1 text-primary hover:bg-primary hover:text-white 
+                font-semibold rounded-md"
+                >
+                  Cancel
+                </button>
+              </form>
+            )}
+            {modalType === "view" && (
+              <div className="modal-content bg-white rounded-lg shadow-lg p-6 w-full max-w-lg mx-auto">
+                <h2 className="modal-title text-xl font-bold mb-4 text-primary">
+                  Booking Details
+                </h2>
+                <div className="booking-info space-y-3">
+                  <p className="text-sm text-gray-700">
+                    <span className="font-semibold text-gray-900">
+                      Booked By:
+                    </span>{" "}
+                    <span className="text-gray-800">
+                      {!booking.bookedByVendor ? "User" : "Vendor"}
+                    </span>
+                  </p>
+                  <p className="text-sm text-gray-700">
+                    <span className="font-semibold text-gray-900">
+                      Start Date:
+                    </span>{" "}
+                    <span className="text-gray-800">
+                      {formatDate(booking.startDate) || "N/A"}
+                    </span>
+                  </p>
+                  <p className="text-sm text-gray-700">
+                    <span className="font-semibold text-gray-900">
+                      Start Time:
+                    </span>{" "}
+                    <span className="text-gray-800">
+                      {booking.startTime || "N/A"}
+                    </span>
+                  </p>
+                  <p className="text-sm text-gray-700">
+                    <span className="font-semibold text-gray-900">
+                      User Address:
+                    </span>{" "}
+                    <span className="text-gray-800">
+                      {booking.address ? (
+                        <>
+                          {booking.address.name}, {booking.address.address},{" "}
+                          {booking.address.addressLine1},{" "}
+                          {booking.address.addressLine2},{" "}
+                          {booking.address.state}, {booking.address.pinCode}
+                        </>
+                      ) : (
+                        "N/A"
+                      )}
+                    </span>
+                  </p>
+                </div>
+                <button
+                  className="mt-6 w-full bg-primary hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition-all"
+                  onClick={handleCloseModal} // Ensure you handle closing the modal
+                >
+                  Close
+                </button>
+              </div>
+            )}
           </ReusableModal>
         </>
       ) : (

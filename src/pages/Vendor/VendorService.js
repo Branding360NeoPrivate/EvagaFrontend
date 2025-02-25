@@ -124,11 +124,9 @@ function VendorService() {
   return (
     <div className="flex items-start justify-between px-[2%] py-[2%] w-full">
       <div className="flex-[0.28] flex flex-col gap-2">
-        <h3 className="text-primary text-xl font-semibold">
-          Select Query Type
-        </h3>
+        <h3 className="text-primary text-xl font-semibold">Evaga Support</h3>
         <hr />
-        <p
+        {/* <p
           className={
             activeTab === "orderRelQry"
               ? "text-primary cursor-pointer font-medium"
@@ -137,7 +135,7 @@ function VendorService() {
           onClick={() => setActiveTab("orderRelQry")}
         >
           Order Related Query
-        </p>{" "}
+        </p>{" "} */}
         <p
           className={"text-textGray cursor-pointer font-medium"}
           // onClick={() => setActiveTab("orderRelQry")}
@@ -154,6 +152,12 @@ function VendorService() {
           onClick={() => window.open(gmailLink, "_blank")}
         >
           Email Support
+        </p>{" "}
+        <p
+          className={"text-textGray cursor-pointer font-medium"}
+          onClick={() => (window.location.href = "tel:+918296157611")}
+        >
+          Click To Call
         </p>
         <p
           className={
@@ -163,7 +167,7 @@ function VendorService() {
           }
           onClick={() => setActiveTab("nonOrderRelQry")}
         >
-          Non Order Related Query
+          Send Your Query
         </p>
         <hr />
         <p

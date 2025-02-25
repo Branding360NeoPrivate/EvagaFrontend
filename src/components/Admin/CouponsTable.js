@@ -18,6 +18,7 @@ const CouponsTable = memo(() => {
   const [page, setPage] = useState(1);
   const [oneCouponData, setOneCouponData] = useState();
   const [vendorsList, setVendorsList] = useState(null);
+  const [vendorPackageList, setVendorPackageList] = useState(null);
   const [couponId, setCouponId] = useState(null);
   const { coupons } = useSelector((state) => state.coupon);
   const addCoupons = useServices(adminActionsApi.addCoupons);
@@ -26,6 +27,9 @@ const CouponsTable = memo(() => {
   const deleteOneCoupons = useServices(adminActionsApi.deleteOneCoupons);
   const getVendorByName = useServices(
     adminActionsApi.getVendorByNameOrUserName
+  );
+  const GetVendorPackageListApi = useServices(
+    adminActionsApi.GetVendorPackageList
   );
   const dispatch = useDispatch();
   const [isFetched, setIsFetched] = useState(false);
@@ -53,7 +57,7 @@ const CouponsTable = memo(() => {
     cap,
     selectedCategory,
     vendor,
-    applyAutoCoupon,
+    applyAutoCoupon,selectedpackage
   }) => {
     const formData = new FormData();
     formData.append("code", code);
@@ -66,6 +70,7 @@ const CouponsTable = memo(() => {
     formData.append("vendorId", vendor);
     formData.append("categoryId", selectedCategory);
     formData.append("applyAutoCoupon", applyAutoCoupon);
+    formData.append("selectedpackage", selectedpackage);
     const response = await addCoupons.callApi(formData);
     handleClose();
     dispatch(fetchCoupons());
@@ -113,7 +118,15 @@ const CouponsTable = memo(() => {
     const response = await getVendorByName.callApi(formData);
     setVendorsList(response?.vendors ? response?.vendors : null);
   };
+  const GetVendorPackageListApiHandle = async (vendorId, categoryId) => {
+    const response = await GetVendorPackageListApi.callApi(
+      vendorId,
+      categoryId
+    );
+    setVendorPackageList(response?.services)
 
+    
+  };
   useEffect(() => {
     if (
       !isFetched &&
@@ -229,6 +242,8 @@ const CouponsTable = memo(() => {
             categories={categories}
             getVendors={getVendorByNameOrUserNamehandle}
             vendorsList={vendorsList}
+            vendorpackageList={GetVendorPackageListApiHandle}
+            vendorPackageList={vendorPackageList}
           />
         )}
         {modalType === "editCoupon" && (

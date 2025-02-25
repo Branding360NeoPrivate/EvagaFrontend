@@ -2,13 +2,17 @@ import apiEndpoints from "./apiEndpoints";
 import apiService from "./apiService";
 
 const adminActionsApi = {
-  getAllVendorsWithProfileStatusAndService: ({ queryPage, searchTerm,filter }) =>
+  getAllVendorsWithProfileStatusAndService: ({
+    queryPage,
+    searchTerm,
+    filter,
+  }) =>
     apiService.get(
       apiEndpoints.adminActions.getAllVendorsWithProfileStatusAndService,
       {
         page: queryPage,
         search: searchTerm,
-        filter:filter
+        filter: filter,
       }
     ),
 
@@ -99,6 +103,10 @@ const adminActionsApi = {
     apiService.get(apiEndpoints.adminActions.getAllCategoryGstFees),
   addCategoryGstFees: (formData) =>
     apiService.post(apiEndpoints.adminActions.addCategoryGstFees, formData),
+  GetVendorPackageList: (vendorId, categoryId) =>
+    apiService.get(
+      apiEndpoints.adminActions.getVendorPackageList(vendorId, categoryId)
+    ),
 };
 
 export default adminActionsApi;

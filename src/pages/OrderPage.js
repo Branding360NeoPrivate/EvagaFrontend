@@ -4,11 +4,13 @@ import orderApis from "../services/orderApis";
 import useServices from "../hooks/useServices";
 import Cookies from "js-cookie";
 import { internalRoutes } from "../utils/internalRoutes";
+import { useNavigate } from "react-router-dom";
 export const OrderPage = (props) => {
   const [activeState, setActivestate] = useState("New Orders");
   const [allOrder, setAllOrder] = useState([]);
   const getOrderByUserIdApi = useServices(orderApis.getOrderByUserId);
   const userId = Cookies.get("userId");
+    const navigate = useNavigate();
   const getOrderByUserIdApiHandle = async () => {
     const response = await getOrderByUserIdApi.callApi(userId);
     setAllOrder(response ? response?.orders : []);
@@ -99,39 +101,21 @@ export const OrderPage = (props) => {
                   userName={item?.userProfile?.name}
                   phone={item?.userProfile?.phoneNumber}
                   email={item?.userProfile?.email}
-                  redirectUrl={internalRoutes?.orderDetail+`/${item?.orderId}`+`/${item?._id}`}
-                  // buttons={[
-                  //   item?.otp && new Date(item?.otpExpiry) > new Date() ? (
-                  //     <button
-                  //       key="verify"
-                  //       className="btn-primary px-2"
-                  //       onClick={() => [
-                  //         handleOpenModal(item?.otp),
-                  //         setModalType("verifyendorder"),
-                  //         setOrderIdAndItemId({
-                  //           ...orderIdAndItemId,
-                  //           orderId: item?.orderId,
-                  //           id: item?._id,
-                  //         }),
-                  //       ]}
-                  //     >
-                  //       Verify OTP
-                  //     </button>
-                  //   ) : (
-                  //     <button
-                  //       key="start"
-                  //       className="btn-primary px-2"
-                  //       onClick={() =>
-                  //         EndUserorderbyorderIdApiHandle(
-                  //           item?.orderId,
-                  //           item?._id
-                  //         )
-                  //       }
-                  //     >
-                  //       End Service
-                  //     </button>
-                  //   ),
-                  // ]}
+                  buttons={[
+                    <button
+                      key="verify"
+                      className="btn-primary px-2"
+                      onClick={() =>
+                        navigate(
+                          internalRoutes?.orderDetail +
+                            `/${item?.orderId}` +
+                            `/${item?._id}`
+                        )
+                      }
+                    >
+                      View Order Summary
+                    </button>,
+                  ]}
                 />
               );
             })}

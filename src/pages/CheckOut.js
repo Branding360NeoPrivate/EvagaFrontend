@@ -23,6 +23,7 @@ import couponApi from "../services/couponApi";
 import orderApis from "../services/orderApis";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import PaymentOptions from "../utils/PaymentOptions";
+import axios from "axios";
 function CheckOut() {
   const { auth } = useAuth();
   const history = useNavigate();
@@ -217,30 +218,17 @@ function CheckOut() {
     console.log(numofParts);
 
     try {
-      let storedOrderId = localStorage.getItem("razorpay_order_id");
+      const formdata = new FormData();
+      formdata.append("numberOfPart", numofParts);
+      const url = `${process.env.REACT_APP_API_BASE_URL}createorder/create-order/${userId}/${numofParts}`;
 
-      if (!storedOrderId) {
-        const formData = new FormData();
-        formData.append("numberOfPart",numofParts)
-        const response = await createOrderApi.callApi(
-          userId,
-          numofParts ? numofParts : 1,
-          formData
-        );
-        console.log("Order Creation Response:", response);
+      const response = await axios.post(url, formdata, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-        if (!response || !response.order_id) {
-          console.error("Missing order_id or amount");
-          return;
-        }
-
-        storedOrderId = response.order_id;
-        localStorage.setItem("razorpay_order_id", storedOrderId);
-      }
-
-      const response = await createOrderApi.callApi(userId);
-
-      const { order_id, amount, currency } = response;
+      const { order_id, amount, currency } = response?.data;
 
       if (!order_id || !amount) {
         console.error("Missing order_id or amount");
