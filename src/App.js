@@ -121,13 +121,25 @@ const AppContent = () => {
         <Route element={<Wishlist />} path={internalRoutes.wishlist} />
         <Route element={<CheckOut />} path={internalRoutes.checkout} />
         <Route element={<PaymentPage />} path={internalRoutes.payment} />
-        <Route element={<OrderSucessPage />} path={internalRoutes.orderStatus} />
+        <Route
+          element={<OrderSucessPage />}
+          path={internalRoutes.orderStatus}
+        />
         <Route element={<PressRelease />} path={internalRoutes.pressReleases} />
         <Route element={<AboutEvaga />} path={internalRoutes.aboutUs} />
-        <Route element={<RefundAndCancellation />} path={internalRoutes.cancellationPolicy} />
-        <Route element={<TermsAndConditions />} path={internalRoutes.TermsAndConditions} />
+        <Route
+          element={<RefundAndCancellation />}
+          path={internalRoutes.cancellationPolicy}
+        />
+        <Route
+          element={<TermsAndConditions />}
+          path={internalRoutes.TermsAndConditions}
+        />
         <Route element={<FeedBack />} path={internalRoutes.feedbackForm} />
-        <Route element={<CustomerService />} path={internalRoutes.customerService} />
+        <Route
+          element={<CustomerService />}
+          path={internalRoutes.customerService}
+        />
         <Route
           element={<SinglePackage />}
           path={`${internalRoutes.SinglePackage + "/:serviceId/:packageId"}`}

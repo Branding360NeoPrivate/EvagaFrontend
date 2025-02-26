@@ -72,7 +72,6 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
           ))}
         </div>
       </div>
-
       {/* Main Media View */}
       <div className="flex-1 flex items-center justify-center relative">
         {isImage(selectedUrl) ? (
@@ -89,11 +88,9 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
             selectedUrl={
               process.env.REACT_APP_API_Aws_Image_BASE_URL + selectedUrl
             }
-            
           />
         )}
       </div>
-
       {/* Modal for Zoomed Image */}
       <AnimatePresence>
         {isModalOpen && (

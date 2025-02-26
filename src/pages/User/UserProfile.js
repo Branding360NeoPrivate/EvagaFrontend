@@ -247,7 +247,7 @@ function UserProfile() {
 
   return (
     <div className="flex items-center justify-center flex-col w-full my-10 ">
-      <div className=" md:w-[650px]  border border-gray-300 rounded-lg px-2 md:px-16 py-12 bg-white">
+      <div className=" w-[95%] md:w-[650px]  border border-gray-300 rounded-lg px-2 md:px-16 py-12 bg-white">
         {/* Personal Info */}
         <div className="space-y-6">
           {[
@@ -302,7 +302,7 @@ function UserProfile() {
                   <h4 className="font-semibold text-purple-700">
                     {address.Name}
                   </h4>
-                  <p className="text-gray-600 w-[322px]">
+                  <p className="text-gray-600 w-fit">
                     {address.address}
                     <br />
                     {address.addressLine1}
@@ -314,7 +314,7 @@ function UserProfile() {
                   </p>
                 </div>
                 <div className="flex space-x-2">
-                  <button className="p-1 rounded-lg">
+                  <button className="p-1 rounded-lg ">
                     <img
                       src={EditButton}
                       alt="Edit"
@@ -327,7 +327,7 @@ function UserProfile() {
                     />
                   </button>
                   <button
-                    className="p-1 rounded-lg"
+                    className="p-1 rounded-lg "
                     onClick={() => [
                       handleDeleteAddressOpenModal(),
                       setAddressId(address?._id),
@@ -358,7 +358,7 @@ function UserProfile() {
       >
         {modalType === "editProfile" && (
           <form onSubmit={handleSubmit(handleUpdateUserProfile)}>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 min-w-[300px]">
               {/* Name Field */}
               <span className="flex items-start justify-start flex-col gap-2">
                 <p>Name</p>

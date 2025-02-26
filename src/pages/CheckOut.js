@@ -168,8 +168,6 @@ function CheckOut() {
     }
   }, [userId, cart, dispatch]);
   const handleApplyCoupon = (query) => {
-
-
     dispatch(
       fetchUserCart({ userId: userId, query: { couponCode: "ffgfg123456" } })
     );
@@ -201,16 +199,16 @@ function CheckOut() {
   }
   return (
     <>
-      <div className="w-full px-[2.5%] py-[2%] flex flex-col md:flex-row gap-4 justify-between">
+      <div className="w-full mt-5 md:mt-auto px-[2.5%] py-[2%] flex flex-col md:flex-row gap-4 justify-between">
         <div className="flex-1 md:flex-[0.72] flex flex-col gap-4 w-full">
           {isEditingAddress ? (
             <div className="flex flex-col gap-4">
-              <span className="flex items-center justify-between w-full">
+              <span className="flex items-center justify-between gap-5 w-full">
                 <h2 className="text-xl font-medium text-primary">
                   Select a Delivery Address
                 </h2>
                 <button
-                  className="btn-primary w-fit px-2"
+                  className="btn-primary w-fit px-2 text-nowrap"
                   onClick={() => [handleOpen(), setModalType("addAddress")]}
                 >
                   Add Address
@@ -283,10 +281,10 @@ function CheckOut() {
       >
         {modalType === "addAddress" && (
           <form onSubmit={handleAddSubmit(handleAddUserAddress)}>
-            <div className="my-8 space-y-4">
-              <div className="flex justify-between sm:flex-col lg:flex-row">
+            <div className=" min-w-[300px] md:w-auto my-8 space-y-4">
+              <div className="flex justify-between flex-col sm:flex-row ">
                 <label className="text-textGray text-xl">Name</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <span className="flex items-start justify-start flex-col gap-2">
                   <input
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
@@ -309,7 +307,7 @@ function CheckOut() {
                   )}
                 </span>
               </div>{" "}
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-col sm:flex-row ">
                 <label className="text-textGray text-xl">Address</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -334,7 +332,7 @@ function CheckOut() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-col sm:flex-row ">
                 <label className="text-textGray text-xl">Address line 1</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -362,7 +360,7 @@ function CheckOut() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-col sm:flex-row ">
                 <label className="text-textGray text-xl">Address line 2</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -390,7 +388,7 @@ function CheckOut() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-col sm:flex-row ">
                 <label className="text-textGray text-xl">State</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -415,7 +413,7 @@ function CheckOut() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-col sm:flex-row ">
                 <label className="text-textGray text-xl">Pincode</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -449,8 +447,8 @@ function CheckOut() {
         )}
         {modalType === "editAddress" && (
           <form onSubmit={handleEditSubmit(handleEditUserAddress)}>
-            <div className="my-8 space-y-4">
-              <div className="flex justify-between sm:flex-col lg:flex-row">
+            <div className="min-w-[300px] md:w-auto my-8 space-y-4">
+              <div className="flex justify-between flex-col sm:flex-row ">
                 <label className="text-textGray text-xl">Name</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -475,7 +473,7 @@ function CheckOut() {
                   )}
                 </span>
               </div>{" "}
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-col sm:flex-row ">
                 <label className="text-textGray text-xl">Address</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -500,7 +498,7 @@ function CheckOut() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-col sm:flex-row ">
                 <label className="text-textGray text-xl">Address line 1</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -528,7 +526,7 @@ function CheckOut() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-col sm:flex-row ">
                 <label className="text-textGray text-xl">Address line 2</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -556,7 +554,7 @@ function CheckOut() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-col sm:flex-row ">
                 <label className="text-textGray text-xl">State</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -581,7 +579,7 @@ function CheckOut() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between flex-col sm:flex-row ">
                 <label className="text-textGray text-xl">Pincode</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -614,13 +612,15 @@ function CheckOut() {
           </form>
         )}
         {modalType === "deleteAddress" && (
-          <DeleteForm
-            deleteText="Address"
-            onDelete={handleDeleteOneUserAddress}
-          />
+          <div className="min-w-[300px]">
+            <DeleteForm
+              deleteText="Address"
+              onDelete={handleDeleteOneUserAddress}
+            />
+          </div>
         )}
         {modalType === "applyCoupon" && (
-          <div>
+          <div className=" w-[75vw] md:w-auto">
             <div className="flex items-center justify-start gap-4 mb-6">
               <img src={Tag} alt="tag1" />
               <input
@@ -641,7 +641,7 @@ function CheckOut() {
                 setCouponCode={setCouponCode}
               />
             ))}
-            <div className="flex items-center justify-end mt-4 gap-2">
+            <div className="flex items-center md:justify-end mt-4 gap-2">
               <button
                 className="btn-transparent-border w-fit px-2"
                 onClick={handleClose}

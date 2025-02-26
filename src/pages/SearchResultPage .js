@@ -176,20 +176,18 @@ function SearchResultPage() {
 
           <div className="w-full px-4 pb-2">
             <div className="flex flex-col gap-6">
-              {searchResult?.length > 0 ? (
-                searchResult.map((item) => { 
+              {searchResult?.length >= 0 ? (
+                searchResult.map((item) => {
                   const imageUrl =
-                  item.serviceDetails?.values?.CoverImage?.[0] ||
-                  item.serviceDetails?.values?.ProductImage?.[0];
+                    item.serviceDetails?.values?.CoverImage?.[0] ||
+                    item.serviceDetails?.values?.ProductImage?.[0];
                   const popularimage = imageUrl?.startsWith("service/")
                     ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
                     : imageUrl;
                   return (
                     <ProductDisplayCard
                       key={item?.serviceDetails?._id || item?.title}
-                      image={
-                        popularimage
-                      }
+                      image={popularimage}
                       title={
                         item?.serviceDetails?.values?.Title ||
                         item?.serviceDetails?.values?.FoodTruckName ||

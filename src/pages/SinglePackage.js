@@ -143,7 +143,7 @@ function SinglePackage() {
 
   return (
     <motion.div
-      className="w-full flex md:flex-row flex-col  pb-4 items-start justify-between px-6 py-4"
+      className="w-full flex lg:flex-row flex-col  pb-4 items-start justify-between px-6 py-4"
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
@@ -153,7 +153,7 @@ function SinglePackage() {
       }}
     >
       <div
-        className=" flex justify-center items-start flex-col"
+        className=" flex justify-center items-start flex-col min-w-[300px]"
         style={{ flex: "0.35" }}
       >
         <ImageNavigationCard
@@ -199,8 +199,9 @@ function SinglePackage() {
               ?.Amount ||
             singlePageData?.services?.[0]?.values?.["SessionLength"]?.[0]
               ?.Amount ||
-            singlePageData?.services?.[0]?.values?.["SessionLength&Pricing"]?.[0]
-              ?.Amount ||
+            singlePageData?.services?.[0]?.values?.[
+              "SessionLength&Pricing"
+            ]?.[0]?.Amount ||
             singlePageData?.services?.[0]?.values?.["QtyPricing"]?.[0]?.Rates
           }
           eventData={singlePageData?.services?.[0]?.values?.EventType}
