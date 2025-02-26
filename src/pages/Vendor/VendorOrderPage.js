@@ -342,6 +342,19 @@ export default function VendorOrderPage() {
                     >
                       Accept Order
                     </button>,
+                        <button
+                        key="view"
+                        className="btn-primary px-2"
+                        onClick={() =>
+                          navigate(
+                            internalRoutes?.vendorOrderDeatil +
+                              `/${item?.orderId}` +
+                              `/${item?._id}`
+                          )
+                        }
+                      >
+                        View Order Summary
+                      </button>,
                   ]}
                 />
               );
@@ -413,7 +426,7 @@ export default function VendorOrderPage() {
                       </button>
                     ),
                     <button
-                      key="cancel"
+                      key="view"
                       className="btn-primary px-2"
                       onClick={() =>
                         navigate(
