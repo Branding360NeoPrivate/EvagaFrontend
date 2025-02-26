@@ -13,17 +13,27 @@ import {
 import { formatDate } from "../../utils/formatDate";
 import useDebounce from "../../utils/useDebounce";
 
-const EditCouponForm = ({ existingCoupon, onUpdate, categories,vendorsList ,getVendors}) => {
+const EditCouponForm = ({
+  existingCoupon,
+  onUpdate,
+  categories,
+  vendorsList,
+  getVendors,
+  vendorpackageListHandle,
+  vendorPackageList,
+}) => {
   const [coupon, setCoupon] = useState({
     code: "",
     startDate: "",
     endDate: "",
     usageLimit: "",
-    discountType: "amount", // Default value
+    discountType: "amount",
     discountAmount: "",
     discountPercentage: "",
     cap: "",
     vendor: "",
+    selectedpackage: "",
+    packageName: "",
     autoApplyCoupon: false,
   });
   console.log(existingCoupon);
@@ -32,6 +42,7 @@ const EditCouponForm = ({ existingCoupon, onUpdate, categories,vendorsList ,getV
   const [selectedCategory, setSelectedCategory] = useState("");
   const allCategoriesOption = { _id: "all", name: "All" };
   const [vendorSearch, setVendorSearch] = useState("");
+  const [filteredVendors, setFilteredVendors] = useState([]);
   useEffect(() => {
     if (existingCoupon) {
       setCoupon({
@@ -57,7 +68,30 @@ const EditCouponForm = ({ existingCoupon, onUpdate, categories,vendorsList ,getV
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
   };
+  const handleVendorPackageChange = (event) => {
+    const selectedPackageId = event.target.value;
+
+    // Find the selected package details from the vendorPackageList
+    const selectedPackage = vendorPackageList.find(
+      (pkg) => pkg._id === selectedPackageId
+    );
+
+    // Update the coupon state with the selected package ID and name
+    setCoupon((prevState) => ({
+      ...prevState,
+      selectedpackage: selectedPackageId, // Store the ID
+      packageName: selectedPackage?.title || "", // Store the name for display purposes
+    }));
+  };
   // Handle discount type change: clear old value when switching
+    useEffect(() => {
+      if (coupon?.vendor && selectedCategory) {
+        vendorpackagesHandle();
+      }
+    }, [coupon?.vendor, selectedCategory]);
+  const vendorpackagesHandle = async () => {
+    await vendorpackageListHandle(coupon?.vendor, selectedCategory);
+  };
   const handleDiscountTypeChange = (e) => {
     const newType = e.target.value;
     setCoupon({
@@ -70,10 +104,10 @@ const EditCouponForm = ({ existingCoupon, onUpdate, categories,vendorsList ,getV
     });
   };
   const debounce = useDebounce(vendorSearch);
-  const handleVendorSearch = async (event) => {
-    const searchTerm = event.target.value;
-    setVendorSearch(searchTerm);
-  };
+  // const handleVendorSearch = async (event) => {
+  //   const searchTerm = event.target.value;
+  //   setVendorSearch(searchTerm);
+  // };
   useEffect(() => {
     const fetchVendors = async () => {
       try {
@@ -111,7 +145,25 @@ const EditCouponForm = ({ existingCoupon, onUpdate, categories,vendorsList ,getV
     }
   };
   console.log(coupon);
+  const handleVendorSearch = (event) => {
+    const searchText = event.target.value;
+    setVendorSearch(searchText);
 
+    if (searchText.length > 0) {
+      setFilteredVendors(
+        vendorsList.filter((vendor) =>
+          vendor.name.toLowerCase().includes(searchText.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredVendors([]);
+    }
+  };
+  const handleVendorSelect = (vendor) => {
+    setCoupon({ ...coupon, vendor: vendor._id }); // Store selected vendor's ID in the state
+    setVendorSearch(vendor.name); // Display the selected vendor's name in the input field
+    setFilteredVendors([]); // Clear the dropdown
+  };
   return (
     <form onSubmit={handleSubmit}>
       <Grid container spacing={2}>
@@ -144,19 +196,55 @@ const EditCouponForm = ({ existingCoupon, onUpdate, categories,vendorsList ,getV
           </FormControl>
         </Grid>
         {/* Vendor Selection with Optional Search */}
-        <Grid item xs={12}>
+        <Grid item xs={12} style={{ position: "relative" }}>
           <TextField
             fullWidth
             label="Search Vendor (Optional)"
             value={vendorSearch}
             onChange={handleVendorSearch}
           />
-          <FormControl fullWidth>
-            <InputLabel>Vendor</InputLabel>
-            <Select name="vendor" value={coupon.vendor} onChange={handleChange}>
-              {vendorsList?.map((vendor) => (
-                <MenuItem key={vendor._id} value={vendor._id}>
+
+          {vendorSearch && filteredVendors.length > 0 && (
+            <div
+              style={{
+                position: "absolute",
+                top: "100%",
+                left: 0,
+                width: "100%",
+                backgroundColor: "white",
+                border: "1px solid #ccc",
+                zIndex: 10,
+                maxHeight: "200px",
+                overflowY: "auto",
+              }}
+            >
+              {filteredVendors.map((vendor) => (
+                <div
+                  key={vendor._id}
+                  onClick={() => handleVendorSelect(vendor)}
+                  style={{
+                    padding: "8px",
+                    cursor: "pointer",
+                    borderBottom: "1px solid #eee",
+                  }}
+                >
                   {vendor.name}
+                </div>
+              ))}
+            </div>
+          )}
+        </Grid>
+
+        <Grid item xs={12}>
+          <FormControl fullWidth>
+            <InputLabel>Vendor Package (optional)</InputLabel>
+            <Select
+              value={coupon?.selectedpackage}
+              onChange={handleVendorPackageChange} // Use the new function
+            >
+              {vendorPackageList?.map((pkg) => (
+                <MenuItem key={pkg._id} value={pkg._id}>
+                  {pkg.title} {/* Show the package name */}
                 </MenuItem>
               ))}
             </Select>

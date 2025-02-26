@@ -61,8 +61,8 @@ const PaymentOptions = ({ cart, setNumberOfPart }) => {
         paymentOptions.map((option, index) => (
           <label
             key={index}
-            style={{ display: "block", margin: "5px 0" }}
-            className="text-sm flex items-center justify-center"
+            style={{  margin: "5px 0" }}
+            className="text-sm flex items-center justify-center text-textGray"
           >
             <input
               type="radio"

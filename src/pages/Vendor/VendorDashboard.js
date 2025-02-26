@@ -106,7 +106,6 @@ const VendorDashboard = () => {
         return extractDates(startDate, endDate);
       });
     
-      console.log(allDates);
     
       const flattenedDates = allDates.flat();
       setBlockedDatesFromBackend(flattenedDates);

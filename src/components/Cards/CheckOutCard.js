@@ -2,7 +2,7 @@ import React from "react";
 import CrossButton from "../../assets/Temporary Images/Cross.png";
 import Event from "../../assets/Temporary Images/image (4).png";
 import formatCurrency from "../../utils/formatCurrency";
-function CheckOutCard({ price, image, title }) {
+function CheckOutCard({ price, image, title,category,vendorUserName }) {
   const data = {
     id: 1,
     title: "Technical Staff",
@@ -37,9 +37,9 @@ function CheckOutCard({ price, image, title }) {
       <div className="flex-1 flex flex-col ml-8">
         <h2 className="text-xl  font-semibold text-primary">{title}</h2>
         <p className="text-normal  font-normal text-textGray">
-          {data.category}
+          {category}
         </p>
-        <p className="text-normal font-normal text-primary">{data.company}</p>
+        <p className="text-normal font-normal text-primary">{vendorUserName}</p>
       </div>
       <div className="text-xl font-semibold text-primary mr-8">
         {formatCurrency(price)}

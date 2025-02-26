@@ -84,14 +84,6 @@ function OrderVenderCard({
             Name:
             <p className="text-textGray">{userName && userName}</p>
           </span>
-          <span className="text-primary font-semibold flex ">
-            Ph.Number:
-            <p className="text-textGray">{phone && phone}</p>
-          </span>{" "}
-          <span className="text-primary font-semibold flex ">
-            Email:
-            <p className="text-textGray">{email && email}</p>
-          </span>
         </div>
         <div className="grid grid-cols-1 gap-4">
           <span className="text-primary font-semibold flex">
@@ -118,7 +110,7 @@ function OrderVenderCard({
           <MdOutlineReportGmailerrorred />
           <p>Report a concern</p>
         </span>
-        <span className="flex items-center justify-end gap-3 w-full">
+        <span className="flex items-center justify-end flex-wrap gap-3 w-full">
           {buttons.map((button, index) => (
             <span key={index}>{button}</span>
           ))}

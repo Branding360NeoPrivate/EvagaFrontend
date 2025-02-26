@@ -17,7 +17,7 @@ const AddCouponForm = ({
   categories,
   getVendors,
   vendorsList,
-  vendorpackageList,
+  vendorpackageListHandle,
   vendorPackageList,
 }) => {
   const [coupon, setCoupon] = useState({
@@ -101,7 +101,7 @@ const AddCouponForm = ({
   // const [vendorSearch, setVendorSearch] = useState("");
   const [filteredVendors, setFilteredVendors] = useState([]);
   const vendorpackagesHandle = async () => {
-    await vendorpackageList(coupon?.vendor, selectedCategory);
+    await vendorpackageListHandle(coupon?.vendor, selectedCategory);
   };
   useEffect(() => {
     if (coupon?.vendor && selectedCategory) {
@@ -161,7 +161,6 @@ const AddCouponForm = ({
           </FormControl>
         </Grid>
 
-        {/* Vendor Selection with Optional Search */}
         {/* Vendor Selection with Optional Search */}
         <Grid item xs={12} style={{ position: "relative" }}>
           <TextField

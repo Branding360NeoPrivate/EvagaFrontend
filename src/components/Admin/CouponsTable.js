@@ -242,7 +242,7 @@ const CouponsTable = memo(() => {
             categories={categories}
             getVendors={getVendorByNameOrUserNamehandle}
             vendorsList={vendorsList}
-            vendorpackageList={GetVendorPackageListApiHandle}
+            vendorpackageListHandle={GetVendorPackageListApiHandle}
             vendorPackageList={vendorPackageList}
           />
         )}
@@ -253,6 +253,8 @@ const CouponsTable = memo(() => {
             categories={categories}
             getVendors={getVendorByNameOrUserNamehandle}
             vendorsList={vendorsList}
+            vendorpackageListHandle={GetVendorPackageListApiHandle}
+            vendorPackageList={vendorPackageList}
           />
         )}
         {modalType === "deleteCoupon" && (

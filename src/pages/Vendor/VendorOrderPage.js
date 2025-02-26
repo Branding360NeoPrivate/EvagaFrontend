@@ -8,18 +8,22 @@ import { AiOutlineCloseCircle } from "react-icons/ai";
 import { toast } from "react-toastify";
 import "./VerifyOtpModal.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { internalRoutes } from "../../utils/internalRoutes";
 export default function VendorOrderPage() {
   const userId = Cookies.get("userId");
   const [allOrders, setAllOrders] = useState([]);
   const [activeState, setActivestate] = useState("New Order");
   const [openModal, setOpenModal] = useState(false);
   const [modalType, setModalType] = useState("cancelOrder");
+  const navigate = useNavigate();
   const handleOpenModal = () => {
     setOpenModal(true);
   };
   const [orderIdAndItemId, setOrderIdAndItemId] = useState({
     orderId: "",
     id: "",
+    cancelReason: "",
   });
   const handleCloseModal = () => {
     setOpenModal(false);
@@ -65,6 +69,7 @@ export default function VendorOrderPage() {
   const verifyEndServiceOrderIdApi = useServices(
     orderApis.verifyEndServiceOrderId
   );
+  const CancelOrderApi = useServices(orderApis.CancelOrder);
   const getNewOrderByVendorIdApiHandle = useCallback(async () => {
     try {
       const response = await getNewOrderByVendorIdApi.callApi(userId);
@@ -114,6 +119,16 @@ export default function VendorOrderPage() {
     const response = await AcceptUserOrderbyorderIdApi.callApi(orderId, id);
     getNewOrderByVendorIdApiHandle();
     toast.success(response?.message || "Order Acceped");
+  };
+  const CancelOrderApiHandle = async (orderId, id, cancelReason) => {
+    const formdata = new FormData();
+    formdata.append("orderId", orderId);
+    formdata.append("itemId", id);
+    formdata.append("cancelReason", cancelReason);
+    const response = await CancelOrderApi.callApi(formdata);
+    getNewOrderByVendorIdApiHandle();
+    toast.success(response?.message || "Order Acceped");
+    handleCloseModal();
   };
   const StartUserOrderbyorderIdApiHandle = async (orderId, id) => {
     const response = await StartUserOrderbyorderIdApi.callApi(orderId, id);
@@ -169,20 +184,15 @@ export default function VendorOrderPage() {
   const handleVerify = async (orderId, id) => {
     const combinedOtp = enteredOtp.join("");
 
-    // Validate if all 6 boxes are filled
     if (combinedOtp.length !== 6) {
       setError("Please fill in all 6 digits of the OTP.");
       return;
     }
-
-    setError(""); // Clear error message if validation passes
-
-    // Create FormData and append the OTP
+    setError("");
     const formData = new FormData();
     formData.append("otp", combinedOtp);
 
     try {
-      // Make the API request
       const response = await axios.post(
         `${process.env.REACT_APP_API_BASE_URL}vendorOrder/verifyStartService/${orderId}/${id}`,
         formData,
@@ -193,7 +203,6 @@ export default function VendorOrderPage() {
         }
       );
 
-      // Check if the response indicates success
       if (response.data.success) {
         toast.success("OTP verified successfully!");
         handleCloseModal();
@@ -309,7 +318,14 @@ export default function VendorOrderPage() {
                     <button
                       key="cancel"
                       className="btn-transparent-border px-2"
-                      onClick={() => handleOpenModal()}
+                      onClick={() => [
+                        handleOpenModal(),
+                        setOrderIdAndItemId({
+                          ...orderIdAndItemId,
+                          orderId: item?.orderId,
+                          id: item?._id,
+                        }),
+                      ]}
                     >
                       Cancel Order
                     </button>,
@@ -396,6 +412,19 @@ export default function VendorOrderPage() {
                         Start Order
                       </button>
                     ),
+                    <button
+                      key="cancel"
+                      className="btn-primary px-2"
+                      onClick={() =>
+                        navigate(
+                          internalRoutes?.vendorOrderDeatil +
+                            `/${item?.orderId}` +
+                            `/${item?._id}`
+                        )
+                      }
+                    >
+                      View Order Summary
+                    </button>,
                   ]}
                 />
               );
@@ -528,68 +557,64 @@ export default function VendorOrderPage() {
         )}
         {activeState === "Cancelled order" && (
           <div className="w-full min-h-[50vh] flex items-center justfiy-center flex-col gap-4">
-            {activeState === "Ongoing Order" && (
-              <div className="w-full min-h-[50vh] flex items-center justfiy-center flex-col gap-4">
-                {allOrders?.map((item) => {
-                  const imageUrl =
-                    (Array.isArray(item.packageDetails?.CoverImage)
-                      ? item.packageDetails?.CoverImage[0]
-                      : item.packageDetails?.CoverImage) ||
-                    (Array.isArray(item.packageDetails?.ProductImage)
-                      ? item.packageDetails?.ProductImage[0]
-                      : item.packageDetails?.ProductImage);
+            {allOrders?.map((item) => {
+              const imageUrl =
+                (Array.isArray(item.packageDetails?.CoverImage)
+                  ? item.packageDetails?.CoverImage[0]
+                  : item.packageDetails?.CoverImage) ||
+                (Array.isArray(item.packageDetails?.ProductImage)
+                  ? item.packageDetails?.ProductImage[0]
+                  : item.packageDetails?.ProductImage);
 
-                  const popularimage = imageUrl?.startsWith("service/")
-                    ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
-                    : imageUrl;
+              const popularimage = imageUrl?.startsWith("service/")
+                ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
+                : imageUrl;
 
-                  return (
-                    <OrderVenderCard
-                      title={item?.packageDetails?.Title}
-                      orderId={item?.orderId}
-                      image={popularimage}
-                      time={item?.time}
-                      date={item?.date}
-                      userName={item?.userProfile?.name}
-                      phone={item?.userProfile?.phoneNumber}
-                      email={item?.userProfile?.email}
-                      // buttons={[
-                      //   item?.otp && new Date(item?.otpExpiry) > new Date() ? (
-                      //     <button
-                      //       key="verify"
-                      //       className="btn-primary px-2"
-                      //       onClick={() => [
-                      //         handleOpenModal(item?.otp),
-                      //         setModalType("verifyendorder"),
-                      //         setOrderIdAndItemId({
-                      //           ...orderIdAndItemId,
-                      //           orderId: item?.orderId,
-                      //           id: item?._id,
-                      //         }),
-                      //       ]}
-                      //     >
-                      //       Verify OTP
-                      //     </button>
-                      //   ) : (
-                      //     <button
-                      //       key="start"
-                      //       className="btn-primary px-2"
-                      //       onClick={() =>
-                      //         EndUserorderbyorderIdApiHandle(
-                      //           item?.orderId,
-                      //           item?._id
-                      //         )
-                      //       }
-                      //     >
-                      //       End Service
-                      //     </button>
-                      //   ),
-                      // ]}
-                    />
-                  );
-                })}
-              </div>
-            )}
+              return (
+                <OrderVenderCard
+                  title={item?.packageDetails?.Title}
+                  orderId={item?.orderId}
+                  image={popularimage}
+                  time={item?.time}
+                  date={item?.date}
+                  userName={item?.userProfile?.name}
+                  phone={item?.userProfile?.phoneNumber}
+                  email={item?.userProfile?.email}
+                  // buttons={[
+                  //   item?.otp && new Date(item?.otpExpiry) > new Date() ? (
+                  //     <button
+                  //       key="verify"
+                  //       className="btn-primary px-2"
+                  //       onClick={() => [
+                  //         handleOpenModal(item?.otp),
+                  //         setModalType("verifyendorder"),
+                  //         setOrderIdAndItemId({
+                  //           ...orderIdAndItemId,
+                  //           orderId: item?.orderId,
+                  //           id: item?._id,
+                  //         }),
+                  //       ]}
+                  //     >
+                  //       Verify OTP
+                  //     </button>
+                  //   ) : (
+                  //     <button
+                  //       key="start"
+                  //       className="btn-primary px-2"
+                  //       onClick={() =>
+                  //         EndUserorderbyorderIdApiHandle(
+                  //           item?.orderId,
+                  //           item?._id
+                  //         )
+                  //       }
+                  //     >
+                  //       End Service
+                  //     </button>
+                  //   ),
+                  // ]}
+                />
+              );
+            })}
           </div>
         )}
       </div>
@@ -600,30 +625,60 @@ export default function VendorOrderPage() {
         width={"fit"}
       >
         {modalType === "cancelOrder" && (
-          <form className="flex flex-col gap-4 p-4 ">
+          <form
+            className="flex flex-col gap-4 p-4"
+            onSubmit={(e) => [
+              e.preventDefault(),
+              CancelOrderApiHandle(
+                orderIdAndItemId?.orderId,
+                orderIdAndItemId?.id,
+                orderIdAndItemId?.cancelReason
+              ),
+            ]}
+          >
             <h6 className="text-primary font-semibold text-lg">
               Please Specify the Reason for Canceling the Booking
             </h6>
             <div className="radio-group flex flex-col gap-3 text-primary">
               <label className="flex items-center gap-2">
-                <input type="radio" name="reason" value="notAvailable" />
+                <input
+                  type="radio"
+                  name="reason"
+                  value="Service not available"
+                  checked={
+                    orderIdAndItemId?.cancelReason === "Service not available"
+                  }
+                  onChange={(e) =>
+                    setOrderIdAndItemId({
+                      ...orderIdAndItemId,
+                      cancelReason: e.target.value,
+                    })
+                  }
+                  required
+                />
                 <span className="text-sm font-medium">
                   Service not available
                 </span>
               </label>
               <label className="flex items-center gap-2">
-                <input type="radio" name="reason" value="doubleBooking" />
+                <input
+                  type="radio"
+                  name="reason"
+                  value="Double booking conflict"
+                  checked={
+                    orderIdAndItemId?.cancelReason === "Double booking conflict"
+                  }
+                  onChange={(e) =>
+                    setOrderIdAndItemId({
+                      ...orderIdAndItemId,
+                      cancelReason: e.target.value,
+                    })
+                  }
+                  required
+                />
                 <span className="text-sm font-medium">
                   Double booking conflict
                 </span>
-              </label>
-              <label className="flex items-center gap-2">
-                <input type="radio" name="reason" value="technicalIssues" />
-                <span className="text-sm font-medium">Technical issues</span>
-              </label>
-              <label className="flex items-center gap-2">
-                <input type="radio" name="reason" value="otherReason" />
-                <span className="text-sm font-medium">Other reasons</span>
               </label>
             </div>
             <div className="flex justify-end w-full">

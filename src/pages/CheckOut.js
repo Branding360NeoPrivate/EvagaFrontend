@@ -169,8 +169,10 @@ function CheckOut() {
     }
   }, [isEditingAddress]);
   const getUserSelectedAddressApiHandle = async () => {
-    const response = await getUserSelectedAddressApi.callApi(userId);
-    setUserSelectedAddress(response ? response?.addresses : null);
+    if (userId) {
+      const response = await getUserSelectedAddressApi.callApi(userId);
+      setUserSelectedAddress(response ? response?.addresses : null);
+    }
   };
   useEffect(() => {
     if (!isEditingAddress) {
@@ -215,9 +217,15 @@ function CheckOut() {
   };
 
   const createOrderHandle = async (numofParts) => {
-    console.log(numofParts);
-
     try {
+      const isScriptLoaded = await loadScript(
+        "https://checkout.razorpay.com/v1/checkout.js"
+      );
+      if (!isScriptLoaded) {
+        console.error("Failed to load Razorpay script.");
+        return;
+      }
+
       const formdata = new FormData();
       formdata.append("numberOfPart", numofParts);
       const url = `${process.env.REACT_APP_API_BASE_URL}createorder/create-order/${userId}/${numofParts}`;
@@ -235,27 +243,19 @@ function CheckOut() {
         return;
       }
 
-      const isScriptLoaded = await loadScript(
-        "https://checkout.razorpay.com/v1/checkout.js"
-      );
-      if (!isScriptLoaded) {
-        console.error("Failed to load Razorpay script.");
-        return;
-      }
-
       const options = {
         key: process.env.REACT_APP_RAZORPAY_KEY_ID,
         amount: amount,
         currency: currency || "INR",
-        name: "Evaga Entertainment ",
+        name: "Evaga Entertainment",
         description: "Order Payment",
         order_id: order_id,
-        method: "wallet",
         handler: async (response) => {
           const formdata = new FormData();
           formdata.append("orderId", response.razorpay_order_id);
           formdata.append("paymentId", response.razorpay_payment_id);
           formdata.append("razorpaySignature", response.razorpay_signature);
+
           await validateOrderApi.callApi(formdata);
 
           window.location.href = `${internalRoutes.orderStatus}?order_id=${response.razorpay_order_id}`;
@@ -266,6 +266,19 @@ function CheckOut() {
           contact: userData?.phoneNumber,
         },
         theme: { color: "#3399cc" },
+        modal: {
+          ondismiss: () => {
+            console.warn("Payment modal closed by user");
+            axios.post(
+              `${process.env.REACT_APP_API_BASE_URL}createorder/update-order`,
+              {
+                orderId: order_id,
+                status: "CANCELLED",
+                paymentStatus: "FAILED",
+              }
+            );
+          },
+        },
       };
 
       const razorpay = new window.Razorpay(options);
@@ -386,6 +399,8 @@ function CheckOut() {
                         item?.packageDetails?.FoodTruckName
                       }
                       image={popularimage}
+                      category={item?.categoryName}
+                      vendorUserName={item?.vendorName}
                     />
                   );
                 })}

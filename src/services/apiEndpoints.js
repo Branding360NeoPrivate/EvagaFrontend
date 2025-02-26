@@ -146,7 +146,8 @@ const apiEndpoints = {
     verifyVendorprofile: (vendorId) => `vender/verify-vendor/${vendorId}`,
     getAllCategoryGstFees: `gstPercentage/get-all-gst-percentage`,
     addCategoryGstFees: `gstPercentage/add-gst-percentage`,
-    getVendorPackageList:(vendorId,categoryId)=> `/adminAction/getVendorPackageList/${vendorId}/${categoryId}`,
+    getVendorPackageList: (vendorId, categoryId) =>
+      `/adminAction/getVendorPackageList/${vendorId}/${categoryId}`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",
@@ -191,6 +192,8 @@ const apiEndpoints = {
       `vendorOrder/verifyEndService/${orderId}/${id}`,
     verifyStartServicebyorderId: (orderId, id) =>
       `vendorOrder/verifyStartService/${orderId}/${id}`,
+    cancelOrder: `vendorOrder/cancelOrder`,
+    getOneOrderDetails: `vendorOrder/getOneOrderDetails`,
   },
 };
 

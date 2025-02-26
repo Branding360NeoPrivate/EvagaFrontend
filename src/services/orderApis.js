@@ -72,6 +72,18 @@ const orderApis = {
         },
       }
     ),
+  CancelOrder: (formdata) =>
+    apiService.post(apiEndpoints.order.cancelOrder, formdata, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
+    GetOneOrderDetails: (formdata) =>
+    apiService.post(apiEndpoints.order.getOneOrderDetails, formdata, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
 };
 
 export default orderApis;
