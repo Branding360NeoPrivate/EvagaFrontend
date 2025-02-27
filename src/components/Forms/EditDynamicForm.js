@@ -1709,7 +1709,7 @@ const EditDynamicForm = ({
                         </div>
                         {/* Render Photos */}
                         <div className="flex flex-wrap gap-1">
-                          {(formValues?.Portfolio?.photos || []).map(
+                          {(formValues?.Portfolio?.photos || [])?.map(
                             (photo, photoIdx) => (
                               <div
                                 key={photoIdx}
