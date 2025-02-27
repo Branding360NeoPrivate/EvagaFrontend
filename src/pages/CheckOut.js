@@ -88,6 +88,7 @@ function CheckOut() {
       formData.append("address", data?.Address);
       formData.append("addressLine1", data?.AddressLine1);
       formData.append("addressLine2", data?.AddressLine2);
+      formData.append("City", data?.City);
       formData.append("state", data?.State);
       formData.append("pinCode", data?.Pincode);
 
@@ -101,6 +102,7 @@ function CheckOut() {
         Address: "",
         AddressLine1: "",
         AddressLine2: "",
+        City: "",
         State: "",
         Pincode: "",
       });
@@ -116,6 +118,7 @@ function CheckOut() {
       formData.append("address", data?.Address);
       formData.append("addressLine1", data?.AddressLine1);
       formData.append("addressLine2", data?.AddressLine2);
+      formData.append("City", data?.City);
       formData.append("state", data?.State);
       formData.append("pinCode", data?.Pincode);
 
@@ -144,6 +147,7 @@ function CheckOut() {
     setValueEditAddress("Address", response?.addresses.address || "");
     setValueEditAddress("AddressLine1", response?.addresses.addressLine1 || "");
     setValueEditAddress("AddressLine2", response?.addresses.addressLine2 || "");
+    setValueEditAddress("City", response?.addresses.City || "");
     setValueEditAddress("State", response?.addresses.state || "");
     setValueEditAddress("Pincode", response?.addresses.pinCode || "");
   };
@@ -444,6 +448,7 @@ function CheckOut() {
             discount={cart?.discount}
             onPlaceOrder={createOrderHandle}
             selectedAddress={userSelectedAddress}
+            editAddress={setIsEditingAddress}
             coupondiscount={cart?.discount}
             selectedCouponCode={cart?.code}
             cart={cart}
@@ -466,13 +471,14 @@ function CheckOut() {
             ? "Add Coupon"
             : "Unknown"
         }
+        width={"50%"}
       >
         {modalType === "addAddress" && (
           <form onSubmit={handleAddSubmit(handleAddUserAddress)}>
             <div className="my-8 space-y-4">
               <div className="flex justify-between sm:flex-col lg:flex-row">
-                <label className="text-textGray text-xl">Name</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <label className="text-textGray text-xl">Name*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
@@ -496,8 +502,8 @@ function CheckOut() {
                 </span>
               </div>{" "}
               <div className="flex justify-between">
-                <label className="text-textGray text-xl">Address</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <label className="text-textGray text-xl">Address*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
@@ -521,8 +527,8 @@ function CheckOut() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <label className="text-textGray text-xl">Address line 1</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <label className="text-textGray text-xl">Address line 1*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
@@ -550,13 +556,13 @@ function CheckOut() {
               </div>
               <div className="flex justify-between">
                 <label className="text-textGray text-xl">Address line 2</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
                     {...registerAddAddress("AddressLine2", {
                       required: {
-                        value: true,
+                        value: false,
                         message: "AddressLine2 is required",
                       },
                       minLength: {
@@ -577,8 +583,33 @@ function CheckOut() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <label className="text-textGray text-xl">State</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <label className="text-textGray text-xl">City*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
+                  <input
+                    type="text"
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    {...registerAddAddress("City", {
+                      required: { value: true, message: "State is required" },
+                      minLength: {
+                        value: 2,
+                        message: "City must be at least 2 characters",
+                      },
+                      maxLength: {
+                        value: 200,
+                        message: "City must be at most 20 characters",
+                      },
+                    })}
+                  />
+                  {errorsAddAddress.City && (
+                    <p role="alert" className="text-red-500 text-base">
+                      {errorsAddAddress.City.message}
+                    </p>
+                  )}
+                </span>
+              </div>{" "}
+              <div className="flex justify-between">
+                <label className="text-textGray text-xl">State*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
@@ -602,8 +633,8 @@ function CheckOut() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <label className="text-textGray text-xl">Pincode</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <label className="text-textGray text-xl">Pincode*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
                     type="number"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none "
@@ -637,7 +668,7 @@ function CheckOut() {
           <form onSubmit={handleEditSubmit(handleEditUserAddress)}>
             <div className="my-8 space-y-4">
               <div className="flex justify-between sm:flex-col lg:flex-row">
-                <label className="text-textGray text-xl">Name</label>
+                <label className="text-textGray text-xl">Name*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
@@ -662,7 +693,7 @@ function CheckOut() {
                 </span>
               </div>{" "}
               <div className="flex justify-between">
-                <label className="text-textGray text-xl">Address</label>
+                <label className="text-textGray text-xl">Address*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
@@ -687,7 +718,7 @@ function CheckOut() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <label className="text-textGray text-xl">Address line 1</label>
+                <label className="text-textGray text-xl">Address line 1*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
@@ -722,7 +753,7 @@ function CheckOut() {
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
                     {...registerEditAddress("AddressLine2", {
                       required: {
-                        value: true,
+                        value: false,
                         message: "AddressLine2 is required",
                       },
                       minLength: {
@@ -743,7 +774,32 @@ function CheckOut() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <label className="text-textGray text-xl">State</label>
+                <label className="text-textGray text-xl">City*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
+                  <input
+                    type="text"
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    {...registerEditAddress("City", {
+                      required: { value: true, message: "State is required" },
+                      minLength: {
+                        value: 2,
+                        message: "City must be at least 2 characters",
+                      },
+                      maxLength: {
+                        value: 200,
+                        message: "City must be at most 20 characters",
+                      },
+                    })}
+                  />
+                  {errorsAddAddress.City && (
+                    <p role="alert" className="text-red-500 text-base">
+                      {errorsAddAddress.City.message}
+                    </p>
+                  )}
+                </span>
+              </div>{" "}
+              <div className="flex justify-between">
+                <label className="text-textGray text-xl">State*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
@@ -768,7 +824,7 @@ function CheckOut() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <label className="text-textGray text-xl">Pincode</label>
+                <label className="text-textGray text-xl">Pincode*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
                     type="number"

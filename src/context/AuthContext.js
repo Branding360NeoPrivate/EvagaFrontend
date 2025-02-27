@@ -44,21 +44,45 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // const login = (accessToken, role, userId) => {
+  //   // Save to state
+  //   setAuth({ isAuthenticated: true, role, accessToken, userId });
+
+  //   // Save to cookies
+  //   Cookies.set("accessToken", accessToken, { expires: 1 });
+  //   Cookies.set("role", role, { expires: 1 });
+  //   Cookies.set("userId", userId, { expires: 1 });
+  //   notificationService.success("Welcome to Evaga!");
+
+  //   // Redirect to the respective dashboard
+  //   const dashboardRoute = getDashboardRoute(role);
+  //   navigate(dashboardRoute);
+  // };
+
+
   const login = (accessToken, role, userId) => {
     // Save to state
     setAuth({ isAuthenticated: true, role, accessToken, userId });
-
+  
     // Save to cookies
     Cookies.set("accessToken", accessToken, { expires: 1 });
     Cookies.set("role", role, { expires: 1 });
     Cookies.set("userId", userId, { expires: 1 });
     notificationService.success("Welcome to Evaga!");
-
-    // Redirect to the respective dashboard
-    const dashboardRoute = getDashboardRoute(role);
-    navigate(dashboardRoute);
+  
+    // Check if a redirect URL is provided
+    const params = new URLSearchParams(location.search);
+    const redirectPath = params.get("redirect");
+  
+    // Redirect to the respective page or dashboard
+    if (redirectPath) {
+      navigate(redirectPath);
+    } else {
+      const dashboardRoute = getDashboardRoute(role);
+      navigate(dashboardRoute);
+    }
   };
-
+  
   const logout = async () => {
     try {
       // Call the appropriate logout API based on the user's role

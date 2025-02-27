@@ -22,7 +22,7 @@ function CheckoutSummary({
   cart,
   RemoveCode,
   selectedCouponCode,
-  applyCoupon,
+  applyCoupon,editAddress
 }) {
   const navigate = useNavigate();
 
@@ -33,7 +33,8 @@ function CheckoutSummary({
 
     setIsPlacingOrder(true);
     if (!selectedAddress) {
-      toast.error("Please select an address before placing the order!");
+      editAddress(true)
+      // toast.error("Please select an address before placing the order!");
       setIsPlacingOrder(false);
       return;
     }

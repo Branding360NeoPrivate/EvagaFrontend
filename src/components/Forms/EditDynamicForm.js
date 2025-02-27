@@ -185,7 +185,6 @@ const EditDynamicForm = ({
     }));
   };
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -820,9 +819,33 @@ const EditDynamicForm = ({
                     {/* UOM */}
                     <div className="flex flex-col items-center justify-center gap-2">
                       <label className="text-textGray font-medium">UOM</label>
-                      <p className="text-textGray text-base">
-                        {item["UOM"] || ""}
-                      </p>
+                      <select
+                        value={formValues[field.key] || ""}
+                        onChange={(e) =>
+                          handleObjectChange(
+                            field.key,
+                            index,
+                            "UOM",
+                            e.target.value
+                          )
+                        }
+                        className="border-2  outline-none p-2 rounded-md text-textGray font-medium w-full"
+                        required
+                      >
+                        <option value="" disabled>
+                          Select an option
+                        </option>
+                        {[
+                          "Per Hour",
+                          "Per Session",
+                          "Per Package",
+                          "Per Unit",
+                        ].map((item, index) => (
+                          <option key={index} value={item}>
+                            {item}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
                 ))}
@@ -1476,7 +1499,6 @@ const EditDynamicForm = ({
                         className="w-[10rem] rounded-md object-cover"
                       />
                     )}
-            
 
                     <button
                       onClick={() => handleChange(`${field.key}`, null)}

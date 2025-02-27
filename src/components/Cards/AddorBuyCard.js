@@ -10,13 +10,13 @@ import "react-calendar/dist/Calendar.css"; // Default styles for React Calendar
 import { FaCalendarAlt } from "react-icons/fa"; // Import calendar icon
 import { CiLocationOn } from "react-icons/ci";
 import AddOnCounter from "../../utils/AddOnCounter";
-import location from "../../assets/Temporary Images/marker (1) 2.png";
+import locationImg from "../../assets/Temporary Images/marker (1) 2.png";
 import Recommended from "../../assets/Temporary Images/cursor-plus.png";
 import session from "../../assets/Temporary Images/stopwatch 1.png";
 import order from "../../assets/Temporary Images/order.png";
 import pkg from "../../assets/Temporary Images/package.png";
 import formatCurrency from "../../utils/formatCurrency";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { internalRoutes } from "../../utils/internalRoutes";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
@@ -27,8 +27,11 @@ function AddorBuyCard({
   addTocart,
   packageIncart,
   packageIncartData,
+  packageId,
+  serviceId,
 }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { auth } = useAuth();
   const [pincode, setPincode] = useState("");
   const calendarRef = useRef(null);
@@ -94,35 +97,7 @@ function AddorBuyCard({
     "Price && MOQ": "price-moq-icon-url",
   };
   const [formattedTime, setFormattedTime] = useState("");
-  const [selectedTime, setSelectedTime] = useState(""); // AM/PM
-
-  const handleTimeChange = (event) => {
-    let timeValue = event.target.value;
-    let [hours, minutes] = timeValue.split(":");
-
-    let period = "AM";
-    if (parseInt(hours) > 12) {
-      hours = parseInt(hours) - 12;
-      period = "PM";
-    } else if (hours === "00") {
-      hours = 12;
-      period = "AM";
-    } else if (hours === "12") {
-      period = "PM";
-    }
-
-    const formattedTime12Hour = `${hours}:${minutes} ${period}`;
-    setFormattedTime(formattedTime12Hour);
-    setSelectedTime(period);
-  };
-
-  const handleTimeSelect = (period) => {
-    if (formattedTime) {
-      const [time] = formattedTime.split(" ");
-      setFormattedTime(`${time} ${period}`);
-      setSelectedTime(period);
-    }
-  };
+  const [selectedTime, setSelectedTime] = useState("");
 
   const [quantity, setQuantity] = useState(1);
   const [selectedAddOns, setSelectedAddOns] = useState([]);
@@ -196,25 +171,150 @@ function AddorBuyCard({
 
     if (missingFields.length > 0) {
       toast.warning(`${missingFields.join(", ")} is required.`);
-      return;
+      return false;
     }
-    if (auth?.isAuthenticated && auth?.role === "user") {
-      console.log(basePrice, selectedAddOns);
 
+    if (auth?.isAuthenticated && auth?.role === "user") {
       try {
-        addTocart(basePrice, selectedAddOns, dateInput, formattedTime, pincode);
+        console.log(basePrice, selectedAddOns);
+        await addTocart(
+          basePrice,
+          selectedAddOns,
+          dateInput,
+          formattedTime,
+          pincode
+        );
+        toast.success("Item added to the cart successfully.");
+        return true;
       } catch (error) {
         toast.error("Failed to Add To Cart. Please try again.");
         console.error(error);
+        return false;
       }
     } else {
       toast.warning("You need to log in first to add items to the Cart.");
+      localStorage.setItem(
+        "addToCart",
+        JSON.stringify({
+          dateInput,
+          formattedTime,
+          pincode,
+          basePrice,
+          selectedAddOns,
+          serviceId,
+          packageId,
+        })
+      );
+      const currentPath = `${location.pathname}${location.search || ""}`;
+      if (!currentPath) {
+        navigate(internalRoutes.userLogin); // Default to login if path is invalid
+      } else {
+        navigate(
+          `${internalRoutes.userLogin}?redirect=${encodeURIComponent(
+            currentPath
+          )}`
+        );
+      }
+      return false;
     }
   };
+
   const disablePastDates = ({ date }) => {
     const today = new Date();
-    // Disable dates before today (ignoring the time component)
     return date < new Date(today.setHours(0, 0, 0, 0));
+  };
+  useEffect(() => {
+    if (packageIncartData) {
+      // If packageIncartData is available, populate the fields
+      const formattedDate = new Date(
+        packageIncartData?.date
+      ).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+      setDateInput(formattedDate);
+
+      const [time, period] = packageIncartData?.time.split(" ");
+      let [hours, minutes] = time.split(":");
+      if (period === "PM" && parseInt(hours) !== 12) {
+        hours = parseInt(hours) + 12;
+      } else if (period === "AM" && parseInt(hours) === 12) {
+        hours = "00";
+      }
+      const formattedTime24Hour = `${hours}:${minutes}`;
+      setFormattedTime(formattedTime24Hour);
+      setSelectedTime(period);
+      setPincode(packageIncartData?.pincode);
+      // Handle selected sessions
+      if (packageIncartData?.selectedSessions) {
+        console.log(
+          "Setting selectedSessions:",
+          packageIncartData.selectedSessions
+        );
+        setSelectedAddOns(
+          packageIncartData.selectedSessions.map((session) => ({
+            ...session,
+            quantity: session.quantity || 1, // Ensure a default quantity exists
+            totalPrice: (session.quantity || 1) * session.Rates, // Calculate initial total price
+          }))
+        );
+      } else {
+        setSelectedAddOns([]);
+      }
+    } else {
+      const storedAddToCart = JSON.parse(localStorage.getItem("addToCart"));
+      if (storedAddToCart) {
+        const { dateInput, formattedTime, pincode, serviceId: storedServiceId, packageId: storedPackageId } = storedAddToCart;
+    
+        if (storedServiceId === serviceId && storedPackageId === packageId) {
+          setDateInput(dateInput || "");
+          setFormattedTime(formattedTime || "");
+          setPincode(pincode || "");
+        } else {
+          setDateInput("");
+          setFormattedTime("");
+          setPincode("");
+        }
+      } else {
+        setDateInput("");
+        setFormattedTime("");
+        setPincode("");
+      }
+    }
+    
+  }, [packageIncartData, serviceId, packageId]);
+
+  const handleTimeChange = (event) => {
+    const timeValue = event.target.value;
+    setFormattedTime(timeValue);
+
+    const [hours, minutes] = timeValue.split(":");
+    let period = "AM";
+    let displayHours = parseInt(hours);
+    if (displayHours >= 12) {
+      period = "PM";
+      if (displayHours > 12) displayHours -= 12;
+    } else if (displayHours === 0) {
+      displayHours = 12;
+    }
+    setSelectedTime(period);
+  };
+
+  const handleTimeSelect = (period) => {
+    setSelectedTime(period);
+
+    if (formattedTime) {
+      let [hours, minutes] = formattedTime.split(":");
+      hours = parseInt(hours);
+      if (period === "PM" && hours < 12) {
+        hours += 12;
+      } else if (period === "AM" && hours >= 12) {
+        hours -= 12;
+      }
+      const formatted24Hour = `${String(hours).padStart(2, "0")}:${minutes}`;
+      setFormattedTime(formatted24Hour);
+    }
   };
 
   if (!renderPrice || Object.keys(renderPrice).length === 0) {
@@ -278,6 +378,7 @@ function AddorBuyCard({
               <input
                 type="time"
                 className="w-full py-2 px-3 border rounded-md text-gray-600 focus:outline-primary"
+                value={formattedTime}
                 onChange={handleTimeChange}
               />
               <div className="flex  gap-2">
@@ -310,7 +411,7 @@ function AddorBuyCard({
           <div className=" text-primary text-xl font-semibold pt-2 flex items-center justify-center gap-1">
             <span className="bg-textLightGray rounded-[50%] p-2">
               <img
-                src={location}
+                src={locationImg}
                 alt="recommended"
                 className="h-[1.5rem] object-fit"
               />
@@ -409,7 +510,18 @@ function AddorBuyCard({
             </button>
           )}
 
-          <button className="btn-primary">Buy Now</button>
+          <button
+            className="btn-primary"
+            onClick={async () => {
+              if (!packageIncart) {
+                const success = await handleAddTocart();
+                if (!success) return;
+              }
+              navigate(internalRoutes.checkout);
+            }}
+          >
+            Buy Now
+          </button>
         </div>
       </div>
       <span className="">

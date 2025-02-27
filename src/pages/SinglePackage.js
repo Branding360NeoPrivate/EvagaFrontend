@@ -85,7 +85,7 @@ function SinglePackage() {
   };
   useEffect(() => {
     if (userId && (!cart || cart.length === 0)) {
-      dispatch(fetchUserCart({userId})).then((response) => {
+      dispatch(fetchUserCart({ userId })).then((response) => {
         if (!response || response.length === 0) {
           console.log("Server response is empty. No cart items fetched.");
         }
@@ -125,7 +125,7 @@ function SinglePackage() {
 
       const response = await addToCartApi.callApi(userId, formData);
 
-      dispatch(fetchUserCart({userId})).then((response) => {
+      dispatch(fetchUserCart({ userId })).then((response) => {
         if (!response || response.length === 0) {
           console.log("Server response is empty. No cart items fetched.");
         }
@@ -141,25 +141,19 @@ function SinglePackage() {
     const exists = cart?.items?.some(
       (item) => item?.serviceId === serviceId && item?.packageId === packageId
     );
-  
-    // Set the cart status in the state
     setPackageIncartStatus(exists);
-  
-    // Find the selected item and store it (or set null if not found)
     const selectedItem = cart?.items?.find(
       (item) => item?.serviceId === serviceId && item?.packageId === packageId
     );
     setPackageIncartData(selectedItem || null);
-  
-    // Return the status
     return exists;
   };
-  
 
   useEffect(() => {
     isPackageInCart(cart, serviceId, packageId);
   }, [serviceId, packageId, cart]);
 
+  console.log(packageIncartData, "packageIncartData");
 
   return (
     <motion.div
@@ -255,6 +249,8 @@ function SinglePackage() {
           addTocart={addTocartHandle}
           packageIncart={packageIncartStatus}
           packageIncartData={packageIncartData}
+          serviceId={serviceId}
+          packageId={packageId}
         />
       </div>
     </motion.div>
