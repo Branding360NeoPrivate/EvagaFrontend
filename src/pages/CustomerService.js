@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AccordionCard from "../components/Cards/AccordionCard";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import NonOrderRelatedQuery from "../components/Cards/NonOrderRelatedQuery";
 import useServices from "../hooks/useServices";
 import commonApis from "../services/commonApis";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
+import { internalRoutes } from "../utils/internalRoutes";
 function CustomerService() {
   const [activeTab, setActiveTab] = useState("faq");
   const [expanded, setExpanded] = useState(null);
   const userId = Cookies.get("userId");
+  const location = useLocation();
+  const navigate = useNavigate();
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : null);
   };
@@ -98,19 +101,32 @@ function CustomerService() {
   const CreateQueryApi = useServices(commonApis.CreateQuery);
   const CreateQueryApiHandle = async (data) => {
     if (!userId) {
-      toast.warn("Please log in to create a query.");
+      localStorage.setItem(
+        "pendingQuery",
+        JSON.stringify({
+          subject: data?.subject,
+          query: data?.query,
+          redirectPath: location.pathname + (location.search || ""),
+        })
+      );
+  
+      navigate(
+        `${internalRoutes.userLogin}?redirect=${encodeURIComponent(
+          location.pathname + (location.search || "")
+        )}`
+      );
       return;
     }
-
+  
     try {
       const formData = new FormData();
       formData.append("userId", userId);
-      formData.append("role", "Venders");
+      formData.append("role", "User");
       formData.append("subject", data?.subject);
       formData.append("query", data?.query);
-
+  
       const response = await CreateQueryApi.callApi(formData);
-
+  
       if (response) {
         toast.success("Query Submitted successfully!");
       } else {
@@ -120,6 +136,43 @@ function CustomerService() {
       toast.error("An error occurred. Please try again later.");
     }
   };
+  
+  useEffect(() => {
+    const pendingQuery = localStorage.getItem("pendingQuery");
+  
+    if (userId && pendingQuery) {
+      const queryData = JSON.parse(pendingQuery);
+  
+      // Add a submission flag to prevent multiple submissions
+      if (!queryData.submitted) {
+        queryData.submitted = true; // Mark as submitted
+        localStorage.setItem("pendingQuery", JSON.stringify(queryData));
+  
+        // Automatically submit the stored query
+        (async () => {
+          try {
+            const formData = new FormData();
+            formData.append("userId", userId);
+            formData.append("role", "User");
+            formData.append("subject", queryData.subject);
+            formData.append("query", queryData.query);
+  
+            const response = await CreateQueryApi.callApi(formData);
+  
+            if (response) {
+              toast.success("Query Submitted successfully!");
+              localStorage.removeItem("pendingQuery"); // Clear localStorage after successful submission
+              navigate(queryData.redirectPath || "/");
+            } else {
+              toast.error("Failed to create query. Please try again later.");
+            }
+          } catch (error) {
+            toast.error("An error occurred while submitting the query.");
+          }
+        })();
+      }
+    }
+  }, [userId]); 
 
   return (
     <div className="flex items-start justify-between px-[2%] py-[2%] w-full">

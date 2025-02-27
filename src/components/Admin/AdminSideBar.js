@@ -26,6 +26,7 @@ import {
 import { GrCompliance } from "react-icons/gr";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdAttachMoney, MdBorderClear, MdOutlineFeed } from "react-icons/md";
+import { LuMailQuestion } from "react-icons/lu";
 const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
   const { logout } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -99,12 +100,44 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
         {
           id: "Completed Orders",
           label: "Completed Orders",
-          icon: <GrCompliance  />,
+          icon: <GrCompliance />,
         },
         {
           id: "Cancelled Orders",
           label: "Cancelled Orders",
           icon: <MdBorderClear />,
+        },
+      ],
+    },
+    {
+      id: "Website Management",
+      label: "Website Management",
+      icon: <FaRegMoneyBillAlt />,
+      children: [
+        { id: "Banner", label: "Banner", icon: <FaRegImage /> },
+        { id: "Coupons", label: "Coupons", icon: <RiCoupon3Line /> },
+        {
+          id: "Fee Breakdown by Category",
+          label: "Fee Breakdown by Category",
+          icon: <FaRegMoneyBillAlt />,
+        },
+        {
+          id: "Gst by Category",
+          label: "Gst by Category",
+          icon: <MdAttachMoney />,
+        },
+      ],
+    },
+    {
+      id: "Query",
+      label: "Query",
+      icon: <LuMailQuestion  />,
+      children: [
+        { id: "Customer Query", label: "Customer Query", icon: <FaBorderAll /> },
+        {
+          id: "Vendor Query",
+          label: "Vendor Query",
+          icon: <FaFirstOrder />,
         },
       ],
     },

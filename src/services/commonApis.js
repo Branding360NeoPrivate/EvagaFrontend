@@ -17,6 +17,8 @@ const commonApis = {
     apiService.get(apiEndpoints.common.getuserQuery(userId)),
   GetvendorQuery: (userId) =>
     apiService.get(apiEndpoints.common.getvendorQuery(userId)),
+  Getallquery: (role) => apiService.get(apiEndpoints.common.getallquery(role)),
+  GetOneQueries: (queryId) => apiService.get(apiEndpoints.common.getOneQueries(queryId)),
 };
 
 export default commonApis;

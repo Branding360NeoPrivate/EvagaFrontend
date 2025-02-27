@@ -103,6 +103,8 @@ const apiEndpoints = {
     createQuery: `Query/create`,
     getuserQuery: (userId) => `Query/user/${userId}`,
     getvendorQuery: (userId) => `Query/vendor/${userId}`,
+    getallquery: (role) => `Query/get-all-query/${role}`,
+    getOneQueries: (queryId) => `Query/getOneQueries/${queryId}`,
   },
   admin: {
     register: "admin/registerAdmin",

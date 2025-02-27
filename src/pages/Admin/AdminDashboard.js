@@ -28,6 +28,8 @@ import ConfirmOrder from "../../components/Admin/ConfirmOrder";
 import OngoingOrder from "../../components/Admin/OngoingOrder";
 import CompletedOrder from "../../components/Admin/CompletedOrder";
 import CancelledOrder from "../../components/Admin/CancelledOrder";
+import CustomerQueryTable from "../../components/Admin/CustomerQueryTable";
+import VendorQueryTable from "../../components/Admin/VendorQueryTable";
 
 const AdminDashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState("Home");
@@ -213,6 +215,8 @@ const AdminDashboard = () => {
         {selectedMenu === "Ongoing Orders" && <OngoingOrder />}
         {selectedMenu === "Completed Orders" && <CompletedOrder />}
         {selectedMenu === "Cancelled Orders" && <CancelledOrder />}
+        {selectedMenu === "Customer Query" && <CustomerQueryTable />}
+        {selectedMenu === "Vendor Query" && <VendorQueryTable />}
       </div>
     </div>
   );
