@@ -169,7 +169,7 @@ function VendorService() {
         >
           Send Your Query
         </p>
-        <hr />
+       
         <p
           className={
             activeTab === "faq"
@@ -180,6 +180,13 @@ function VendorService() {
         >
           Frequently Asked Questions(FAQs)
         </p>
+        <p className={"text-textGray cursor-pointer font-medium"}>
+          Call Us : +91 82961 57611
+        </p>{" "}
+        <p className={"text-textGray cursor-pointer font-medium"}>
+          Email Us : info@evagaentertainment.com
+        </p>
+        <hr />
       </div>
       <div className="flex-[0.67]">
         {activeTab === "nonOrderRelQry" && (

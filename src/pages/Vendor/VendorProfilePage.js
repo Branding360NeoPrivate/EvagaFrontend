@@ -231,13 +231,15 @@ const VendorProfile = () => {
   );
 
   // console.log("vendorDetails in vendor profile:", vendorDetails);
-    useEffect(() => {
-      if (profile?.vendor?.termsAccepted === false) {
-        handleOpen();
-        console.log(profile?.vendor?.termsAccepted,'profile?.vendor?.termsAccepted');
-        
-      }
-    }, [profile?.vendor?.termsAccepted]);
+  useEffect(() => {
+    if (profile?.vendor?.termsAccepted === false) {
+      handleOpen();
+      console.log(
+        profile?.vendor?.termsAccepted,
+        "profile?.vendor?.termsAccepted"
+      );
+    }
+  }, [profile?.vendor?.termsAccepted]);
 
   if (!profile)
     return <ErrorView status="loading" error={"Profile Details Not Found!"} />;
@@ -306,7 +308,6 @@ const VendorProfile = () => {
             </div>
           </div>
 
-      
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-y-6 md:gap-6 lg:w-full">
             {/* Left Column */}
             <div className="lg:col-span-1 grid grid-cols-1 gap-6">
@@ -440,11 +441,13 @@ const VendorProfile = () => {
           </div>
 
           {/* Documents Section */}
-          <DocumentUploader
+          {/* <DocumentUploader
             formfields={formfields.vendorProfileDetails.documents.fields}
             vendorDetails={vendorDetails.documents}
-          />
-
+          /> */}
+          <div className="w-full flex items-center justify-center">
+            <button className="btn-primary px-2 w-fit">Add Service</button>
+          </div>
           {/* Modal for Editing Section */}
           <Modal open={openModal} onClose={handleCloseModal}>
             <Box
@@ -485,7 +488,7 @@ const VendorProfile = () => {
           </Modal>
         </div>
       )}
-            <TermsModal open={open} handleClose={handleClose} />
+      <TermsModal open={open} handleClose={handleClose} />
     </div>
   );
 };
