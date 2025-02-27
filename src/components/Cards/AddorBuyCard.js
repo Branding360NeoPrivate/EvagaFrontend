@@ -192,7 +192,6 @@ function AddorBuyCard({
         return false;
       }
     } else {
-      toast.warning("You need to log in first to add items to the Cart.");
       localStorage.setItem(
         "addToCart",
         JSON.stringify({
@@ -247,21 +246,21 @@ function AddorBuyCard({
       setSelectedTime(period);
       setPincode(packageIncartData?.pincode);
       // Handle selected sessions
-      if (packageIncartData?.selectedSessions) {
-        console.log(
-          "Setting selectedSessions:",
-          packageIncartData.selectedSessions
-        );
-        setSelectedAddOns(
-          packageIncartData.selectedSessions.map((session) => ({
-            ...session,
-            quantity: session.quantity || 1, // Ensure a default quantity exists
-            totalPrice: (session.quantity || 1) * session.Rates, // Calculate initial total price
-          }))
-        );
-      } else {
-        setSelectedAddOns([]);
-      }
+      // if (packageIncartData?.selectedSessions) {
+      //   console.log(
+      //     "Setting selectedSessions:",
+      //     packageIncartData.selectedSessions
+      //   );
+      //   setSelectedAddOns(
+      //     packageIncartData.selectedSessions.map((session) => ({
+      //       ...session,
+      //       quantity: session.quantity || 1, // Ensure a default quantity exists
+      //       totalPrice: (session.quantity || 1) * session.Rates, // Calculate initial total price
+      //     }))
+      //   );
+      // } else {
+      //   setSelectedAddOns([]);
+      // }
     } else {
       const storedAddToCart = JSON.parse(localStorage.getItem("addToCart"));
       if (storedAddToCart) {
