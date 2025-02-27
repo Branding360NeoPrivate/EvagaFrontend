@@ -1623,7 +1623,7 @@ const EditDynamicForm = ({
                 {Array.isArray(formValues?.ProductImage) &&
                   formValues.ProductImage.length > 0 && (
                     <div className="flex flex-wrap gap-2">
-                      {formValues.ProductImage.map((item, idx) => (
+                      {formValues?.ProductImage?.map((item, idx) => (
                         <span
                           key={idx}
                           className="text-textGray bg-textLightGray flex p-1 rounded-md justify-between items-center gap-1"
@@ -1790,7 +1790,7 @@ const EditDynamicForm = ({
                         </div>
                         {/* Render Videos */}
                         <div className="flex flex-wrap gap-1">
-                          {(formValues?.Portfolio?.videos || []).map(
+                          {(formValues?.Portfolio?.videos || [])?.map(
                             (video, videoIdx) => (
                               <div
                                 key={videoIdx}
