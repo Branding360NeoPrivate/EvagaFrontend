@@ -1633,7 +1633,9 @@ const EditDynamicForm = ({
                               typeof item === "string"
                                 ? process.env.REACT_APP_API_Aws_Image_BASE_URL +
                                   item
-                                : URL?.createObjectURL(item)
+                                : item instanceof File || item instanceof Blob
+                                ? URL.createObjectURL(item)
+                                : "" // Fallback for invalid types
                             }
                             alt="Selected"
                             className="w-[10rem] rounded-md object-cover"
