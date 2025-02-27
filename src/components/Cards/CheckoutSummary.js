@@ -6,6 +6,7 @@ import formatCurrency from "../../utils/formatCurrency";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import PaymentOptions from "../../utils/PaymentOptions";
+
 function CheckoutSummary({
   totalOfcart,
   totalWithFee,
@@ -19,16 +20,18 @@ function CheckoutSummary({
   selectedAddress,
   coupondiscount,
   cart,
+  RemoveCode,
+  selectedCouponCode,
+  applyCoupon,
 }) {
   const navigate = useNavigate();
 
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
-
+  const [couponCode, setCouponCode] = useState("");
   const handlePlaceOrder = async () => {
-    if (isPlacingOrder) return; // Prevent multiple invocations
+    if (isPlacingOrder) return;
 
-    setIsPlacingOrder(true); // Set the state to prevent further clicks
-
+    setIsPlacingOrder(true);
     if (!selectedAddress) {
       toast.error("Please select an address before placing the order!");
       setIsPlacingOrder(false);
@@ -47,11 +50,19 @@ function CheckoutSummary({
       console.error("No action defined for placing the order.");
     }
 
-    setIsPlacingOrder(false); // Re-enable the button after the process completes
+    setIsPlacingOrder(false);
   };
+
   const [partialPaymentPart, setPartialPaymentPart] = useState(1);
   const [partialAmount, setPartialAmount] = useState(null);
-  // Function to calculate partial payment amounts
+  const earliestDate = useMemo(() => {
+    if (!cart?.items?.length) return null;
+    return cart.items.reduce((minDate, item) => {
+      const itemDate = new Date(item?.date?.$date);
+      return minDate ? (itemDate < minDate ? itemDate : minDate) : itemDate;
+    }, null);
+  }, [cart]);
+
   const calculatePartialPayments = (total, parts) => {
     if (parts === 1) {
       return [total];
@@ -62,38 +73,76 @@ function CheckoutSummary({
     }
     return [];
   };
+  const calculateNextPaymentDates = (parts) => {
+    if (!earliestDate) return [];
+
+    const nextPaymentDates = [];
+    const firstPaymentDate = new Date(earliestDate);
+
+    if (parts === 2) {
+      nextPaymentDates.push(
+        new Date(firstPaymentDate.setDate(firstPaymentDate.getDate() + 14))
+      );
+    } else if (parts === 3) {
+      nextPaymentDates.push(
+        new Date(firstPaymentDate.setDate(firstPaymentDate.getDate() + 30))
+      ); 
+      nextPaymentDates.push(
+        new Date(firstPaymentDate.setDate(firstPaymentDate.getDate() + 14))
+      ); 
+    }
+    return nextPaymentDates;
+  };
 
   const paymentDetails = useMemo(() => {
     if (partialPaymentPart > 1) {
-      // Only calculate for partial payments
       return calculatePartialPayments(totalWithFee, partialPaymentPart);
     }
     return [];
   }, [totalWithFee, partialPaymentPart]);
   useEffect(() => {
     if (partialPaymentPart > 1) {
-      // Store only partial payments in state
       setPartialAmount(paymentDetails);
     } else {
-      setPartialAmount(null); // Clear the state for full payment
+      setPartialAmount(null);
     }
   }, [partialPaymentPart, paymentDetails]);
+  useEffect(() => {
+    if (selectedCouponCode) {
+      setCouponCode(selectedCouponCode);
+    }
+  }, [selectedCouponCode]);
 
   return (
     <div className="w-full max-sm:w-full min-h-[560px] mx-auto border rounded-[10px] border-gray-300  p-6 bg-white font-['Poppins']">
       <PaymentOptions cart={cart} setNumberOfPart={setPartialPaymentPart} />
       <h2 className="text-xl font-semibold text-primary mb-4">Coupons</h2>
-      <div className="flex items-center mb-6">
+      <form
+        onSubmit={(e) => [e.preventDefault(), applyCoupon(couponCode)]}
+        className="flex items-center mb-6"
+      >
         <img src={Tag} alt="tag1" />
         <input
           type="text"
           placeholder="Enter Coupon code"
           className="w-[217px] h-[40px] ml-2 px-4 py-2 border rounded-lg focus:outline-none"
+          value={couponCode}
+          onChange={(e) => setCouponCode(e.target.value)}
         />
-        <button className="w-[123px] h-[40px]" style={{ marginLeft: "4rem" }}>
-          <img src={Add} alt="Add" />
-        </button>
-      </div>
+        {coupondiscount ? (
+          <button
+            type="button"
+            className="w-[123px] h-[40px] text-red-500"
+            onClick={RemoveCode}
+          >
+            Remove
+          </button>
+        ) : (
+          <button type="submit" className="w-[123px] h-[40px] ml-16">
+            <img src={Add} alt="Add" />
+          </button>
+        )}
+      </form>
       <h3 className="text-xl font-semibold mb-2 text-primary">Bill Details</h3>
       <div className="border-b border-gray-300 pt-4 text-textGray text-[18px]">
         <div className="flex justify-between mb-2">
@@ -113,10 +162,10 @@ function CheckoutSummary({
           <span>
             {coupondiscount ? (
               <span className=" font-semibold">
-                {coupondiscount} - {formatCurrency(coupondiscount)}
+                - {formatCurrency(coupondiscount)}
                 <button
                   className="ml-2 text-red-500 text-sm"
-                  // onClick={() => removeAppliedCoupon()}
+                  onClick={() => RemoveCode()}
                 >
                   Remove
                 </button>
@@ -156,7 +205,7 @@ function CheckoutSummary({
         <button
           className="w-[257px] px-4 py-2 bg-primary text-white rounded-md font-semibold hover:bg-purple-800"
           onClick={handlePlaceOrder}
-          disabled={isPlacingOrder} // Disable the button during the process
+          disabled={isPlacingOrder}
         >
           {isPlacingOrder ? "Processing..." : "Place Order"}
         </button>

@@ -2,14 +2,16 @@ import React from "react";
 import CrossButton from "../../assets/Temporary Images/Cross.png";
 import Event from "../../assets/Temporary Images/image (4).png";
 import formatCurrency from "../../utils/formatCurrency";
-function CheckOutCard({ price, image, title,category,vendorUserName }) {
-  const data = {
-    id: 1,
-    title: "Technical Staff",
-    category: "Event Management and Staffing",
-    company: "Geeta Pvt Ltd",
-    price: "₹1,10,000.00",
-    image: Event,
+function CheckOutCard({
+  price,
+  image,
+  title,
+  category,
+  vendorUserName,
+  packageId,removeFromcart
+}) {
+  const removefromcartHandle = async() => {
+    removeFromcart(packageId)
   };
 
   return (
@@ -19,13 +21,13 @@ function CheckOutCard({ price, image, title,category,vendorUserName }) {
     >
       <button
         className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-        onClick={() => console.log("Close button clicked")}
+        onClick={() => removefromcartHandle()}
       >
         <img src={CrossButton} alt="Close" className="w-6 h-6" />
       </button>
       <img
-        src={ image}
-        alt={data.title}
+        src={image}
+        alt={title}
         className="object-cover rounded-lg"
         style={{
           width: "12rem",
@@ -36,9 +38,7 @@ function CheckOutCard({ price, image, title,category,vendorUserName }) {
       />
       <div className="flex-1 flex flex-col ml-8">
         <h2 className="text-xl  font-semibold text-primary">{title}</h2>
-        <p className="text-normal  font-normal text-textGray">
-          {category}
-        </p>
+        <p className="text-normal  font-normal text-textGray">{category}</p>
         <p className="text-normal font-normal text-primary">{vendorUserName}</p>
       </div>
       <div className="text-xl font-semibold text-primary mr-8">

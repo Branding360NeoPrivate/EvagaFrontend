@@ -61,6 +61,8 @@ const userApi = {
     apiService.post(apiEndpoints.user.addToCart(userId), formData),
   getUserCart: (userId) =>
     apiService.get(apiEndpoints.user.getUserCart(userId)),
+  RemoveFromCart: (userId,packageId) =>
+    apiService.post(apiEndpoints.user.removeFromCart(userId,packageId)),
 };
 
 export default userApi;

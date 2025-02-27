@@ -22,6 +22,7 @@ function SinglePackage() {
   const dispatch = useDispatch();
   const [singlePageData, setSinglePageData] = useState();
   const [packageIncartStatus, setPackageIncartStatus] = useState(false);
+  const [packageIncartData, setPackageIncartData] = useState(null);
   const [vendorProfile, setVendorProfile] = useState({
     name: "",
     bio: "",
@@ -137,16 +138,28 @@ function SinglePackage() {
   };
 
   const isPackageInCart = (cart, serviceId, packageId) => {
-    return setPackageIncartStatus(
-      cart?.items?.some(
-        (item) => item?.serviceId === serviceId && item?.packageId === packageId
-      )
+    const exists = cart?.items?.some(
+      (item) => item?.serviceId === serviceId && item?.packageId === packageId
     );
+  
+    // Set the cart status in the state
+    setPackageIncartStatus(exists);
+  
+    // Find the selected item and store it (or set null if not found)
+    const selectedItem = cart?.items?.find(
+      (item) => item?.serviceId === serviceId && item?.packageId === packageId
+    );
+    setPackageIncartData(selectedItem || null);
+  
+    // Return the status
+    return exists;
   };
+  
 
   useEffect(() => {
     isPackageInCart(cart, serviceId, packageId);
   }, [serviceId, packageId, cart]);
+
 
   return (
     <motion.div
@@ -241,6 +254,7 @@ function SinglePackage() {
           renderPrice={singlePageData?.services?.[0]?.values}
           addTocart={addTocartHandle}
           packageIncart={packageIncartStatus}
+          packageIncartData={packageIncartData}
         />
       </div>
     </motion.div>

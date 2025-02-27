@@ -79,6 +79,8 @@ const apiEndpoints = {
       `user/select-one-address/${userId}/${addressId}`,
     addToCart: (userId) => `cart/add-to-cart/${userId}`,
     getUserCart: (userId) => `cart/get-user-cart/${userId}`,
+    removeFromCart: (userId, packageId) =>
+      `cart/remove-item-from-user-cart/${userId}/${packageId}`,
   },
   category: {
     add: "category",
@@ -157,6 +159,7 @@ const apiEndpoints = {
   coupons: {
     getAllCoupons: "coupons/get-all-coupons",
     validateCoupons: "coupons/",
+    removeCoupon: (userId) => `coupons/removeCoupon-coupons/${userId}`,
   },
   order: {
     createOrder: (userId, numofParts) =>
@@ -169,7 +172,11 @@ const apiEndpoints = {
     getallongoingorder: `order/ongoing-order`,
     getallcompleteorder: `order/completed-order`,
     getallconfirmedorder: `order/confirmed-order`,
-    getorderbyuserid: (userId) => `userOrder/get-order-by-user-Id/${userId}`,
+    getorderbyuserid: (userId) => `userOrder/get-new-orders/${userId}`,
+    getconfirmedorderbyuserid: (userId) => `userOrder/get-confirmed-orders/${userId}`,
+    getactiveorderbyuserid: (userId) => `userOrder/get-active-orders/${userId}`,
+    getcompletedorderbyuserid: (userId) => `userOrder/get-completed-orders/${userId}`,
+    getcancelledorderbyuserid: (userId) => `userOrder/get-cancelled-orders/${userId}`,
     getoneuserorderbyorderid: (orderId, itemId) =>
       `userOrder/get-one-order-by-order-Id/${orderId}/${itemId}`,
     getneworderbyvendorid: (vendorId) =>
@@ -194,6 +201,8 @@ const apiEndpoints = {
       `vendorOrder/verifyStartService/${orderId}/${id}`,
     cancelOrder: `vendorOrder/cancelOrder`,
     getOneOrderDetails: `vendorOrder/getOneOrderDetails`,
+    getOneOrderDetailsadmin: (OrderId, itemId) =>
+      `order/getOneOrderDetail/${OrderId}/${itemId}`,
   },
 };
 

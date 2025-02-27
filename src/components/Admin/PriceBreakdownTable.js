@@ -5,8 +5,15 @@ const PriceBreakdown = ({
   platformFee,
   platformGstAmount,
   gatewayFeeRate,
+  feesPercentage,
 }) => {
-  const vendorPrice = totalPrice * (1 - Number(gstPercentage) / 100);
+  function calculateOriginalValue(increasedValue, increasePercentage) {
+    const originalValue = increasedValue / (1 + increasePercentage / 100);
+    return originalValue;
+}
+
+  const vendorPrice =calculateOriginalValue(totalPrice, feesPercentage);
+    // totalPrice * (1 - Number(feesPercentage ? feesPercentage : 12) / 100);
   console.log(vendorPrice, totalPrice);
 
   const vendorGST = vendorPrice * (Number(gstPercentage) / 100);

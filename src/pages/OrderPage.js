@@ -9,18 +9,64 @@ export const OrderPage = (props) => {
   const [activeState, setActivestate] = useState("New Orders");
   const [allOrder, setAllOrder] = useState([]);
   const getOrderByUserIdApi = useServices(orderApis.getOrderByUserId);
+  const getconfirmedorderbyuseridApi = useServices(
+    orderApis.getconfirmedorderbyuserid
+  );
+  const getactiveorderbyuseridApi = useServices(
+    orderApis.getactiveorderbyuserid
+  );
+  const getcompletedorderbyuseridApi = useServices(
+    orderApis.getcompletedorderbyuserid
+  );
+  const getcancelledorderbyuseridApi = useServices(
+    orderApis.getcancelledorderbyuserid
+  );
   const userId = Cookies.get("userId");
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const getOrderByUserIdApiHandle = async () => {
     const response = await getOrderByUserIdApi.callApi(userId);
     setAllOrder(response ? response?.orders : []);
     console.log(response);
   };
+  const getconfirmedorderbyuseridApiHandle = async () => {
+    const response = await getconfirmedorderbyuseridApi.callApi(userId);
+    setAllOrder(response ? response?.orders : []);
+    console.log(response);
+  };
+  const getactiveorderbyuseridApiHandle = async () => {
+    const response = await getactiveorderbyuseridApi.callApi(userId);
+    setAllOrder(response ? response?.orders : []);
+    console.log(response);
+  };
+  const getcompletedorderbyuseridApiHandle = async () => {
+    const response = await getcompletedorderbyuseridApi.callApi(userId);
+    setAllOrder(response ? response?.orders : []);
+    console.log(response);
+  };
+  const getcancelledorderbyuseridApiHandle = async () => {
+    const response = await getcancelledorderbyuseridApi.callApi(userId);
+    setAllOrder(response ? response?.orders : []);
+    console.log(response);
+  };
   useEffect(() => {
     if (userId) {
-      getOrderByUserIdApiHandle();
+      if (activeState === "New Orders") {
+        getOrderByUserIdApiHandle();
+      }
+      if (activeState === "Confirmed Orders") {
+        getconfirmedorderbyuseridApiHandle();
+      }
+      if (activeState === "Ongoing Order") {
+        getactiveorderbyuseridApiHandle();
+      }
+      if (activeState === "Completed order") {
+        getcompletedorderbyuseridApiHandle();
+      }
+      if (activeState === "Cancelled order") {
+        getcancelledorderbyuseridApiHandle();
+      }
     }
-  }, [userId]);
+  }, [userId,activeState]);
   return (
     <div className="flex items-center justify-center flex-col w-full gap-2">
       <div className="w-11/12 flex items-center justify-center flex-col gap-4 mt-4">
@@ -122,23 +168,183 @@ export const OrderPage = (props) => {
           </div>
         )}{" "}
         {activeState === "Confirmed Orders" && (
-          <div className="w-full h-[50vh] flex items-center justfiy-center flex-col gap-4">
-            {/* <OrderVenderCard /> */}
+          <div className="w-full min-h-[50vh]  flex items-center justfiy-center flex-col gap-4">
+             {allOrder?.map((item) => {
+              const imageUrl =
+                (Array.isArray(item.packageDetails?.CoverImage)
+                  ? item.packageDetails?.CoverImage[0]
+                  : item.packageDetails?.CoverImage) ||
+                (Array.isArray(item.packageDetails?.ProductImage)
+                  ? item.packageDetails?.ProductImage[0]
+                  : item.packageDetails?.ProductImage);
+
+              const popularimage = imageUrl?.startsWith("service/")
+                ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
+                : imageUrl;
+
+              return (
+                <OrderVenderCard
+                  title={item?.packageDetails?.Title}
+                  orderId={item?.orderId}
+                  image={popularimage}
+                  time={item?.time}
+                  date={item?.date}
+                  userName={item?.userProfile?.name}
+                  phone={item?.userProfile?.phoneNumber}
+                  email={item?.userProfile?.email}
+                  buttons={[
+                    <button
+                      key="verify"
+                      className="btn-primary px-2"
+                      onClick={() =>
+                        navigate(
+                          internalRoutes?.orderDetail +
+                            `/${item?.orderId}` +
+                            `/${item?._id}`
+                        )
+                      }
+                    >
+                      View Order Summary
+                    </button>,
+                  ]}
+                />
+              );
+            })}
           </div>
         )}{" "}
         {activeState === "Ongoing Order" && (
-          <div className="w-full h-[50vh] flex items-center justfiy-center flex-col gap-4">
-            {/* <OrderVenderCard /> */}
+          <div className="w-full min-h-[50vh]  flex items-center justfiy-center flex-col gap-4">
+               {allOrder?.map((item) => {
+              const imageUrl =
+                (Array.isArray(item.packageDetails?.CoverImage)
+                  ? item.packageDetails?.CoverImage[0]
+                  : item.packageDetails?.CoverImage) ||
+                (Array.isArray(item.packageDetails?.ProductImage)
+                  ? item.packageDetails?.ProductImage[0]
+                  : item.packageDetails?.ProductImage);
+
+              const popularimage = imageUrl?.startsWith("service/")
+                ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
+                : imageUrl;
+
+              return (
+                <OrderVenderCard
+                  title={item?.packageDetails?.Title}
+                  orderId={item?.orderId}
+                  image={popularimage}
+                  time={item?.time}
+                  date={item?.date}
+                  userName={item?.userProfile?.name}
+                  phone={item?.userProfile?.phoneNumber}
+                  email={item?.userProfile?.email}
+                  buttons={[
+                    <button
+                      key="verify"
+                      className="btn-primary px-2"
+                      onClick={() =>
+                        navigate(
+                          internalRoutes?.orderDetail +
+                            `/${item?.orderId}` +
+                            `/${item?._id}`
+                        )
+                      }
+                    >
+                      View Order Summary
+                    </button>,
+                  ]}
+                />
+              );
+            })}
           </div>
         )}
         {activeState === "Completed order" && (
-          <div className="w-full h-[50vh] flex items-center justfiy-center flex-col gap-4">
-            {/* <OrderVenderCard /> */}
+          <div className="w-full min-h-[50vh]  flex items-center justfiy-center flex-col gap-4">
+               {allOrder?.map((item) => {
+              const imageUrl =
+                (Array.isArray(item.packageDetails?.CoverImage)
+                  ? item.packageDetails?.CoverImage[0]
+                  : item.packageDetails?.CoverImage) ||
+                (Array.isArray(item.packageDetails?.ProductImage)
+                  ? item.packageDetails?.ProductImage[0]
+                  : item.packageDetails?.ProductImage);
+
+              const popularimage = imageUrl?.startsWith("service/")
+                ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
+                : imageUrl;
+
+              return (
+                <OrderVenderCard
+                  title={item?.packageDetails?.Title}
+                  orderId={item?.orderId}
+                  image={popularimage}
+                  time={item?.time}
+                  date={item?.date}
+                  userName={item?.userProfile?.name}
+                  phone={item?.userProfile?.phoneNumber}
+                  email={item?.userProfile?.email}
+                  buttons={[
+                    <button
+                      key="verify"
+                      className="btn-primary px-2"
+                      onClick={() =>
+                        navigate(
+                          internalRoutes?.orderDetail +
+                            `/${item?.orderId}` +
+                            `/${item?._id}`
+                        )
+                      }
+                    >
+                      View Order Summary
+                    </button>,
+                  ]}
+                />
+              );
+            })}
           </div>
         )}{" "}
         {activeState === "Cancelled order" && (
-          <div className="w-full h-[50vh] flex items-center justfiy-center flex-col gap-4">
-            {/* <OrderVenderCard /> */}
+          <div className="w-full min-h-[50vh]  flex items-center justfiy-center flex-col gap-4">
+             {allOrder?.map((item) => {
+              const imageUrl =
+                (Array.isArray(item.packageDetails?.CoverImage)
+                  ? item.packageDetails?.CoverImage[0]
+                  : item.packageDetails?.CoverImage) ||
+                (Array.isArray(item.packageDetails?.ProductImage)
+                  ? item.packageDetails?.ProductImage[0]
+                  : item.packageDetails?.ProductImage);
+
+              const popularimage = imageUrl?.startsWith("service/")
+                ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
+                : imageUrl;
+
+              return (
+                <OrderVenderCard
+                  title={item?.packageDetails?.Title}
+                  orderId={item?.orderId}
+                  image={popularimage}
+                  time={item?.time}
+                  date={item?.date}
+                  userName={item?.userProfile?.name}
+                  phone={item?.userProfile?.phoneNumber}
+                  email={item?.userProfile?.email}
+                  buttons={[
+                    <button
+                      key="verify"
+                      className="btn-primary px-2"
+                      onClick={() =>
+                        navigate(
+                          internalRoutes?.orderDetail +
+                            `/${item?.orderId}` +
+                            `/${item?._id}`
+                        )
+                      }
+                    >
+                      View Order Summary
+                    </button>,
+                  ]}
+                />
+              );
+            })}
           </div>
         )}
       </div>

@@ -37,6 +37,7 @@ function CheckOut() {
   const getOneUserAddress = useServices(userApi.getOneAddress);
   const getUserAllAddress = useServices(userApi.getUserAllAddress);
   const getUserSelectedAddressApi = useServices(userApi.getUserSelectedAddress);
+  const RemoveFromCartApi = useServices(userApi.RemoveFromCart);
   const deleteOneAddress = useServices(userApi.deleteOneAddress);
   const selectOneUserAddress = useServices(userApi.selectOneUserAddress);
   const getAllCoupon = useServices(couponApi.getAllValidCoupons);
@@ -174,6 +175,14 @@ function CheckOut() {
       setUserSelectedAddress(response ? response?.addresses : null);
     }
   };
+  const RemoveFromCartApihandle = async (packageId) => {
+    const response = await RemoveFromCartApi.callApi(userId, packageId);
+    dispatch(fetchUserCart({ userId })).then((response) => {
+      if (!response || response.length === 0) {
+        console.log("Server response is empty. No cart items fetched.");
+      }
+    });
+  };
   useEffect(() => {
     if (!isEditingAddress) {
       getUserSelectedAddressApiHandle();
@@ -201,10 +210,15 @@ function CheckOut() {
       });
     }
   }, [userId, cart, dispatch]);
-  const handleApplyCoupon = (query) => {
+  const handleApplyCoupon = (couponCode) => {
     dispatch(
       fetchUserCart({ userId: userId, query: { couponCode: couponCode } })
     );
+  };
+  const RemoveCouponApi = useServices(couponApi.RemoveCoupon);
+  const RemoveCouponApiHandle = async (req, res) => {
+    const response = await RemoveCouponApi.callApi(userId);
+    dispatch(fetchUserCart({ userId: userId }));
   };
   const loadScript = (src) => {
     return new Promise((resolve) => {
@@ -410,6 +424,8 @@ function CheckOut() {
                       image={popularimage}
                       category={item?.categoryName}
                       vendorUserName={item?.vendorName}
+                      packageId={item?.packageId}
+                      removeFromcart={RemoveFromCartApihandle}
                     />
                   );
                 })}
@@ -429,7 +445,10 @@ function CheckOut() {
             onPlaceOrder={createOrderHandle}
             selectedAddress={userSelectedAddress}
             coupondiscount={cart?.discount}
+            selectedCouponCode={cart?.code}
             cart={cart}
+            RemoveCode={RemoveCouponApiHandle}
+            applyCoupon={handleApplyCoupon}
           />
         </div>
       </div>

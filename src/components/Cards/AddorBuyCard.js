@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css"; // Default styles for React Calendar
 import { FaCalendarAlt } from "react-icons/fa"; // Import calendar icon
@@ -15,7 +21,13 @@ import { internalRoutes } from "../../utils/internalRoutes";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 
-function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
+function AddorBuyCard({
+  bio,
+  renderPrice,
+  addTocart,
+  packageIncart,
+  packageIncartData,
+}) {
   const navigate = useNavigate();
   const { auth } = useAuth();
   const [pincode, setPincode] = useState("");
@@ -199,6 +211,11 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
       toast.warning("You need to log in first to add items to the Cart.");
     }
   };
+  const disablePastDates = ({ date }) => {
+    const today = new Date();
+    // Disable dates before today (ignoring the time component)
+    return date < new Date(today.setHours(0, 0, 0, 0));
+  };
 
   if (!renderPrice || Object.keys(renderPrice).length === 0) {
     return <div>Loading...</div>;
@@ -248,6 +265,7 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
                 <Calendar
                   onChange={handleDateChange}
                   value={date}
+                  tileDisabled={disablePastDates}
                   className="react-calendar"
                 />
               </div>
@@ -301,7 +319,7 @@ function AddorBuyCard({ bio, renderPrice, addTocart, packageIncart }) {
           </div>
           <div className="flex items-end">
             <input
-              type="text"
+              type="number"
               placeholder="Enter Pincode"
               value={pincode}
               onChange={(e) => setPincode(e.target.value)}

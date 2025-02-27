@@ -3,9 +3,6 @@ import apiEndpoints from "./apiEndpoints";
 
 const orderApis = {
   createUserOrder: (userId, numofParts, formdata) => {
-    // Log formdata to check if it is coming correctly
-    console.log("Formdata:", formdata);
-
     // Proceed with the API call
     return apiService.post(
       apiEndpoints.order.createOrder(userId, numofParts),
@@ -30,8 +27,14 @@ const orderApis = {
     apiService.get(apiEndpoints.order.getallconfirmedorder),
   getOrderByUserId: (userId) =>
     apiService.get(apiEndpoints.order.getorderbyuserid(userId)),
-  getOrderByUserId: (userId) =>
-    apiService.get(apiEndpoints.order.getorderbyuserid(userId)),
+  getconfirmedorderbyuserid: (userId) =>
+    apiService.get(apiEndpoints.order.getconfirmedorderbyuserid(userId)),
+  getactiveorderbyuserid: (userId) =>
+    apiService.get(apiEndpoints.order.getactiveorderbyuserid(userId)),
+  getcompletedorderbyuserid: (userId) =>
+    apiService.get(apiEndpoints.order.getcompletedorderbyuserid(userId)),
+  getcancelledorderbyuserid: (userId) =>
+    apiService.get(apiEndpoints.order.getcancelledorderbyuserid(userId)),
   getOneUserOrderByOrderId: (orderId, itemId) =>
     apiService.get(
       apiEndpoints.order.getoneuserorderbyorderid(orderId, itemId)
@@ -78,12 +81,21 @@ const orderApis = {
         "Content-Type": "multipart/form-data",
       },
     }),
-    GetOneOrderDetails: (formdata) =>
+  GetOneOrderDetails: (formdata) =>
     apiService.post(apiEndpoints.order.getOneOrderDetails, formdata, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     }),
+  GetOneOrderDetailsAdmin: (OrderId, itemId) =>
+    apiService.get(
+      apiEndpoints.order.getOneOrderDetailsadmin(OrderId, itemId),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    ),
 };
 
 export default orderApis;
