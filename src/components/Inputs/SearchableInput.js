@@ -22,8 +22,6 @@ function SearchableInput({ items, value, onSelect, min, def }) {
   }, [searchTerm, items]);
 
   const handleSelect = (item) => {
-
-
     setSearchTerm(item.name);
     onSelect(item);
     setTimeout(() => {
@@ -31,37 +29,29 @@ function SearchableInput({ items, value, onSelect, min, def }) {
     }, 200);
   };
 
-  // console.log("filteredItems:", filteredItems);
-
-  const handleDropdownScroll = (e) => {
-    e.stopPropagation();
-  };
   return (
     <div className="relative w-full">
       <input
         type="text"
-        placeholder={"Search..."}
+        placeholder="Search..."
         value={searchTerm}
         onFocus={() => setIsInputFocused(true)}
         onBlur={() => {
           setTimeout(() => {
             setIsInputFocused(false);
-          }, 100);
+          }, 200);
         }}
         min={min}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="w-full px-4 py-2 border rounded-md bg-gray-100 focus:outline-none"
       />
       {filteredItems?.length > 0 && isInputFocused && (
-        <ul
-          className="absolute z-10 bg-white border rounded-md mt-1 max-h-[200px] w-[300px] overflow-y-scroll"
-          onWheel={handleDropdownScroll}
-        >
+        <ul className="absolute z-10 bg-white border rounded-md mt-1 max-h-[200px] w-[300px] overflow-y-scroll">
           {filteredItems.map((item) => (
             <li
               key={item.id ? item.id : item._id ? item._id : item.name}
-              onClick={(e) => {
-                console.log("itemselected:", item.name);
+              onMouseDown={(e) => {
+                e.preventDefault(); // Prevents losing focus
                 handleSelect(item);
               }}
               className="px-4 py-2 hover:bg-gray-200 cursor-pointer"

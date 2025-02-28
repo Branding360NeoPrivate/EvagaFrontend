@@ -58,12 +58,14 @@ const SearchableInput = ({
   };
 
   const handleSelect = (item) => {
+    console.log(item);
     onSelect(item);
     setSearchTerm(item.name);
     setTimeout(() => {
       setIsInputFocused(false);
-    }, 100);
+    }, 200);
   };
+
 
   return (
     <div
