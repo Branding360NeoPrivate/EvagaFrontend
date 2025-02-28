@@ -275,11 +275,10 @@ function CheckOut() {
           formdata.append("razorpaySignature", response.razorpay_signature);
 
           await validateOrderApi.callApi(formdata);
-          // Added Facebook Pixel Tracking for Purchase
           if (window.fbq && typeof window.fbq === "function") {
             window.fbq("track", "Purchase", {
               currency: currency || "INR",
-              value: amount / 100, // Convert paisa to INR if necessary
+              value: amount / 100, 
             });
           } else {
             console.warn("Facebook Pixel is not available");

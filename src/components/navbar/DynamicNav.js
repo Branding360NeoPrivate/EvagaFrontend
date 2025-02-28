@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { internalRoutes } from "../../utils/internalRoutes";
 import logo from "../../assets/Temporary Images/Evaga Logo.png";
-import cart from "../../assets/Temporary Images/cart.png";
+import cartImg from "../../assets/Temporary Images/cart.png";
 import celebrate from "../../assets/Temporary Images/Animation - 1739604047964.gif";
 import { MdExitToApp } from "react-icons/md";
 import { LiaLanguageSolid } from "react-icons/lia";
@@ -43,7 +43,6 @@ const DynamicNav = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [open, setOpen] = useState(false);
-  const [email, setEmail] = useState("");
   const [modalType, setModalType] = useState("evagaXperience");
   const { categories } = useSelector((state) => state.category);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -60,6 +59,8 @@ const DynamicNav = () => {
     formState: { errors },
     reset,
   } = useForm();
+  const { cart } = useSelector((state) => state.cart);
+
   const dropdownRef = useRef(null);
   const hoverAnimation = {
     rest: { borderColor: "transparent", borderWidth: 0 },
@@ -259,8 +260,8 @@ const DynamicNav = () => {
                     onClick={(e) => {
                       if (item.label === "Vendor Community") {
                         e.preventDefault(); // Prevent navigation
-                        handleOpen()
-                        setModalType("evagaXperience") // Call a function to open the modal
+                        handleOpen();
+                        setModalType("evagaXperience"); // Call a function to open the modal
                       } else {
                         closeMobileMenu(); // Use the current functionality
                       }
@@ -352,11 +353,18 @@ const DynamicNav = () => {
 
           {(!auth?.isAuthenticated || auth?.role == "user") && (
             <Link to={internalRoutes.checkout}>
-              <img
-                src={cart}
-                alt="cart"
-                className="h-[2rem] object-contain cursor-pointer"
-              />
+              <div className="flex items-center justify-center relative">
+                <img
+                  src={cartImg}
+                  alt="cart"
+                  className="h-[2rem] object-contain cursor-pointer"
+                />
+                {cart?.items?.length > 0 && (
+                  <span className="bg-[#FFD700] text-primary w-[1rem] h-[1rem] rounded-lg absolute right-[-0.5rem] top-[-0.4rem] flex items-center justify-center text-esm p-1">
+                    {cart?.items?.length}
+                  </span>
+                )}
+              </div>
             </Link>
           )}
         </div>

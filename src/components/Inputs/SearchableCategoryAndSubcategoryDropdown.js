@@ -8,7 +8,6 @@ import categoryApi from "../../services/categoryServices";
 import useServices from "../../hooks/useServices";
 import { FaChevronDown } from "react-icons/fa6";
 import { MdArrowDropDown } from "react-icons/md";
-// Local SearchableInput component
 const SearchableInput = ({
   items,
   value,
@@ -23,13 +22,8 @@ const SearchableInput = ({
   const [filteredItems, setFilteredItems] = useState([]);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [disabledState, setDisabledState] = useState(false);
-  //   console.log("defaultValue:", defaultValue);
-
-  //   console.log("disabledState:", disabledState);
-
   useEffect(() => {
     if (defaultValue) {
-      //   setSearchTerm(defaultValue);
       setSearchTerm(defaultValue?.name);
       setDisabledState(true);
       if (handleSetDisabledCategoryState) {

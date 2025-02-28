@@ -95,7 +95,7 @@ const EditDynamicForm = ({
   };
   useEffect(() => {
     if (formData?.entityModel === "Catering") {
-      if (foodMenu.length > 0) {
+      if (foodMenu?.length > 0) {
         setFormValues((prev) => ({
           ...prev,
           Cuisine: {
@@ -215,7 +215,7 @@ const EditDynamicForm = ({
           label: field.label,
           key: field.key,
           type: field.type,
-          items: items.length > 0 ? items : formValues[field.key],
+          items: items?.length > 0 ? items : formValues[field.key],
         };
       });
 
@@ -390,7 +390,7 @@ const EditDynamicForm = ({
               </label>
               <div className="col-span-3 flex flex-col gap-4">
                 {selectedStaffData &&
-                selectedStaffData.staffDetails.length > 0 ? (
+                selectedStaffData.staffDetails?.length > 0 ? (
                   selectedStaffData.staffDetails.map((staff, index) => (
                     <div
                       key={index}
@@ -620,7 +620,7 @@ const EditDynamicForm = ({
               <div className="bg-textLightGray col-span-3">
                 <ReactQuill
                   theme="snow"
-                  value={formValues[field.key] || ""}
+                  value={typeof formValues[field.key] === "string" ? formValues[field.key] : ""}
                   onChange={(value) => handleChange(field.key, value)}
                   style={editorStyle}
                   required
@@ -820,7 +820,7 @@ const EditDynamicForm = ({
                     <div className="flex flex-col items-center justify-center gap-2">
                       <label className="text-textGray font-medium">UOM</label>
                       <select
-                        value={formValues[field.key] || ""}
+                        value={formValues[field.key]?.[index]?.UOM || ""}
                         onChange={(e) =>
                           handleObjectChange(
                             field.key,
@@ -836,11 +836,12 @@ const EditDynamicForm = ({
                           Select an option
                         </option>
                         {[
+                          "Per 30 mins",
                           "Per Hour",
                           "Per Session",
                           "Per Package",
                           "Per Unit",
-                        ].map((item, index) => (
+                        ]?.map((item, index) => (
                           <option key={index} value={item}>
                             {item}
                           </option>
@@ -1534,7 +1535,7 @@ const EditDynamicForm = ({
                           (file) => file.size > maxFileSize
                         );
 
-                        if (oversizedFiles.length > 0) {
+                        if (oversizedFiles?.length > 0) {
                           alert(
                             "One or more files exceed the maximum size of 50MB."
                           );
@@ -1599,7 +1600,7 @@ const EditDynamicForm = ({
                       onChange={(e) => {
                         const selectedFiles = Array.from(e.target.files);
                         const existingFiles = formValues?.ProductImage || [];
-                        if (selectedFiles.length + existingFiles.length > 3) {
+                        if (selectedFiles?.length + existingFiles?.length > 3) {
                           alert("You can only upload up to 3 images.");
                           return;
                         }
@@ -1621,7 +1622,7 @@ const EditDynamicForm = ({
                   )}
                 </div>
                 {Array.isArray(formValues?.ProductImage) &&
-                  formValues.ProductImage.length > 0 && (
+                  formValues?.ProductImage?.length > 0 && (
                     <div className="flex flex-wrap gap-2">
                       {formValues?.ProductImage?.map((item, idx) => (
                         <span
@@ -1691,7 +1692,7 @@ const EditDynamicForm = ({
                               const existingPhotos =
                                 formValues?.Portfolio?.photos || [];
                               const totalSelected =
-                                existingPhotos.length + selectedFiles.length;
+                                existingPhotos?.length + selectedFiles?.length;
 
                               if (totalSelected > totalNumberOfPhotoAllowed) {
                                 alert(
@@ -1763,7 +1764,7 @@ const EditDynamicForm = ({
 
                               const existingVideos =
                                 formValues?.Portfolio?.videos || [];
-                              if (existingVideos.length > 10) {
+                              if (existingVideos?.length > 10) {
                                 alert(
                                   "You can only upload !0 video. Please remove the existing video before uploading a new one."
                                 );
@@ -1774,7 +1775,7 @@ const EditDynamicForm = ({
                               const oversizedFiles = selectedFiles.filter(
                                 (file) => file.size > maxFileSize
                               );
-                              if (oversizedFiles.length > 0) {
+                              if (oversizedFiles?.length > 0) {
                                 alert(
                                   "One or more files exceed the maximum size of 100MB."
                                 );
@@ -2112,7 +2113,7 @@ const EditDynamicForm = ({
                     </div>
 
                     {/* Render sub-item textboxes if available */}
-                    {item.items && item.items.length > 0 && (
+                    {item.items && item.items?.length > 0 && (
                       <div className="ml-4">
                         {item.items.map((subItem, subIndex) => (
                           <div
@@ -2577,7 +2578,7 @@ const EditDynamicForm = ({
                       Remove Sub Venue
                     </button> */}
                   <div className="flex items-center justify-center">
-                    {formValues[field.key].length > 1 && (
+                    {formValues[field.key]?.length > 1 && (
                       <button
                         onClick={() => handleRemoveObject(field.key, index)}
                         className="bg-red-500 text-white py-1 px-3 rounded-md mt-2 w-fit"

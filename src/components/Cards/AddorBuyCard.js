@@ -105,7 +105,6 @@ function AddorBuyCard({
     const basePrice = Number(renderPrice?.Price || renderPrice?.Pricing) || 0;
     setBasePrice(basePrice);
     const addOnsPrice = selectedAddOns.reduce((total, addOn) => {
-      console.log(addOn, total);
       if (addOn.type === "Package") {
         return total + Number(addOn.Rates || 0);
       }
@@ -124,9 +123,26 @@ function AddorBuyCard({
         (item) => item.Particulars === addOn.Particulars
       );
 
+  
+      const minQty =
+        addOn.MinQty && !isNaN(addOn.MinQty) ? parseInt(addOn.MinQty, 10) : 1;
+  
+      const basePrice = parseFloat(addOn.Rates || addOn.rateInfo) || 0;
+  
       if (type === "Package") {
         if (operation === "add") {
-          return [{ ...addOn, type, quantity: 1 }];
+          if (index > -1) {
+            return prevAddOns; // ✅ Do nothing if package already exists
+          } else {
+            return [
+              {
+                ...addOn,
+                type,
+                quantity: 1, // ✅ Allow only one package
+                rateInfo: basePrice, // ✅ Set initial price
+              },
+            ];
+          }
         } else if (operation === "remove") {
           return [];
         }
@@ -141,12 +157,12 @@ function AddorBuyCard({
             };
             return updatedAddOns;
           } else {
-            return [...prevAddOns, { ...addOn, type, quantity: 1 }];
+            return [...prevAddOns, { ...addOn, type, quantity: minQty }];
           }
         } else if (operation === "remove") {
           if (index > -1) {
             const updatedAddOns = [...prevAddOns];
-            if (updatedAddOns[index].quantity > 1) {
+            if (updatedAddOns[index].quantity > minQty) {
               updatedAddOns[index] = {
                 ...updatedAddOns[index],
                 type,
@@ -162,21 +178,102 @@ function AddorBuyCard({
       return prevAddOns;
     });
   }, []);
+  
+
+  // const handleAddTocart = async () => {
+  //   const missingFields = [];
+  //   if (!dateInput) missingFields.push("Date");
+  //   if (!pincode) missingFields.push("Pin Code");
+  //   if (!formattedTime) missingFields.push("Time");
+
+  //   if (missingFields.length > 0) {
+  //     toast.warning(`${missingFields.join(", ")} is required.`);
+  //     return false;
+  //   }
+
+  //   if (auth?.isAuthenticated && auth?.role === "user") {
+  //     try {
+  //       console.log(basePrice, selectedAddOns);
+  //       await addTocart(
+  //         basePrice,
+  //         selectedAddOns,
+  //         dateInput,
+  //         formattedTime,
+  //         pincode
+  //       );
+  //       toast.success("Item added to the cart successfully.");
+  //       return true;
+  //     } catch (error) {
+  //       toast.error("Failed to Add To Cart. Please try again.");
+  //       console.error(error);
+  //       return false;
+  //     }
+  //   } else {
+  //     localStorage.setItem(
+  //       "addToCart",
+  //       JSON.stringify({
+  //         dateInput,
+  //         formattedTime,
+  //         pincode,
+  //         basePrice,
+  //         selectedAddOns,
+  //         serviceId,
+  //         packageId,
+  //       })
+  //     );
+  //     const currentPath = `${location.pathname}${location.search || ""}`;
+  //     if (!currentPath) {
+  //       navigate(internalRoutes.userLogin); 
+  //     } else {
+  //       navigate(
+  //         `${internalRoutes.userLogin}?redirect=${encodeURIComponent(
+  //           currentPath
+  //         )}`
+  //       );
+  //     }
+  //     return false;
+  //   }
+  // };
+
 
   const handleAddTocart = async () => {
     const missingFields = [];
     if (!dateInput) missingFields.push("Date");
     if (!pincode) missingFields.push("Pin Code");
     if (!formattedTime) missingFields.push("Time");
-
+  
     if (missingFields.length > 0) {
       toast.warning(`${missingFields.join(", ")} is required.`);
       return false;
     }
-
+  
+    // Add default AddOn if basePrice and selectedAddOns are empty
+    if (!basePrice && selectedAddOns.length === 0) {
+      const defaultKey = keysToRender.find(
+        (key) => Array.isArray(renderPrice?.[key]) && renderPrice[key].length > 0
+      );
+  
+      if (defaultKey) {
+        const defaultAddOn = renderPrice[defaultKey][0];
+        const minQty =
+          defaultAddOn.MinQty && !isNaN(defaultAddOn.MinQty)
+            ? parseInt(defaultAddOn.MinQty, 10)
+            : 1;
+  
+        await new Promise((resolve) => {
+          handleAddOnUpdate(
+            { ...defaultAddOn, MinQty: minQty },
+            "add",
+            defaultKey
+          );
+          setTimeout(resolve, 0); // Wait for state update
+        });
+      }
+    }
+  
+    // Proceed with adding to cart
     if (auth?.isAuthenticated && auth?.role === "user") {
       try {
-        console.log(basePrice, selectedAddOns);
         await addTocart(
           basePrice,
           selectedAddOns,
@@ -205,19 +302,14 @@ function AddorBuyCard({
         })
       );
       const currentPath = `${location.pathname}${location.search || ""}`;
-      if (!currentPath) {
-        navigate(internalRoutes.userLogin); // Default to login if path is invalid
-      } else {
-        navigate(
-          `${internalRoutes.userLogin}?redirect=${encodeURIComponent(
-            currentPath
-          )}`
-        );
-      }
+      navigate(
+        `${internalRoutes.userLogin}?redirect=${encodeURIComponent(currentPath)}`
+      );
       return false;
     }
   };
-
+  
+  
   const disablePastDates = ({ date }) => {
     const today = new Date();
     return date < new Date(today.setHours(0, 0, 0, 0));
@@ -264,8 +356,14 @@ function AddorBuyCard({
     } else {
       const storedAddToCart = JSON.parse(localStorage.getItem("addToCart"));
       if (storedAddToCart) {
-        const { dateInput, formattedTime, pincode, serviceId: storedServiceId, packageId: storedPackageId } = storedAddToCart;
-    
+        const {
+          dateInput,
+          formattedTime,
+          pincode,
+          serviceId: storedServiceId,
+          packageId: storedPackageId,
+        } = storedAddToCart;
+
         if (storedServiceId === serviceId && storedPackageId === packageId) {
           setDateInput(dateInput || "");
           setFormattedTime(formattedTime || "");
@@ -281,7 +379,6 @@ function AddorBuyCard({
         setPincode("");
       }
     }
-    
   }, [packageIncartData, serviceId, packageId]);
 
   const handleTimeChange = (event) => {
@@ -463,6 +560,12 @@ function AddorBuyCard({
                       : item.Amount || item?.Rates;
                     const uom = isPackage ? item.days : item.Uom || item.UOM;
 
+                    // Extract MinQty, fallback to 1 if not available
+                    const minQuantity =
+                      item.MinQty && !isNaN(item.MinQty)
+                        ? parseInt(item.MinQty, 10)
+                        : 1;
+
                     return (
                       <AddOnCounter
                         key={`${key}-${idx}`}
@@ -470,7 +573,7 @@ function AddorBuyCard({
                         rateInfo={rateInfo}
                         uom={uom}
                         note={item.Note || ""}
-                        minQuantity={1}
+                        minQuantity={minQuantity}
                         type={isPackage ? "Package" : key}
                         onAdd={() =>
                           handleAddOnUpdate(
@@ -486,6 +589,12 @@ function AddorBuyCard({
                             isPackage ? "Package" : key
                           )
                         }
+                        disableAdd={
+                          isPackage &&
+                          selectedAddOns.some(
+                            (addon) => addon.type === "Package"
+                          )
+                        } 
                       />
                     );
                   })}

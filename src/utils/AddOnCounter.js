@@ -9,7 +9,7 @@ const AddOnCounter = memo(
     minQuantity = 1,
     onAdd,
     onRemove,
-    extraData,
+    extraData,disableAdd
   }) => {
     const [quantity, setQuantity] = useState(0);
     const [showCounter, setShowCounter] = useState(false);
@@ -66,6 +66,7 @@ const AddOnCounter = memo(
             <button
               className="bg-textYellow text-primary font-medium py-2 px-4 rounded hover:bg-yellow-500 transition duration-200"
               onClick={handleAdd}
+              
             >
               Add
             </button>
@@ -87,6 +88,7 @@ const AddOnCounter = memo(
                   <button
                     className="bg-textYellow text-primary font-bold py-1 px-3 rounded hover:bg-gray-300 transition duration-200"
                     onClick={handleIncrease}
+                    disabled={disableAdd}
                   >
                     +
                   </button>

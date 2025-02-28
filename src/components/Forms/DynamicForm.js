@@ -330,6 +330,7 @@ const DynamicForm = ({
       return setInhouseCategoringOrBoth(false);
     }
   }, [formValues?.CateringPolicy]);
+  console.log(formValues);
 
   return (
     <form
@@ -894,7 +895,7 @@ const DynamicForm = ({
                     <div className="flex flex-col items-center justify-center gap-2">
                       <label className="text-textGray font-medium">UOM</label>
                       <select
-                        value={formValues[field.key] || ""}
+                        value={formValues[field.key]?.[index]?.UOM || ""}
                         onChange={(e) =>
                           handleObjectChange(
                             field.key,
@@ -910,6 +911,7 @@ const DynamicForm = ({
                           Select an option
                         </option>
                         {[
+                          "Per 30 mins",
                           "Per Hour",
                           "Per Session",
                           "Per Package",
@@ -2207,8 +2209,6 @@ const DynamicForm = ({
             </div>
           );
         } else if (field.type === "radio") {
-          console.log(field.items);
-
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
               <label className="text-primary text-base font-semibold">

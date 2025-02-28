@@ -363,7 +363,7 @@ function VendorEditService() {
                 setOpenMasterVenueModal={setOpenMasterVenueModal}
               />
 
-              {form.saved && formInstances.length > 1 && (
+              {form?.saved && formInstances?.length > 1 && (
                 <button
                   className="btn-danger mt-2"
                   onClick={() => handleRemoveForm(index)}
