@@ -15,7 +15,7 @@ function FilterCard({ filters, onFilterChange, onSliderChange }) {
   const minPrice = 0;
   const maxPrice = 1000000;
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 h-fit lg:h-auto">
       <span className="flex items-center justify-start gap-2 border-b-2 pb-1 mb-1">
         <img src={filter} alt="filter" className="object-contain h-[1.5rem]" />
         <h2 className="text-xl font-medium mt-2 text-primary">Filter</h2>
@@ -45,7 +45,6 @@ function FilterCard({ filters, onFilterChange, onSliderChange }) {
           ))}
         </div>
       </div>
-
       <div>
         <h2 className="font-medium text-xl mb-2 text-primary">Location Type</h2>
         <div className="text-textGray">
@@ -62,10 +61,8 @@ function FilterCard({ filters, onFilterChange, onSliderChange }) {
           ))}
         </div>
       </div>
-
       <div className="w-full pr-4">
         <h2 className="font-medium text-lg text-primary mb-4">Price</h2>
-
 
         <Slider
           value={filters.priceRange}
@@ -74,18 +71,17 @@ function FilterCard({ filters, onFilterChange, onSliderChange }) {
           max={maxPrice}
           step={100}
           sx={{
-
             "& .MuiSlider-track": {
               bgcolor: "#dfdfdf",
               outline: "none",
               border: "none",
             },
-          
+
             "& .MuiSlider-thumb": {
-              bgcolor: "#ffffff", 
+              bgcolor: "#ffffff",
               border: "3px solid #6A1B9A",
               "&:hover, &:focus, &.Mui-active": {
-                boxShadow: "none", 
+                boxShadow: "none",
               },
             },
             "&:hover .MuiSlider-track, &:focus .MuiSlider-track": {
@@ -93,7 +89,7 @@ function FilterCard({ filters, onFilterChange, onSliderChange }) {
               boxShadow: "none",
             },
             "& .MuiSlider-rail": {
-              bgcolor: "#757575", 
+              bgcolor: "#757575",
             },
             "& .Mui-focusVisible": {
               outline: "none",

@@ -64,11 +64,11 @@ function ProductDisplayCard({
   };
 
   return (
-    <div className="h-[250px] border rounded-lg shadow-sm flex flex-col md:flex-row gap-4 cursor-pointer overflow-hidden">
+    <div className=" w-full h-auto lg:h-[350px] xl:h-[250px] p-2 lg:p-0 border rounded-lg shadow-sm flex flex-col md:flex-row gap-4 cursor-pointer overflow-hidden">
       <img
         src={image}
         alt={title}
-        className=" w-[30%] h-[15rem] rounded-lg object-fit aspect-w-16 aspect-h-9"
+        className=" w-full lg:w-[30%] lg:h-[15rem] rounded-lg object-fit aspect-w-16 aspect-h-9"
         onClick={onClick}
       />
       <div className="w-full flex flex-col my-4" onClick={onClick}>
@@ -83,7 +83,7 @@ function ProductDisplayCard({
             <h3>{vendor}</h3>
           </div>
         </div>
-        <div className="flex flex-row gap-2 pr-4 flex-col">
+        <div className="flex flex-row gap-2 lg:pr-4 flex-col">
           {keysToRender.map((key, index) => {
             const value = eventData?.values?.[key];
             if (Array.isArray(value) && value.length > 0) {
@@ -109,7 +109,7 @@ function ProductDisplayCard({
         </div>
       </div>
       {/* Price */}
-      <div className="flex flex-col items-end justify-between w-[20%] pr-4 pt-4">
+      <div className="flex flex-col lg:items-end justify-between lg:w-[20%] lg:pr-4 pt-4">
         <Wishlist
           isInWishlist={isFavourite}
           onWishlistToggle={() => toggleWishlistHandle(userId)}

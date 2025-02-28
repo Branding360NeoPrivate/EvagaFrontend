@@ -44,9 +44,9 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
   }, [isModalOpen]);
 
   return (
-    <div className="flex w-full h-[400px] rounded-md overflow-hidden p-5 bg-white">
-      <div className="w-[20%] h-full overflow-y-scroll no-scrollbar">
-        <div className="flex flex-col gap-2 p-2">
+    <div className="flex flex-col-reverse w-full h-[600px] rounded-md overflow-hidden lg:p-5 bg-white">
+      <div className="w-[100%] h-[20%] overflow-y-scroll no-scrollbar">
+        <div className="flex  gap-2 p-2">
           {mediaUrls.map((url, index) => (
             <div key={index} className="cursor-pointer">
               {isImage(url) ? (
@@ -73,7 +73,7 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
         </div>
       </div>
       {/* Main Media View */}
-      <div className="flex-1 flex items-center justify-center relative">
+      <div className=" flex-shrink w-full md:w-[600px] flex-1 flex items-center justify-center relative">
         {isImage(selectedUrl) ? (
           <div className="group relative w-full aspect-[4/5] h-full flex items-center justify-center">
             <img

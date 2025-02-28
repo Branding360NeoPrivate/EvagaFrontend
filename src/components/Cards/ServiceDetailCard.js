@@ -89,14 +89,16 @@ function ServiceDetailCard({
   };
 
   return (
-    <div className="  bg-white p-4 w-full max-w-3xl">
+    <div className="  bg-white lg:p-4 w-full max-w-3xl mt-10 lg:mt-0">
       {/* Header */}
-      <div className=" w-full flex flex-row items-center mb-4">
-        <div className="w-[80%] ">
-          <h2 className="text-2xl font-semibold text-primary">{title}</h2>
+      <div className=" w-full flex flex-row gap-1 flex-wrap justify-between items-center mb-4">
+        <div className=" w-fit ">
+          <h2 className="text-2xl text-nowrap w-fit font-semibold text-primary">
+            {title}
+          </h2>
           <p className="text-base  text-textGray">{category}</p>
         </div>
-        <div className="w-[20%] text-right">
+        <div className="w-fit text-right">
           <div className="flex flex-col items-end justify-end gap-1">
             <div className="flex flex-row">
               <span className="text-yellow-500 text-lg">★</span>
