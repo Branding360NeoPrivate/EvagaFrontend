@@ -213,11 +213,16 @@ function SearchResultPage() {
               {searchResult?.length >= 0 ? (
                 searchResult.map((item) => {
                   const imageUrl =
-                    item.serviceDetails?.values?.CoverImage?.[0] ||
-                    item.serviceDetails?.values?.ProductImage?.[0];
-                  const popularimage = imageUrl?.startsWith("service/")
-                    ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
-                    : imageUrl;
+                (Array.isArray(item.serviceDetails?.values?.CoverImage)
+                  ? item.serviceDetails?.values?.CoverImage[0]
+                  : item.serviceDetails?.values?.CoverImage) ||
+                (Array.isArray(item.serviceDetails?.values?.ProductImage)
+                  ? item.serviceDetails?.values?.ProductImage[0]
+                  : item.serviceDetails?.values?.ProductImage);
+
+              const popularimage = imageUrl?.startsWith("service/")
+                ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
+                : imageUrl;
                   return (
                     <ProductDisplayCard
                       key={item?.serviceDetails?._id || item?.title}
