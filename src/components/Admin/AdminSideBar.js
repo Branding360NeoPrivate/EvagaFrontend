@@ -21,11 +21,12 @@ import {
   FaFirstOrder,
   FaFirstOrderAlt,
   FaRegImage,
+  FaServicestack,
   FaWpforms,
 } from "react-icons/fa6";
 import { GrCompliance } from "react-icons/gr";
 import { motion, AnimatePresence } from "framer-motion";
-import { MdAttachMoney, MdBorderClear, MdOutlineFeed } from "react-icons/md";
+import { MdAttachMoney, MdBorderClear, MdEventNote, MdOutlineFeed } from "react-icons/md";
 import { LuMailQuestion } from "react-icons/lu";
 const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
   const { logout } = useAuth();
@@ -131,14 +132,26 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
     {
       id: "Query",
       label: "Query",
-      icon: <LuMailQuestion  />,
+      icon: <LuMailQuestion />,
       children: [
-        { id: "Customer Query", label: "Customer Query", icon: <FaBorderAll /> },
+        {
+          id: "Customer Query",
+          label: "Customer Query",
+          icon: <FaBorderAll />,
+        },
         {
           id: "Vendor Query",
           label: "Vendor Query",
           icon: <FaFirstOrder />,
         },
+      ],
+    },
+    {
+      id: "Listed Services",
+      label: "Listed Services",
+      icon: <FaServicestack />,
+      children: [
+        { id: "All Services", label: "All Services", icon: <MdEventNote  /> },
       ],
     },
     { id: "AdminUsers", label: "Admin Users", icon: <FaUserShield /> },

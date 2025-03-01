@@ -63,7 +63,6 @@ function BannerTable() {
     status,
     bannerId,
   }) => {
-    console.log(image, altText, forType, category, status, bannerId);
 
     const formData = new FormData();
     formData.append("bannerImage", image);
