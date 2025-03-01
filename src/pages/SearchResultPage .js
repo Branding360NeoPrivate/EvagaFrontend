@@ -12,9 +12,12 @@ import Cookies from "js-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
 import { internalRoutes } from "../utils/internalRoutes";
 import { motion } from "framer-motion";
+import { FaFilter } from "react-icons/fa6";
+import { FaTimes } from "react-icons/fa";
 function SearchResultPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isMobileFilterVisible, setIsMobileFilterVisible] = useState(false);
   const { allWishlist } = useSelector((state) => state.wishlist);
   const [searchResult, setSearchResult] = useState([]);
   const [pages, setPages] = useState({
@@ -154,8 +157,9 @@ function SearchResultPage() {
         scale: { duration: 0.5, ease: "easeOut" },
       }}
     >
-      <div className="flex md:flex-row flex-col w-11/12 relative">
-        <div className="w-1/4 px-4 py-2 sticky top-0 sticky top-[10%] self-start">
+      <div className="flex md:flex-row flex-col w-full lg:w-11/12 relative">
+        {/* Filter card for desktop */}
+        <div className="lg:w-1/4 lg:block hidden px-4 py-2 sticky top-0 self-start">
           <FilterCard
             filters={filters}
             onFilterChange={handleFilterChange}
@@ -163,7 +167,37 @@ function SearchResultPage() {
           />
         </div>
 
-        <div className="flex flex-col w-3/4 mt-6">
+        {/* Filter card for mobile */}
+        <div
+          className={`lg:hidden fixed h-fit  inset-y-0 top-40 left-0 rounded-md z-50 w-fit bg-white shadow-lg transform ${
+            isMobileFilterVisible ? "translate-x-0" : "-translate-x-full"
+          } transition-transform duration-300 ease-in-out`}
+        >
+          <div className="p-4">
+            <button
+              className="absolute top-2 right-2 text-gray-600"
+              onClick={() => setIsMobileFilterVisible(false)}
+            >
+              <FaTimes size={24} />
+            </button>
+            <FilterCard
+              filters={filters}
+              onFilterChange={handleFilterChange}
+              onSliderChange={handleSliderChange}
+            />
+          </div>
+        </div>
+
+        {/* Floating filter button for mobile */}
+        <button
+          className={` ${
+            isMobileFilterVisible ? "hidden" : ""
+          } lg:hidden fixed bottom-10 left-4 bg-white text-primary p-3 rounded-full shadow-md shadow-gray-400 z-50`}
+          onClick={() => setIsMobileFilterVisible(true)}
+        >
+          <FaFilter size={24} />
+        </button>
+        <div className="flex flex-col w-full lg:w-3/4 mt-6">
           <div className="w-full px-4 pt-2">
             <SortandFilterCard
               activeFilters={activeFilters}
@@ -176,16 +210,11 @@ function SearchResultPage() {
 
           <div className="w-full px-4 pb-2">
             <div className="flex flex-col gap-6">
-              {searchResult?.length > 0 ? (
+              {searchResult?.length >= 0 ? (
                 searchResult.map((item) => {
                   const imageUrl =
-                    (Array.isArray(item.serviceDetails?.values?.CoverImage)
-                      ? item.serviceDetails?.values?.CoverImage[0]
-                      : item.serviceDetails?.values?.CoverImage) ||
-                    (Array.isArray(item.serviceDetails?.values?.ProductImage)
-                      ? item.serviceDetails?.values?.ProductImage[0]
-                      : item.serviceDetails?.values?.ProductImage);
-
+                    item.serviceDetails?.values?.CoverImage?.[0] ||
+                    item.serviceDetails?.values?.ProductImage?.[0];
                   const popularimage = imageUrl?.startsWith("service/")
                     ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
                     : imageUrl;

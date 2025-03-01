@@ -88,10 +88,8 @@ function HomeSearchBar({ cities, value, onChange }) {
   );
 
   useEffect(() => {
-
-      handleSearch(shouldRedirect);
-      setShouldRedirect(false);
-
+    handleSearch(shouldRedirect);
+    setShouldRedirect(false);
   }, [debounce, shouldRedirect]);
   useEffect(() => {
     const handleCookieChange = () => {
@@ -127,16 +125,16 @@ function HomeSearchBar({ cities, value, onChange }) {
   })(Cookies.set);
 
   return (
-  
     <div
-      className="w-[200px] lg:w-[40vw] xl:w-[50vw] h-[45px] flex justify-start bg-gray-100 items-center rounded-lg relative"
+      className="w-auto lg:w-[30vw] xl:w-[40vw] md:h-[45px] md:bg-gray-100 
+    flex flex-col md:flex-row justify-start items-center gap-2 md:gap-0 rounded-md relative"
       ref={dropdownRef}
     >
       <div
         className="flex justify-center items-center h-full w-auto text-nowrap px-2 rounded-md bg-highlightYellow text-textPrimary font-bold cursor-pointer"
         onClick={toggleDropdown}
       >
-        <span className=" text-sm text-primary">
+        <span className=" flex justify-center items-center text-[11px] md:text-sm text-primary h-6 md:h-fit lg:text-wrap">
           {selectedCategory ? selectedCategory : "Not Found"}
         </span>
         <MdKeyboardArrowDown className="ml-1" />
@@ -164,13 +162,12 @@ function HomeSearchBar({ cities, value, onChange }) {
         type="text"
         placeholder="Search..."
         value={searchTerm}
-        className="ml-2 px-2 py-1 border-none rounded-md bg-transparent text-primary outline-none"
+        className="md:ml-2 px-2 py-1 w-full bg-white border-none rounded-md bg-transparent text-primary outline-none"
         onChange={(e) => [
           handleSearchInputChange(e),
           setSearch(e.target.value),
         ]}
       />
-
     </div>
   );
 }

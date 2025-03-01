@@ -105,7 +105,15 @@ const DynamicNav = () => {
 
   const guestMenu = [
     { component: <HomeSearchableCityDropdown />, roles: [] },
-    { component: <HomeSearchBar />, roles: [] },
+    {
+      component: (
+        <div className="hidden lg:inline">
+          {" "}
+          <HomeSearchBar />
+        </div>
+      ),
+      roles: [],
+    },
   ];
 
   const filteredMenuItems =
@@ -232,7 +240,9 @@ const DynamicNav = () => {
           <Link to="/" className="hover:text-gray-300">
             <img src={logo} alt="logo" className="w-[50px]" />
           </Link>
-
+          <div className=" lg:hidden">
+            <HomeSearchBar />
+          </div>
           {/* Hamburger Menu for Mobile */}
           <button
             className="lg:hidden float-right lg:float-right"

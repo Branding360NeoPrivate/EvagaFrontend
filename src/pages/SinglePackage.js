@@ -157,7 +157,7 @@ function SinglePackage() {
 
   return (
     <motion.div
-      className="w-full flex md:flex-row flex-col  pb-4 items-start justify-between px-6 py-4"
+       className="w-full flex lg:flex-row flex-col  pb-4 items-start justify-between px-5 lg:px-6 py-4"
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
@@ -167,7 +167,7 @@ function SinglePackage() {
       }}
     >
       <div
-        className=" flex justify-center items-start flex-col"
+       className=" flex justify-start items-start flex-col min-w-[300px]"
         style={{ flex: "0.35" }}
       >
         <ImageNavigationCard
@@ -186,7 +186,7 @@ function SinglePackage() {
       </div>
 
       <div
-        className="flex flex-col items-center justify-center p-4"
+         className="flex flex-col items-center justify-center lg:p-4 mb-10 lg:mb-0"
         style={{ flex: "0.32" }}
       >
         <ServiceDetailCard

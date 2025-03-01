@@ -41,7 +41,7 @@ function UserLoginPage() {
   };
 
   return (
-    <div className=" w-full h-[100vh] flex justify-center items-center">
+    <div className=" w-full md:h-[100vh] flex flex-col-reverse pt-10 md:pt-0 md:flex-row justify-center items-center">
       <div className=" flex-1 flex items-center justify-center w-[90%]">
         <img
           src={userLogin}

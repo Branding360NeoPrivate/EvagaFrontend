@@ -13,7 +13,7 @@ export const SelectAddressCard = ({
   selectAddress,
 }) => {
   return (
-    <Card className="w-full flex items-start flex-row gap-4 p-4 border rounded-2xl shadow-md w-full ">
+    <Card className="w-full flex items-start justify-between flex-row gap-5 flex-wrap p-4 border rounded-2xl shadow-md ">
       <div className="selectAddress w-full flex items-start gap-2">
         <input
           type="radio"
