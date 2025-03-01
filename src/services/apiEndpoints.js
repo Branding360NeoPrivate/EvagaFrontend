@@ -47,6 +47,9 @@ const apiEndpoints = {
       `vender/accept-terms-and-condition/${vendorId}`,
     acceptOrRejectpackage: (serviceId, packageId) =>
       `vender/createService/verify-one-service/${serviceId}/${packageId}`,
+    verifyVendorDetails: (vendorId) => `vender/verifyVendorDetails/${vendorId}`,
+    sendaadharotp: (vendorId) => `vender/sendaadharotp/${vendorId}`,
+    verifyaadharotp: (vendorId) => `vender/verifyaadharotp/${vendorId}`,
   },
 
   // User-related endpoints
@@ -175,10 +178,13 @@ const apiEndpoints = {
     getallcompleteorder: `order/completed-order`,
     getallconfirmedorder: `order/confirmed-order`,
     getorderbyuserid: (userId) => `userOrder/get-new-orders/${userId}`,
-    getconfirmedorderbyuserid: (userId) => `userOrder/get-confirmed-orders/${userId}`,
+    getconfirmedorderbyuserid: (userId) =>
+      `userOrder/get-confirmed-orders/${userId}`,
     getactiveorderbyuserid: (userId) => `userOrder/get-active-orders/${userId}`,
-    getcompletedorderbyuserid: (userId) => `userOrder/get-completed-orders/${userId}`,
-    getcancelledorderbyuserid: (userId) => `userOrder/get-cancelled-orders/${userId}`,
+    getcompletedorderbyuserid: (userId) =>
+      `userOrder/get-completed-orders/${userId}`,
+    getcancelledorderbyuserid: (userId) =>
+      `userOrder/get-cancelled-orders/${userId}`,
     getoneuserorderbyorderid: (orderId, itemId) =>
       `userOrder/get-one-order-by-order-Id/${orderId}/${itemId}`,
     getneworderbyvendorid: (vendorId) =>

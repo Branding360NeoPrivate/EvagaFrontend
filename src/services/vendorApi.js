@@ -143,6 +143,15 @@ const vendorApi = {
         },
       }
     ),
+  VerifyVendorDetails: (vendorId, formdata) =>
+    apiService.post(
+      apiEndpoints.vendor.verifyVendorDetails(vendorId),
+      formdata
+    ),
+  Sendaadharotp: (vendorId) =>
+    apiService.post(apiEndpoints.vendor.sendaadharotp(vendorId)),
+  Verifyaadharotp: (vendorId, formdata) =>
+    apiService.post(apiEndpoints.vendor.verifyaadharotp(vendorId), formdata),
 };
 
 export default vendorApi;

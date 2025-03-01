@@ -2,12 +2,15 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import SearchableCategoryAndSubcategoryDropdown from "../Inputs/SearchableCategoryAndSubcategoryDropdown";
 import { toast } from "react-toastify";
+import vendorApi from "../../services/vendorApi";
 
 const ProfileFormGenerator = ({
   fields,
   defaultValues,
   onSubmit,
   editable,
+  verifyDocs,
+  getVerifyDetails,
 }) => {
   const {
     register,
@@ -15,6 +18,7 @@ const ProfileFormGenerator = ({
     setValue,
     formState: { errors },
     reset,
+    watch,
   } = useForm({
     defaultValues,
   });
@@ -135,16 +139,65 @@ const ProfileFormGenerator = ({
           return (
             <div key={index} className="grid grid-cols-2 gap-x-2">
               <label htmlFor={field.name}>{field.placeholder}</label>
-              <input
-                id={field.name}
-                type={field.type}
-                accept={field.accept}
-                {...register(field.name, field.validation)}
-                disabled={!editable}
-                className={`p-2 text-gray-500 rounded-md ${
-                  editable ? "border" : "bg-grayBg border-none"
-                } ${errors[field.name] ? "border-red-500" : "border-gray-300"}`}
-              />
+              <div className="flex items-start flex-col gap-1">
+                <input
+                  id={field.name}
+                  type={field.type}
+                  accept={field.accept}
+                  {...register(field.name, field.validation)}
+                  disabled={!editable}
+                  className={`p-2 text-gray-500 rounded-md w-full ${
+                    editable ? "border" : "bg-grayBg border-none"
+                  } ${
+                    errors[field.name] ? "border-red-500" : "border-gray-300"
+                  }`}
+                />
+                {!editable &&
+                  ["udyamAadhaar", "gstNumber", "panNumber"].includes(
+                    field.name
+                  ) &&
+                  watch(field.name) && (
+                    <button
+                      type="button"
+                      onClick={() => verifyDocs(field.name)}
+                      className={`px-2 py-1 text-white rounded-md ${
+                        field.name === "udyamAadhaar" &&
+                        getVerifyDetails.adharVerificationStatus === "Verified"
+                          ? "bg-green-500"
+                          : field.name === "gstNumber" &&
+                            getVerifyDetails.gstVerificationStatus ===
+                              "Verified"
+                          ? "bg-green-500"
+                          : field.name === "panNumber" &&
+                            getVerifyDetails.panVerificationStatus ===
+                              "Verified"
+                          ? "bg-green-500"
+                          : "bg-blue-500 hover:bg-blue-600"
+                      }`}
+                      disabled={
+                        (field.name === "udyamAadhaar" &&
+                          getVerifyDetails.adharVerificationStatus ===
+                            "Verified") ||
+                        (field.name === "gstNumber" &&
+                          getVerifyDetails.gstVerificationStatus ===
+                            "Verified") ||
+                        (field.name === "panNumber" &&
+                          getVerifyDetails.panVerificationStatus === "Verified")
+                      }
+                    >
+                      {field.name === "udyamAadhaar" &&
+                      getVerifyDetails.adharVerificationStatus === "Verified"
+                        ? "Verified"
+                        : field.name === "gstNumber" &&
+                          getVerifyDetails.gstVerificationStatus === "Verified"
+                        ? "Verified"
+                        : field.name === "panNumber" &&
+                          getVerifyDetails.panVerificationStatus === "Verified"
+                        ? "Verified"
+                        : "Verify"}
+                    </button>
+                  )}
+              </div>
               {errors[field.name] && (
                 <span className="text-red-500">
                   {errors[field.name].message}

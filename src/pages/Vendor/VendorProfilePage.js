@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchVendorProfile } from "../../context/redux/slices/vendorSlice";
 import Cookies from "js-cookie";
@@ -16,28 +16,103 @@ import { fetchCategories } from "../../context/redux/slices/categorySlice";
 import SearchableCategoryAndSubcategoryDropdown from "../../components/Inputs/SearchableCategoryAndSubcategoryDropdown";
 import { showLoader } from "../../context/redux/slices/loaderSlice";
 import TermsModal from "../../components/Modal/TermsModal ";
-
+import ReusableModal from "../../components/Modal/Modal";
 const VendorProfile = () => {
   const dispatch = useDispatch();
   const { profile } = useSelector((state) => state.vendor);
   const { categories, subCategories, status, error } = useSelector(
     (state) => state.category
   );
+  const userId = Cookies.get("userId");
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  const [openReuseableModal, setOpenReuseableModal] = useState(false);
+  const handleOpenReuseableModal = () => {
+    setOpenReuseableModal(true);
+  };
+  const handleCloseReuseableModal = () => {
+    setOpenReuseableModal(false);
+  };
   const imagesBaseUrl = process.env.REACT_APP_API_Image_BASE_URL;
 
   const [vendorDetails, setVendorDetails] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [activeSection, setActiveSection] = useState(null);
 
-  // console.log("profile in vendor profile:", profile);
-  // console.log("categories in vendor profile:", categories);
+  const [otp, setOtp] = useState(new Array(6).fill(""));
+  const [errorOtp, setErrorOtp] = useState("");
+  const inputRefs = useRef([]);
+  const [timer, setTimer] = useState(0);
+  const [canResend, setCanResend] = useState(true);
 
-  // Initialize API services
+  const startResendTimer = () => {
+    setTimer(60); // 60 seconds countdown
+    setCanResend(false);
+
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          setCanResend(true); // Enable resend after timer ends
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+  useEffect(() => {
+    if (timer > 0) {
+      const countdown = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(countdown);
+    } else {
+      setCanResend(true);
+    }
+  }, [timer]);
+
+  const handleChange = (value, index) => {
+    if (isNaN(value)) return;
+
+    const updatedOtp = [...otp];
+    updatedOtp[index] = value;
+    setOtp(updatedOtp);
+    setErrorOtp(""); // Clear error on input
+
+    // Move to next input field if not the last input
+    if (value && index < 5) {
+      inputRefs.current[index + 1].focus();
+    }
+  };
+
+  const handleKeyDown = (event, index) => {
+    if (event.key === "Backspace") {
+      const updatedOtp = [...otp];
+      updatedOtp[index] = "";
+      setOtp(updatedOtp);
+
+      // Move to the previous input field if not the first input
+      if (index > 0) {
+        inputRefs.current[index - 1].focus();
+      }
+    }
+  };
+  const handleOtpSubmit = () => {
+    if (otp.includes("")) {
+      setErrorOtp("Please fill all the OTP fields.");
+    } else {
+      setErrorOtp("");
+      verifyAadharOptHandle(otp.join(""));
+      // alert(`OTP Submitted: ${otp.join("")}`);
+    }
+  };
+  const handleResendOtp = () => {
+    verifyVendorDetailsWithCashfree("udyamAadhaar");
+    setCanResend(false);
+    setTimer(60);
+  };
   const updateProfileService = useServices(vendorApi.updateProfile);
   const updateBankDetailsService = useServices(vendorApi.updateBankDetails);
   const updateBusinessService = useServices(vendorApi.updateBusiness);
@@ -45,6 +120,9 @@ const VendorProfile = () => {
   const updateProfilePictureService = useServices(
     vendorApi.updateProfilePicture
   );
+  const VerifyVendorDetailsApi = useServices(vendorApi.VerifyVendorDetails);
+  const SendaadharotpApi = useServices(vendorApi.Sendaadharotp);
+  const VerifyaadharotpApi = useServices(vendorApi.Verifyaadharotp);
 
   useEffect(() => {
     const userId = Cookies.get("userId");
@@ -230,7 +308,48 @@ const VendorProfile = () => {
     [vendorDetails]
   );
 
-  // console.log("vendorDetails in vendor profile:", vendorDetails);
+  const verifyVendorDetailsWithCashfree = async (type) => {
+    if (type === "panNumber") {
+      const formdata = new FormData();
+      formdata.append("type", "pan");
+      const response = await VerifyVendorDetailsApi.callApi(userId, formdata);
+      dispatch(fetchVendorProfile(userId));
+    }
+    if (type === "gstNumber") {
+      const formdata = new FormData();
+      formdata.append("type", "gstin");
+      const response = await VerifyVendorDetailsApi.callApi(userId, formdata);
+
+      dispatch(fetchVendorProfile(userId));
+    }
+    if (type === "udyamAadhaar") {
+      handleOpenReuseableModal();
+
+      if (canResend) {
+        const response = await SendaadharotpApi.callApi(userId);
+
+        if (response) {
+          toast.success(response?.result?.message);
+          localStorage.setItem("refernceId", response?.result?.ref_id);
+          startResendTimer(); // Start the countdown timer
+        }
+      } else {
+        toast.error("Please wait before resending the OTP.");
+      }
+    }
+  };
+  const verifyAadharOptHandle = async (otp) => {
+    const refId = localStorage.getItem("refernceId");
+    const formdata = new FormData();
+    formdata.append("Otp", otp);
+    formdata.append("RefId", refId);
+    const response = await VerifyaadharotpApi.callApi(userId, formdata);
+    if (response?.status === "VALID") {
+      toast.success(response?.message);
+      handleCloseReuseableModal();
+      dispatch(fetchVendorProfile(userId));
+    }
+  };
   useEffect(() => {
     if (profile?.vendor?.termsAccepted === false) {
       handleOpen();
@@ -384,6 +503,8 @@ const VendorProfile = () => {
                   }
                   defaultValues={businessDefaultValues}
                   editable={false}
+                  verifyDocs={verifyVendorDetailsWithCashfree}
+                  getVerifyDetails={vendorDetails?.businessDetails}
                 />
                 {businessDefaultValues?.categoriesOfServices && (
                   <>
@@ -488,6 +609,50 @@ const VendorProfile = () => {
           </Modal>
         </div>
       )}
+      <ReusableModal
+        title={"Verify Aadhar"}
+        open={openReuseableModal}
+        onClose={handleCloseReuseableModal}
+        width={"50%"}
+      >
+        <div className="flex flex-col h-full items-center justify-center ">
+          <h1 className="text-2xl font-semibold mb-4 text-primary">
+            Enter OTP
+          </h1>
+          <div className="flex gap-2 mb-4">
+            {otp.map((_, index) => (
+              <input
+                key={index}
+                type="text"
+                maxLength="1"
+                value={otp[index]}
+                onChange={(e) => handleChange(e.target.value, index)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                ref={(el) => (inputRefs.current[index] = el)}
+                className="w-12 h-12 text-center text-xl border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            ))}
+          </div>
+          {errorOtp && <p className="text-red-500 text-sm mb-4">{errorOtp}</p>}
+          <button
+            onClick={handleOtpSubmit}
+            className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary focus:outline-none mb-4"
+          >
+            Submit
+          </button>
+          <button
+            onClick={handleResendOtp}
+            disabled={!canResend}
+            className={`px-6 py-2 rounded-lg focus:outline-none ${
+              canResend
+                ? "bg-primary text-white hover:bg-primary"
+                : "bg-gray-300 text-gray-500"
+            }`}
+          >
+            {canResend ? "Resend OTP" : `Resend in ${timer}s`}
+          </button>
+        </div>
+      </ReusableModal>
       <TermsModal open={open} handleClose={handleClose} />
     </div>
   );
