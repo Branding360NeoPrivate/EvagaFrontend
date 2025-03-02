@@ -38,6 +38,10 @@ function AllVendorService() {
   const columns = [
     { label: "No", key: "index", render: (_, i) => i + 1 },
     {
+      label: "Vendor UserName",
+      key: "userName",
+    },
+    {
       label: "Name of Service",
       key: "Title",
       render: (row) =>

@@ -383,6 +383,7 @@ const AdminVendorProfileViewer = ({ vendorId,onMenuSelect }) => {
                   }
                   defaultValues={businessDefaultValues}
                   editable={false}
+                  getVerifyDetails={vendorDetails?.businessDetails}
                 />
                 {businessDefaultValues?.categoriesOfServices && (
                   <>
@@ -433,11 +434,11 @@ const AdminVendorProfileViewer = ({ vendorId,onMenuSelect }) => {
             </div>
           </div>
 
-          <DocumentUploader
+          {/* <DocumentUploader
             formfields={formfields.vendorProfileDetails.documents.fields}
             vendorDetails={vendorDetails.documents}
             vendorId={vendorId}
-          />
+          /> */}
           {/* Documents Section */}
           <AdminVendorDocumentsVerification
             documents={vendorDetails.documents}
