@@ -109,7 +109,6 @@ function ServiceDetailCard({
           <p className="text-sm text-gray-500">Reviews</p>
         </div>
       </div>
-
       {/* Company Name */}
       <div className="w-full flex flex-row  items-center justify-between">
         <div className=" text-lg font-semibold text-primary mb-4">
@@ -133,7 +132,6 @@ function ServiceDetailCard({
         </div>
       </div>
       <hr style={{ margin: "0.2rem 0" }} />
-
       {/* Price */}
       <div className="flex flex-row">
         <div className="text-lg font-medium text-primary pt-2 pr-2">Price</div>
@@ -141,7 +139,6 @@ function ServiceDetailCard({
           {formatCurrency(price)}
         </div>
       </div>
-
       {/* Event */}
       {keysToRender?.map((key, index) => {
         const value = DataToRender?.[key];
@@ -190,7 +187,6 @@ function ServiceDetailCard({
 
         return null; // Return nothing if the value is neither an array nor a string
       })}
-
       {/* Terms & Conditions */}
       <div className="flex gap-4 items-start justify-start">
         <span className="bg-textLightGray p-2 rounded-[50%]">

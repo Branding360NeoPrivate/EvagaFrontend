@@ -11,6 +11,8 @@ import userApi from "../services/userApi";
 import Cookies from "js-cookie";
 import { fetchUserCart } from "../context/redux/slices/cartSlice";
 import { toast } from "react-toastify";
+import dummyImage from "../assets/PopularImages/image.png";
+
 function SinglePackage() {
   const userId = Cookies.get("userId");
   const { serviceId, packageId } = useParams();
@@ -141,9 +143,22 @@ function SinglePackage() {
     isPackageInCart(cart, serviceId, packageId);
   }, [serviceId, packageId, cart]);
 
+  // const dummyImages = [
+  //   dummyImage,
+  //   dummyImage,
+  //   dummyImage,
+  //   dummyImage,
+  //   dummyImage,
+  //   dummyImage,
+  //   dummyImage,
+  //   dummyImage,
+  //   dummyImage,
+  //   dummyImage,
+  // ];
+
   return (
     <motion.div
-      className="w-full flex lg:flex-row flex-col  pb-4 items-start justify-between px-5 lg:px-6 py-4"
+      className="w-full flex lg:flex-row flex-col  pb-4 items-start justify-between px-3 md:px-5 lg:px-6 py-4"
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
@@ -153,7 +168,7 @@ function SinglePackage() {
       }}
     >
       <div
-        className=" flex justify-start items-start flex-col min-w-[300px]"
+        className=" w-full flex justify-center items-center lg:justify-start lg:items-start flex-col gap-5 min-w-[300px]"
         style={{ flex: "0.35" }}
       >
         <ImageNavigationCard
@@ -161,7 +176,7 @@ function SinglePackage() {
           selectedUrl={selectedImage}
           onMediaClick={handleImageClick}
         />
-        <span className="lg:pl-[22%]">
+        <span className="xl:pl-[22%]">
           <h3 className="text-xl font-medium text-primary">
             About the Service
           </h3>

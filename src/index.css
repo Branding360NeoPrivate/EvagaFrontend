@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: 0; /* Firefox */
+  }
+}
+
 @import "./styles/tailwindComponents.css";
 
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
@@ -23,7 +35,7 @@ h6 {
 p {
   font-family: "Poppins", sans-serif;
 }
-label{
+label {
   font-family: "Poppins", sans-serif;
 }
 strong {
@@ -237,15 +249,15 @@ input[type="number"] {
   left: 6px;
 }
 .selectAddress input[type="radio"]:hover {
-  border-color:#6A1B9A !important;
+  border-color: #6a1b9a !important;
 }
 
 .selectAddress input[type="radio"] {
-  -webkit-appearance: none; 
+  -webkit-appearance: none;
   appearance: none;
   width: 20px;
   height: 20px;
-  border: 2px solid #6A1B9A !important;
+  border: 2px solid #6a1b9a !important;
   border-radius: 50%;
   margin-right: 10px;
   display: inline-block;
@@ -260,20 +272,19 @@ input[type="number"] {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: #6A1B9A !important;
+  background-color: #6a1b9a !important;
 }
 
-
 .customRadio:hover {
-  border-color: #F9D703 !important;
+  border-color: #f9d703 !important;
 }
 
 .customRadio {
-  -webkit-appearance: none; 
+  -webkit-appearance: none;
   appearance: none;
   width: 20px;
   height: 20px;
-  border: 2px solid #F9D703 !important;
+  border: 2px solid #f9d703 !important;
   border-radius: 50%;
   margin-right: 10px;
   display: inline-block;
@@ -288,18 +299,18 @@ input[type="number"] {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: #F9D703 !important;
+  background-color: #f9d703 !important;
 }
 .customCheckbox:hover {
-  border-color: #F9D703 !important;
+  border-color: #f9d703 !important;
 }
 
 .customCheckbox {
-  -webkit-appearance: none; 
+  -webkit-appearance: none;
   appearance: none;
   width: 20px;
   height: 20px;
-  border: 2px solid #F9D703 !important;
+  border: 2px solid #f9d703 !important;
   border-radius: 4px; /* For a square checkbox */
   margin-right: 10px;
   display: inline-block;
@@ -313,7 +324,7 @@ input[type="number"] {
   left: 6px;
   width: 6px;
   height: 12px;
-  border: solid #F9D703 !important;
+  border: solid #f9d703 !important;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg); /* Creates the checkmark */
 }
@@ -326,4 +337,3 @@ input[type="number"] {
 .terms-conditions li {
   margin-bottom: 0.5rem; /* Adds spacing between items */
 }
-
