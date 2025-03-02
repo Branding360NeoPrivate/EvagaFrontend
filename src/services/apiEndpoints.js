@@ -155,6 +155,7 @@ const apiEndpoints = {
     addCategoryGstFees: `gstPercentage/add-gst-percentage`,
     getVendorPackageList: (vendorId, categoryId) =>
       `/adminAction/getVendorPackageList/${vendorId}/${categoryId}`,
+    getAllVendorsPackage:()=> `/adminAction/getAllVendorsPackage`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",

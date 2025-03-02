@@ -1,16 +1,26 @@
 import React from "react";
 import { Pagination, Stack } from "@mui/material";
 
-const TableComponet = ({ columns, data, page = 1, itemsPerPage = 10, onPageChange }) => {
+const TableComponet = ({
+  columns,
+  data,
+  page = 1,
+  itemsPerPage = 10,
+  onPageChange,
+  totalCount = null,
+}) => {
   const style = {
     "& .Mui-selected": {
       backgroundColor: "#6A1B9A !important",
       color: "white",
     },
   };
-  const count = Math.ceil((data?.length || 0) / itemsPerPage);
+  const count = totalCount
+    ? totalCount
+    : Math.ceil((data?.length || 0) / itemsPerPage);
   const startIndex = (page - 1) * itemsPerPage;
-  const paginatedData = data?.slice(startIndex, startIndex + itemsPerPage) || [];
+  const paginatedData =
+    data?.slice(startIndex, startIndex + itemsPerPage) || [];
 
   return (
     <div>
@@ -27,10 +37,15 @@ const TableComponet = ({ columns, data, page = 1, itemsPerPage = 10, onPageChang
         <tbody>
           {paginatedData.length > 0 ? (
             paginatedData.map((row, rowIndex) => (
-              <tr key={rowIndex} className="text-center border text-textGray border-gray-200">
+              <tr
+                key={rowIndex}
+                className="text-center border text-textGray border-gray-200"
+              >
                 {columns.map((col, colIndex) => (
                   <td key={colIndex} className="px-4 py-2">
-                    {col.render ? col.render(row, rowIndex) : row[col.key] || "N/A"}
+                    {col.render
+                      ? col.render(row, rowIndex)
+                      : row[col.key] || "N/A"}
                   </td>
                 ))}
               </tr>
@@ -48,7 +63,12 @@ const TableComponet = ({ columns, data, page = 1, itemsPerPage = 10, onPageChang
       {/* Pagination Component */}
       <div className="flex items-center justify-center w-full py-3">
         <Stack spacing={2}>
-          <Pagination count={count} page={page} onChange={onPageChange} sx={style}/>
+          <Pagination
+            count={count}
+            page={page}
+            onChange={onPageChange}
+            sx={style}
+          />
         </Stack>
       </div>
     </div>

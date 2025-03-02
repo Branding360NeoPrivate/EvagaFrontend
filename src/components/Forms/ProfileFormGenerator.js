@@ -156,43 +156,43 @@ const ProfileFormGenerator = ({
                   ["udyamAadhaar", "gstNumber", "panNumber"].includes(
                     field.name
                   ) &&
-                  watch(field.name) && (
+                  watch(field?.name) && (
                     <button
                       type="button"
-                      onClick={() => verifyDocs(field.name)}
+                      onClick={() => verifyDocs(field?.name)}
                       className={`px-2 py-1 text-white rounded-md ${
                         field.name === "udyamAadhaar" &&
-                        getVerifyDetails.adharVerificationStatus === "Verified"
+                        getVerifyDetails?.adharVerificationStatus === "Verified"
                           ? "bg-green-500"
                           : field.name === "gstNumber" &&
-                            getVerifyDetails.gstVerificationStatus ===
+                            getVerifyDetails?.gstVerificationStatus ===
                               "Verified"
                           ? "bg-green-500"
                           : field.name === "panNumber" &&
-                            getVerifyDetails.panVerificationStatus ===
+                            getVerifyDetails?.panVerificationStatus ===
                               "Verified"
                           ? "bg-green-500"
                           : "bg-blue-500 hover:bg-blue-600"
                       }`}
                       disabled={
                         (field.name === "udyamAadhaar" &&
-                          getVerifyDetails.adharVerificationStatus ===
+                          getVerifyDetails?.adharVerificationStatus ===
                             "Verified") ||
                         (field.name === "gstNumber" &&
-                          getVerifyDetails.gstVerificationStatus ===
+                          getVerifyDetails?.gstVerificationStatus ===
                             "Verified") ||
                         (field.name === "panNumber" &&
-                          getVerifyDetails.panVerificationStatus === "Verified")
+                          getVerifyDetails?.panVerificationStatus === "Verified")
                       }
                     >
                       {field.name === "udyamAadhaar" &&
-                      getVerifyDetails.adharVerificationStatus === "Verified"
+                      getVerifyDetails?.adharVerificationStatus === "Verified"
                         ? "Verified"
                         : field.name === "gstNumber" &&
-                          getVerifyDetails.gstVerificationStatus === "Verified"
+                          getVerifyDetails?.gstVerificationStatus === "Verified"
                         ? "Verified"
                         : field.name === "panNumber" &&
-                          getVerifyDetails.panVerificationStatus === "Verified"
+                          getVerifyDetails?.panVerificationStatus === "Verified"
                         ? "Verified"
                         : "Verify"}
                     </button>

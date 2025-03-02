@@ -111,25 +111,6 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
       ],
     },
     {
-      id: "Website Management",
-      label: "Website Management",
-      icon: <FaRegMoneyBillAlt />,
-      children: [
-        { id: "Banner", label: "Banner", icon: <FaRegImage /> },
-        { id: "Coupons", label: "Coupons", icon: <RiCoupon3Line /> },
-        {
-          id: "Fee Breakdown by Category",
-          label: "Fee Breakdown by Category",
-          icon: <FaRegMoneyBillAlt />,
-        },
-        {
-          id: "Gst by Category",
-          label: "Gst by Category",
-          icon: <MdAttachMoney />,
-        },
-      ],
-    },
-    {
       id: "Query",
       label: "Query",
       icon: <LuMailQuestion />,

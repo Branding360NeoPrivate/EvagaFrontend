@@ -107,6 +107,11 @@ const adminActionsApi = {
     apiService.get(
       apiEndpoints.adminActions.getVendorPackageList(vendorId, categoryId)
     ),
+  GetAllVendorsPackage: (queryParams) =>
+    apiService.get(
+      apiEndpoints.adminActions.getAllVendorsPackage(),
+      queryParams
+    ),
 };
 
 export default adminActionsApi;
