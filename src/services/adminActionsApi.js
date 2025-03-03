@@ -112,6 +112,16 @@ const adminActionsApi = {
       apiEndpoints.adminActions.getAllVendorsPackage(),
       queryParams
     ),
+  ArchiveVendorService: (serviceId, PackageId) =>
+    apiService.delete(
+      apiEndpoints.adminActions.archiveVendorServicehandle(serviceId, PackageId)
+    ),
+  DeleteVendorService: (serviceId, PackageId) =>
+    apiService.delete(
+      apiEndpoints.adminActions.deleteVendorService(serviceId, PackageId)
+    ),
+  getAllVendorWithNumberOfService: () =>
+    apiService.get(apiEndpoints.adminActions.getAllVendorWithNumberOfService),
 };
 
 export default adminActionsApi;

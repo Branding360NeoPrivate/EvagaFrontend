@@ -133,9 +133,10 @@ const VendorTable = memo(
                 <th className="font-normal px-4 py-2">Name of Vendor</th>
                 <th className="font-normal px-4 py-2">UserName</th>
                 <th className="font-normal px-4 py-2">Category</th>
-                <th className="font-normal px-4 py-2">Profile Status</th>
+                <th className="font-normal px-4 py-2">Registration Status</th>
                 <th className="font-normal px-4 py-2">Contact Number</th>
-                <th className="font-normal px-4 py-2">No. of Services</th>
+                <th className="font-normal px-4 py-2">No. of Listing</th>
+                <th className="font-normal px-4 py-2">Verified Listing</th>
                 <th className="font-normal px-4 py-2 rounded-e-md">Actions</th>
               </tr>
             </thead>
@@ -164,9 +165,9 @@ const VendorTable = memo(
                     }`}
                   >
                     {!vendor.verificationStatus ? (
-                      <p>Not Verified</p>
+                      <p>Pending</p>
                     ) : (
-                      <p className="text-primary">Verified</p>
+                      <p className="text-primary">Completed</p>
                     )}
                   </td>
                   <td className="  px-4 py-2">{vendor.phoneNumber}</td>

@@ -14,6 +14,7 @@ const adminApi = {
   deleteProfile: (userId) =>
     apiService.delete(apiEndpoints.admin.deleteProfile(userId)),
   logout: (userId) => apiService.post(apiEndpoints.admin.logout(userId)),
+  getAllAdmin: () => apiService.get(apiEndpoints.admin.getAllAdmin),
 };
 
 export default adminApi;

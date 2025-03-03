@@ -123,9 +123,9 @@ const AddCouponForm = ({
     }
   };
   const handleVendorSelect = (vendor) => {
-    setCoupon({ ...coupon, vendor: vendor._id }); // Store selected vendor's ID in the state
-    setVendorSearch(vendor.name); // Display the selected vendor's name in the input field
-    setFilteredVendors([]); // Clear the dropdown
+    setCoupon({ ...coupon, vendor: vendor._id });
+    setVendorSearch(vendor.name);
+    setFilteredVendors([]);
   };
 
   return (
@@ -207,7 +207,6 @@ const AddCouponForm = ({
             <Select
               value={coupon?.selectedpackage}
               onChange={handleVendorPackageChange} // Use the new function
-      
             >
               {vendorPackageList?.map((pkg) => (
                 <MenuItem key={pkg._id} value={pkg._id}>

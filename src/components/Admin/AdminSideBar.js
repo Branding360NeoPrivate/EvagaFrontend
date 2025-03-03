@@ -117,8 +117,34 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
         },
       ],
     },
+    {
+      id: "Reports",
+      label: "Reports Center",
+      icon: <TbReport />,
+      children: [
+        {
+          id: "Vendor Reports",
+          label: "Vendor Reports",
+          icon: <FaBorderAll />,
+        },
+        {
+          id: "Customer Reports",
+          label: "Customer Reports",
+          icon: <FaFirstOrder />,
+        },
+        {
+          id: "Booking Reports",
+          label: "Booking Reports",
+          icon: <FaWpforms />,
+        },
+        {
+          id: "Payment Financial Reports",
+          label: "Payment Financial Reports",
+          icon: <FaWpforms />,
+        },
+      ],
+    },
 
-    { id: "Reports", label: "Reports", icon: <TbReport  /> },
     { id: "Admin Users", label: "Admin Users", icon: <FaUserShield /> },
 
     {

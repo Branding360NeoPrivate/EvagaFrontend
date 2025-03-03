@@ -32,6 +32,10 @@ import CustomerQueryTable from "../../components/Admin/CustomerQueryTable";
 import VendorQueryTable from "../../components/Admin/VendorQueryTable";
 import AllVendorService from "../../components/Admin/AllVendorService";
 import CreateSubAdmin from "../../components/Admin/CreateSubAdmin";
+import VendorReport from "../../components/Admin/VendorReport";
+import CustomerReport from "../../components/Admin/CustomerReport";
+import BookingReports from "../../components/Admin/BookingReports";
+import PaymentFinancialReports from "../../components/Admin/PaymentFinancialReports";
 
 const AdminDashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState("Home");
@@ -221,6 +225,10 @@ const AdminDashboard = () => {
         {selectedMenu === "Vendor Query" && <VendorQueryTable />}
         {selectedMenu === "All Services" && <AllVendorService />}
         {selectedMenu === "Admin Users" && <CreateSubAdmin />}
+        {selectedMenu === "Vendor Reports" && <VendorReport />}
+        {selectedMenu === "Customer Reports" && <CustomerReport />}
+        {selectedMenu === "Booking Reports" && <BookingReports />}
+        {selectedMenu === "Payment Financial Reports" && <PaymentFinancialReports />}
       </div>
     </div>
   );

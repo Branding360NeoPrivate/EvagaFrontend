@@ -18,7 +18,7 @@ import adminActionsApi from "../../services/adminActionsApi";
 import DocumentUploader from "../Forms/DocumentUploader";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
-const AdminVendorProfileViewer = ({ vendorId,onMenuSelect }) => {
+const AdminVendorProfileViewer = ({ vendorId, onMenuSelect }) => {
   const [currentVendorId, setCurrentVendorId] = useState(null);
   const dispatch = useDispatch();
   const { profile } = useSelector((state) => state.vendor);
@@ -75,7 +75,7 @@ const AdminVendorProfileViewer = ({ vendorId,onMenuSelect }) => {
   };
 
   const handleDocumentVerified = () => {
-    dispatch(fetchVendorProfile(vendorId)); // Fetch updated vendor details
+    dispatch(fetchVendorProfile(vendorId));
   };
 
   const getDefaultValuesForSection = (section) => {
@@ -231,7 +231,7 @@ const AdminVendorProfileViewer = ({ vendorId,onMenuSelect }) => {
       ),
     [vendorDetails]
   );
-  console.log(vendorDetails?.businessDetails, "vendorDetails?.businessDetails");
+  console.log(vendorDetails, "vendorDetails?.businessDetails");
 
   if (!profile)
     return <ErrorView status="loading" error={"Profile Details Not Found!"} />;
@@ -432,6 +432,36 @@ const AdminVendorProfileViewer = ({ vendorId,onMenuSelect }) => {
                 </div>
               </div>
             </div>
+          </div>
+          <div className="flex items-center justify-start gap-4 px-4">
+            <span className="flex items-center justify-center gap-2">
+              <h3 className="text-normal font-medium">
+                Terms And Condition Status
+              </h3>
+              <p className="text-textGray">
+                {vendorDetails?.termsAccepted ? "Accepted" : "Not Accepted"}
+              </p>
+            </span>
+            <span className="flex items-center justify-center gap-2">
+              <h3 className="text-normal font-medium">
+                Terms And Condition Accepted Time
+              </h3>
+              <p className="text-textGray">
+                {vendorDetails?.termsAcceptedAt
+                  ? new Date(vendorDetails.termsAcceptedAt).toLocaleString(
+                      "en-US",
+                      {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "numeric",
+                        minute: "numeric",
+                        second: "numeric",
+                      }
+                    )
+                  : "N/A"}
+              </p>
+            </span>
           </div>
 
           {/* <DocumentUploader

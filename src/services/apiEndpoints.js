@@ -118,6 +118,7 @@ const apiEndpoints = {
     changePassword: (userId) => `admin/changeAdminPassword/${userId}`,
     deleteProfile: (userId) => `admin/deleteAdminProfile/${userId}`,
     logout: (userId) => `admin/logoutAdmin/${userId}`,
+    getAllAdmin: `admin/getAllAdmin`,
     getTotalUser: "user/get-all-user",
   },
   adminActions: {
@@ -155,7 +156,12 @@ const apiEndpoints = {
     addCategoryGstFees: `gstPercentage/add-gst-percentage`,
     getVendorPackageList: (vendorId, categoryId) =>
       `/adminAction/getVendorPackageList/${vendorId}/${categoryId}`,
-    getAllVendorsPackage:()=> `/adminAction/getAllVendorsPackage`,
+    getAllVendorsPackage: () => `/adminAction/getAllVendorsPackage`,
+    archiveVendorServicehandle: (serviceId, PackageId) =>
+      `/adminAction/archiveVendorServicehandle/${serviceId}/${PackageId}`,
+    deleteVendorService: (serviceId, PackageId) =>
+      `/adminAction/deleteVendorService/${serviceId}/${PackageId}`,
+    getAllVendorWithNumberOfService: `/adminAction/getAllVendorWithNumberOfService`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",
