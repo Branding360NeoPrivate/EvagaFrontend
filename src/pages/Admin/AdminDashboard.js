@@ -31,6 +31,7 @@ import CancelledOrder from "../../components/Admin/CancelledOrder";
 import CustomerQueryTable from "../../components/Admin/CustomerQueryTable";
 import VendorQueryTable from "../../components/Admin/VendorQueryTable";
 import AllVendorService from "../../components/Admin/AllVendorService";
+import CreateSubAdmin from "../../components/Admin/CreateSubAdmin";
 
 const AdminDashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState("Home");
@@ -219,6 +220,7 @@ const AdminDashboard = () => {
         {selectedMenu === "Customer Query" && <CustomerQueryTable />}
         {selectedMenu === "Vendor Query" && <VendorQueryTable />}
         {selectedMenu === "All Services" && <AllVendorService />}
+        {selectedMenu === "Admin Users" && <CreateSubAdmin />}
       </div>
     </div>
   );

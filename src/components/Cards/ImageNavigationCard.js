@@ -43,20 +43,21 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
   }, [isModalOpen]);
 
   return (
-    <div className="flex w-full h-[400px] rounded-md overflow-hidden p-5 bg-white">
-      <div className="w-[20%] h-full overflow-y-scroll no-scrollbar">
-        <div className="flex flex-col gap-2 p-2 h-[300px] overflow-y-auto overflow-x-hidden custom-scrollbar">
+    <div
+      className="flex flex-col-reverse justify-center items-center xl:flex-row lg:flex-wrap-reverse xl:flex-nowrap gap-2 w-full lg:min-w-[300px] h-auto
+   rounded-md overflow-hidden bg-white"
+    >
+      <div className="w-fit h-auto">
+        <div className=" w-[350px] md:w-[400px] xl:w-auto xl:min-w-[80px] xl:h-[400px] flex xl:flex-col justify-start items-start overflow-x-scroll xl:overflow-x-hidden xl:overflow-y-scroll no-scrollbar gap-5 p-2 custom-scrollbar">
           {mediaUrls.map((url, index) => (
-            <div key={index} className="cursor-pointer">
+            <div key={index} className=" w-[80px] cursor-pointer">
               {isImage(url) ? (
                 <img
-                  src={
-                    process.env.REACT_APP_API_Aws_Image_BASE_URL +
-                    url.replace("images/", "thumbnails/")
-                  }
+                  src={process.env.REACT_APP_API_Aws_Image_BASE_URL + url}
+                  style={{ maxWidth: "unset" }}
+                  // src={dummyImg}
                   alt={`Thumbnail ${index + 1}`}
-                  className="w-[80px] h-[60px] object-cover rounded-md border-2 border-transparent hover:scale-110 hover:border-blue-500 transition-transform duration-200"
-                  loading="lazy"
+                  className="w-[80px] h-[60px] object-cover object-center rounded-md border-2 border-transparent hover:scale-110 hover:border-blue-500 transition-transform duration-200"
                   onClick={() => [onMediaClick(url), setIsModalOpen(true)]}
                 />
               ) : (
@@ -66,6 +67,7 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
                 >
                   <img
                     src={videoThumbnil}
+                    // src={dummyImg}
                     alt="Video Placeholder"
                     className="w-full h-full object-cover rounded-md"
                   />
@@ -75,18 +77,15 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
           ))}
         </div>
       </div>
-
       {/* Main Media View */}
-      <div className="flex-1 flex items-center justify-center relative">
-        {!selectedUrl ? (
-          <div className="w-full h-full bg-gray-200 animate-pulse rounded-md"></div>
-        ) : isImage(selectedUrl) ? (
+      <div className=" flex-shrink md:w-fit h-[400px] md:min-w-[350px] flex-1 flex items-center justify-center relative">
+        {isImage(selectedUrl) ? (
           <div className="group relative w-full aspect-[4/5] h-full flex items-center justify-center">
             <img
               src={process.env.REACT_APP_API_Aws_Image_BASE_URL + selectedUrl}
+              // src={dummyImg}
               alt="Selected Media"
-              className="w-fit h-full object-contain rounded-md cursor-pointer aspect-[4/5]"
-              loading="lazy"
+              className="w-[300px] md:w-[350px] lg:w-[450px] h-auto object-cover rounded-lg cursor-pointer aspect-[4/5]"
               onClick={() => setIsModalOpen(true)}
             />
           </div>
@@ -98,7 +97,6 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
           />
         )}
       </div>
-
       {/* Modal for Zoomed Image */}
       <AnimatePresence>
         {isModalOpen && (
@@ -122,6 +120,7 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
                     process.env.REACT_APP_API_Aws_Image_BASE_URL +
                     mediaUrls[currentIndex]
                   }
+                  // src={dummyImg}
                   alt="Zoomed Media"
                   className="max-w-[90vw] max-h-[90vh] rounded-md"
                   onClick={(e) => e.stopPropagation()} // Prevent closing when clicking on the image
@@ -132,6 +131,7 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
                     process.env.REACT_APP_API_Aws_Image_BASE_URL +
                     mediaUrls[currentIndex]
                   }
+                  // selectedUrl={dummyImg}
                 />
               )}
 

@@ -6,6 +6,7 @@ import useServices from "../../hooks/useServices";
 import adminApi from "../../services/adminApi";
 import useDebounce from "../../utils/useDebounce";
 import adminActionsApi from "../../services/adminActionsApi";
+import ReusableModal from "../Modal/Modal";
 
 function AllVendorService() {
   const [page, setPage] = useState(1);
@@ -14,6 +15,14 @@ function AllVendorService() {
   const GetAllVendorsPackageApi = useServices(
     adminActionsApi.GetAllVendorsPackage
   );
+  const [modalType, setModalType] = useState("delete");
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   const [sortvalue, setSortValue] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
   const debounce = useDebounce(searchTerm);
@@ -77,8 +86,8 @@ function AllVendorService() {
           <MdOutlineDelete
             className="text-3xl font-semibold cursor-pointer text-textGray"
             onClick={() => [
-              // handleOpen(),
-              // setModalType("deleteBanner"),
+              handleOpen(),
+              setModalType("delete"),
               // setBannerId(row?._id),
             ]}
           />
@@ -97,6 +106,18 @@ function AllVendorService() {
         onPageChange={handlePageChange}
         totalCount={totalPages}
       />
+      <ReusableModal
+        open={open}
+        onClose={handleClose}
+        title={modalType === "delete" ? "Delete Service" : ""}
+      >
+        {modalType === "delete" && (
+          <div className="flex items-center justify-center gap-3">
+            <button className="btn-primary w-fit px-2">Archive</button>
+            <button className="btn-primary w-fit px-2">Permanent Delete</button>
+          </div>
+        )}
+      </ReusableModal>
     </div>
   );
 }

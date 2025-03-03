@@ -12,7 +12,7 @@ import {
 } from "react-icons/fa";
 import { RiCoupon3Line } from "react-icons/ri";
 import MainLogo from "../../assets/Temporary Images/Evaga Logo.png";
-import { toast } from "react-toastify";
+import { TbReport } from "react-icons/tb";
 import Cookies from "js-cookie";
 import { useAuth } from "../../context/AuthContext";
 import {
@@ -26,7 +26,12 @@ import {
 } from "react-icons/fa6";
 import { GrCompliance } from "react-icons/gr";
 import { motion, AnimatePresence } from "framer-motion";
-import { MdAttachMoney, MdBorderClear, MdEventNote, MdOutlineFeed } from "react-icons/md";
+import {
+  MdAttachMoney,
+  MdBorderClear,
+  MdEventNote,
+  MdOutlineFeed,
+} from "react-icons/md";
 import { LuMailQuestion } from "react-icons/lu";
 const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
   const { logout } = useAuth();
@@ -61,6 +66,8 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
       children: [
         { id: "Vendor", label: "Vendor", icon: <FaUsers /> },
         { id: "Client", label: "Client", icon: <FaClipboardList /> },
+        { id: "All Services", label: "All Services", icon: <MdEventNote /> },
+        { id: "Waitlist", label: "Waitlist", icon: <MdOutlineFeed /> },
       ],
     },
     {
@@ -110,10 +117,14 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
         },
       ],
     },
+
+    { id: "Reports", label: "Reports", icon: <TbReport  /> },
+    { id: "Admin Users", label: "Admin Users", icon: <FaUserShield /> },
+
     {
-      id: "Query",
-      label: "Query",
-      icon: <LuMailQuestion />,
+      id: "SupportCenter",
+      label: "Support Center",
+      icon: <FaHeadset />,
       children: [
         {
           id: "Customer Query",
@@ -125,20 +136,9 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
           label: "Vendor Query",
           icon: <FaFirstOrder />,
         },
+        { id: "Feedback", label: "Feedback Form", icon: <FaWpforms /> },
       ],
     },
-    {
-      id: "Listed Services",
-      label: "Listed Services",
-      icon: <FaServicestack />,
-      children: [
-        { id: "All Services", label: "All Services", icon: <MdEventNote  /> },
-      ],
-    },
-    { id: "AdminUsers", label: "Admin Users", icon: <FaUserShield /> },
-    { id: "Feedback", label: "Feedback Form", icon: <FaWpforms /> },
-    { id: "Waitlist", label: "Waitlist", icon: <MdOutlineFeed /> },
-    { id: "SupportCenter", label: "Support Center", icon: <FaHeadset /> },
   ];
 
   return (

@@ -64,14 +64,14 @@ function ProductDisplayCard({
   };
 
   return (
-    <div className="h-[240px] border rounded-lg shadow-sm flex flex-col md:flex-row gap-4 cursor-pointer overflow-hidden">
+    <div className=" w-full h-auto lg:h-[350px] xl:h-[250px] p-2 lg:p-0 border rounded-lg shadow-sm flex flex-col md:flex-row gap-4 cursor-pointer overflow-hidden">
       <img
         src={image}
         alt={title}
-        className=" w-[30%] h-[15rem] rounded-lg object-fit aspect-w-16 aspect-h-9"
+        className=" w-full lg:w-[30%] lg:h-[15rem] rounded-lg object-fit aspect-w-16 aspect-h-9"
         onClick={onClick}
       />
-      <div className="w-full h-[90%] overflow-hidden flex flex-col my-4 pb-2" onClick={onClick}>
+      <div className="w-full flex flex-col my-4" onClick={onClick}>
         <div className=" w-full flex flex-row items-center mb-1 justify-between">
           <div className="w-[100%] gap-0 ">
             <h2 className="text-normal font-medium text-primary">{title}</h2>
@@ -79,17 +79,17 @@ function ProductDisplayCard({
           </div>
         </div>
         <div className="w-full flex flex-row border-borderPrimary mb-1 ">
-          <div className="w-[80%] text-sm font-semibold text-primary mb-2">
+          <div className="w-[80%] text-base font-semibold text-primary mb-2">
             <h3>{vendor}</h3>
           </div>
         </div>
-        <div className="flex flex-row gap-2 pr-4 flex-col">
+        <div className="flex flex-row gap-2 lg:pr-4 flex-col">
           {keysToRender.map((key, index) => {
             const value = eventData?.values?.[key];
             if (Array.isArray(value) && value.length > 0) {
               return (
                 <div className="mb-1 flex flex-row gap-3">
-                  <h3 className="text-normal font-medium text-primary pt-1">
+                  <h3 className="text-lg font-medium text-primary pt-1">
                     {key}
                   </h3>
                   <div className="flex flex-wrap gap-2 mt-1">
@@ -109,16 +109,16 @@ function ProductDisplayCard({
         </div>
       </div>
       {/* Price */}
-      <div className="flex flex-col items-end justify-between w-[20%] pr-4 pt-4">
+      <div className="flex flex-col lg:items-end justify-between lg:w-[20%] lg:pr-4 pt-4">
         <Wishlist
           isInWishlist={isFavourite}
           onWishlistToggle={() => toggleWishlistHandle(userId)}
         />
         <div>
-          <div className="text-normal font-medium text-primary pt-2 pr-4 justify-start">
+        <div className="text-xl font-medium text-primary pt-2 pr-4 justify-start">
             Starting
           </div>
-          <div className="text-normal font-bold text-primary mb-4">
+          <div className="text-2xl font-bold text-primary mb-4">
             {formatCurrency(
               Number(
                 eventData?.values?.Price ||
