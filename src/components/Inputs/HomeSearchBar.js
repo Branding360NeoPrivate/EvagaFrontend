@@ -127,11 +127,12 @@ function HomeSearchBar({ cities, value, onChange }) {
   return (
     <div
       className="w-auto lg:w-[30vw] xl:w-[40vw] md:h-[45px] md:bg-gray-100 
-    flex flex-col md:flex-row justify-start items-center gap-2 md:gap-0 rounded-md relative"
+      flex flex-col md:flex-row justify-start items-center gap-2 md:gap-0 rounded-md relative"
       ref={dropdownRef}
     >
       <div
-        className="flex justify-center items-center h-full w-auto text-nowrap px-2 rounded-md bg-highlightYellow text-textPrimary font-bold cursor-pointer"
+        className="flex justify-between md:justify-center items-center h-full w-full md:w-auto text-nowrap px-2 
+        rounded-md bg-highlightYellow text-textPrimary font-bold cursor-pointer"
         onClick={toggleDropdown}
       >
         <span className=" flex justify-center items-center text-[11px] md:text-sm text-primary h-6 md:h-fit lg:text-wrap">
