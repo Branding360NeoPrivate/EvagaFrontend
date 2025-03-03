@@ -162,6 +162,7 @@ const apiEndpoints = {
     deleteVendorService: (serviceId, PackageId) =>
       `/adminAction/deleteVendorService/${serviceId}/${PackageId}`,
     getAllVendorWithNumberOfService: `/adminAction/getAllVendorWithNumberOfService`,
+    getAllUsersWithOrderDetails: `/adminAction/getAllUsersWithOrderDetails`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",

@@ -122,6 +122,8 @@ const adminActionsApi = {
     ),
   getAllVendorWithNumberOfService: () =>
     apiService.get(apiEndpoints.adminActions.getAllVendorWithNumberOfService),
+  getAllUsersWithOrderDetails: () =>
+    apiService.get(apiEndpoints.adminActions.getAllUsersWithOrderDetails),
 };
 
 export default adminActionsApi;
