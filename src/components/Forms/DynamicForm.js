@@ -28,7 +28,7 @@ const DynamicForm = ({
   const [foodMenu, setFoodMenu] = useState([]);
   const totalNumberOfPhotoAllowed =
     process.env.REACT_APP_API_Number_of_Images_allowed || 10;
-    const totalNumberOfVideoAllowed =
+  const totalNumberOfVideoAllowed =
     process.env.REACT_APP_API_Number_of_Video_allowed || 10;
   const editorStyle = {
     backgroundColor: "#7575751a",
@@ -297,7 +297,7 @@ const DynamicForm = ({
       [key]: file,
     }));
   };
-  
+
   const handleFileChange = (fieldKey, type, files) => {
     setFormValues((prev) => {
       const updatedField = {
@@ -330,7 +330,6 @@ const DynamicForm = ({
       return setInhouseCategoringOrBoth(false);
     }
   }, [formValues?.CateringPolicy]);
-
 
   return (
     <form
@@ -688,11 +687,14 @@ const DynamicForm = ({
           );
         } else if (field.type === "text" && field.key === "Terms&Conditions") {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+            <div
+              key={field._id}
+              className="col-span-2 grid grid-cols-1 md:grid-cols-4 gap-4"
+            >
               <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="bg-textLightGray col-span-3">
+              <div className="bg-textLightGray md:col-span-3">
                 <ReactQuill
                   theme="snow"
                   value={formValues[field.key] || ""}
@@ -1518,11 +1520,14 @@ const DynamicForm = ({
             field.key === "Certifications&Licenses")
         ) {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+            <div
+              key={field._id}
+              className="col-span-2 grid grid-cols-1 md:grid-cols-4 gap-4"
+            >
               <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-3 flex  items-center justify-start gap-4 ">
+              <div className="md:col-span-3 flex  items-center justify-start gap-4 ">
                 {/* <div className="flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
                   <input
                     type={field.type}
@@ -1575,11 +1580,14 @@ const DynamicForm = ({
           );
         } else if (field.type === "file" && field.key === "3DTour") {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+            <div
+              key={field._id}
+              className="col-span-2 grid grid-cols-1 md:grid-cols-4 gap-4"
+            >
               <label className="text-primary text-base font-semibold">
                 {field.label}*:
               </label>
-              <div className="col-span-3 flex items-center justify-start gap-4">
+              <div className="md:col-span-3 flex items-center justify-start gap-4">
                 <div className="flex items-center justify-center flex-col text-textGray ">
                   <div className="relative cursor-pointer flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
                     <IoCloudUploadOutline className="text-primary text-2xl mb-4" />
@@ -1630,11 +1638,14 @@ const DynamicForm = ({
           );
         } else if (field.type === "file" && field.key === "ProductImage") {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+            <div
+              key={field._id}
+              className="col-span-2 grid grid-cols-1 md:grid-cols-4 gap-4"
+            >
               <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-3 flex items-center justify-start gap-4">
+              <div className="md:col-span-3 flex items-center justify-start gap-4">
                 <div className="flex items-center justify-center flex-col text-textGray ">
                   <div className="relative cursor-pointer flex items-center justify-center flex-col text-textGray border-2 border-dashed border-primary p-3 rounded-md">
                     <IoCloudUploadOutline className="text-primary text-2xl mb-4" />
@@ -1700,12 +1711,15 @@ const DynamicForm = ({
           );
         } else if (field.type === "array" && field.key === "Portfolio") {
           return (
-            <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
+            <div
+              key={field._id}
+              className="col-span-2 grid grid-cols-1 md:grid-cols-4 gap-4"
+            >
               <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-3 flex flex-col gap-4">
-                <div className="col-span-2 flex flex-col gap-4">
+              <div className="md:col-span-3 flex flex-col gap-4">
+                <div className="md:col-span-2 flex flex-col gap-4">
                   {/* Ensure field.items is a valid object */}
                   {field.items && (
                     <div className="grid grid-cols-2 gap-4">
@@ -1744,9 +1758,9 @@ const DynamicForm = ({
                             }}
                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                           />
-                            <p>Upload upto 30 Images</p>
+                          <p>Upload upto 30 Images</p>
                         </div>
-                      
+
                         <div className="flex flex-wrap gap-1">
                           {(formValues?.Portfolio?.photos || [])?.map(
                             (photo, photoIdx) => (
@@ -1785,7 +1799,7 @@ const DynamicForm = ({
                             accept="video/mp4, video/webm"
                             multiple={totalNumberOfVideoAllowed}
                             onChange={(e) => {
-                              const maxFileSize = 100 * 1024 * 1024; 
+                              const maxFileSize = 100 * 1024 * 1024;
                               const selectedFiles = Array.from(e.target.files);
                               const existingVideos =
                                 formValues?.Portfolio?.videos || [];
@@ -1812,10 +1826,12 @@ const DynamicForm = ({
                               ); // No index
                             }}
                             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                            
                           />
-                           <p>Upload upto 10 Video</p>
-                           <p className="text-esm">*The total size of all videos should be less than 250 MB.</p>
+                          <p>Upload upto 10 Video</p>
+                          <p className="text-esm">
+                            *The total size of all videos should be less than
+                            250 MB.
+                          </p>
                         </div>
                         {/* Render Videos */}
                         <div className="flex flex-wrap gap-1">
@@ -2234,12 +2250,14 @@ const DynamicForm = ({
               {subVenues.map((subVenue, index) => (
                 <div key={index} className="rounded-md p-4 grid gap-4 ">
                   {field.items.map((item, i) => (
-                    <div key={i} className="grid grid-cols-3 gap-4">
+                    <div
+                      key={i}
+                      className="grid grid-cols-1 md:grid-cols-3 gap-4"
+                    >
                       <label className="text-primary text-base font-semibold">
                         {item.label}:
                       </label>
-
-                      <div className="col-span-2">
+                      <div className="md:col-span-2">
                         {/* Text Input */}
                         {item.type === "text" && (
                           <input
@@ -2253,7 +2271,7 @@ const DynamicForm = ({
                                 e.target.value
                               )
                             }
-                            className="border-2 p-2 rounded-md w-[25rem] text-textGray outline-none"
+                            className="border-2 p-2 rounded-md w-full md:w-[25rem] text-textGray outline-none"
                             required
                           />
                         )}
@@ -2507,13 +2525,13 @@ const DynamicForm = ({
                           </div>
                         )}
                         {item.key === "CapacitySeating" && (
-                          <div className="grid grid-cols-5 gap-4">
+                          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
                             {item?.items?.map((seatingItem, seatingIndex) => (
                               <div
                                 key={seatingIndex}
                                 className="flex flex-col items-center gap-2"
                               >
-                                <span className="text-textGray text-base font-normal flex flex-col items-center">
+                                <span className="text-textGray text-nowrap text-base font-normal flex flex-col items-center">
                                   <img
                                     src={
                                       seatingItem.Style === "Max Capacity"
@@ -2725,7 +2743,7 @@ const DynamicForm = ({
                         e.target.value = "";
                       }
                     }}
-                    className="border-2 w-[25rem] outline-none p-1 rounded-l-lg text-textGray font-medium"
+                    className="border-2 w-full md:w-[25rem] outline-none p-1 rounded-l-lg text-textGray font-medium"
                     disabled={!isEditing}
                   />
                   <p className="bg-textYellow p-2 rounded-r-lg">

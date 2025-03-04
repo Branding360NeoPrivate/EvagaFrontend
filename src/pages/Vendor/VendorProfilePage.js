@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import ErrorView from "../../components/Errors/ErrorView";
 import ProfileFormGenerator from "../../components/Forms/ProfileFormGenerator";
 import generateDefaultValues from "../../utils/generateDefaultvalues";
-import { Modal, Box, Button } from "@mui/material";
+import { Modal, Box, Button, IconButton } from "@mui/material";
 import formfields from "../../utils/formFields";
 import DocumentUploader from "../../components/Forms/DocumentUploader";
 import { FaRegEdit } from "react-icons/fa";
@@ -16,6 +16,7 @@ import { fetchCategories } from "../../context/redux/slices/categorySlice";
 import SearchableCategoryAndSubcategoryDropdown from "../../components/Inputs/SearchableCategoryAndSubcategoryDropdown";
 import { showLoader } from "../../context/redux/slices/loaderSlice";
 import TermsModal from "../../components/Modal/TermsModal ";
+import { IoIosCloseCircleOutline } from "react-icons/io";
 
 const VendorProfile = () => {
   const dispatch = useDispatch();
@@ -231,13 +232,15 @@ const VendorProfile = () => {
   );
 
   // console.log("vendorDetails in vendor profile:", vendorDetails);
-    useEffect(() => {
-      if (profile?.vendor?.termsAccepted === false) {
-        handleOpen();
-        console.log(profile?.vendor?.termsAccepted,'profile?.vendor?.termsAccepted');
-        
-      }
-    }, [profile?.vendor?.termsAccepted]);
+  useEffect(() => {
+    if (profile?.vendor?.termsAccepted === false) {
+      handleOpen();
+      console.log(
+        profile?.vendor?.termsAccepted,
+        "profile?.vendor?.termsAccepted"
+      );
+    }
+  }, [profile?.vendor?.termsAccepted]);
 
   if (!profile)
     return <ErrorView status="loading" error={"Profile Details Not Found!"} />;
@@ -306,7 +309,6 @@ const VendorProfile = () => {
             </div>
           </div>
 
-      
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-y-6 md:gap-6 lg:w-full">
             {/* Left Column */}
             <div className="lg:col-span-1 grid grid-cols-1 gap-6">
@@ -393,7 +395,7 @@ const VendorProfile = () => {
                           .length > 1 && (
                           <div className="mt-4">
                             <h3 className="font-bold text-lg">
-                              Add Categories+
+                              Add Categories +
                             </h3>
                             {vendorDetails?.businessDetails
                               ?.categoriesOfServices &&
@@ -407,10 +409,11 @@ const VendorProfile = () => {
                                   return (
                                     <div
                                       key={category._id}
-                                      className="flex items-center gap-2"
+                                      className="flex items-center gap-2 mb-14 w-[300px] md:w-auto"
                                     >
                                       <SearchableCategoryAndSubcategoryDropdown
                                         defaultValues={categoryArray}
+                                        width={"full"}
                                       />
                                     </div>
                                   );
@@ -457,35 +460,47 @@ const VendorProfile = () => {
                 borderRadius: 2,
                 boxShadow: 24,
                 p: 4,
-                width: "80%",
+                minWidth: "80%",
                 maxHeight: "80vh",
-                minHeight: "60vh",
+                minHeight: "20vh",
                 overflowY: "auto",
               }}
             >
-              {activeSection && (
-                <div>
-                  <h2 className="font-bold text-lg mb-4">
-                    Edit: {activeSection.name}
-                  </h2>
-                  <ProfileFormGenerator
-                    fields={activeSection.fields}
-                    defaultValues={generateDefaultValues(
-                      getDefaultValuesForSection(activeSection),
-                      activeSection.fields
-                    )}
-                    editable={true}
-                    onSubmit={(data) => {
-                      handleSubmit(data);
-                    }}
-                  />
+              <div className=" relative">
+                <div
+                  className=" w-fit h-fit absolute top-[-30px] right-[-30px] cursor-pointer"
+                  onClick={handleCloseModal}
+                >
+                  {/* Close button on top right corner */}
+                  <IconButton>
+                    <IoIosCloseCircleOutline></IoIosCloseCircleOutline>{" "}
+                  </IconButton>
                 </div>
-              )}
+
+                {activeSection && (
+                  <div>
+                    <h2 className="font-bold text-lg mb-4 text-primary">
+                      Edit {activeSection.name}
+                    </h2>
+                    <ProfileFormGenerator
+                      fields={activeSection.fields}
+                      defaultValues={generateDefaultValues(
+                        getDefaultValuesForSection(activeSection),
+                        activeSection.fields
+                      )}
+                      editable={true}
+                      onSubmit={(data) => {
+                        handleSubmit(data);
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
             </Box>
           </Modal>
         </div>
       )}
-            <TermsModal open={open} handleClose={handleClose} />
+      <TermsModal open={open} handleClose={handleClose} />
     </div>
   );
 };

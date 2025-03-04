@@ -7,7 +7,12 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchVendorProfile } from "../../context/redux/slices/vendorSlice";
 
-const DocumentUploader = ({ formfields, vendorDetails, onUpload,vendorId }) => {
+const DocumentUploader = ({
+  formfields,
+  vendorDetails,
+  onUpload,
+  vendorId,
+}) => {
   const [uploadProgress, setUploadProgress] = useState({});
   const dispatch = useDispatch();
   const [documentsState, setDocumentsState] = useState(null);
@@ -40,29 +45,29 @@ const DocumentUploader = ({ formfields, vendorDetails, onUpload,vendorId }) => {
   const handleFileChange = async (event, doc) => {
     const file = event.target.files[0];
     if (!file) return;
-  
+
     const userId = vendorId || Cookies.get("userId");
     console.log("doc in handleFileChange:", doc);
-  
+
     const formData = new FormData();
     formData.append("document", file);
     formData.append("documentName", doc.name);
     formData.append("documentType", file.type);
     formData.append("documentId", doc?.documentId || "");
-  
+
     if (vendorId) {
       formData.append("adminId", Cookies.get("userId"));
     }
-  
+
     try {
       setUploadProgress((prev) => ({ ...prev, [doc.name]: 0 }));
-  
+
       // Simulate progress upload for 1 second
       for (let i = 0; i < 10; i++) {
         await new Promise((resolve) => setTimeout(resolve, 100));
         setUploadProgress((prev) => ({ ...prev, [doc.name]: i * 10 }));
       }
-  
+
       const response = await documentUploadService.callApi(userId, formData, {
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round(
@@ -74,7 +79,7 @@ const DocumentUploader = ({ formfields, vendorDetails, onUpload,vendorId }) => {
           }));
         },
       });
-  
+
       if (response.document) {
         toast.success(
           `${doc.name
@@ -98,8 +103,6 @@ const DocumentUploader = ({ formfields, vendorDetails, onUpload,vendorId }) => {
       );
     }
   };
-  
-  
 
   return (
     <div className="bg-gray-50 rounded-lg p-4 shadow-sm border">
@@ -108,7 +111,7 @@ const DocumentUploader = ({ formfields, vendorDetails, onUpload,vendorId }) => {
         {mergedDocuments.map((doc) => (
           <div
             key={doc._id || doc.name}
-            className="grid grid-cols-4 border-b pb-3 pt-5 mb-2"
+            className="grid grid-cols-3 lg:grid-cols-4 border-b pb-3 pt-5 mb-2"
           >
             <div className="flex justify-between items-center mb-2">
               <p className="font-medium text-gray-700">
@@ -147,10 +150,10 @@ const DocumentUploader = ({ formfields, vendorDetails, onUpload,vendorId }) => {
               )}
             </div>
             {doc.documentUrl && (
-              <div className=" overflow-hiddens w-fit relative group">
+              <div className=" w-fit relative group">
                 <a
                   // href={`${documentsBaseUrl}${doc.documentUrl}`}
-                  className=" text-sm mb-2 "
+                  className=" text-sm mb-2 overflow-x-scroll flex w-[100px] py-2 md:py-0 md:inline md:w-auto "
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -167,7 +170,7 @@ const DocumentUploader = ({ formfields, vendorDetails, onUpload,vendorId }) => {
               </div>
             )}
             <span
-              className={`text-sm text-center font-medium px-2 py-1 rounded ${
+              className={` col-span-3 text-sm text-center font-medium px-2 py-1 rounded ${
                 doc.status === "verified"
                   ? "bg-green-100 text-green-600"
                   : doc.status === "pending"

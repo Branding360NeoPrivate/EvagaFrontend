@@ -74,13 +74,13 @@ const VendorDashboard = () => {
     }
   }, [dispatch, profile, profilePercentage]);
 
-  useEffect(() => {
-    if (!vendorBanner || vendorBanner.length === 0) {
-      console.log("vendor banner");
+  // useEffect(() => {
+  //   if (!vendorBanner || vendorBanner.length === 0) {
+  //     console.log("vendor banner");
 
-      dispatch(fetchVendorBanner());
-    }
-  }, [dispatch, vendorBanner]);
+  //     dispatch(fetchVendorBanner());
+  //   }
+  // }, [dispatch, vendorBanner]);
 
   const [activeState, setActivestate] = useState("Services Provided");
 
@@ -185,18 +185,13 @@ const VendorDashboard = () => {
                     key={item?._id || item?.title}
                     image={
                       process.env.REACT_APP_API_Aws_Image_BASE_URL +
-                      (
-                        Array.isArray(item?.services?.[0]?.values?.CoverImage)
+                        (Array.isArray(item?.services?.[0]?.values?.CoverImage)
                           ? item?.services?.[0]?.values?.CoverImage?.[0]
-                          : item?.services?.[0]?.values?.CoverImage
-                      ) ||
-                      (
-                        Array.isArray(item?.services?.[0]?.values?.ProductImage)
-                          ? item?.services?.[0]?.values?.ProductImage?.[0]
-                          : item?.services?.[0]?.values?.ProductImage
-                      )
+                          : item?.services?.[0]?.values?.CoverImage) ||
+                      (Array.isArray(item?.services?.[0]?.values?.ProductImage)
+                        ? item?.services?.[0]?.values?.ProductImage?.[0]
+                        : item?.services?.[0]?.values?.ProductImage)
                     }
-                    
                     title={
                       item?.services?.[0]?.values?.Title ||
                       item?.services?.[0]?.values?.FoodTruckName ||

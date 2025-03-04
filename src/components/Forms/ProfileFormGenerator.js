@@ -111,7 +111,10 @@ const ProfileFormGenerator = ({
           );
         } else if (field.type === "textarea") {
           return (
-            <div key={index} className="grid grid-cols-2 gap-x-2">
+            <div
+              key={index}
+              className="grid grid-cols-1 md:grid-cols-2 gap-x-2"
+            >
               <label htmlFor={field.name}>{field.placeholder}</label>
               <textarea
                 id={field.name}
@@ -119,7 +122,7 @@ const ProfileFormGenerator = ({
                 accept={field.accept}
                 {...register(field.name, field.validation)}
                 disabled={!editable}
-                rows={5}
+                rows={8}
                 className={`p-2 text-gray-500 rounded-md ${
                   editable ? "border" : "bg-grayBg border-none"
                 } ${errors[field.name] ? "border-red-500" : "border-gray-300"}`}
@@ -133,7 +136,10 @@ const ProfileFormGenerator = ({
           );
         } else {
           return (
-            <div key={index} className="grid grid-cols-2 gap-x-2">
+            <div
+              key={index}
+              className="grid grid-cols-1 md:grid-cols-2 gap-x-2"
+            >
               <label htmlFor={field.name}>{field.placeholder}</label>
               <input
                 id={field.name}

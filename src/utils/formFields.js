@@ -395,6 +395,7 @@ const formfields = {
       fields: [
         {
           name: "profilePicture",
+          placeholder: "Profile Picture",
           type: "file",
           accept: "image/jpeg, image/png",
           validation: {
