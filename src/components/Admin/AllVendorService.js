@@ -343,8 +343,8 @@ function AllVendorService() {
 
     {
       label: "Status",
-      key: "status",
-      render: (row) => (row?.services.status === true ? "Active" : "Deactive"),
+      key: "packageStatus",
+      render: (row) => (row?.services.packageStatus),
     },
     {
       label: "Action",

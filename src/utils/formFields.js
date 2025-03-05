@@ -543,8 +543,8 @@ const formfields = {
         {
           name: "udyamAadhaar",
           type: "text",
-          placeholder: "Udyam Aadhaar",
-          validation: { required: "Udyam Aadhaar is required" },
+          placeholder: "Aadhaar Number",
+          validation: { required: "Aadhaar Number is required" },
         },
         {
           name: "gstNumber",

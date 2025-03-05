@@ -19,6 +19,7 @@ function SinglePackage() {
   const { cart } = useSelector((state) => state.cart);
   const getAllPackages = useServices(packageApis.getOnePackage);
   const addToCartApi = useServices(userApi.addPackageToUserCart);
+  const AddRecentViewApi = useServices(userApi.AddRecentView);
   const dispatch = useDispatch();
   const [singlePageData, setSinglePageData] = useState();
   const [packageIncartStatus, setPackageIncartStatus] = useState(false);
@@ -32,6 +33,20 @@ function SinglePackage() {
     category: "",
     subcategory: "",
   });
+  const AddRecentViewApiHandle = async () => {
+    const formdata = new FormData();
+    formdata.append("userId", userId);
+    formdata.append("packageId", packageId);
+    formdata.append("serviceId", serviceId);
+    const response = await AddRecentViewApi.callApi(formdata);
+    console.log(response);
+  };
+  useEffect(() => {
+    if (!!userId && !!serviceId && !!packageId) {
+      AddRecentViewApiHandle();
+    }
+  }, [userId, packageId, serviceId]);
+  
   const handlegetOnePackage = async () => {
     const response = await getAllPackages.callApi(serviceId, packageId);
     setSinglePageData(response && response?.data);
@@ -130,8 +145,6 @@ function SinglePackage() {
           console.log("Server response is empty. No cart items fetched.");
         }
       });
-
-      toast.success("Item Added To Cart");
     } catch (error) {
       console.error("An error occurred while adding to cart:", error);
     }
@@ -153,11 +166,10 @@ function SinglePackage() {
     isPackageInCart(cart, serviceId, packageId);
   }, [serviceId, packageId, cart]);
 
-  console.log(packageIncartData, "packageIncartData");
 
   return (
     <motion.div
-       className="w-full flex lg:flex-row flex-col  pb-4 items-start justify-between px-5 lg:px-6 py-4"
+      className="w-full flex lg:flex-row flex-col  pb-4 items-start justify-between px-5 lg:px-6 py-4"
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
@@ -167,7 +179,7 @@ function SinglePackage() {
       }}
     >
       <div
-       className=" flex justify-start items-start flex-col min-w-[300px]"
+        className=" flex justify-start items-start flex-col min-w-[300px]"
         style={{ flex: "0.35" }}
       >
         <ImageNavigationCard
@@ -186,7 +198,7 @@ function SinglePackage() {
       </div>
 
       <div
-         className="flex flex-col items-center justify-center lg:p-4 mb-10 lg:mb-0"
+        className="flex flex-col items-center justify-center lg:p-4 mb-10 lg:mb-0"
         style={{ flex: "0.32" }}
       >
         <ServiceDetailCard

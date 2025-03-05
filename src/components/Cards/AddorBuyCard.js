@@ -118,123 +118,92 @@ function AddorBuyCard({
     setQuantity(newQuantity);
   }, []);
   const handleAddOnUpdate = useCallback((addOn, operation, type) => {
-    setSelectedAddOns((prevAddOns) => {
-      const index = prevAddOns.findIndex(
-        (item) => item.Particulars === addOn.Particulars
-      );
+    console.log(addOn, "addOn", operation, type);
+    return new Promise((resolve) => {
+      setSelectedAddOns((prevAddOns) => {
+        console.log("Current Add-Ons:", prevAddOns);
+        const index = prevAddOns.findIndex(
+          (item) => item.Particulars === addOn.Particulars
+        );
+        console.log("Index found:", index);
 
-  
-      const minQty =
-        addOn.MinQty && !isNaN(addOn.MinQty) ? parseInt(addOn.MinQty, 10) : 1;
-  
-      const basePrice = parseFloat(addOn.Rates || addOn.rateInfo) || 0;
-  
-      if (type === "Package") {
-        if (operation === "add") {
-          if (index > -1) {
-            return prevAddOns; // ✅ Do nothing if package already exists
-          } else {
-            return [
-              {
-                ...addOn,
-                type,
-                quantity: 1, // ✅ Allow only one package
-                rateInfo: basePrice, // ✅ Set initial price
-              },
-            ];
+        const minQty =
+          addOn.MinQty && !isNaN(addOn.MinQty) ? parseInt(addOn.MinQty, 10) : 1;
+        const basePrice = parseFloat(addOn.Rates || addOn.rateInfo) || 0;
+
+        console.log("Type:", type, "Operation:", operation);
+
+        if (type === "Package") {
+          if (operation === "add") {
+            console.log("Adding package...");
+            if (index > -1) {
+              console.log(
+                "Package already exists, returning previous Add-Ons."
+              );
+              return prevAddOns; // ✅ Do nothing if package already exists
+            } else {
+              console.log("Adding new package:", addOn);
+              return [
+                {
+                  ...addOn,
+                  type,
+                  quantity: 1, // ✅ Allow only one package
+                  rateInfo: basePrice, // ✅ Set initial price
+                },
+              ];
+            }
+          } else if (operation === "remove") {
+            console.log("Removing package...");
+            return [];
           }
-        } else if (operation === "remove") {
-          return [];
-        }
-      } else {
-        if (operation === "add") {
-          if (index > -1) {
-            const updatedAddOns = [...prevAddOns];
-            updatedAddOns[index] = {
-              ...updatedAddOns[index],
-              type,
-              quantity: updatedAddOns[index].quantity + 1,
-            };
-            return updatedAddOns;
-          } else {
-            return [...prevAddOns, { ...addOn, type, quantity: minQty }];
-          }
-        } else if (operation === "remove") {
-          if (index > -1) {
-            const updatedAddOns = [...prevAddOns];
-            if (updatedAddOns[index].quantity > minQty) {
+        } else {
+          if (operation === "add") {
+            console.log("Adding non-package item...");
+            if (index > -1) {
+              const updatedAddOns = [...prevAddOns];
               updatedAddOns[index] = {
                 ...updatedAddOns[index],
                 type,
-                quantity: updatedAddOns[index].quantity - 1,
+                quantity: Math.max(updatedAddOns[index].quantity + 1, minQty),
               };
+              console.log("Updated Add-Ons:", updatedAddOns);
+              return updatedAddOns;
             } else {
-              updatedAddOns.splice(index, 1);
+              console.log("Adding new non-package item:", addOn);
+              return [...prevAddOns, { ...addOn, type, quantity: minQty }];
             }
-            return updatedAddOns;
+          } else if (operation === "remove") {
+            console.log("Removing non-package item...");
+            if (index > -1) {
+              const updatedAddOns = [...prevAddOns];
+              if (updatedAddOns[index].quantity > minQty) {
+                updatedAddOns[index] = {
+                  ...updatedAddOns[index],
+                  type,
+                  quantity: updatedAddOns[index].quantity - 1,
+                };
+                console.log(
+                  "Decreased quantity for Add-On:",
+                  updatedAddOns[index]
+                );
+              } else {
+                console.log(
+                  "Removing Add-On completely:",
+                  updatedAddOns[index]
+                );
+                updatedAddOns.splice(index, 1);
+              }
+              return updatedAddOns;
+            }
           }
         }
-      }
-      return prevAddOns;
+
+        resolve(prevAddOns);
+        return prevAddOns;
+      });
     });
   }, []);
-  
-
-  // const handleAddTocart = async () => {
-  //   const missingFields = [];
-  //   if (!dateInput) missingFields.push("Date");
-  //   if (!pincode) missingFields.push("Pin Code");
-  //   if (!formattedTime) missingFields.push("Time");
-
-  //   if (missingFields.length > 0) {
-  //     toast.warning(`${missingFields.join(", ")} is required.`);
-  //     return false;
-  //   }
-
-  //   if (auth?.isAuthenticated && auth?.role === "user") {
-  //     try {
-  //       console.log(basePrice, selectedAddOns);
-  //       await addTocart(
-  //         basePrice,
-  //         selectedAddOns,
-  //         dateInput,
-  //         formattedTime,
-  //         pincode
-  //       );
-  //       toast.success("Item added to the cart successfully.");
-  //       return true;
-  //     } catch (error) {
-  //       toast.error("Failed to Add To Cart. Please try again.");
-  //       console.error(error);
-  //       return false;
-  //     }
-  //   } else {
-  //     localStorage.setItem(
-  //       "addToCart",
-  //       JSON.stringify({
-  //         dateInput,
-  //         formattedTime,
-  //         pincode,
-  //         basePrice,
-  //         selectedAddOns,
-  //         serviceId,
-  //         packageId,
-  //       })
-  //     );
-  //     const currentPath = `${location.pathname}${location.search || ""}`;
-  //     if (!currentPath) {
-  //       navigate(internalRoutes.userLogin); 
-  //     } else {
-  //       navigate(
-  //         `${internalRoutes.userLogin}?redirect=${encodeURIComponent(
-  //           currentPath
-  //         )}`
-  //       );
-  //     }
-  //     return false;
-  //   }
-  // };
-
+  // console.log(selectedAddOns,);
 
   const handleAddTocart = async () => {
     const missingFields = [];
@@ -247,31 +216,43 @@ function AddorBuyCard({
       return false;
     }
   
-    // Add default AddOn if basePrice and selectedAddOns are empty
+    // Add default Add-On if basePrice and selectedAddOns are empty
     if (!basePrice && selectedAddOns.length === 0) {
       const defaultKey = keysToRender.find(
-        (key) => Array.isArray(renderPrice?.[key]) && renderPrice[key].length > 0
+        (key) =>
+          Array.isArray(renderPrice?.[key]) && renderPrice[key].length > 0
       );
   
-      if (defaultKey) {
-        const defaultAddOn = renderPrice[defaultKey][0];
-        const minQty =
-          defaultAddOn.MinQty && !isNaN(defaultAddOn.MinQty)
-            ? parseInt(defaultAddOn.MinQty, 10)
-            : 1;
-  
-        await new Promise((resolve) => {
-          handleAddOnUpdate(
-            { ...defaultAddOn, MinQty: minQty },
-            "add",
-            defaultKey
-          );
-          setTimeout(resolve, 0); // Wait for state update
-        });
+      if (!defaultKey || !renderPrice[defaultKey]?.length) {
+        toast.warning("No default add-on is available.");
+        return false;
       }
-    }
   
-    // Proceed with adding to cart
+      const defaultAddOn = renderPrice[defaultKey][0];
+      const isPackage = defaultKey === "Package"; // Define isPackage here
+  
+      // Add rateInfo and uom directly to defaultAddOn
+      defaultAddOn.rateInfo = isPackage
+        ? defaultAddOn.Rates
+        : defaultAddOn.Amount || defaultAddOn?.Rates;
+  
+      defaultAddOn.uom = isPackage
+        ? defaultAddOn.days
+        : defaultAddOn.Uom || defaultAddOn.UOM;
+  
+      const minQty =
+        defaultAddOn.MinQty && !isNaN(defaultAddOn.MinQty)
+          ? parseInt(defaultAddOn.MinQty, 10)
+          : 1;
+  
+      await handleAddOnUpdate(
+        { ...defaultAddOn, MinQty: minQty },
+        "add",
+        defaultKey
+      );
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
     if (auth?.isAuthenticated && auth?.role === "user") {
       try {
         await addTocart(
@@ -309,14 +290,13 @@ function AddorBuyCard({
     }
   };
   
-  
+
   const disablePastDates = ({ date }) => {
     const today = new Date();
     return date < new Date(today.setHours(0, 0, 0, 0));
   };
   useEffect(() => {
     if (packageIncartData) {
-      // If packageIncartData is available, populate the fields
       const formattedDate = new Date(
         packageIncartData?.date
       ).toLocaleDateString("en-US", {
@@ -337,22 +317,6 @@ function AddorBuyCard({
       setFormattedTime(formattedTime24Hour);
       setSelectedTime(period);
       setPincode(packageIncartData?.pincode);
-      // Handle selected sessions
-      // if (packageIncartData?.selectedSessions) {
-      //   console.log(
-      //     "Setting selectedSessions:",
-      //     packageIncartData.selectedSessions
-      //   );
-      //   setSelectedAddOns(
-      //     packageIncartData.selectedSessions.map((session) => ({
-      //       ...session,
-      //       quantity: session.quantity || 1, // Ensure a default quantity exists
-      //       totalPrice: (session.quantity || 1) * session.Rates, // Calculate initial total price
-      //     }))
-      //   );
-      // } else {
-      //   setSelectedAddOns([]);
-      // }
     } else {
       const storedAddToCart = JSON.parse(localStorage.getItem("addToCart"));
       if (storedAddToCart) {
@@ -594,7 +558,7 @@ function AddorBuyCard({
                           selectedAddOns.some(
                             (addon) => addon.type === "Package"
                           )
-                        } 
+                        }
                       />
                     );
                   })}

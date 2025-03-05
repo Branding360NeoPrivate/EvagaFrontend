@@ -27,6 +27,7 @@ import axios from "axios";
 function CheckOut() {
   const { auth } = useAuth();
   const history = useNavigate();
+  const { cart } = useSelector((state) => state.cart);
   const [allCoupon, setAllCoupon] = useState();
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [couponCode, setCouponCode] = useState(null);
@@ -50,10 +51,20 @@ function CheckOut() {
   const createOrderApi = useServices(orderApis.createUserOrder);
   const validateOrderApi = useServices(orderApis.valiDateUserOrder);
   const getUserProfileApi = useServices(userApi.getUserProfile);
+  const SuggestSimilarServicesApi = useServices(userApi.SuggestSimilarServices);
   const getUserdetailhandle = async () => {
     const response = await getUserProfileApi.callApi(userId);
     setUserData(response);
   };
+  const SuggestSimilarServicesApihandle = async () => {
+    const formdata = new FormData();
+    formdata.append("items", JSON.stringify(cart?.items));
+    const response = await SuggestSimilarServicesApi.callApi(formdata);
+    console.log(response);
+  };
+  useEffect(() => {
+    if (cart && userId) SuggestSimilarServicesApihandle();
+  }, [cart, userId]);
   useEffect(() => {
     if (userId) {
       getUserdetailhandle();
@@ -204,7 +215,7 @@ function CheckOut() {
       handleGetAllUserAddress();
     }
   }, [isEditingAddress, handleGetAllUserAddress]);
-  const { cart } = useSelector((state) => state.cart);
+
   useEffect(() => {
     if (userId && (!cart || cart.length === 0)) {
       dispatch(fetchUserCart({ userId })).then((response) => {
@@ -278,7 +289,7 @@ function CheckOut() {
           if (window.fbq && typeof window.fbq === "function") {
             window.fbq("track", "Purchase", {
               currency: currency || "INR",
-              value: amount / 100, 
+              value: amount / 100,
             });
           } else {
             console.warn("Facebook Pixel is not available");

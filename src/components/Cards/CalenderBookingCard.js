@@ -88,9 +88,10 @@ function CalenderBookingCard({ booking, getMonthlyBookedDates }) {
           <div className="grid grid-cols-7 w-full ">
             <div className="col-span-3 px-4 py-2 bg-white flex flex-col items-start justify-center text-primary font-medium rounded-md">
               <span className="flex justify-center items-center">
-                From: {new Date(booking.startDate).getDate()}{" "}
+                From:{new Date(booking.startDate).getUTCDate()}{" "}
                 {new Date(booking.startDate).toLocaleString("default", {
                   month: "short",
+                  timeZone: "UTC",
                 })}
               </span>
 
@@ -104,11 +105,13 @@ function CalenderBookingCard({ booking, getMonthlyBookedDates }) {
             </span>
             <div className="col-span-3 px-4 py-2 bg-white flex flex-col items-start justify-center text-primary font-medium rounded-md">
               <span className="flex justify-center items-center">
-                To: {new Date(booking.endDate || booking?.startDate).getDate()}{" "}
+                To:{" "}
+                {new Date(booking.endDate || booking?.startDate).getUTCDate()}{" "}
                 {new Date(booking.endDate || booking?.startDate).toLocaleString(
                   "default",
                   {
                     month: "short",
+                    timeZone: "UTC",
                   }
                 )}
               </span>

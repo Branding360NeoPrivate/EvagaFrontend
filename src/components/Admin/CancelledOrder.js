@@ -134,42 +134,113 @@ function CancelledOrder() {
       {modalType === "viewOrder" && (
         <>
         
-          <div className="w-full mx-auto p-6 bg-white ">
-          <h2 className="text-2xl font-bold mb-4 text-primary">Order Details</h2>
-          <div className="space-y-2">
-            <p><strong className="text-primary">Order ID:</strong> {oneOrder?.OrderId}</p>
-            <p><strong className="text-primary">Title:</strong> {oneOrder?.serviceDetails?.Title}</p>
-            <p><strong className="text-primary">SKU:</strong> {oneOrder?.serviceDetails?.SKU}</p>
-            <p><strong className="text-primary">Start Date:</strong> {new Date(oneOrder?.date).toLocaleDateString()}</p>
-            <p><strong className="text-primary">Time:</strong> {oneOrder?.time}</p>
-          </div>
-    
-          <h3 className="text-xl font-semibold mt-6 text-primary">User Details</h3>
-          <div className="space-y-2">
-            <p><strong className="text-primary">Name:</strong> {oneOrder?.userId?.name}</p>
-            <p><strong className="text-primary">Email:</strong> {oneOrder?.userId?.email}</p>
-          </div>
-    
-          <h3 className="text-xl font-semibold mt-6 text-primary">Address</h3>
-          <div className="space-y-2">
-            <p><strong className="text-primary">Full Address:</strong> {oneOrder?.address?.address}, {oneOrder?.address?.addressLine1}, {oneOrder?.address?.addressLine2}</p>
-            <p><strong className="text-primary">State:</strong> {oneOrder?.address?.state}</p>
-            <p><strong className="text-primary">Pin Code:</strong> {oneOrder?.address?.pinCode}</p>
-          </div>
-    
-          <h3 className="text-xl font-semibold mt-6 text-primary">Payment Details</h3>
-          <div className="space-y-2">
-            <p><strong className="text-primary">Method:</strong> {oneOrder?.paymentDetails?.method}</p>
-            {/* <p><strong>UPI ID:</strong> {oneOrder?.paymentDetails?.details}</p> */}
-            <p><strong className="text-primary">Status:</strong> {oneOrder?.paymentStatus}</p>
-          </div>
-    
-          <h3 className="text-xl font-semibold mt-6 text-primary">Discount & Coupons</h3>
-          <div className="space-y-2">
-            <p><strong className="text-primary">Coupon Code:</strong> {oneOrder?.appliedCouponAndDiscount?.code || "N/A"}</p>
-            <p><strong className="text-primary">Discount:</strong> ₹{oneOrder?.appliedCouponAndDiscount?.discount}</p>
-          </div>
-        </div>
+        <div className="w-full mx-auto p-6 bg-white ">
+              <h2 className="text-2xl font-bold mb-4 text-primary">
+                Order Details
+              </h2>
+              <div className="space-y-2">
+                <p>
+                  <strong className="text-primary">Order ID:</strong>{" "}
+                  {oneOrder?.OrderId}
+                </p>
+                <p>
+                  <strong className="text-primary">Title:</strong>{" "}
+                  {oneOrder?.serviceDetails?.Title}
+                </p>
+                <p>
+                  <strong className="text-primary">SKU:</strong>{" "}
+                  {oneOrder?.serviceDetails?.SKU}
+                </p>
+                <p>
+                  <strong className="text-primary">Start Date:</strong>{" "}
+                  {new Date(oneOrder?.date).toLocaleDateString()}
+                </p>
+                <p>
+                  <strong className="text-primary">Time:</strong>{" "}
+                  {oneOrder?.time}
+                </p>
+              </div>
+              <h3 className="text-xl font-semibold mt-6 text-primary">
+                User Details
+              </h3>
+              <div className="space-y-2">
+                <p>
+                  <strong className="text-primary">Name:</strong>{" "}
+                  {oneOrder?.userId?.name}
+                </p>
+                <p>
+                  <strong className="text-primary">Email:</strong>{" "}
+                  {oneOrder?.userId?.email}
+                </p>
+              </div>{" "}
+              <h3 className="text-xl font-semibold mt-6 text-primary">
+                Vendor Details
+              </h3>
+              <div className="space-y-2">
+                <p>
+                  <strong className="text-primary">Name:</strong>{" "}
+                  {oneOrder?.vendor?.name}
+                </p>
+                <p>
+                  <strong className="text-primary">Email:</strong>{" "}
+                  {oneOrder?.vendor?.email}
+                </p>{" "}
+                <p>
+                  <strong className="text-primary">Phone:</strong>{" "}
+                  {oneOrder?.vendor?.phoneNumber}
+                </p>
+              </div>
+              <h3 className="text-xl font-semibold mt-6 text-primary">
+                Address
+              </h3>
+              <div className="space-y-2">
+                <p>
+                  <strong className="text-primary">Full Address:</strong>{" "}
+                  {oneOrder?.address?.address},{" "}
+                  {oneOrder?.address?.addressLine1},{" "}
+                  {oneOrder?.address?.addressLine2}
+                </p>
+                <p>
+                  <strong className="text-primary">State:</strong>{" "}
+                  {oneOrder?.address?.state}
+                </p>
+                <p>
+                  <strong className="text-primary">Pin Code:</strong>{" "}
+                  {oneOrder?.address?.pinCode}
+                </p>
+              </div>
+              <h3 className="text-xl font-semibold mt-6 text-primary">
+                Payment Details
+              </h3>
+              <div className="space-y-2">
+                <p>
+                  <strong className="text-primary">Method:</strong>{" "}
+                  {oneOrder?.paymentDetails?.method}
+                </p>
+                {/* <p><strong>UPI ID:</strong> {oneOrder?.paymentDetails?.details}</p> */}
+                <p>
+                  <strong className="text-primary">Status:</strong>{" "}
+                  {oneOrder?.paymentStatus}
+                </p>{" "}
+                <p>
+                  <strong className="text-primary">Payment Id:</strong>{" "}
+                  {oneOrder?.razorPayOrderId}
+                </p>
+              </div>
+              <h3 className="text-xl font-semibold mt-6 text-primary">
+                Discount & Coupons
+              </h3>
+              <div className="space-y-2">
+                <p>
+                  <strong className="text-primary">Coupon Code:</strong>{" "}
+                  {oneOrder?.appliedCouponAndDiscount?.code || "N/A"}
+                </p>
+                <p>
+                  <strong className="text-primary">Discount:</strong> ₹
+                  {oneOrder?.appliedCouponAndDiscount?.discount}
+                </p>
+              </div>
+            </div>
         <PriceBreakdown
           totalPrice={oneOrder.totalPrice}
           gstAmount={oneOrder?.gstAmount}

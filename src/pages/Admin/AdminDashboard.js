@@ -36,6 +36,7 @@ import VendorReport from "../../components/Admin/VendorReport";
 import CustomerReport from "../../components/Admin/CustomerReport";
 import BookingReports from "../../components/Admin/BookingReports";
 import PaymentFinancialReports from "../../components/Admin/PaymentFinancialReports";
+import AdminDashBoardchart from "../../components/Admin/AdminDashBoardchart";
 
 const AdminDashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState("Home");
@@ -229,6 +230,7 @@ const AdminDashboard = () => {
         {selectedMenu === "Customer Reports" && <CustomerReport />}
         {selectedMenu === "Booking Reports" && <BookingReports />}
         {selectedMenu === "Payment Financial Reports" && <PaymentFinancialReports />}
+        {selectedMenu === "Home" && <AdminDashBoardchart />}
       </div>
     </div>
   );

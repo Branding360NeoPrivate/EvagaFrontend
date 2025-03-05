@@ -38,14 +38,14 @@ function ProfileCard({
             onClick={() => history(internalRoutes.vendorProfile)}
           >
             {" "}
-            Complete your profile
+            Complete your Registration
           </p>
         ) : (
           <p
             className="text-lg font-normal text-primary cursor-pointer"
             onClick={() => history(internalRoutes.vendorProfile)}
           >
-            Profile is completed
+            Registration is completed
           </p>
         )}
         <span className="w-full flex items-end justify-end text-primary">

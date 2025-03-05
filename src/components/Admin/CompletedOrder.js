@@ -133,7 +133,7 @@ function CompletedOrder() {
       >
         {modalType === "viewOrder" && (
           <>
-            <div className="w-full mx-auto p-6 bg-white ">
+               <div className="w-full mx-auto p-6 bg-white ">
               <h2 className="text-2xl font-bold mb-4 text-primary">
                 Order Details
               </h2>
@@ -159,7 +159,6 @@ function CompletedOrder() {
                   {oneOrder?.time}
                 </p>
               </div>
-
               <h3 className="text-xl font-semibold mt-6 text-primary">
                 User Details
               </h3>
@@ -172,8 +171,24 @@ function CompletedOrder() {
                   <strong className="text-primary">Email:</strong>{" "}
                   {oneOrder?.userId?.email}
                 </p>
+              </div>{" "}
+              <h3 className="text-xl font-semibold mt-6 text-primary">
+                Vendor Details
+              </h3>
+              <div className="space-y-2">
+                <p>
+                  <strong className="text-primary">Name:</strong>{" "}
+                  {oneOrder?.vendor?.name}
+                </p>
+                <p>
+                  <strong className="text-primary">Email:</strong>{" "}
+                  {oneOrder?.vendor?.email}
+                </p>{" "}
+                <p>
+                  <strong className="text-primary">Phone:</strong>{" "}
+                  {oneOrder?.vendor?.phoneNumber}
+                </p>
               </div>
-
               <h3 className="text-xl font-semibold mt-6 text-primary">
                 Address
               </h3>
@@ -193,7 +208,6 @@ function CompletedOrder() {
                   {oneOrder?.address?.pinCode}
                 </p>
               </div>
-
               <h3 className="text-xl font-semibold mt-6 text-primary">
                 Payment Details
               </h3>
@@ -206,9 +220,12 @@ function CompletedOrder() {
                 <p>
                   <strong className="text-primary">Status:</strong>{" "}
                   {oneOrder?.paymentStatus}
+                </p>{" "}
+                <p>
+                  <strong className="text-primary">Payment Id:</strong>{" "}
+                  {oneOrder?.razorPayOrderId}
                 </p>
               </div>
-
               <h3 className="text-xl font-semibold mt-6 text-primary">
                 Discount & Coupons
               </h3>

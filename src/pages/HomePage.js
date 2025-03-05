@@ -21,17 +21,19 @@ import Cookies from "js-cookie";
 import { addWishlist } from "../context/redux/slices/wishlistSlice";
 import { useAuth } from "../context/AuthContext";
 import userApi from "../services/userApi";
+import RecentlyViewedCard from "../components/Cards/RecentlyViewedCard";
 function Home() {
   const { banner, userBanner } = useSelector((state) => state.banner);
   const dispatch = useDispatch();
   const { categories } = useSelector((state) => state.category);
   const { allPackages } = useSelector((state) => state.package);
   const getAllPackages = useServices(packageApis.getAllPackage);
+  const GetRecentViewpackageApi = useServices(userApi.GetRecentViewpackage);
   const { allWishlist } = useSelector((state) => state.wishlist);
   const history = useNavigate();
   const userId = Cookies.get("userId");
   const { auth } = useAuth();
-
+  const [recentView, setRecentView] = useState([]);
   const wishlist = useServices(userApi.Wishlist);
 
   const handleGetAllPackages = async () => {
@@ -43,6 +45,16 @@ function Home() {
     const response = await wishlist.callApi(userId);
     dispatch(addWishlist(response?.wishlist));
   };
+  const GetRecentViewpackageApiHandle = async () => {
+    const response = await GetRecentViewpackageApi.callApi(userId);
+    setRecentView(response ? response?.recentlyViewed : []);
+    console.log(response);
+  };
+  useEffect(() => {
+    if (userId) {
+      GetRecentViewpackageApiHandle();
+    }
+  }, [userId]);
   useEffect(() => {
     if (auth?.isAuthenticated && auth?.role === "user") {
       handleGetWishList(userId);
@@ -64,12 +76,11 @@ function Home() {
 
   useEffect(() => {
     if (!userBanner || userBanner.length === 0) {
-      console.log('banner');
-      
+      console.log("banner");
+
       dispatch(fetchUserBanner());
     }
   }, [dispatch, userBanner]);
-
 
   return (
     <motion.div
@@ -147,8 +158,9 @@ function Home() {
                       ?.Amount ||
                     service.serviceDetails?.values?.["SessionLength"]?.[0]
                       ?.Amount ||
-                    service.serviceDetails?.values?.["SessionLength&Pricing"]?.[0]
-                      ?.Amount ||
+                    service.serviceDetails?.values?.[
+                      "SessionLength&Pricing"
+                    ]?.[0]?.Amount ||
                     service.serviceDetails?.values?.["QtyPricing"]?.[0]?.Rates
                   }
                   rating={0}
@@ -171,7 +183,66 @@ function Home() {
           </HorizontalScroll>
         </div>
       </div>
-  
+     {recentView && <div className="w-[95%]  mx-12 gap-4">
+        <span className="w-full flex items-center justify-between">
+          <h2 className="sub_heading">Recently Viewed</h2>
+        </span>
+        <div className="flex flex-row gap-5 overflow-x-scroll no-scrollbar box-border">
+          <HorizontalScroll speed={1} className="flex flex-row gap-8">
+            {recentView?.map((service, index) => {
+              const imageUrl =
+                (Array.isArray(service?.CoverImage)
+                  ? service?.CoverImage[0]
+                  : service?.CoverImage) ||
+                (Array.isArray(service?.ProductImage)
+                  ? service?.ProductImage[0]
+                  : service?.ProductImage);
+
+              const popularimage = imageUrl?.startsWith("service/")
+                ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
+                : imageUrl;
+
+              return (
+                <RecentlyViewedCard
+                  key={service?.serviceDetails?._id}
+                  popularimage={popularimage}
+                  title={
+                    service?.Title ||
+                    service?.VenueName ||
+                    service?.FoodTruckName
+                  }
+                  category={service?.CategoryName}
+                  price={
+                    service?.price ||
+                    service?.Pricing ||
+                    service?.Price ||
+                    service?.Package?.[0]?.Rates ||
+                    service?.["OrderQuantity&Pricing"]?.[0]?.Rates ||
+                    service?.["Duration&Pricing"]?.[0]?.Amount ||
+                    service?.["SessionLength"]?.[0]?.Amount ||
+                    service?.["SessionLength&Pricing"]?.[0]?.Amount ||
+                    service?.["QtyPricing"]?.[0]?.Rates
+                  }
+                  rating={0}
+                  reviews={0}
+                  serviceId={service?.serviceId}
+                  packageId={service?.packageId}
+                  onClick={() =>
+                    history(
+                      `${internalRoutes.SinglePackage}/${service?.serviceId}/${service?.packageId}`
+                    )
+                  }
+                  isFavourite={allWishlist?.some(
+                    (item) =>
+                      item._id === service?.serviceId &&
+                      item.packageDetails?._id === service?.packageId
+                  )}
+                />
+              );
+            })}
+          </HorizontalScroll>
+        </div>
+      </div>}
     </motion.div>
   );
 }

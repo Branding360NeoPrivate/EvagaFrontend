@@ -84,6 +84,9 @@ const apiEndpoints = {
     getUserCart: (userId) => `cart/get-user-cart/${userId}`,
     removeFromCart: (userId, packageId) =>
       `cart/remove-item-from-user-cart/${userId}/${packageId}`,
+    getRecentViewpackage: (userId) => `recentView/get-recent-view/${userId}`,
+    addRecentView: `recentView/add-recent-view`,
+    suggestSimilarServices: `cart/suggestSimilarServices`,
   },
   category: {
     add: "category",
@@ -163,6 +166,7 @@ const apiEndpoints = {
       `/adminAction/deleteVendorService/${serviceId}/${PackageId}`,
     getAllVendorWithNumberOfService: `/adminAction/getAllVendorWithNumberOfService`,
     getAllUsersWithOrderDetails: `/adminAction/getAllUsersWithOrderDetails`,
+    getAdminDashboardDataHandle: `/adminAction/getAdminDashboardDataHandle`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",

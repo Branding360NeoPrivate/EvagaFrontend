@@ -90,9 +90,10 @@ function VendorserviceTable({
     });
     console.log(response, "response");
   };
-  const handleAccpetorRejectpackage = async (status) => {
+  const handleAccpetorRejectpackage = async (status, packageStatus) => {
     const formData = new FormData();
     formData.append("status", status);
+    formData.append("packageStatus", packageStatus);
     formData.append("remarks", packageCredentials.remarks);
     try {
       const response = await apiClient.post(
@@ -298,7 +299,6 @@ function VendorserviceTable({
     ) : null;
   };
 
-
   if (status === "loading") {
     return <div className="text-center py-10">Loading vendor data...</div>;
   }
@@ -310,9 +310,13 @@ function VendorserviceTable({
   return (
     <div className="w-full px-6 py-4 bg-white shadow-md rounded-lg">
       {/* Header Section */}
-      <button onClick={()=>onMenuSelect("Vendor")} className="flex items-center justfiy-center gap-1 text-textGray font-medium"><IoMdArrowRoundBack /> back</button>
+      <button
+        onClick={() => onMenuSelect("Vendor")}
+        className="flex items-center justfiy-center gap-1 text-textGray font-medium"
+      >
+        <IoMdArrowRoundBack /> back
+      </button>
       <div className="flex justify-between items-center mb-4">
-        
         <h2 className="text-lg font-bold">Vendor Services</h2>
         <div className="flex gap-4 items-center">
           <button
@@ -406,9 +410,11 @@ function VendorserviceTable({
         <Fade in={open}>
           <Box sx={style} className="w-[90%] sm:w-[80%]">
             <div className="flex items-center justify-center flex-col w-full p-4 gap-2">
-              <span className="w-full flex items-center justify-end text-textGray text-2xl cursor-pointer"  onClick={handleClose}>
-
-            <IoMdCloseCircleOutline className="float-right"/>
+              <span
+                className="w-full flex items-center justify-end text-textGray text-2xl cursor-pointer"
+                onClick={handleClose}
+              >
+                <IoMdCloseCircleOutline className="float-right" />
               </span>
               <div className="flex items-center justify-center  gap-4 w-full">
                 <span
@@ -464,7 +470,9 @@ function VendorserviceTable({
                   <h3 className="text-primary font-bold text-xl">
                     Created At :
                   </h3>
-                  <p className="text-textGray">{formatDate(serviceValue?.createdAt)}</p>
+                  <p className="text-textGray">
+                    {formatDate(serviceValue?.createdAt)}
+                  </p>
                 </span>
                 <span
                   className="flex items-center justify-start gap-2 w-full"
@@ -557,7 +565,7 @@ function VendorserviceTable({
                         ...packageCredentials,
                         status: true,
                       }),
-                      handleAccpetorRejectpackage(true),
+                      handleAccpetorRejectpackage(true, "Verified"),
                     ]}
                   >
                     Accept
@@ -570,7 +578,7 @@ function VendorserviceTable({
                         ...packageCredentials,
                         status: false,
                       }),
-                      handleAccpetorRejectpackage(false),
+                      handleAccpetorRejectpackage(false, "Rejected"),
                     ]}
                   >
                     Reject
