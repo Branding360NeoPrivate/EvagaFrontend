@@ -57,7 +57,9 @@ function UserOrderDetailPage() {
           <span className="flex items-center  font-semibold gap-2">
             Address
             <p className="text-textGray font-medium">
-              302, Ishwara Layout, Indiranagar, Bengaluru, Karnataka-500036
+              {orderDetail?.address?.name} {orderDetail?.address?.address}{" "}
+              {orderDetail?.address?.addressLine1}{" "}
+              {orderDetail?.address?.addressLine2}
             </p>
           </span>
         </div>
@@ -91,22 +93,43 @@ function UserOrderDetailPage() {
             </span>{" "}
             <span className="flex items-center  font-semibold gap-2">
               Time of Booking :
-              <p className="text-textGray font-medium"> 07:45: 13 PM</p>
-            </span>{" "}
+              <p className="text-textGray font-medium">
+                {new Date(orderDetail?.updatedAt).toLocaleString("en-US", {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                  timeZone: "UTC",
+                })}
+              </p>
+            </span>
             <span className="flex items-center  font-semibold gap-2">
-              Payment Status :{" "}
-              <p className="text-textGray font-medium"> Partially Paid</p>
-            </span>{" "}
+              Payment Status :
+              <p className="text-textGray font-medium">
+                {" "}
+                {orderDetail?.partialPayments?.length > 0
+                  ? "Partially Paid"
+                  : "Full Paid"}
+              </p>
+            </span>
             <span className="flex items-center  font-semibold gap-2">
-              Payment Mode : <p className="text-textGray font-medium"> UPI</p>
-            </span>{" "}
+              Payment Mode :{" "}
+              <p className="text-textGray font-medium">
+                {" "}
+                {orderDetail?.paymentDetails?.method}
+              </p>
+            </span>
             <span className="flex items-center  font-semibold gap-2">
-              Amount Due: :{" "}
-              <p className="text-textGray font-medium"> ₹50,000</p>
+              Amount Due: :
+              <p className="text-textGray font-medium">
+                {" "}
+                ₹{orderDetail?.totalAmount?.toLocaleString()}
+              </p>
             </span>{" "}
             <span className="flex items-center  font-semibold gap-2">
               Trans ID :{" "}
-              <p className="text-textGray font-medium"> 1132332355</p>
+              <p className="text-textGray font-medium">
+                {" "}
+                {orderDetail?.razorPayOrderId}
+              </p>
             </span>
           </div>
         </div>
@@ -169,7 +192,6 @@ function UserOrderDetailPage() {
           </h5>
         </span>
         <div className="grid grid-cols-1 gap-2 w-full text-textSecondary">
-        
           {orderDetail?.selectedSessions?.length > 0 && (
             <div className="flex flex-col gap-2">
               <span className="flex items-center justify-start font-semibold gap-2">

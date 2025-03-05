@@ -24,6 +24,8 @@ import orderApis from "../services/orderApis";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import PaymentOptions from "../utils/PaymentOptions";
 import axios from "axios";
+import RecentlyViewedCard from "../components/Cards/RecentlyViewedCard";
+import HorizontalScroll from "../utils/HorizontalScroll";
 function CheckOut() {
   const { auth } = useAuth();
   const history = useNavigate();
@@ -56,10 +58,12 @@ function CheckOut() {
     const response = await getUserProfileApi.callApi(userId);
     setUserData(response);
   };
+  const [suggestions, setSuggestions] = useState([]);
   const SuggestSimilarServicesApihandle = async () => {
     const formdata = new FormData();
     formdata.append("items", JSON.stringify(cart?.items));
     const response = await SuggestSimilarServicesApi.callApi(formdata);
+    setSuggestions(response?.suggestions ?? []);
     console.log(response);
   };
   useEffect(() => {
@@ -443,6 +447,66 @@ function CheckOut() {
                     />
                   );
                 })}
+              </div>
+              <div className="flex items-start justify-start flex-col gap-2">
+                <h3 className="text-primary font-semibold text-xl">
+                  Recommended
+                </h3>
+                <div className="flex flex-row gap-5 overflow-x-scroll no-scrollbar box-border">
+          <HorizontalScroll speed={1} className="flex flex-row gap-8">
+            {suggestions?.map((service, index) => {
+              const imageUrl =
+                (Array.isArray(service?.CoverImage)
+                  ? service?.CoverImage[0]
+                  : service?.CoverImage) ||
+                (Array.isArray(service?.ProductImage)
+                  ? service?.ProductImage[0]
+                  : service?.ProductImage);
+
+              const popularimage = imageUrl?.startsWith("service/")
+                ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
+                : imageUrl;
+
+              return (
+                <RecentlyViewedCard
+                  key={service?.serviceDetails?._id}
+                  popularimage={popularimage}
+                  title={
+                    service?.Title ||
+                    service?.VenueName ||
+                    service?.FoodTruckName
+                  }
+                  category={service?.CategoryName}
+                  price={
+                    service?.price ||
+                    service?.Pricing ||
+                    service?.Price ||
+                    service?.Package?.[0]?.Rates ||
+                    service?.["OrderQuantity&Pricing"]?.[0]?.Rates ||
+                    service?.["Duration&Pricing"]?.[0]?.Amount ||
+                    service?.["SessionLength"]?.[0]?.Amount ||
+                    service?.["SessionLength&Pricing"]?.[0]?.Amount ||
+                    service?.["QtyPricing"]?.[0]?.Rates
+                  }
+                  rating={0}
+                  reviews={0}
+                  serviceId={service?.serviceId}
+                  packageId={service?.packageId}
+                  onClick={() =>
+                    history(
+                      `${internalRoutes.SinglePackage}/${service?.serviceId}/${service?.packageId}`
+                    )
+                  }
+                  // isFavourite={allWishlist?.some(
+                  //   (item) =>
+                  //     item._id === service?.serviceId &&
+                  //     item.packageDetails?._id === service?.packageId
+                  // )}
+                />
+              );
+            })}
+          </HorizontalScroll>
+        </div>
               </div>
             </div>
           )}

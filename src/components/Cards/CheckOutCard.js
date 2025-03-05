@@ -30,7 +30,7 @@ function CheckOutCard({
      <img
        src={image}
        alt={title}
-       className="object-cover rounded-lg h-auto w-full md:w-[12rem] md:h-[10rem]"
+       className="object-cover rounded-lg  w-full h-[10rem] md:w-[12rem] md:h-[10rem]"
        // style={{
        //   width: "12rem",
        //   height: "10rem",

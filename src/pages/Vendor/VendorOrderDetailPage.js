@@ -29,12 +29,12 @@ function VendorOrderDetailPage() {
             Order ID:
             <p className="text-textGray font-medium"> {orderDetail?.OrderId}</p>
           </span>
-        <span className="flex items-center  font-semibold gap-2">
-        <h5 className="font-semibold text-2xl">
-            {orderDetail?.extractedDetails?.Title}
-          </h5>,
-          <p>Sku Code: {orderDetail?.extractedDetails?.SKU}</p>
-        </span>
+          <span className="flex items-center  font-semibold gap-2">
+            <h5 className="font-semibold text-2xl">
+              {orderDetail?.extractedDetails?.Title}
+            </h5>
+            ,<p>Sku Code: {orderDetail?.extractedDetails?.SKU}</p>
+          </span>
         </div>
         <div className="flex items-center justify-between w-full text-primary">
           <div className="flex items-center justify-between gap-4">
@@ -92,14 +92,27 @@ function VendorOrderDetailPage() {
             </span>{" "}
             <span className="flex items-center  font-semibold gap-2">
               Time of Booking :
-              <p className="text-textGray font-medium"> 07:45: 13 PM</p>
+              <p className="text-textGray font-medium">   {new Date(orderDetail?.updatedAt).toLocaleString("en-US", {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                  timeZone: "UTC",
+                })}</p>
             </span>{" "}
             <span className="flex items-center  font-semibold gap-2">
               Payment Status :{" "}
-              <p className="text-textGray font-medium"> Partially Paid</p>
+              <p className="text-textGray font-medium">
+                {" "}
+                {orderDetail?.partialPayments?.length > 0
+                  ? "Partially Paid"
+                  : "Full Paid"}
+              </p>
             </span>{" "}
             <span className="flex items-center  font-semibold gap-2">
-              Payment Mode : <p className="text-textGray font-medium"> UPI</p>
+              Payment Mode :{" "}
+              <p className="text-textGray font-medium">
+                {" "}
+                {orderDetail?.paymentDetails?.method}
+              </p>
             </span>{" "}
             <span className="flex items-center  font-semibold gap-2">
               Amount Due: :{" "}

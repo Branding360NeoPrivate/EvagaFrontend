@@ -187,7 +187,7 @@ function SinglePackage() {
           selectedUrl={selectedImage}
           onMediaClick={handleImageClick}
         />
-        <span className="pl-[22%]">
+        <span className="pl-[5%] md:pl-[22%]">
           <h3 className="text-normal font-medium text-primary">
             About the Service
           </h3>

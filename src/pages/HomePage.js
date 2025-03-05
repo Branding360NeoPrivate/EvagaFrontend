@@ -183,7 +183,7 @@ function Home() {
           </HorizontalScroll>
         </div>
       </div>
-     {recentView && <div className="w-[95%]  mx-12 gap-4">
+     {recentView?.length>0 && <div className="w-[95%]  mx-12 gap-4">
         <span className="w-full flex items-center justify-between">
           <h2 className="sub_heading">Recently Viewed</h2>
         </span>
