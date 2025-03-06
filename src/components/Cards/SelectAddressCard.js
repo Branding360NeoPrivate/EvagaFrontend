@@ -32,6 +32,8 @@ export const SelectAddressCard = ({
             Pin Code: {address?.pinCode}
           </p>
           <p className="text-normal text-textGray">State: {address?.state}</p>
+          <p className="text-normal text-textGray">Phone: {address?.Phone}</p>
+          <p className="text-normal text-textGray">Alternate Phone: {address?.alternatePhone}</p>
         </span>
       </div>
       <span className="flex items-center justify-center gap-2 ">

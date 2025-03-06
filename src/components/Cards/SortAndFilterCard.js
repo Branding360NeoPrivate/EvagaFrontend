@@ -43,13 +43,13 @@ function SortandFilterCard({
       </div>
       <div className="flex flex-row">
         <label
-          className="mr-2 flex flex-row text-primary text-xl items-center gap-2 cursor-pointer"
+          className="mr-2 flex flex-row text-primary text-normal md:text-xl items-center gap-2 cursor-pointer"
           onClick={() =>
             setSortValue((val) => (val === "asc" ? "desc" : "asc"))
           }
         >
           Sort By{" "}
-          <LuArrowDownUp className="font-semibold text-primary text-2xl" />
+          <LuArrowDownUp className="font-semibold text-primary text-xl" />
         </label>
       </div>
     </div>

@@ -175,7 +175,7 @@ function CustomerService() {
   }, [userId]); 
 
   return (
-    <div className="flex items-start justify-between px-[2%] py-[2%] w-full">
+    <div className="flex flex-col md:flex-row items-start justify-between gap-5 px-5 py-5 md:px-[2%] md:py-[2%] w-full">
       <div className="flex-[0.28] flex flex-col gap-2">
         <h3 className="text-primary text-xl font-semibold">Evaga Support</h3>
         <hr />
@@ -240,7 +240,7 @@ function CustomerService() {
         </p>
         <hr />
       </div>
-      <div className="flex-[0.67]">
+      <div className=" flex-1 md:flex-[0.67] w-full">
         {activeTab === "nonOrderRelQry" && (
           <NonOrderRelatedQuery saveForm={CreateQueryApiHandle} />
         )}

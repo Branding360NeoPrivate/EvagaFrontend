@@ -11,6 +11,7 @@ import userApi from "../services/userApi";
 import Cookies from "js-cookie";
 import { fetchUserCart } from "../context/redux/slices/cartSlice";
 import { toast } from "react-toastify";
+import BackButton from "../utils/globalBackButton";
 function SinglePackage() {
   const userId = Cookies.get("userId");
   const { serviceId, packageId } = useParams();
@@ -46,7 +47,7 @@ function SinglePackage() {
       AddRecentViewApiHandle();
     }
   }, [userId, packageId, serviceId]);
-  
+
   const handlegetOnePackage = async () => {
     const response = await getAllPackages.callApi(serviceId, packageId);
     setSinglePageData(response && response?.data);
@@ -166,7 +167,6 @@ function SinglePackage() {
     isPackageInCart(cart, serviceId, packageId);
   }, [serviceId, packageId, cart]);
 
-
   return (
     <motion.div
       className="w-full flex lg:flex-row flex-col  pb-4 items-start justify-between px-5 lg:px-6 py-4"
@@ -182,12 +182,13 @@ function SinglePackage() {
         className=" flex justify-start items-start flex-col min-w-[300px]"
         style={{ flex: "0.35" }}
       >
+        <BackButton />
         <ImageNavigationCard
           mediaUrls={images}
           selectedUrl={selectedImage}
           onMediaClick={handleImageClick}
         />
-        <span className="pl-[5%] md:pl-[22%]">
+        <span className="pl-[5%] md:pl-[22%] pt-2">
           <h3 className="text-normal font-medium text-primary">
             About the Service
           </h3>

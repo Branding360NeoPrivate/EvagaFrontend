@@ -14,6 +14,7 @@ import { internalRoutes } from "../utils/internalRoutes";
 import { motion } from "framer-motion";
 import { FaFilter } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
+import BackButton from "../utils/globalBackButton";
 function SearchResultPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -198,7 +199,8 @@ function SearchResultPage() {
           <FaFilter size={24} />
         </button>
         <div className="flex flex-col w-full lg:w-3/4 mt-6">
-          <div className="w-full px-4 pt-2">
+          <div className="w-full px-4 pt-2 flex items-center justify-between ">
+            <BackButton />
             <SortandFilterCard
               activeFilters={activeFilters}
               setActiveFilters={setActiveFilters}
@@ -213,16 +215,16 @@ function SearchResultPage() {
               {searchResult?.length >= 0 ? (
                 searchResult.map((item) => {
                   const imageUrl =
-                (Array.isArray(item.serviceDetails?.values?.CoverImage)
-                  ? item.serviceDetails?.values?.CoverImage[0]
-                  : item.serviceDetails?.values?.CoverImage) ||
-                (Array.isArray(item.serviceDetails?.values?.ProductImage)
-                  ? item.serviceDetails?.values?.ProductImage[0]
-                  : item.serviceDetails?.values?.ProductImage);
+                    (Array.isArray(item.serviceDetails?.values?.CoverImage)
+                      ? item.serviceDetails?.values?.CoverImage[0]
+                      : item.serviceDetails?.values?.CoverImage) ||
+                    (Array.isArray(item.serviceDetails?.values?.ProductImage)
+                      ? item.serviceDetails?.values?.ProductImage[0]
+                      : item.serviceDetails?.values?.ProductImage);
 
-              const popularimage = imageUrl?.startsWith("service/")
-                ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
-                : imageUrl;
+                  const popularimage = imageUrl?.startsWith("service/")
+                    ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
+                    : imageUrl;
                   return (
                     <ProductDisplayCard
                       key={item?.serviceDetails?._id || item?.title}

@@ -68,7 +68,7 @@ function ProductDisplayCard({
       <img
         src={image}
         alt={title}
-        className=" w-full lg:w-[30%] lg:h-[15rem] rounded-lg object-fit aspect-w-16 aspect-h-9"
+        className=" w-full lg:w-[30%] h-[13rem] lg:h-[15rem] rounded-lg object-fit aspect-w-16 aspect-h-9"
         onClick={onClick}
       />
       <div className="w-full flex flex-col my-4" onClick={onClick}>
@@ -109,16 +109,16 @@ function ProductDisplayCard({
         </div>
       </div>
       {/* Price */}
-      <div className="flex flex-col lg:items-end justify-between lg:w-[20%] lg:pr-4 pt-4">
+      <div className="flex flex-row-reverse md:flex-col lg:items-end justify-between lg:w-[20%] lg:pr-4 pt-4">
         <Wishlist
           isInWishlist={isFavourite}
           onWishlistToggle={() => toggleWishlistHandle(userId)}
         />
-        <div>
-        <div className="text-xl font-medium text-primary pt-2 pr-4 justify-start">
+        <div className="flex flex-row-reverse md:block gap-2 md:gap-0">
+        <div className="text-normal font-medium text-primary md:pt-2 pr-4 justify-start">
             Starting
           </div>
-          <div className="text-2xl font-bold text-primary mb-4">
+          <div className="text-normal font-bold text-primary mb-4">
             {formatCurrency(
               Number(
                 eventData?.values?.Price ||

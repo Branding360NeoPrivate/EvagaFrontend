@@ -26,6 +26,7 @@ import PaymentOptions from "../utils/PaymentOptions";
 import axios from "axios";
 import RecentlyViewedCard from "../components/Cards/RecentlyViewedCard";
 import HorizontalScroll from "../utils/HorizontalScroll";
+import BackButton from "../utils/globalBackButton";
 function CheckOut() {
   const { auth } = useAuth();
   const history = useNavigate();
@@ -106,6 +107,8 @@ function CheckOut() {
       formData.append("City", data?.City);
       formData.append("state", data?.State);
       formData.append("pinCode", data?.Pincode);
+      formData.append("Phone", data?.Phone);
+      formData.append("alternatePhone", data?.alternatePhone);
 
       const response = await addUserAddress.callApi(userId, formData);
 
@@ -136,7 +139,8 @@ function CheckOut() {
       formData.append("City", data?.City);
       formData.append("state", data?.State);
       formData.append("pinCode", data?.Pincode);
-
+      formData.append("Phone", data?.Phone);
+      formData.append("alternatePhone", data?.alternatePhone);
       const response = await updateOneAddress.callApi(
         selectedAddressId,
         formData
@@ -165,6 +169,9 @@ function CheckOut() {
     setValueEditAddress("City", response?.addresses.City || "");
     setValueEditAddress("State", response?.addresses.state || "");
     setValueEditAddress("Pincode", response?.addresses.pinCode || "");
+    setValueEditAddress("Pincode", response?.addresses.pinCode || "");
+    setValueEditAddress("Phone", response?.addresses.Phone || "");
+    setValueEditAddress("alternatePhone", response?.addresses.alternatePhone || "");
   };
   const handleDeleteOneUserAddress = async () => {
     const response = await deleteOneAddress.callApi(selectedAddressId);
@@ -377,6 +384,9 @@ function CheckOut() {
     <>
       <div className="w-full mt-5 md:mt-auto px-[2.5%] py-[2%] flex flex-col md:flex-row gap-4 justify-between">
         <div className="flex-1 md:flex-[0.72] flex flex-col gap-4 w-full">
+          <div className="flex items-start justify-start">
+            {!isEditingAddress && <BackButton />}
+          </div>
           {isEditingAddress ? (
             <div className="flex flex-col gap-4">
               <span
@@ -453,60 +463,61 @@ function CheckOut() {
                   Recommended
                 </h3>
                 <div className="flex flex-row gap-5 overflow-x-scroll no-scrollbar box-border">
-          <HorizontalScroll speed={1} className="flex flex-row gap-8">
-            {suggestions?.map((service, index) => {
-              const imageUrl =
-                (Array.isArray(service?.CoverImage)
-                  ? service?.CoverImage[0]
-                  : service?.CoverImage) ||
-                (Array.isArray(service?.ProductImage)
-                  ? service?.ProductImage[0]
-                  : service?.ProductImage);
+                  <HorizontalScroll speed={1} className="flex flex-row gap-8">
+                    {suggestions?.map((service, index) => {
+                      const imageUrl =
+                        (Array.isArray(service?.CoverImage)
+                          ? service?.CoverImage[0]
+                          : service?.CoverImage) ||
+                        (Array.isArray(service?.ProductImage)
+                          ? service?.ProductImage[0]
+                          : service?.ProductImage);
 
-              const popularimage = imageUrl?.startsWith("service/")
-                ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
-                : imageUrl;
+                      const popularimage = imageUrl?.startsWith("service/")
+                        ? process.env.REACT_APP_API_Aws_Image_BASE_URL +
+                          imageUrl
+                        : imageUrl;
 
-              return (
-                <RecentlyViewedCard
-                  key={service?.serviceDetails?._id}
-                  popularimage={popularimage}
-                  title={
-                    service?.Title ||
-                    service?.VenueName ||
-                    service?.FoodTruckName
-                  }
-                  category={service?.CategoryName}
-                  price={
-                    service?.price ||
-                    service?.Pricing ||
-                    service?.Price ||
-                    service?.Package?.[0]?.Rates ||
-                    service?.["OrderQuantity&Pricing"]?.[0]?.Rates ||
-                    service?.["Duration&Pricing"]?.[0]?.Amount ||
-                    service?.["SessionLength"]?.[0]?.Amount ||
-                    service?.["SessionLength&Pricing"]?.[0]?.Amount ||
-                    service?.["QtyPricing"]?.[0]?.Rates
-                  }
-                  rating={0}
-                  reviews={0}
-                  serviceId={service?.serviceId}
-                  packageId={service?.packageId}
-                  onClick={() =>
-                    history(
-                      `${internalRoutes.SinglePackage}/${service?.serviceId}/${service?.packageId}`
-                    )
-                  }
-                  // isFavourite={allWishlist?.some(
-                  //   (item) =>
-                  //     item._id === service?.serviceId &&
-                  //     item.packageDetails?._id === service?.packageId
-                  // )}
-                />
-              );
-            })}
-          </HorizontalScroll>
-        </div>
+                      return (
+                        <RecentlyViewedCard
+                          key={service?.serviceDetails?._id}
+                          popularimage={popularimage}
+                          title={
+                            service?.Title ||
+                            service?.VenueName ||
+                            service?.FoodTruckName
+                          }
+                          category={service?.CategoryName}
+                          price={
+                            service?.price ||
+                            service?.Pricing ||
+                            service?.Price ||
+                            service?.Package?.[0]?.Rates ||
+                            service?.["OrderQuantity&Pricing"]?.[0]?.Rates ||
+                            service?.["Duration&Pricing"]?.[0]?.Amount ||
+                            service?.["SessionLength"]?.[0]?.Amount ||
+                            service?.["SessionLength&Pricing"]?.[0]?.Amount ||
+                            service?.["QtyPricing"]?.[0]?.Rates
+                          }
+                          rating={0}
+                          reviews={0}
+                          serviceId={service?.serviceId}
+                          packageId={service?.packageId}
+                          onClick={() =>
+                            history(
+                              `${internalRoutes.SinglePackage}/${service?.serviceId}/${service?.packageId}`
+                            )
+                          }
+                          // isFavourite={allWishlist?.some(
+                          //   (item) =>
+                          //     item._id === service?.serviceId &&
+                          //     item.packageDetails?._id === service?.packageId
+                          // )}
+                        />
+                      );
+                    })}
+                  </HorizontalScroll>
+                </div>
               </div>
             </div>
           )}
@@ -569,12 +580,67 @@ function CheckOut() {
                     })}
                   />
                   {errorsAddAddress.addressName && (
-                    <p role="alert" className="text-red-500 text-base">
+                    <p role="alert" className="text-red-500 text-sm">
                       {errorsAddAddress.addressName.message}
                     </p>
                   )}
                 </span>
               </div>{" "}
+              <div className="flex justify-between sm:flex-col lg:flex-row">
+                <label className="text-textGray text-xl">Phone*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
+                  <input
+                    type="text"
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    {...registerAddAddress("Phone", {
+                      required: { value: true, message: "Phone is required" },
+                      minLength: {
+                        value: 3,
+                        message: "Phone must be at least 10 characters",
+                      },
+                      maxLength: {
+                        value: 20,
+                        message: "Phone must be at most 10 characters",
+                      },
+                    })}
+                  />
+                  {errorsAddAddress.Phone && (
+                    <p role="alert" className="text-red-500 text-sm">
+                      {errorsAddAddress.Phone.message}
+                    </p>
+                  )}
+                </span>
+              </div>{" "}
+              <div className="flex justify-between sm:flex-col lg:flex-row">
+                <label className="text-textGray text-xl">Alternate Phone</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
+                  <input
+                    type="text"
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    {...registerAddAddress("alternatePhone", {
+                      required: {
+                        value: false,
+                        message: "Alternate Phone is required",
+                      },
+                      minLength: {
+                        value: 3,
+                        message:
+                          "Alternate Phone must be at least 10 characters",
+                      },
+                      maxLength: {
+                        value: 20,
+                        message:
+                          "Alternate Phone must be at most 10 characters",
+                      },
+                    })}
+                  />
+                  {errorsAddAddress.alternatePhone && (
+                    <p role="alert" className="text-red-500 text-sm">
+                      {errorsAddAddress.alternatePhone.message}
+                    </p>
+                  )}
+                </span>
+              </div>
               <div className="flex justify-between">
                 <label className="text-textGray text-xl">Address*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
@@ -594,7 +660,7 @@ function CheckOut() {
                     })}
                   />
                   {errorsAddAddress.Address && (
-                    <p role="alert" className="text-red-500 text-base">
+                    <p role="alert" className="text-red-500 text-sm">
                       {errorsAddAddress.Address.message}
                     </p>
                   )}
@@ -622,7 +688,7 @@ function CheckOut() {
                     })}
                   />
                   {errorsAddAddress.AddressLine1 && (
-                    <p role="alert" className="text-red-500 text-base">
+                    <p role="alert" className="text-red-500 text-sm">
                       {errorsAddAddress.AddressLine1.message}
                     </p>
                   )}
@@ -650,7 +716,7 @@ function CheckOut() {
                     })}
                   />
                   {errorsAddAddress.AddressLine2 && (
-                    <p role="alert" className="text-red-500 text-base">
+                    <p role="alert" className="text-red-500 text-sm">
                       {errorsAddAddress.AddressLine2.message}
                     </p>
                   )}
@@ -663,7 +729,7 @@ function CheckOut() {
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
                     {...registerAddAddress("City", {
-                      required: { value: true, message: "State is required" },
+                      required: { value: true, message: "City is required" },
                       minLength: {
                         value: 2,
                         message: "City must be at least 2 characters",
@@ -675,7 +741,7 @@ function CheckOut() {
                     })}
                   />
                   {errorsAddAddress.City && (
-                    <p role="alert" className="text-red-500 text-base">
+                    <p role="alert" className="text-red-500 text-sm">
                       {errorsAddAddress.City.message}
                     </p>
                   )}
@@ -700,7 +766,7 @@ function CheckOut() {
                     })}
                   />
                   {errorsAddAddress.State && (
-                    <p role="alert" className="text-red-500 text-base">
+                    <p role="alert" className="text-red-500 text-sm">
                       {errorsAddAddress.State.message}
                     </p>
                   )}
@@ -725,7 +791,7 @@ function CheckOut() {
                     })}
                   />
                   {errorsAddAddress.Pincode && (
-                    <p role="alert" className="text-red-500 text-base">
+                    <p role="alert" className="text-red-500 text-sm">
                       {errorsAddAddress.Pincode.message}
                     </p>
                   )}
@@ -766,6 +832,56 @@ function CheckOut() {
                   )}
                 </span>
               </div>{" "}
+              <div className="flex justify-between sm:flex-col lg:flex-row">
+                <label className="text-textGray text-xl">Phone*</label>
+                <span className="flex items-start justify-start flex-col gap1">
+                  <input
+                    type="text"
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    {...registerEditAddress("Phone", {
+                      required: { value: true, message: "Phone is required" },
+                      minLength: {
+                        value: 3,
+                        message: "Phone must be at least 10 characters",
+                      },
+                      maxLength: {
+                        value: 20,
+                        message: "Phone must be at most 10 characters",
+                      },
+                    })}
+                  />
+                  {errorsEditAddress.Phone && (
+                    <p role="alert" className="text-red-500 text-base">
+                      {errorsEditAddress.Phone.message}
+                    </p>
+                  )}
+                </span>
+              </div>{" "}
+              <div className="flex justify-between sm:flex-col lg:flex-row">
+                <label className="text-textGray text-xl">Alternate Phone</label>
+                <span className="flex items-start justify-start flex-col gap1">
+                  <input
+                    type="text"
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    {...registerEditAddress("alternatePhone", {
+                      required: { value: false, message: "Alternate Phone is required" },
+                      minLength: {
+                        value: 3,
+                        message: "Alternate Phone must be at least 10 characters",
+                      },
+                      maxLength: {
+                        value: 20,
+                        message: "Alternate Phone must be at most 10 characters",
+                      },
+                    })}
+                  />
+                  {errorsEditAddress.alternatePhone && (
+                    <p role="alert" className="text-red-500 text-base">
+                      {errorsEditAddress.alternatePhone.message}
+                    </p>
+                  )}
+                </span>
+              </div>
               <div className="flex justify-between">
                 <label className="text-textGray text-xl">Address*</label>
                 <span className="flex items-start justify-start flex-col gap1">

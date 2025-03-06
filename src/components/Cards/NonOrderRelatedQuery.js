@@ -18,7 +18,7 @@ function NonOrderRelatedQuery({ saveForm }) {
 
   return (
     <div className=" w-full flex items-center justify-center flex-col">
-      <div className="w-[70%] bg-textLightGray px-4 py-8 rounded-md">
+      <div className="w-full md:w-[70%] bg-textLightGray px-4 py-8 rounded-md">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="w-full  p-6 bg-transparent space-y-4"

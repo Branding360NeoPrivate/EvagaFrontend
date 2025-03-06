@@ -117,11 +117,11 @@ function Home() {
         </div>
       </div>
       <div className="w-[95%]  mx-12 gap-4">
-        <span className="w-full flex items-center justify-between">
+        <span className="w-full flex items-center justify-between md:px-0 px-2">
           <h2 className="sub_heading">Popular</h2>
           <Link
             href="/search?q="
-            className="text-primary text-xl font-medium cursor-pointer border-b-2 border-primary"
+            className="text-primary md:text-xl sm:text-sm font-medium cursor-pointer border-b-2 border-primary"
           >
             View All
           </Link>

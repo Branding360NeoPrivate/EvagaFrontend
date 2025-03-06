@@ -129,40 +129,6 @@ function Footer() {
       <div className="container mx-auto px-5 md:hidden grid grid-cols-2 gap-y-5 justify-center items-start ">
         {/* Footer Links */}
         <div className=" gap-6 text-sm">
-          <div>
-            <ul className="space-y-4">
-              {footerMenuItems.leftMenu.map((item, index) => (
-                <li key={index}>
-                  <Link to={item.path || "#"} className=" text-sm">
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div className=" text-sm space-y-4">
-          <ul className="space-y-4">
-            {footerMenuItems.midMenu.map((item, index) => (
-              <li key={index}>
-                <Link to={item.path || "#"} className="hover:text-highlight">
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <ul className="space-y-4">
-            {footerMenuItems.rightMenu.map((item, index) => (
-              <li key={index}>
-                <Link to={item.path || "#"} className="hover:text-highlight">
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
         <div className=" col-span-2 flex-col flex justify-start items-start gap-4 text-sm">
           <h3 className=" font-semibold">Connect With Us</h3>
           <div className="flex flex-col  gap-2">
@@ -215,6 +181,41 @@ function Footer() {
             </a>
           </div>
         </div>
+          <div className="mt-4">
+            <ul className="space-y-4">
+              {footerMenuItems.leftMenu.map((item, index) => (
+                <li key={index}>
+                  <Link to={item.path || "#"} className=" text-sm">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className=" text-sm space-y-4">
+          <ul className="space-y-4">
+            {footerMenuItems.midMenu.map((item, index) => (
+              <li key={index}>
+                <Link to={item.path || "#"} className="hover:text-highlight">
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <ul className="space-y-4">
+            {footerMenuItems.rightMenu.map((item, index) => (
+              <li key={index}>
+                <Link to={item.path || "#"} className="hover:text-highlight">
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+      
         <div className=" col-span-2">
           <div className="mt-4 text-sm">
             <h3>Registered Office Address</h3>
