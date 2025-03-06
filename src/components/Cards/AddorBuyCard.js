@@ -386,13 +386,13 @@ function AddorBuyCard({
         <div className="text-center flex flex-row mb-6 flex items-center justify-start">
           <div>
             {" "}
-            <p className="text-primary font-semibold pr-2  text-xl  w-full ">
+            <p className="text-primary font-semibold pr-2  text-normal  w-full ">
               Price{" "}
             </p>
           </div>
           <div>
             {" "}
-            <p className="text-2xl font-bold text-primary  w-full">
+            <p className="text-xl font-bold text-primary  w-full">
               {formatCurrency(calculatedPrice)}
             </p>
           </div>
@@ -476,21 +476,21 @@ function AddorBuyCard({
                 className="h-[1.5rem] object-fit"
               />
             </span>
-            <p className="text-primary font-semibold text-normal">Location</p>
+            <p className="text-primary text-sm font-semibold text-normal">Event Location </p>
           </div>
-          <div className="flex items-end">
+          <div className="flex items-end justify-end w-[10rem]">
             <input
               type="number"
               placeholder="Enter Pincode"
               value={pincode}
               onChange={(e) => setPincode(e.target.value)}
-              className="w-full py-2 px-1 border rounded-md text-gray-600 focus:outline-primary"
+              className="w-full py-2 px-1 border rounded-md text-gray-600 focus:outline-primary w-[8rem]"
             />
           </div>
         </div>
         {renderPrice?.SecurityDeposit && (
           <span className="flex items-center justify-between py-2">
-            <p className="text-primary font-semibold text-normal">
+            <p className="text-primary text-sm font-semibold text-normal">
               Security Deposit
             </p>
             <p className="text-textGray">
@@ -513,7 +513,7 @@ function AddorBuyCard({
                         className="h-[1.5rem] object-fit"
                       />
                     </span>
-                    <p className="text-primary font-semibold text-normal">
+                    <p className="text-primary text-sm font-semibold text-normal">
                       {key === "AddOns" ? "Recommended Add-Ons " : key}
                     </p>
                   </div>

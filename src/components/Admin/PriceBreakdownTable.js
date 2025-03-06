@@ -93,7 +93,7 @@ const PriceBreakdown = ({
             </td>
           </tr>
           <tr>
-            <td className="border border-gray-300 px-4 py-2">Gateway Fees</td>
+            <td className="border border-gray-300 px-4 py-2"> Payment Gateway Fees</td>
             <td className="border border-gray-300 px-4 py-2">N/A</td>
             <td className="border border-gray-300 px-4 py-2 text-red-500">
               ₹{gatewayFeesVendor?.toFixed(2)}

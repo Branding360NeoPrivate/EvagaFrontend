@@ -171,7 +171,7 @@ function CreateSubAdmin() {
         onClick={() => [handleOpen(), setModalType("addSubAdmin")]}
         className="float-right btn-primary w-fit px-2 mb-2"
       >
-        Add New Sub Admin
+        Add New Roles
       </button>
       <TableComponet
         columns={columns}

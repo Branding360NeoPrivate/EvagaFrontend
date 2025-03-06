@@ -23,12 +23,13 @@ import { useAuth } from "../context/AuthContext";
 import userApi from "../services/userApi";
 import RecentlyViewedCard from "../components/Cards/RecentlyViewedCard";
 function Home() {
-  const { banner, userBanner } = useSelector((state) => state.banner);
+  const { userBanner } = useSelector((state) => state.banner);
   const dispatch = useDispatch();
   const { categories } = useSelector((state) => state.category);
   const { allPackages } = useSelector((state) => state.package);
   const getAllPackages = useServices(packageApis.getAllPackage);
   const GetRecentViewpackageApi = useServices(userApi.GetRecentViewpackage);
+  const SuggestSimilarServicesApi = useServices(userApi.SuggestSimilarServices);
   const { allWishlist } = useSelector((state) => state.wishlist);
   const history = useNavigate();
   const userId = Cookies.get("userId");
@@ -40,7 +41,11 @@ function Home() {
     const response = await getAllPackages.callApi();
     dispatch(addPackage(response?.data));
   };
-
+  // const SuggestSimilarServicesApiHandle = async () => {
+  //   const formdata = new FormData();
+  //   formdata.append("items", JSON.stringify(cart?.items));
+  //   const response = await SuggestSimilarServicesApi.callApi(formdata);
+  // };
   const handleGetWishList = async (userId) => {
     const response = await wishlist.callApi(userId);
     dispatch(addWishlist(response?.wishlist));
@@ -183,66 +188,68 @@ function Home() {
           </HorizontalScroll>
         </div>
       </div>
-     {recentView?.length>0 && <div className="w-[95%]  mx-12 gap-4">
-        <span className="w-full flex items-center justify-between">
-          <h2 className="sub_heading">Recently Viewed</h2>
-        </span>
-        <div className="flex flex-row gap-5 overflow-x-scroll no-scrollbar box-border">
-          <HorizontalScroll speed={1} className="flex flex-row gap-8">
-            {recentView?.map((service, index) => {
-              const imageUrl =
-                (Array.isArray(service?.CoverImage)
-                  ? service?.CoverImage[0]
-                  : service?.CoverImage) ||
-                (Array.isArray(service?.ProductImage)
-                  ? service?.ProductImage[0]
-                  : service?.ProductImage);
+      {recentView?.length > 0 && (
+        <div className="w-[95%]  mx-12 gap-4">
+          <span className="w-full flex items-center justify-between">
+            <h2 className="sub_heading">Recently Viewed</h2>
+          </span>
+          <div className="flex flex-row gap-5 overflow-x-scroll no-scrollbar box-border">
+            <HorizontalScroll speed={1} className="flex flex-row gap-8">
+              {recentView?.map((service, index) => {
+                const imageUrl =
+                  (Array.isArray(service?.CoverImage)
+                    ? service?.CoverImage[0]
+                    : service?.CoverImage) ||
+                  (Array.isArray(service?.ProductImage)
+                    ? service?.ProductImage[0]
+                    : service?.ProductImage);
 
-              const popularimage = imageUrl?.startsWith("service/")
-                ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
-                : imageUrl;
+                const popularimage = imageUrl?.startsWith("service/")
+                  ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
+                  : imageUrl;
 
-              return (
-                <RecentlyViewedCard
-                  key={service?.serviceDetails?._id}
-                  popularimage={popularimage}
-                  title={
-                    service?.Title ||
-                    service?.VenueName ||
-                    service?.FoodTruckName
-                  }
-                  category={service?.CategoryName}
-                  price={
-                    service?.price ||
-                    service?.Pricing ||
-                    service?.Price ||
-                    service?.Package?.[0]?.Rates ||
-                    service?.["OrderQuantity&Pricing"]?.[0]?.Rates ||
-                    service?.["Duration&Pricing"]?.[0]?.Amount ||
-                    service?.["SessionLength"]?.[0]?.Amount ||
-                    service?.["SessionLength&Pricing"]?.[0]?.Amount ||
-                    service?.["QtyPricing"]?.[0]?.Rates
-                  }
-                  rating={0}
-                  reviews={0}
-                  serviceId={service?.serviceId}
-                  packageId={service?.packageId}
-                  onClick={() =>
-                    history(
-                      `${internalRoutes.SinglePackage}/${service?.serviceId}/${service?.packageId}`
-                    )
-                  }
-                  isFavourite={allWishlist?.some(
-                    (item) =>
-                      item._id === service?.serviceId &&
-                      item.packageDetails?._id === service?.packageId
-                  )}
-                />
-              );
-            })}
-          </HorizontalScroll>
+                return (
+                  <RecentlyViewedCard
+                    key={service?.serviceDetails?._id}
+                    popularimage={popularimage}
+                    title={
+                      service?.Title ||
+                      service?.VenueName ||
+                      service?.FoodTruckName
+                    }
+                    category={service?.CategoryName}
+                    price={
+                      service?.price ||
+                      service?.Pricing ||
+                      service?.Price ||
+                      service?.Package?.[0]?.Rates ||
+                      service?.["OrderQuantity&Pricing"]?.[0]?.Rates ||
+                      service?.["Duration&Pricing"]?.[0]?.Amount ||
+                      service?.["SessionLength"]?.[0]?.Amount ||
+                      service?.["SessionLength&Pricing"]?.[0]?.Amount ||
+                      service?.["QtyPricing"]?.[0]?.Rates
+                    }
+                    rating={0}
+                    reviews={0}
+                    serviceId={service?.serviceId}
+                    packageId={service?.packageId}
+                    onClick={() =>
+                      history(
+                        `${internalRoutes.SinglePackage}/${service?.serviceId}/${service?.packageId}`
+                      )
+                    }
+                    isFavourite={allWishlist?.some(
+                      (item) =>
+                        item._id === service?.serviceId &&
+                        item.packageDetails?._id === service?.packageId
+                    )}
+                  />
+                );
+              })}
+            </HorizontalScroll>
+          </div>
         </div>
-      </div>}
+      )}
     </motion.div>
   );
 }

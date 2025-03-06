@@ -84,7 +84,7 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
         },
         {
           id: "Gst by Category",
-          label: "Gst by Category",
+          label: "GST by Category",
           icon: <MdAttachMoney />,
         },
       ],
@@ -145,7 +145,7 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
       ],
     },
 
-    { id: "Admin Users", label: "Admin Users", icon: <FaUserShield /> },
+    { id: "Admin Users", label: "Roles", icon: <FaUserShield /> },
 
     {
       id: "SupportCenter",

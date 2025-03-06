@@ -135,14 +135,14 @@ function HomeSearchBar({ cities, value, onChange }) {
         rounded-md bg-highlightYellow text-textPrimary font-bold cursor-pointer"
         onClick={toggleDropdown}
       >
-        <span className=" flex justify-center items-center text-[11px] md:text-sm text-primary h-6 md:h-fit lg:text-wrap">
+        <span className=" flex justify-center items-center text-[11px] md:text-sm text-primary h-6 md:w-fit md:h-fit lg:text-wrap">
           {selectedCategory ? selectedCategory : "Not Found"}
         </span>
         <MdKeyboardArrowDown className="ml-1" />
       </div>
       {isDropdownOpen && (
-        <div className="absolute top-full left-0 mt-1 w-[200px] max-h-[50vh] overflow-y-scroll text-textPrimary bg-white border border-gray-300 rounded-md shadow-lg z-10">
-          <ul>
+        <div className="absolute top-full left-0 mt-1 w-[200px] max-h-[50vh] overflow-y-scroll custom-scrollbar text-textPrimary bg-white border border-gray-300 rounded-md shadow-lg z-10">
+          <ul >
             {[allCategoriesOption, ...categories].map((category, index) => (
               <li
                 key={index}
