@@ -52,7 +52,7 @@ function UserLoginPage() {
       <div className=" flex-1 flex justify-center items-center">
         <AuthBox>
           <div className=" text-center">
-            <h4 className=" text-primary text-3xl">Login In</h4>
+            <h4 className=" text-primary text-3xl">Login</h4>
             <h4 className=" text-primary text-xl">Welcome to Evaga</h4>
           </div>
 

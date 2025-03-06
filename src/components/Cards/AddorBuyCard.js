@@ -262,7 +262,7 @@ function AddorBuyCard({
           formattedTime,
           pincode
         );
-        toast.success("Item added to the cart successfully.");
+        // toast.success("Item added to the cart successfully.");
         return true;
       } catch (error) {
         toast.error("Failed to Add To Cart. Please try again.");

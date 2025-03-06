@@ -40,6 +40,7 @@ function UserProfile() {
   const getOneAddress = useServices(userApi.getOneAddress);
   const updateOneAddress = useServices(userApi.updateOneAddress);
   const deleteOneAddress = useServices(userApi.deleteOneAddress);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
   const { auth } = useAuth();
   const history = useNavigate();
   const userId = Cookies.get("userId");
@@ -81,33 +82,41 @@ function UserProfile() {
       formData.append("name", data?.Name);
       formData.append("email", data?.Email);
       formData.append("phoneNumber", data?.Phone);
-  
+
       const response = await updateUserProfile.callApi(userId, formData);
-  
+
       if (response?.message === "User profile updated successfully") {
-        dispatch(fetchUserProfile(userId)); 
-        handleClose(); 
+        dispatch(fetchUserProfile(userId));
+        handleClose();
         toast.success(response?.message || "Profile updated successfully!");
       } else {
-        setErrorResponse(response?.error || "An error occurred while updating the profile.");
-        toast.error(response?.error || "Failed to update the profile. Please try again.");
+        setErrorResponse(
+          response?.error || "An error occurred while updating the profile."
+        );
+        toast.error(
+          response?.error || "Failed to update the profile. Please try again."
+        );
       }
     } catch (error) {
       console.error("Error updating user profile:", error);
-      toast.error("An error occurred while updating the profile. Please try again.");
+      toast.error(
+        "An error occurred while updating the profile. Please try again."
+      );
     }
   };
-  
+
   const handleAddUserAddress = async (data) => {
     try {
       const formData = new FormData();
-      formData.append("Name", data?.Name);
+      formData.append("Name", data?.addressName);
       formData.append("address", data?.Address);
       formData.append("addressLine1", data?.AddressLine1);
       formData.append("addressLine2", data?.AddressLine2);
       formData.append("state", data?.State);
       formData.append("pinCode", data?.Pincode);
-
+      formData.append("City", data?.City);
+      formData.append("Phone", data?.Phone);
+      formData.append("alternatePhone", data?.alternatePhone);
       const response = await addUserAddress.callApi(userId, formData);
 
       handleClose();
@@ -139,23 +148,25 @@ function UserProfile() {
       console.error("Error fetching the address:", error);
     }
   };
-  
+
   const handleUpdateAddress = async (data) => {
     try {
       const formData = new FormData();
-      formData.append("Name", data?.Name);
+      formData.append("Name", data?.addressName);
       formData.append("address", data?.Address);
       formData.append("addressLine1", data?.AddressLine1);
       formData.append("addressLine2", data?.AddressLine2);
       formData.append("state", data?.State);
       formData.append("pinCode", data?.Pincode);
-  
+      formData.append("Phone", data?.Phone);
+      formData.append("alternatePhone", data?.alternatePhone);
+      formData.append("City", data?.City);
       const response = await updateOneAddress.callApi(addressId, formData);
-  
+
       if (response) {
-        dispatch(fetchUserProfile(userId)); 
+        dispatch(fetchUserProfile(userId));
         toast.success(response?.message || "Address updated successfully!");
-        handleClose(); 
+        handleClose();
       } else {
         toast.error("Failed to update the address. Please try again.");
       }
@@ -164,7 +175,7 @@ function UserProfile() {
       toast.error("An error occurred while updating the address.");
     }
   };
-  
+
   const handleDeleteAddress = async () => {
     try {
       const response = await deleteOneAddress.callApi(addressId);
@@ -198,6 +209,22 @@ function UserProfile() {
       Email: profileData?.email || "",
     },
   });
+  const {
+    register: registerAddAddress,
+    handleSubmit: handleAddSubmit,
+    setValue: setValueAddAddress,
+    formState: { errors: errorsAddAddress },
+    reset: resetAddAddress,
+  } = useForm({});
+
+  const {
+    register: registerEditAddress,
+    handleSubmit: handleEditSubmit,
+    setValue: setValueEditAddress,
+    formState: { errors: errorsEditAddress },
+    reset: resetEditAddress,
+  } = useForm({});
+
   useEffect(() => {
     if (profileData) {
       setValue("Name", profileData.name || "");
@@ -205,12 +232,18 @@ function UserProfile() {
       setValue("Phone", profileData.phone || "");
     }
     if (userOneAddress) {
-      setValue("addressName", userOneAddress.Name || "");
-      setValue("Address", userOneAddress.address || "");
-      setValue("AddressLine1", userOneAddress.addressLine1 || "");
-      setValue("AddressLine2", userOneAddress.addressLine2 || "");
-      setValue("State", userOneAddress.state || "");
-      setValue("Pincode", userOneAddress.pinCode || "");
+      setValueEditAddress("addressName", userOneAddress.Name || "");
+      setValueEditAddress("Address", userOneAddress.address || "");
+      setValueEditAddress("AddressLine1", userOneAddress.addressLine1 || "");
+      setValueEditAddress("AddressLine2", userOneAddress.addressLine2 || "");
+      setValueEditAddress("State", userOneAddress.state || "");
+      setValueEditAddress("Pincode", userOneAddress.pinCode || "");
+      setValueEditAddress("City", userOneAddress.City || "");
+      setValueEditAddress(
+        "alternatePhone",
+        userOneAddress.alternatePhone || ""
+      );
+      setValueEditAddress("Phone", userOneAddress.Phone || "");
     }
   }, [profileData, setValue, userOneAddress]);
 
@@ -304,7 +337,13 @@ function UserProfile() {
                     {address.addressLine2}
                   </p>
                   <p className="text-gray-600 font-semibold">
-                    Pin code {address.pinCode}
+                    Pin code: {address.pinCode}
+                  </p>{" "}
+                  <p className="text-gray-600 font-semibold">
+                    Phone Number: {address.Phone}
+                  </p>{" "}
+                  <p className="text-gray-600 font-semibold">
+                   Alt Phone Number: {address.alternatePhone}
                   </p>
                 </div>
                 <div className="flex space-x-2">
@@ -342,6 +381,7 @@ function UserProfile() {
       <ReusableModal
         open={modalOpen}
         onClose={handleClose}
+        width={"50%"}
         title={
           modalType === "editProfile"
             ? "Edit Profile"
@@ -431,21 +471,21 @@ function UserProfile() {
               </span>
             </div>
 
-            <button type='submit' className="btn-primary w-fit px-2 mt-2" >
+            <button type="submit" className="btn-primary w-fit px-2 mt-2">
               Update Profile
             </button>
           </form>
         )}
         {modalType === "addAddress" && (
-          <form onSubmit={handleSubmit(handleAddUserAddress)}>
+          <form onSubmit={handleAddSubmit(handleAddUserAddress)}>
             <div className="my-8 space-y-4">
               <div className="flex justify-between sm:flex-col lg:flex-row">
-                <label className="text-textGray text-xl">Name</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <label className="text-textGray text-xl">Name*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
-                    {...register("addressName", {
+                    {...registerAddAddress("addressName", {
                       required: { value: true, message: "Name is required" },
                       minLength: {
                         value: 3,
@@ -457,20 +497,75 @@ function UserProfile() {
                       },
                     })}
                   />
-                  {errors.addressName && (
-                    <p role="alert" className="text-red-500 text-base">
-                      {errors.addressName.message}
+                  {errorsAddAddress.addressName && (
+                    <p role="alert" className="text-red-500 text-sm">
+                      {errorsAddAddress.addressName.message}
                     </p>
                   )}
                 </span>
               </div>{" "}
-              <div className="flex justify-between">
-                <label className="text-textGray text-xl">Address</label>
-                <span className="flex items-start justify-start flex-col gap1">
+              <div className="flex justify-between sm:flex-col lg:flex-row">
+                <label className="text-textGray text-xl">Phone*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
-                    {...register("Address", {
+                    {...registerAddAddress("Phone", {
+                      required: { value: true, message: "Phone is required" },
+                      minLength: {
+                        value: 3,
+                        message: "Phone must be at least 10 characters",
+                      },
+                      maxLength: {
+                        value: 20,
+                        message: "Phone must be at most 10 characters",
+                      },
+                    })}
+                  />
+                  {errorsAddAddress.Phone && (
+                    <p role="alert" className="text-red-500 text-sm">
+                      {errorsAddAddress.Phone.message}
+                    </p>
+                  )}
+                </span>
+              </div>{" "}
+              <div className="flex justify-between sm:flex-col lg:flex-row">
+                <label className="text-textGray text-xl">Alternate Phone</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
+                  <input
+                    type="text"
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    {...registerAddAddress("alternatePhone", {
+                      required: {
+                        value: false,
+                        message: "Alternate Phone is required",
+                      },
+                      minLength: {
+                        value: 3,
+                        message:
+                          "Alternate Phone must be at least 10 characters",
+                      },
+                      maxLength: {
+                        value: 20,
+                        message:
+                          "Alternate Phone must be at most 10 characters",
+                      },
+                    })}
+                  />
+                  {errorsAddAddress.alternatePhone && (
+                    <p role="alert" className="text-red-500 text-sm">
+                      {errorsAddAddress.alternatePhone.message}
+                    </p>
+                  )}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <label className="text-textGray text-xl">Address*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
+                  <input
+                    type="text"
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    {...registerAddAddress("Address", {
                       required: { value: true, message: "Address is required" },
                       minLength: {
                         value: 5,
@@ -482,20 +577,20 @@ function UserProfile() {
                       },
                     })}
                   />
-                  {errors.Address && (
-                    <p role="alert" className="text-red-500 text-base">
-                      {errors.Address.message}
+                  {errorsAddAddress.Address && (
+                    <p role="alert" className="text-red-500 text-sm">
+                      {errorsAddAddress.Address.message}
                     </p>
                   )}
                 </span>
               </div>
               <div className="flex justify-between">
-                <label className="text-textGray text-xl">Address line 1</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <label className="text-textGray text-xl">Address line 1*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
-                    {...register("AddressLine1", {
+                    {...registerAddAddress("AddressLine1", {
                       required: {
                         value: true,
                         message: "AddressLine1 is required",
@@ -510,22 +605,22 @@ function UserProfile() {
                       },
                     })}
                   />
-                  {errors.AddressLine1 && (
-                    <p role="alert" className="text-red-500 text-base">
-                      {errors.AddressLine1.message}
+                  {errorsAddAddress.AddressLine1 && (
+                    <p role="alert" className="text-red-500 text-sm">
+                      {errorsAddAddress.AddressLine1.message}
                     </p>
                   )}
                 </span>
               </div>
               <div className="flex justify-between">
                 <label className="text-textGray text-xl">Address line 2</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
-                    {...register("AddressLine2", {
+                    {...registerAddAddress("AddressLine2", {
                       required: {
-                        value: true,
+                        value: false,
                         message: "AddressLine2 is required",
                       },
                       minLength: {
@@ -538,20 +633,45 @@ function UserProfile() {
                       },
                     })}
                   />
-                  {errors.AddressLine2 && (
-                    <p role="alert" className="text-red-500 text-base">
-                      {errors.AddressLine2.message}
+                  {errorsAddAddress.AddressLine2 && (
+                    <p role="alert" className="text-red-500 text-sm">
+                      {errorsAddAddress.AddressLine2.message}
                     </p>
                   )}
                 </span>
               </div>
               <div className="flex justify-between">
-                <label className="text-textGray text-xl">State</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <label className="text-textGray text-xl">City*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
-                    {...register("State", {
+                    {...registerAddAddress("City", {
+                      required: { value: true, message: "City is required" },
+                      minLength: {
+                        value: 2,
+                        message: "City must be at least 2 characters",
+                      },
+                      maxLength: {
+                        value: 200,
+                        message: "City must be at most 20 characters",
+                      },
+                    })}
+                  />
+                  {errorsAddAddress.City && (
+                    <p role="alert" className="text-red-500 text-sm">
+                      {errorsAddAddress.City.message}
+                    </p>
+                  )}
+                </span>
+              </div>{" "}
+              <div className="flex justify-between">
+                <label className="text-textGray text-xl">State*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
+                  <input
+                    type="text"
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    {...registerAddAddress("State", {
                       required: { value: true, message: "State is required" },
                       minLength: {
                         value: 2,
@@ -563,20 +683,20 @@ function UserProfile() {
                       },
                     })}
                   />
-                  {errors.State && (
-                    <p role="alert" className="text-red-500 text-base">
-                      {errors.State.message}
+                  {errorsAddAddress.State && (
+                    <p role="alert" className="text-red-500 text-sm">
+                      {errorsAddAddress.State.message}
                     </p>
                   )}
                 </span>
               </div>
               <div className="flex justify-between">
-                <label className="text-textGray text-xl">Pincode</label>
-                <span className="flex items-start justify-start flex-col gap1">
+                <label className="text-textGray text-xl">Pincode*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
                     type="number"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none "
-                    {...register("Pincode", {
+                    {...registerAddAddress("Pincode", {
                       required: { value: true, message: "Pincode is required" },
                       minLength: {
                         value: 6,
@@ -588,9 +708,9 @@ function UserProfile() {
                       },
                     })}
                   />
-                  {errors.Pincode && (
-                    <p role="alert" className="text-red-500 text-base">
-                      {errors.Pincode.message}
+                  {errorsAddAddress.Pincode && (
+                    <p role="alert" className="text-red-500 text-sm">
+                      {errorsAddAddress.Pincode.message}
                     </p>
                   )}
                 </span>
@@ -603,15 +723,15 @@ function UserProfile() {
           </form>
         )}
         {modalType === "editAddress" && (
-          <form onSubmit={handleSubmit(handleUpdateAddress)}>
+          <form onSubmit={handleEditSubmit(handleUpdateAddress)}>
             <div className="my-8 space-y-4">
               <div className="flex justify-between sm:flex-col lg:flex-row">
-                <label className="text-textGray text-xl">Name</label>
+                <label className="text-textGray text-xl">Name*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
-                    {...register("addressName", {
+                    {...registerEditAddress("addressName", {
                       required: { value: true, message: "Name is required" },
                       minLength: {
                         value: 3,
@@ -623,20 +743,75 @@ function UserProfile() {
                       },
                     })}
                   />
-                  {errors.addressName && (
+                  {errorsEditAddress.addressName && (
                     <p role="alert" className="text-red-500 text-base">
-                      {errors.addressName.message}
+                      {errorsEditAddress.addressName.message}
                     </p>
                   )}
                 </span>
               </div>{" "}
-              <div className="flex justify-between">
-                <label className="text-textGray text-xl">Address</label>
+              <div className="flex justify-between sm:flex-col lg:flex-row">
+                <label className="text-textGray text-xl">Phone*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
-                    {...register("Address", {
+                    {...registerEditAddress("Phone", {
+                      required: { value: true, message: "Phone is required" },
+                      minLength: {
+                        value: 3,
+                        message: "Phone must be at least 10 characters",
+                      },
+                      maxLength: {
+                        value: 20,
+                        message: "Phone must be at most 10 characters",
+                      },
+                    })}
+                  />
+                  {errorsEditAddress.Phone && (
+                    <p role="alert" className="text-red-500 text-base">
+                      {errorsEditAddress.Phone.message}
+                    </p>
+                  )}
+                </span>
+              </div>{" "}
+              <div className="flex justify-between sm:flex-col lg:flex-row">
+                <label className="text-textGray text-xl">Alternate Phone</label>
+                <span className="flex items-start justify-start flex-col gap1">
+                  <input
+                    type="text"
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    {...registerEditAddress("alternatePhone", {
+                      required: {
+                        value: false,
+                        message: "Alternate Phone is required",
+                      },
+                      minLength: {
+                        value: 3,
+                        message:
+                          "Alternate Phone must be at least 10 characters",
+                      },
+                      maxLength: {
+                        value: 20,
+                        message:
+                          "Alternate Phone must be at most 10 characters",
+                      },
+                    })}
+                  />
+                  {errorsEditAddress.alternatePhone && (
+                    <p role="alert" className="text-red-500 text-base">
+                      {errorsEditAddress.alternatePhone.message}
+                    </p>
+                  )}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <label className="text-textGray text-xl">Address*</label>
+                <span className="flex items-start justify-start flex-col gap1">
+                  <input
+                    type="text"
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    {...registerEditAddress("Address", {
                       required: { value: true, message: "Address is required" },
                       minLength: {
                         value: 5,
@@ -648,20 +823,20 @@ function UserProfile() {
                       },
                     })}
                   />
-                  {errors.Address && (
+                  {errorsEditAddress.Address && (
                     <p role="alert" className="text-red-500 text-base">
-                      {errors.Address.message}
+                      {errorsEditAddress.Address.message}
                     </p>
                   )}
                 </span>
               </div>
               <div className="flex justify-between">
-                <label className="text-textGray text-xl">Address line 1</label>
+                <label className="text-textGray text-xl">Address line 1*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
-                    {...register("AddressLine1", {
+                    {...registerEditAddress("AddressLine1", {
                       required: {
                         value: true,
                         message: "AddressLine1 is required",
@@ -676,9 +851,9 @@ function UserProfile() {
                       },
                     })}
                   />
-                  {errors.AddressLine1 && (
+                  {errorsEditAddress.AddressLine1 && (
                     <p role="alert" className="text-red-500 text-base">
-                      {errors.AddressLine1.message}
+                      {errorsEditAddress.AddressLine1.message}
                     </p>
                   )}
                 </span>
@@ -689,9 +864,9 @@ function UserProfile() {
                   <input
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
-                    {...register("AddressLine2", {
+                    {...registerEditAddress("AddressLine2", {
                       required: {
-                        value: true,
+                        value: false,
                         message: "AddressLine2 is required",
                       },
                       minLength: {
@@ -704,20 +879,45 @@ function UserProfile() {
                       },
                     })}
                   />
-                  {errors.AddressLine2 && (
+                  {errorsEditAddress.AddressLine2 && (
                     <p role="alert" className="text-red-500 text-base">
-                      {errors.AddressLine2.message}
+                      {errorsEditAddress.AddressLine2.message}
                     </p>
                   )}
                 </span>
               </div>
               <div className="flex justify-between">
-                <label className="text-textGray text-xl">State</label>
+                <label className="text-textGray text-xl">City*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap1">
+                  <input
+                    type="text"
+                    className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
+                    {...registerEditAddress("City", {
+                      required: { value: true, message: "State is required" },
+                      minLength: {
+                        value: 2,
+                        message: "City must be at least 2 characters",
+                      },
+                      maxLength: {
+                        value: 200,
+                        message: "City must be at most 20 characters",
+                      },
+                    })}
+                  />
+                  {errorsAddAddress.City && (
+                    <p role="alert" className="text-red-500 text-base">
+                      {errorsAddAddress.City.message}
+                    </p>
+                  )}
+                </span>
+              </div>{" "}
+              <div className="flex justify-between">
+                <label className="text-textGray text-xl">State*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
-                    {...register("State", {
+                    {...registerEditAddress("State", {
                       required: { value: true, message: "State is required" },
                       minLength: {
                         value: 2,
@@ -729,20 +929,20 @@ function UserProfile() {
                       },
                     })}
                   />
-                  {errors.State && (
+                  {errorsEditAddress.State && (
                     <p role="alert" className="text-red-500 text-base">
-                      {errors.State.message}
+                      {errorsEditAddress.State.message}
                     </p>
                   )}
                 </span>
               </div>
               <div className="flex justify-between">
-                <label className="text-textGray text-xl">Pincode</label>
+                <label className="text-textGray text-xl">Pincode*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
                     type="number"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none "
-                    {...register("Pincode", {
+                    {...registerEditAddress("Pincode", {
                       required: { value: true, message: "Pincode is required" },
                       minLength: {
                         value: 6,
@@ -754,9 +954,9 @@ function UserProfile() {
                       },
                     })}
                   />
-                  {errors.Pincode && (
+                  {errorsEditAddress.Pincode && (
                     <p role="alert" className="text-red-500 text-base">
-                      {errors.Pincode.message}
+                      {errorsEditAddress.Pincode.message}
                     </p>
                   )}
                 </span>
@@ -764,7 +964,7 @@ function UserProfile() {
             </div>
 
             <button className="btn-primary w-fit px-2 mt-2" type="submit">
-              Update Address
+              Edit Address
             </button>
           </form>
         )}

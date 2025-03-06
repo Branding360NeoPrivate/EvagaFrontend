@@ -109,6 +109,7 @@ function CheckOut() {
       formData.append("pinCode", data?.Pincode);
       formData.append("Phone", data?.Phone);
       formData.append("alternatePhone", data?.alternatePhone);
+      formData.append("AddressType", data?.AddressType);
 
       const response = await addUserAddress.callApi(userId, formData);
 
@@ -131,6 +132,8 @@ function CheckOut() {
   };
   const handleEditUserAddress = async (data) => {
     try {
+      console.log(data);
+      
       const formData = new FormData();
       formData.append("Name", data?.addressName);
       formData.append("address", data?.Address);
@@ -141,6 +144,7 @@ function CheckOut() {
       formData.append("pinCode", data?.Pincode);
       formData.append("Phone", data?.Phone);
       formData.append("alternatePhone", data?.alternatePhone);
+      formData.append("AddressType", data?.AddressType);
       const response = await updateOneAddress.callApi(
         selectedAddressId,
         formData
@@ -171,7 +175,14 @@ function CheckOut() {
     setValueEditAddress("Pincode", response?.addresses.pinCode || "");
     setValueEditAddress("Pincode", response?.addresses.pinCode || "");
     setValueEditAddress("Phone", response?.addresses.Phone || "");
-    setValueEditAddress("alternatePhone", response?.addresses.alternatePhone || "");
+    setValueEditAddress(
+      "alternatePhone",
+      response?.addresses.alternatePhone || ""
+    );
+    setValueEditAddress(
+      "AddressType",
+      response?.addresses.AddressType || ""
+    );
   };
   const handleDeleteOneUserAddress = async () => {
     const response = await deleteOneAddress.callApi(selectedAddressId);
@@ -796,6 +807,70 @@ function CheckOut() {
                     </p>
                   )}
                 </span>
+              </div>{" "}
+              <div className="flex justify-between">
+                <label className="text-textGray text-xl">Address Type*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap-1">
+                  <div className="flex flex-row flex-wrap text-textGray text-sm gap-2">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="Home"
+                        {...registerAddAddress("AddressType", {
+                          required: {
+                            value: true,
+                            message: "Address Type is required",
+                          },
+                        })}
+                      />
+                      Home
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="Office"
+                        {...registerAddAddress("AddressType", {
+                          required: {
+                            value: true,
+                            message: "Address Type is required",
+                          },
+                        })}
+                      />
+                      Office
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="Event Address"
+                        {...registerAddAddress("AddressType", {
+                          required: {
+                            value: true,
+                            message: "Address Type is required",
+                          },
+                        })}
+                      />
+                      Event Address
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="Others"
+                        {...registerAddAddress("AddressType", {
+                          required: {
+                            value: true,
+                            message: "Address Type is required",
+                          },
+                        })}
+                      />
+                      Others
+                    </label>
+                  </div>
+                  {errorsAddAddress.AddressType && (
+                    <p role="alert" className="text-red-500 text-sm">
+                      {errorsAddAddress.AddressType.message}
+                    </p>
+                  )}
+                </span>
               </div>
             </div>
 
@@ -864,14 +939,19 @@ function CheckOut() {
                     type="text"
                     className="w-[300px] h-[40px] px-4 py-2 border border-[#E0E0E0] rounded-lg outline-none"
                     {...registerEditAddress("alternatePhone", {
-                      required: { value: false, message: "Alternate Phone is required" },
+                      required: {
+                        value: false,
+                        message: "Alternate Phone is required",
+                      },
                       minLength: {
                         value: 3,
-                        message: "Alternate Phone must be at least 10 characters",
+                        message:
+                          "Alternate Phone must be at least 10 characters",
                       },
                       maxLength: {
                         value: 20,
-                        message: "Alternate Phone must be at most 10 characters",
+                        message:
+                          "Alternate Phone must be at most 10 characters",
                       },
                     })}
                   />
@@ -1038,6 +1118,7 @@ function CheckOut() {
                   )}
                 </span>
               </div>
+         
             </div>
 
             <button className="btn-primary w-fit px-2 mt-2" type="submit">

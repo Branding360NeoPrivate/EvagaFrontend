@@ -66,50 +66,58 @@ function Wishlist() {
     >
       <h2 className="text-primary font-semibold text-xl">My Wishlist</h2>
       <div className="flex items-center justify-start flex-wrap gap-8 pl-[2%]">
-        {allWishlist?.map((service, index) => (
-          <WishlistCard
-            key={service?.service?._id}
-            popularimage={
-              process.env.REACT_APP_API_Image_BASE_URL +
-              `${
-                service.packageDetails?.values?.CoverImage ||
-                service.packageDetails?.values?.ProductImage?.[0]
-              }`
-            }
-            title={
-              service.packageDetails?.values?.Title ||
-              service.packageDetails?.values?.VenueName ||
-              service.packageDetails?.values?.FoodTruckName
-            }
-            category={service?.categoryName}
-            price={
-              service.packageDetails?.values?.price ||
-              service.packageDetails?.values?.Pricing ||
-              service.packageDetails?.values?.Price ||
-              service.packageDetails?.values?.Package?.[0]?.Rates ||
-              service.packageDetails?.values?.["OrderQuantity&Pricing"]?.[0]
-                ?.Rates ||
-              service.packageDetails?.values?.["Duration&Pricing"]?.[0]
-                ?.Amount ||
-              service.packageDetails?.values?.["SessionLength"]?.[0]?.Amount ||
-              service.packageDetails?.values?.["QtyPricing"]?.[0]?.Rates
-            }
-            rating={0}
-            reviews={0}
-            onClick={() =>
-              history(
-                `${internalRoutes.SinglePackage}/${service?._id}/${service?.packageDetails?._id}`
-              )
-            }
-            isFavourite={allWishlist?.some(
-              (item) =>
-                item._id === service?._id &&
-                item.packageDetails?._id === service?.packageDetails?._id
-            )}
-            serviceId={service?._id}
-            packageId={service?.packageDetails?._id}
-          />
-        ))}
+        {allWishlist.map((service, index) => {
+          const imageUrl =
+            (Array.isArray(service.packageDetails?.values?.CoverImage)
+              ? service.packageDetails?.values?.CoverImage[0]
+              : service.packageDetails?.values?.CoverImage) ||
+            (Array.isArray(service.packageDetails?.values?.ProductImage)
+              ? service.packageDetails?.values?.ProductImage[0]
+              : service.packageDetails?.values?.ProductImage);
+
+          const popularimage = imageUrl?.startsWith("service/")
+            ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
+            : imageUrl;
+          return (
+            <WishlistCard
+              key={service?.service?._id}
+              popularimage={popularimage}
+              title={
+                service.packageDetails?.values?.Title ||
+                service.packageDetails?.values?.VenueName ||
+                service.packageDetails?.values?.FoodTruckName
+              }
+              category={service?.categoryName}
+              price={
+                service.packageDetails?.values?.price ||
+                service.packageDetails?.values?.Pricing ||
+                service.packageDetails?.values?.Price ||
+                service.packageDetails?.values?.Package?.[0]?.Rates ||
+                service.packageDetails?.values?.["OrderQuantity&Pricing"]?.[0]
+                  ?.Rates ||
+                service.packageDetails?.values?.["Duration&Pricing"]?.[0]
+                  ?.Amount ||
+                service.packageDetails?.values?.["SessionLength"]?.[0]
+                  ?.Amount ||
+                service.packageDetails?.values?.["QtyPricing"]?.[0]?.Rates
+              }
+              rating={0}
+              reviews={0}
+              onClick={() =>
+                history(
+                  `${internalRoutes.SinglePackage}/${service?._id}/${service?.packageDetails?._id}`
+                )
+              }
+              isFavourite={allWishlist?.some(
+                (item) =>
+                  item._id === service?._id &&
+                  item.packageDetails?._id === service?.packageDetails?._id
+              )}
+              serviceId={service?._id}
+              packageId={service?.packageDetails?._id}
+            />
+          );
+        })}
       </div>
     </motion.div>
   );
