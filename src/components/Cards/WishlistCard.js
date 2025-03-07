@@ -43,7 +43,7 @@ function WishlistCard({
     }
   };
   return (
-    <div className="min-w-[295px] min-h-[356px]  flex items-center justify-center flex-col gap-2">
+    <div className="w-[295px] min-h-[356px]  flex items-center justify-center flex-col gap-2">
       <div className="w-full border rounded-lg bg-white overflow-hidden">
         <div className="w-full h-[247px]" onClick={onClick}>
           <img

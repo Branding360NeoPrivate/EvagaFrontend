@@ -99,6 +99,8 @@ function Wishlist() {
                   ?.Amount ||
                 service.packageDetails?.values?.["SessionLength"]?.[0]
                   ?.Amount ||
+                service.packageDetails?.values?.["SessionLength&Pricing"]?.[0]
+                  ?.Amount ||
                 service.packageDetails?.values?.["QtyPricing"]?.[0]?.Rates
               }
               rating={0}

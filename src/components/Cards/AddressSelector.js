@@ -2,7 +2,13 @@ import React, { useState } from "react";
 
 function AddressSelector({ setIsEditingAddress, userAddress }) {
   return (
-    <div className="w-full h-auto xl:h-[100px] flex flex-col xl:flex-row gap-5 justify-start items-start xl:justify-between xl:items-center font-['Poppins'] border border-gray-300 rounded-lg bg-white px-6 py-4 max-sm:w-full">
+    <div
+      className={
+        userAddress
+          ? "w-full h-auto xl:h-[100px] flex flex-col xl:flex-row gap-5 justify-start items-start xl:justify-between xl:items-center font-['Poppins'] border border-gray-300 rounded-lg bg-white px-6 py-4 max-sm:w-full"
+          : "w-full h-auto xl:h-[100px] flex flex-col xl:flex-row gap-5 justify-start items-start xl:justify-center xl:items-center font-['Poppins'] border border-gray-300 rounded-lg bg-white px-6 py-4 max-sm:w-full"
+      }
+    >
       {userAddress ? (
         <div className="w-full flex justify-between font-['Poppins'] items-center  py-4 max-sm:w-full flex-col-reverse md:flex-row gap-1">
           <div className="w-full md:w-auto">

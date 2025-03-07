@@ -45,9 +45,9 @@ const InterestSelection = () => {
       const response = await UserInterestStatus.callApi();
       console.log("API Response:", response);
 
-      if (response?.user?.userInterestFilled) {
-        navigate("/");
-      }
+      // if (response?.user?.userInterestFilled) {
+      //   navigate("/");
+      // }
 
       setHasFetched(true); 
     } catch (error) {

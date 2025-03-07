@@ -42,6 +42,7 @@ const DynamicNav = () => {
   const { auth, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const [modalType, setModalType] = useState("evagaXperience");
   const { categories } = useSelector((state) => state.category);
@@ -422,22 +423,76 @@ const DynamicNav = () => {
                 </button>
                 {/* User Controls */}
                 {auth.isAuthenticated ? (
-                  <div className="flex items-center space-x-4">
-                    <Link to={`/${auth.role}/profile`}>
-                      <span className="text-lg font-medium capitalize">
-                        My Profile
-                      </span>
-                    </Link>
+                  <div className="flex flex-col space-y-4">
+                    {auth.role === "user" ? (
+                      <div className="relative">
+                        <span
+                          onClick={() => setMobileDropdownOpen((prev) => !prev)}
+                          className="cursor-pointer text-lg font-medium capitalize border px-3 py-2 rounded-md flex items-center"
+                        >
+                          My Profile
+                          <span className="ml-2">
+                            <svg
+                              className={`w-4 h-4 transition-transform ${
+                                mobileDropdownOpen ? "rotate-180" : "rotate-0"
+                              }`}
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M19 9l-7 7-7-7"
+                              />
+                            </svg>
+                          </span>
+                        </span>
+                        {mobileDropdownOpen && (
+                          <div className="mt-2 bg-white border rounded-md shadow-lg">
+                            <Link
+                              to={internalRoutes.profile}
+                              onClick={() => [setMobileDropdownOpen(false),closeMobileMenu()]}  // Close dropdown and redirect
+                              className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                            >
+                              My Profile
+                            </Link>
+                            <Link
+                              to={internalRoutes.checkout}
+                              onClick={() => [setMobileDropdownOpen(false),closeMobileMenu()]} // Close dropdown and redirect
+                              className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                            >
+                              Cart
+                            </Link>{" "}
+                            <Link
+                              to={internalRoutes.order}
+                              onClick={() => [setMobileDropdownOpen(false),closeMobileMenu()]} // Close dropdown and redirect
+                              className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                            >
+                              Orders
+                            </Link>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <Link to={`/${auth.role}/profile`}>
+                        <span className="text-lg font-medium capitalize border px-3 py-2 rounded-md">
+                          My Profile
+                        </span>
+                      </Link>
+                    )}
                     <button
                       onClick={logout}
-                      className="text-2xl text-white hover:text-red-500 font-bold"
+                      className="text-lg text-white hover:text-red-500 font-bold"
                     >
-                      <MdExitToApp />
+                      Logout
                     </button>
                   </div>
                 ) : (
                   <Link to={internalRoutes?.userLogin}>
-                    <button className="bg-highlightYellow max-w-[200px] w-[200px] px-6 py-3 text-primary font-semibold text-lg rounded-md">
+                    <button className="bg-highlightYellow w-full px-6 py-3 text-primary font-semibold text-lg rounded-md">
                       Sign In
                     </button>
                   </Link>

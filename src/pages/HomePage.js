@@ -1,13 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchBanner,
-  fetchUserBanner,
-} from "../context/redux/slices/bannerSlice";
+import { fetchUserBanner } from "../context/redux/slices/bannerSlice";
 import Slider from "../components/Slider/Slider";
 import CategoryDisplayCard from "../components/Cards/CategoryDisplayCard";
 import ProductCard from "../components/Cards/ProductCard";
-import NavImage from "../assets/ImageNavImgs/image.png";
 import { fetchCategories } from "../context/redux/slices/categorySlice";
 import packageApis from "../services/packageApis";
 import useServices from "../hooks/useServices";
@@ -28,6 +24,7 @@ function Home() {
   const { categories } = useSelector((state) => state.category);
   const { allPackages } = useSelector((state) => state.package);
   const getAllPackages = useServices(packageApis.getAllPackage);
+  const userIntereststatus = useServices(userApi.userIntereststatus);
   const GetRecentViewpackageApi = useServices(userApi.GetRecentViewpackage);
   const SuggestSimilarServicesApi = useServices(userApi.SuggestSimilarServices);
   const { allWishlist } = useSelector((state) => state.wishlist);
@@ -55,6 +52,21 @@ function Home() {
     setRecentView(response ? response?.recentlyViewed : []);
     console.log(response);
   };
+  const userIntereststatusHandle = async () => {
+    const response = await userIntereststatus.callApi(userId);
+    if (response?.user?.userInterestFilled) {
+      console.log(true);
+    } else {
+      console.log(false);
+      history(internalRoutes.interest);
+    }
+    // console.log(response);
+  };
+  useEffect(() => {
+    if (userId) {
+      userIntereststatusHandle();
+    }
+  }, [userId]);
   useEffect(() => {
     if (userId) {
       GetRecentViewpackageApiHandle();

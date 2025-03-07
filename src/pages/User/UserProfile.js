@@ -117,6 +117,7 @@ function UserProfile() {
       formData.append("City", data?.City);
       formData.append("Phone", data?.Phone);
       formData.append("alternatePhone", data?.alternatePhone);
+      formData.append("AddressType", data?.AddressType);
       const response = await addUserAddress.callApi(userId, formData);
 
       handleClose();
@@ -161,6 +162,7 @@ function UserProfile() {
       formData.append("Phone", data?.Phone);
       formData.append("alternatePhone", data?.alternatePhone);
       formData.append("City", data?.City);
+      formData.append("AddressType", data?.AddressType);
       const response = await updateOneAddress.callApi(addressId, formData);
 
       if (response) {
@@ -244,6 +246,7 @@ function UserProfile() {
         userOneAddress.alternatePhone || ""
       );
       setValueEditAddress("Phone", userOneAddress.Phone || "");
+      setValueEditAddress("AddressType", userOneAddress.AddressType || "");
     }
   }, [profileData, setValue, userOneAddress]);
 
@@ -273,8 +276,8 @@ function UserProfile() {
   }
 
   return (
-    <div className="flex items-center justify-center flex-col w-full ">
-      <div className="w-[650px]  border border-gray-300 rounded-lg px-16 py-12 bg-white">
+    <div className="flex items-center justify-center flex-col w-full my-10 ">
+      <div className=" w-[95%] md:w-[650px]  border border-gray-300 rounded-lg px-2 md:px-16 py-12 bg-white">
         {/* Personal Info */}
         <div className="space-y-6">
           {[
@@ -284,7 +287,7 @@ function UserProfile() {
           ].map((item, index) => (
             <div
               key={index}
-              className="flex justify-between h-[50px] border-b border-[#f0f0f0]"
+              className="flex flex-col justify-start items-start gap-2 md:gap-0 md:flex-row md:justify-between md:h-[50px] border-b border-[#f0f0f0]"
             >
               <label className="text-purple-700 font-semibold mt-[12px]">
                 {item.label}
@@ -343,7 +346,10 @@ function UserProfile() {
                     Phone Number: {address.Phone}
                   </p>{" "}
                   <p className="text-gray-600 font-semibold">
-                   Alt Phone Number: {address.alternatePhone}
+                    Alt Phone Number: {address.alternatePhone}
+                  </p>{" "}
+                  <p className="text-gray-600 font-semibold">
+                    Address Type: {address.AddressType}
                   </p>
                 </div>
                 <div className="flex space-x-2">
@@ -479,7 +485,7 @@ function UserProfile() {
         {modalType === "addAddress" && (
           <form onSubmit={handleAddSubmit(handleAddUserAddress)}>
             <div className="my-8 space-y-4">
-              <div className="flex justify-between sm:flex-col lg:flex-row">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Name*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -504,7 +510,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>{" "}
-              <div className="flex justify-between sm:flex-col lg:flex-row">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Phone*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -529,7 +535,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>{" "}
-              <div className="flex justify-between sm:flex-col lg:flex-row">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Alternate Phone</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -559,7 +565,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -584,7 +590,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address line 1*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -612,7 +618,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address line 2</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -640,7 +646,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">City*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -665,7 +671,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>{" "}
-              <div className="flex justify-between">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">State*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -690,7 +696,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Pincode*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -714,6 +720,70 @@ function UserProfile() {
                     </p>
                   )}
                 </span>
+              </div>{" "}
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+                <label className="text-textGray text-xl">Address Type*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap-1">
+                  <div className="flex flex-row flex-wrap text-textGray text-sm gap-2">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="Home"
+                        {...registerAddAddress("AddressType", {
+                          required: {
+                            value: true,
+                            message: "Address Type is required",
+                          },
+                        })}
+                      />
+                      Home
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="Office"
+                        {...registerAddAddress("AddressType", {
+                          required: {
+                            value: true,
+                            message: "Address Type is required",
+                          },
+                        })}
+                      />
+                      Office
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="Event Address"
+                        {...registerAddAddress("AddressType", {
+                          required: {
+                            value: true,
+                            message: "Address Type is required",
+                          },
+                        })}
+                      />
+                      Event Address
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="Others"
+                        {...registerAddAddress("AddressType", {
+                          required: {
+                            value: true,
+                            message: "Address Type is required",
+                          },
+                        })}
+                      />
+                      Others
+                    </label>
+                  </div>
+                  {errorsAddAddress.AddressType && (
+                    <p role="alert" className="text-red-500 text-sm">
+                      {errorsAddAddress.AddressType.message}
+                    </p>
+                  )}
+                </span>
               </div>
             </div>
 
@@ -725,7 +795,7 @@ function UserProfile() {
         {modalType === "editAddress" && (
           <form onSubmit={handleEditSubmit(handleUpdateAddress)}>
             <div className="my-8 space-y-4">
-              <div className="flex justify-between sm:flex-col lg:flex-row">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Name*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -750,7 +820,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>{" "}
-              <div className="flex justify-between sm:flex-col lg:flex-row">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Phone*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -775,7 +845,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>{" "}
-              <div className="flex justify-between sm:flex-col lg:flex-row">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Alternate Phone</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -805,7 +875,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -830,7 +900,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address line 1*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -858,7 +928,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address line 2</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -886,7 +956,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">City*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -911,7 +981,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>{" "}
-              <div className="flex justify-between">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">State*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -936,7 +1006,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div className="flex justify-between">
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Pincode*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -957,6 +1027,70 @@ function UserProfile() {
                   {errorsEditAddress.Pincode && (
                     <p role="alert" className="text-red-500 text-base">
                       {errorsEditAddress.Pincode.message}
+                    </p>
+                  )}
+                </span>
+              </div>
+              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+                <label className="text-textGray text-xl">Address Type*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap-1">
+                  <div className="flex flex-row flex-wrap text-textGray text-sm gap-2">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="Home"
+                        {...registerEditAddress("AddressType", {
+                          required: {
+                            value: true,
+                            message: "Address Type is required",
+                          },
+                        })}
+                      />
+                      Home
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="Office"
+                        {...registerEditAddress("AddressType", {
+                          required: {
+                            value: true,
+                            message: "Address Type is required",
+                          },
+                        })}
+                      />
+                      Office
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="Event Address"
+                        {...registerEditAddress("AddressType", {
+                          required: {
+                            value: true,
+                            message: "Address Type is required",
+                          },
+                        })}
+                      />
+                      Event Address
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="Others"
+                        {...registerEditAddress("AddressType", {
+                          required: {
+                            value: true,
+                            message: "Address Type is required",
+                          },
+                        })}
+                      />
+                      Others
+                    </label>
+                  </div>
+                  {errorsAddAddress.AddressType && (
+                    <p role="alert" className="text-red-500 text-sm">
+                      {errorsAddAddress.AddressType.message}
                     </p>
                   )}
                 </span>

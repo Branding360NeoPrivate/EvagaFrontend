@@ -1118,7 +1118,70 @@ function CheckOut() {
                   )}
                 </span>
               </div>
-         
+              <div className="flex justify-between">
+                <label className="text-textGray text-xl">Address Type*</label>
+                <span className="w-[300px] flex items-start justify-start flex-col gap-1">
+                  <div className="flex flex-row flex-wrap text-textGray text-sm gap-2">
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="Home"
+                        {...registerEditAddress("AddressType", {
+                          required: {
+                            value: true,
+                            message: "Address Type is required",
+                          },
+                        })}
+                      />
+                      Home
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="Office"
+                        {...registerEditAddress("AddressType", {
+                          required: {
+                            value: true,
+                            message: "Address Type is required",
+                          },
+                        })}
+                      />
+                      Office
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="Event Address"
+                        {...registerEditAddress("AddressType", {
+                          required: {
+                            value: true,
+                            message: "Address Type is required",
+                          },
+                        })}
+                      />
+                      Event Address
+                    </label>
+                    <label className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        value="Others"
+                        {...registerEditAddress("AddressType", {
+                          required: {
+                            value: true,
+                            message: "Address Type is required",
+                          },
+                        })}
+                      />
+                      Others
+                    </label>
+                  </div>
+                  {errorsAddAddress.AddressType && (
+                    <p role="alert" className="text-red-500 text-sm">
+                      {errorsAddAddress.AddressType.message}
+                    </p>
+                  )}
+                </span>
+              </div>
             </div>
 
             <button className="btn-primary w-fit px-2 mt-2" type="submit">
