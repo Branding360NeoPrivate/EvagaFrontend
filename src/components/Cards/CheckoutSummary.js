@@ -139,8 +139,9 @@ function CheckoutSummary({
             Remove
           </button>
         ) : (
-          <button type="submit" className="w-[123px] h-[40px] ml-16">
-            <img src={Add} alt="Add" />
+          <button type="submit" className="w-[123px] h-[40px] ml-4 border-2 border-primary text-primary rounded-md">
+            {/* <img src={Add} alt="Add" /> */}
+            ADD
           </button>
         )}
       </form>

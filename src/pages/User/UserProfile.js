@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import EditButton from "../../assets/Temporary Images/pen-square 1.png";
 import DeleteButton from "../../assets/Temporary Images/rectangle-xmark 1.png";
-import { MdOutlineModeEditOutline } from "react-icons/md";
+import { FaRegEdit } from "react-icons/fa";
+import { AiOutlineCloseSquare } from "react-icons/ai";
 import useServices from "../../hooks/useServices";
 import userApi from "../../services/userApi";
 import Cookies from "js-cookie";
@@ -352,12 +353,10 @@ function UserProfile() {
                     Address Type: {address.AddressType}
                   </p>
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex flex-col md:flex-row items-center gap-2">
                   <button className="p-1 rounded-lg">
-                    <img
-                      src={EditButton}
-                      alt="Edit"
-                      className="h-8 w-9 aspect-square"
+                    <FaRegEdit
+                      className="text-2xl aspect-square text-primary"
                       onClick={() => [
                         handleOpen(),
                         setModalType("editAddress"),
@@ -365,17 +364,13 @@ function UserProfile() {
                       ]}
                     />
                   </button>
-                  <button
-                    className="p-1 rounded-lg"
-                    onClick={() => [
-                      handleDeleteAddressOpenModal(),
-                      setAddressId(address?._id),
-                    ]}
-                  >
-                    <img
-                      src={DeleteButton}
-                      alt="Delete"
-                      className="h-10 w-9 aspect-square"
+                  <button className="p-1 rounded-lg">
+                    <AiOutlineCloseSquare
+                      className="text-2xl aspect-square text-primary"
+                      onClick={() => [
+                        handleDeleteAddressOpenModal(),
+                        setAddressId(address?._id),
+                      ]}
                     />
                   </button>
                 </div>
@@ -485,7 +480,7 @@ function UserProfile() {
         {modalType === "addAddress" && (
           <form onSubmit={handleAddSubmit(handleAddUserAddress)}>
             <div className="my-8 space-y-4">
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Name*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -510,7 +505,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>{" "}
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Phone*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -535,7 +530,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>{" "}
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Alternate Phone</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -565,7 +560,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -590,7 +585,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address line 1*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -618,7 +613,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address line 2</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -646,7 +641,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">City*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -671,7 +666,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>{" "}
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">State*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -696,7 +691,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Pincode*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -721,7 +716,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>{" "}
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address Type*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap-1">
                   <div className="flex flex-row flex-wrap text-textGray text-sm gap-2">
@@ -795,7 +790,7 @@ function UserProfile() {
         {modalType === "editAddress" && (
           <form onSubmit={handleEditSubmit(handleUpdateAddress)}>
             <div className="my-8 space-y-4">
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Name*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -820,7 +815,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>{" "}
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Phone*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -845,7 +840,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>{" "}
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Alternate Phone</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -875,7 +870,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -900,7 +895,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address line 1*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -928,7 +923,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address line 2</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -956,7 +951,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">City*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap1">
                   <input
@@ -981,7 +976,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>{" "}
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">State*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -1006,7 +1001,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Pincode*</label>
                 <span className="flex items-start justify-start flex-col gap1">
                   <input
@@ -1031,7 +1026,7 @@ function UserProfile() {
                   )}
                 </span>
               </div>
-              <div  className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
+              <div className=" w-full flex flex-col justify-start items-start lg:justify-between lg:flex-row">
                 <label className="text-textGray text-xl">Address Type*</label>
                 <span className="w-[300px] flex items-start justify-start flex-col gap-1">
                   <div className="flex flex-row flex-wrap text-textGray text-sm gap-2">

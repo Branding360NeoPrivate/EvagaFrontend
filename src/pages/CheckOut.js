@@ -469,11 +469,11 @@ function CheckOut() {
                   );
                 })}
               </div>
-              <div className="flex items-start justify-start flex-col gap-2">
+              <div className="w-full flex items-start justify-start flex-col gap-2">
                 <h3 className="text-primary font-semibold text-xl">
                   Recommended
                 </h3>
-                <div className="flex flex-row gap-5 overflow-x-scroll no-scrollbar box-border">
+                <div className="w-full flex flex-row gap-5 overflow-x-scroll no-scrollbar box-border">
                   <HorizontalScroll speed={1} className="flex flex-row gap-8">
                     {suggestions?.map((service, index) => {
                       const imageUrl =
