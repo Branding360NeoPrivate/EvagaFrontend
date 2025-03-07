@@ -22,7 +22,9 @@ function CheckoutSummary({
   cart,
   RemoveCode,
   selectedCouponCode,
-  applyCoupon,editAddress
+  applyCoupon,
+  editAddress,
+  platformGstAmount
 }) {
   const navigate = useNavigate();
 
@@ -33,7 +35,7 @@ function CheckoutSummary({
 
     setIsPlacingOrder(true);
     if (!selectedAddress) {
-      editAddress(true)
+      editAddress(true);
       // toast.error("Please select an address before placing the order!");
       setIsPlacingOrder(false);
       return;
@@ -87,10 +89,10 @@ function CheckoutSummary({
     } else if (parts === 3) {
       nextPaymentDates.push(
         new Date(firstPaymentDate.setDate(firstPaymentDate.getDate() + 30))
-      ); 
+      );
       nextPaymentDates.push(
         new Date(firstPaymentDate.setDate(firstPaymentDate.getDate() + 14))
-      ); 
+      );
     }
     return nextPaymentDates;
   };
@@ -139,7 +141,10 @@ function CheckoutSummary({
             Remove
           </button>
         ) : (
-          <button type="submit" className="w-[123px] h-[40px] ml-4 border-2 border-primary text-primary rounded-md">
+          <button
+            type="submit"
+            className="w-[123px] h-[40px] ml-4 border-2 border-primary text-primary rounded-md"
+          >
             {/* <img src={Add} alt="Add" /> */}
             ADD
           </button>
@@ -183,10 +188,13 @@ function CheckoutSummary({
             )}
           </span>
         </div>
-
         <div className="text-normal flex justify-between mb-2">
           <span className="font-medium">Platform Fee</span>
           <span>{formatCurrency(platformFee)}</span>
+        </div>{" "}
+        <div className="text-normal flex justify-between mb-2">
+          <span className="font-medium">Platform Fee Gst</span>
+          <span>{formatCurrency(platformGstAmount)}</span>
         </div>
         <div className="text-normal flex justify-between mb-2">
           <span className="flex text-normal">

@@ -538,6 +538,7 @@ function CheckOut() {
             totalOfcart={cart?.totalOfCart}
             platformFee={cart?.platformFee}
             totalWithFee={cart?.totalAfterDiscount}
+            platformGstAmount={cart?.platformGstAmount}
             totalGst={cart?.totalGst}
             setModalType={setModalType}
             openModal={handleOpen}

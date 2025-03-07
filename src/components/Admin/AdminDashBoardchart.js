@@ -13,7 +13,10 @@ function AdminDashBoardchart() {
   ]);
   const [dashboardData, setDashboardData] = useState({
     orderStatusSummary: [],
-    totalVendor: "",
+    serviceSummary: {},
+    totalVendors: "",
+    totalRegisteredVendors: "",
+    totalVerifiedRegisteredVendors: "",
   });
   const AddRecentViewApi = useServices(
     adminActionsApi.GetAdminDashboardDataHandle
@@ -22,7 +25,10 @@ function AdminDashBoardchart() {
     const response = await AddRecentViewApi.callApi();
     setDashboardData({
       ...dashboardData,
-      totalVendor: response?.totalVendor,
+      totalVendors: response?.totalVendors,
+      totalVerifiedRegisteredVendors: response?.totalVerifiedRegisteredVendors,
+      totalRegisteredVendors: response?.totalRegisteredVendors,
+      serviceSummary: response?.serviceSummary,
     });
     const orderSummary = response.orderStatusSummary;
 
@@ -51,8 +57,27 @@ function AdminDashBoardchart() {
   };
 
   const vendorAndUser = [
-    { title: "Total Active Vendors ", value: dashboardData?.totalVendor },
-    { title: "Total Registered Vendors ", value: dashboardData?.totalVendor },
+    { title: "Total Signup Vendors ", value: dashboardData?.totalVendors },
+    {
+      title: "Total Registered Vendors",
+      value: dashboardData?.totalRegisteredVendors,
+    },
+    {
+      title: "Total Verified Vendors ",
+      value: dashboardData?.totalVerifiedRegisteredVendors,
+    },
+  ];
+  const vendorService = [
+    {
+      title: "Total Services Listed ",
+      value: dashboardData?.serviceSummary?.totalServices,
+    },
+    { title: "Total Verified Services  ", value: dashboardData?.serviceSummary?.verifiedCount },
+    { title: "Total Pending Services  ", value: dashboardData?.serviceSummary?.pendingCount },
+    {
+      title: "Total Rejected Services ",
+      value: dashboardData?.serviceSummary?.rejectedCount,
+    },
   ];
   useEffect(() => {
     AddRecentViewApiHandle();
@@ -66,10 +91,26 @@ function AdminDashBoardchart() {
         {vendorAndUser.map((item, index) => (
           <div
             key={index}
-            className="bg-textLightGray p-4 py-8 rounded-md flex-[0.3] min-w-[400px] flex flex-col"
+            className="bg-textLightGray p-4 py-8 rounded-md flex-[0.3] min-w-[300px] flex flex-col items-center"
           >
             <h3 className="text-primary text-xl font-medium">{item.title}</h3>
-            <span className="text-textGray">
+            <span className="text-textGray flex items-center justify-center text-xl">
+              <strong>{item.value}</strong>
+            </span>
+          </div>
+        ))}
+      </div>{" "}
+      <h2 className="text-2xl font-semibold w-full flex items-start justify-start text-primary">
+        Vendor Listed Service
+      </h2>
+      <div className="flex items-center justify-start flex-wrap gap-4 w-full">
+        {vendorService.map((item, index) => (
+          <div
+            key={index}
+            className="bg-textLightGray p-4 py-8 rounded-md flex-[0.3] min-w-[250px] flex flex-col items-center"
+          >
+            <h3 className="text-primary text-xl font-medium">{item.title}</h3>
+            <span className="text-textGray flex items-center justify-center text-xl">
               <strong>{item.value}</strong>
             </span>
           </div>
