@@ -37,8 +37,8 @@ const VendorTable = memo(
     const downloadVendorsAsCSVhandle = async () => {
       try {
         const response = await downloadVendorsAsCSV.callApi(); // Adjust to your actual API call method
-        if (response && response.data) {
-          const blob = new Blob([response.data], { type: "text/csv" });
+        if (response && response) {
+          const blob = new Blob([response], { type: "text/csv" });
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
