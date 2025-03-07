@@ -68,7 +68,7 @@ function Home() {
     }
   }, [userId, auth?.isAuthenticated, auth?.role]);
   useEffect(() => {
-    if (userId) {
+    if (userId && auth?.isAuthenticated && auth?.role === "user") {
       GetRecentViewpackageApiHandle();
     }
   }, [userId]);
