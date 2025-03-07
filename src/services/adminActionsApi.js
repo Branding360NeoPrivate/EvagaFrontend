@@ -126,6 +126,10 @@ const adminActionsApi = {
     apiService.get(apiEndpoints.adminActions.getAllUsersWithOrderDetails),
   GetAdminDashboardDataHandle: () =>
     apiService.get(apiEndpoints.adminActions.getAdminDashboardDataHandle),
+  downloadVendorListing: () =>
+    apiService.get(apiEndpoints.adminActions.downloadVendorListing),
+  downloadVendorsAsCSV: () =>
+    apiService.get(apiEndpoints.adminActions.downloadVendorsAsCSV),
 };
 
 export default adminActionsApi;

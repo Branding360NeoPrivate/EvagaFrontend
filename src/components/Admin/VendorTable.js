@@ -5,6 +5,8 @@ import AdminVendorTableModal from "./AdminVendorTableModal";
 import { fetchAllVendorsWithProfileStatusAndService } from "../../context/redux/slices/adminActionsSlice";
 import { Pagination, Stack } from "@mui/material";
 import useDebounce from "../../utils/useDebounce";
+import useServices from "../../hooks/useServices";
+import adminActionsApi from "../../services/adminActionsApi";
 
 const VendorTable = memo(
   ({ onMenuSelect, selectedVendor, setSelectedVendor, term }) => {
@@ -26,7 +28,31 @@ const VendorTable = memo(
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [showFilter, setShowFilter] = useState(false);
     const [selectedFilter, setSelectedFilter] = useState("All Vendors");
-
+    const downloadVendorListing = useServices(
+      adminActionsApi.downloadVendorListing
+    );
+    const downloadVendorsAsCSV = useServices(
+      adminActionsApi.downloadVendorsAsCSV
+    );
+    const downloadVendorsAsCSVhandle = async () => {
+      try {
+        const response = await downloadVendorsAsCSV.callApi(); // Adjust to your actual API call method
+        if (response && response.data) {
+          const blob = new Blob([response.data], { type: "text/csv" });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "vendors.csv"; // File name
+          a.click();
+          window.URL.revokeObjectURL(url);
+        } else {
+          console.error("No data received for CSV download");
+        }
+      } catch (error) {
+        console.error("Error downloading CSV:", error);
+      }
+    };
+    
     const handleFilterClick = () => {
       setShowFilter((prev) => !prev);
     };
@@ -58,13 +84,13 @@ const VendorTable = memo(
         fetchAllVendorsWithProfileStatusAndService({
           queryPage: page,
           searchTerm: debounce,
-          filter:selectedFilter
+          filter: selectedFilter,
         })
       );
     };
     useEffect(() => {
       handleSearchAndPageChangeHandle();
-    }, [dispatch, page, debounce,selectedFilter]);
+    }, [dispatch, page, debounce, selectedFilter]);
 
     if (status === "loading") {
       return <div className="text-center py-10">Loading vendor data...</div>;
@@ -115,11 +141,13 @@ const VendorTable = memo(
                 </div>
               )}
             </div>
-
             {/* Sort Button */}
             <button className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-highlightYellowPrimary hover:text-primary">
               <FaSort />
               Sort By
+            </button>{" "}
+            <button onClick={downloadVendorsAsCSVhandle} className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-highlightYellowPrimary hover:text-primary">
+              Download
             </button>
           </div>
         </div>

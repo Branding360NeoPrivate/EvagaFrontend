@@ -167,6 +167,8 @@ const apiEndpoints = {
     getAllVendorWithNumberOfService: `/adminAction/getAllVendorWithNumberOfService`,
     getAllUsersWithOrderDetails: `/adminAction/getAllUsersWithOrderDetails`,
     getAdminDashboardDataHandle: `/adminAction/getAdminDashboardDataHandle`,
+    downloadVendorListing: `/adminAction/downloadVendorListing`,
+    downloadVendorsAsCSV: `/adminAction/downloadVendorsAsCSV`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",

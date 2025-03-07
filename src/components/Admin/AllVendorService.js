@@ -89,6 +89,28 @@ function AllVendorService() {
   const [sortvalue, setSortValue] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
   const [serviceValue, setServiceValue] = useState();
+  const downloadVendorListing = useServices(
+    adminActionsApi.downloadVendorListing
+  );
+  const downloadVendorListinghandle = async () => {
+    try {
+      const response = await downloadVendorListing.callApi(); // Adjust to your actual API call method
+      if (response && response.data) {
+        const blob = new Blob([response.data], { type: "text/csv" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "vendors.csv"; // File name
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } else {
+        console.error("No data received for CSV download");
+      }
+    } catch (error) {
+      console.error("Error downloading CSV:", error);
+    }
+  };
+  
   const debounce = useDebounce(searchTerm);
   const handlePageChange = (event, value) => {
     setPage(value);
@@ -344,7 +366,7 @@ function AllVendorService() {
     {
       label: "Status",
       key: "packageStatus",
-      render: (row) => (row?.services.packageStatus),
+      render: (row) => row?.services.packageStatus,
     },
     {
       label: "Action",
@@ -387,6 +409,14 @@ function AllVendorService() {
   return (
     <div>
       {" "}
+      <div className="flex gap-4 items-center justify-end">
+        <button
+          onClick={downloadVendorListinghandle}
+          className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-highlightYellowPrimary hover:text-primary"
+        >
+          Download
+        </button>
+      </div>
       <TableComponetWithApi
         columns={columns}
         data={allService}
