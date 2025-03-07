@@ -63,10 +63,10 @@ function Home() {
     // console.log(response);
   };
   useEffect(() => {
-    if (userId) {
+    if (userId && auth?.isAuthenticated && auth?.role === "user") {
       userIntereststatusHandle();
     }
-  }, [userId]);
+  }, [userId, auth?.isAuthenticated, auth?.role]);
   useEffect(() => {
     if (userId) {
       GetRecentViewpackageApiHandle();
