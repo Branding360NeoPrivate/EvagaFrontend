@@ -16,6 +16,8 @@ import SearchableCategoryAndSubcategoryDropdown from "../../components/Inputs/Se
 import TermsModal from "../../components/Modal/TermsModal ";
 import ReusableModal from "../../components/Modal/Modal";
 import BackButton from "../../utils/globalBackButton";
+import { useNavigate } from "react-router-dom";
+import { internalRoutes } from "../../utils/internalRoutes";
 const VendorProfile = () => {
   const dispatch = useDispatch();
   const { profile } = useSelector((state) => state.vendor);
@@ -112,6 +114,7 @@ const VendorProfile = () => {
     setCanResend(false);
     setTimer(60);
   };
+  const navigate=useNavigate()
   const updateProfileService = useServices(vendorApi.updateProfile);
   const updateBankDetailsService = useServices(vendorApi.updateBankDetails);
   const updateBusinessService = useServices(vendorApi.updateBusiness);
@@ -211,6 +214,16 @@ const VendorProfile = () => {
       toast.error("Failed to update bio. Please try again.");
     }
   };
+  const handleUpdateName = async (name) => {
+    try {
+      const userId = Cookies.get("userId");
+      await updateProfileService.callApi(userId, name);
+      toast.success("Bio updated successfully!");
+      dispatch(fetchVendorProfile(userId)); // Refresh profile data
+    } catch (error) {
+      toast.error("Failed to update bio. Please try again.");
+    }
+  };
   const handleUpdateProfilePicture = async (data) => {
     try {
       const userId = Cookies.get("userId");
@@ -249,6 +262,9 @@ const VendorProfile = () => {
       case "Profile Picture":
         handleUpdateProfilePicture(data);
         break;
+      case "Name":
+        handleUpdateName(data);
+        break;
       default:
         console.error("Unknown section:", activeSection.name);
     }
@@ -264,6 +280,8 @@ const VendorProfile = () => {
       case "Business Details":
         return vendorDetails?.businessDetails;
       case "Bio":
+        return vendorDetails;
+      case "Name":
         return vendorDetails;
       default:
         console.error("Unknown section:", section.name);
@@ -366,7 +384,7 @@ const VendorProfile = () => {
     <div className="min-h-screen bg-backgroundOffWhite pt-10 text-primary">
       {vendorDetails && (
         <div className="container mx-auto w-[95%] md:max-w-[80%] rounded-lg space-y-6">
-          <BackButton/>
+          <BackButton />
           {/* Header Section */}
           <div
             className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 flex-wrap 
@@ -399,7 +417,20 @@ const VendorProfile = () => {
               </div>
 
               <div>
-                <h1 className="text-xl font-bold">{vendorDetails?.name}</h1>
+                <span className="flex items-center justify-centers gap-4">
+                  <h1 className="text-xl font-bold">{vendorDetails?.name}</h1>
+                  <button
+                    className="hover:text-primary text-purpleSecondary font-semibold float-end"
+                    onClick={() =>
+                      handleOpenModal(
+                        "Name",
+                        formfields.vendorProfileDetails.name
+                      )
+                    }
+                  >
+                    <FaRegEdit className="text-xl" />
+                  </button>
+                </span>
                 <p className="text-gray-500">
                   {vendorDetails?.location}, India
                 </p>
@@ -567,7 +598,12 @@ const VendorProfile = () => {
             vendorDetails={vendorDetails.documents}
           /> */}
           <div className="w-full flex items-center justify-center">
-            <button className="btn-primary px-2 w-fit">Add Service</button>
+            <button
+              className="btn-primary px-2 w-fit"
+              onClick={() => navigate(internalRoutes.vendorCreateservice)}
+            >
+              Add Service
+            </button>
           </div>
           {/* Modal for Editing Section */}
           <Modal open={openModal} onClose={handleCloseModal}>

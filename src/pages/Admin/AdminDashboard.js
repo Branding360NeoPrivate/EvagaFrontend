@@ -39,6 +39,8 @@ import PaymentFinancialReports from "../../components/Admin/PaymentFinancialRepo
 import AdminDashBoardchart from "../../components/Admin/AdminDashBoardchart";
 import vendorApi from "../../services/vendorApi";
 import adminActionsApi from "../../services/adminActionsApi";
+import AdminBlog from "../../components/Admin/AdminBlog";
+import AdminNewsLetter from "../../components/Admin/AdminNewsLetter";
 
 const AdminDashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState("Home");
@@ -227,13 +229,15 @@ const AdminDashboard = () => {
         {selectedMenu === "Cancelled Orders" && <CancelledOrder />}
         {selectedMenu === "Customer Query" && <CustomerQueryTable />}
         {selectedMenu === "Vendor Query" && <VendorQueryTable />}
-        {selectedMenu === "All Services" && <AllVendorService />}
+        {selectedMenu === "All Services" && <AllVendorService term={term}/>}
         {selectedMenu === "Admin Users" && <CreateSubAdmin />}
         {selectedMenu === "Vendor Reports" && <VendorReport />}
         {selectedMenu === "Customer Reports" && <CustomerReport />}
         {selectedMenu === "Booking Reports" && <BookingReports />}
         {selectedMenu === "Payment Financial Reports" && <PaymentFinancialReports />}
         {selectedMenu === "Home" && <AdminDashBoardchart />}
+        {selectedMenu === "Blog" && <AdminBlog />}
+        {selectedMenu === "NewsLetter" && <AdminNewsLetter />}
       </div>
     </div>
   );

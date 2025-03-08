@@ -693,18 +693,18 @@ function VendorCreateService() {
         {allFormsSaved && (
           <p className="text-textGray py-2">
             {" "}
-            Note: Once you've saved each package, click on 'Create Service' to
-            proceed. To add a new package, simply click on 'Add Package'.
+            Note: Once you've saved package, click on 'Create Service' to
+            proceed.
           </p>
         )}{" "}
         {allFormsSaved && (
           <div className="flex items-center justify-end w-full gap-4 mt-4">
-            <button
+            {/* <button
               className="btn-primary w-fit px-3 add-package-button"
               onClick={handleAddPackage}
             >
               Add Package
-            </button>
+            </button> */}
             {!loading ? (
               <button
                 onClick={addNewServiceHandle}

@@ -78,21 +78,6 @@ const AdminVendorProfileViewer = ({ vendorId, onMenuSelect }) => {
     dispatch(fetchVendorProfile(vendorId));
   };
 
-  const getDefaultValuesForSection = (section) => {
-    switch (section.name) {
-      case "Personal Contact Info":
-        return vendorDetails;
-      case "Bank Details":
-        return vendorDetails?.bankDetails;
-      case "Business Details":
-        return vendorDetails?.businessDetails;
-      case "Bio":
-        return vendorDetails;
-      default:
-        console.error("Unknown section:", section.name);
-        return {};
-    }
-  };
   const handleUpdateProfile = async (data) => {
     try {
       const response = await updateProfileService.callApi(vendorId, data);
@@ -149,6 +134,16 @@ const AdminVendorProfileViewer = ({ vendorId, onMenuSelect }) => {
       toast.error("Failed to update bio. Please try again.");
     }
   };
+  const handleUpdateName = async (name) => {
+    try {
+      const userId = Cookies.get("userId");
+      await updateProfileService.callApi(vendorId, name);
+      toast.success("Bio updated successfully!");
+      dispatch(fetchVendorProfile(vendorId));
+    } catch (error) {
+      toast.error("Failed to update bio. Please try again.");
+    }
+  };
   const handleUpdateProfilePicture = async (data) => {
     try {
       console.log(data);
@@ -187,10 +182,31 @@ const AdminVendorProfileViewer = ({ vendorId, onMenuSelect }) => {
       case "Profile Picture":
         handleUpdateProfilePicture(data);
         break;
+      case "Name":
+        handleUpdateName(data);
+        break;
       default:
         console.error("Unknown section:", activeSection.name);
     }
     handleCloseModal();
+  };
+
+  const getDefaultValuesForSection = (section) => {
+    switch (section.name) {
+      case "Personal Contact Info":
+        return vendorDetails;
+      case "Bank Details":
+        return vendorDetails?.bankDetails;
+      case "Business Details":
+        return vendorDetails?.businessDetails;
+      case "Bio":
+        return vendorDetails;
+      case "Name":
+        return vendorDetails;
+      default:
+        console.error("Unknown section:", section.name);
+        return {};
+    }
   };
   const handleverifyVendorprofileByAdmin = async () => {
     const response = await verifyVendorprofileByAdminApi.callApi(vendorId);
@@ -231,7 +247,6 @@ const AdminVendorProfileViewer = ({ vendorId, onMenuSelect }) => {
       ),
     [vendorDetails]
   );
-  console.log(vendorDetails, "vendorDetails?.businessDetails");
 
   if (!profile)
     return <ErrorView status="loading" error={"Profile Details Not Found!"} />;
@@ -278,7 +293,20 @@ const AdminVendorProfileViewer = ({ vendorId, onMenuSelect }) => {
               </div>
 
               <div>
-                <h1 className="text-xl font-bold">{vendorDetails?.name}</h1>
+                <span className="flex items-center justify-centers gap-4">
+                  <h1 className="text-xl font-bold">{vendorDetails?.name}</h1>
+                  <button
+                    className="hover:text-primary text-purpleSecondary font-semibold float-end"
+                    onClick={() =>
+                      handleOpenModal(
+                        "Name",
+                        formfields.vendorProfileDetails.name
+                      )
+                    }
+                  >
+                    <FaRegEdit className="text-xl" />
+                  </button>
+                </span>
                 <p className="text-gray-500">
                   {vendorDetails?.location}, India
                 </p>

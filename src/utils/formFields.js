@@ -391,6 +391,18 @@ const formfields = {
         },
       ],
     },
+    name: {
+      fields: [
+        {
+          name: "name",
+          type: "input",
+          placeholder: "name",
+          validation: {
+            required: "name is required",
+          },
+        },
+      ],
+    },
     profilePicture: {
       fields: [
         {

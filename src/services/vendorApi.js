@@ -152,6 +152,8 @@ const vendorApi = {
     apiService.post(apiEndpoints.vendor.sendaadharotp(vendorId)),
   Verifyaadharotp: (vendorId, formdata) =>
     apiService.post(apiEndpoints.vendor.verifyaadharotp(vendorId), formdata),
+  updateVendorProfileStatus: (formdata) =>
+    apiService.post(apiEndpoints.vendor.updateVendorProfileStatus, formdata),
 };
 
 export default vendorApi;

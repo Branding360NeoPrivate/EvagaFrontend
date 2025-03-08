@@ -378,12 +378,12 @@ function VendorEditService() {
         {/* Buttons Section */}
         {formInstances.every((form) => form.saved) && ( // Ensure all forms are saved
           <div className="flex items-center justify-end w-full gap-4 mt-4">
-            <button
+            {/* <button
               className="btn-primary w-fit px-3 add-package-button"
               onClick={handleAddPackage}
             >
               Add Package
-            </button>
+            </button> */}
             {!loading ? (
               <button
                 onClick={updateServiceHandle}

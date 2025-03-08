@@ -9,6 +9,7 @@ const apiEndpoints = {
     changePassword: (vendorId) => `vender/changeVenderPassword/${vendorId}`,
     deleteAccount: (vendorId) => `vender/deleteVenderProfile/${vendorId}`,
     getProfile: (vendorId) => `vender/getVenderProfileAllInOne/${vendorId}`,
+    updateVendorProfileStatus:  `vender/updateProfileStatus`,
     updateProfile: (vendorId) => `vender/updateVender/${vendorId}`,
     updateBankDetails: (vendorId) =>
       `vender/updateVendorBankDetails/${vendorId}`,

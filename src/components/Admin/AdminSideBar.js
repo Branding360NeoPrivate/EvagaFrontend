@@ -5,14 +5,14 @@ import {
   FaClipboardList,
   FaUserShield,
   FaHeadset,
-  FaAngleRight,
-  FaAngleLeft,
   FaRegMoneyBillAlt,
   FaBorderAll,
+  FaRegNewspaper,
 } from "react-icons/fa";
+import { TfiWrite } from "react-icons/tfi";
 import { RiCoupon3Line } from "react-icons/ri";
 import MainLogo from "../../assets/Temporary Images/Evaga Logo.png";
-import { TbReport } from "react-icons/tb";
+import { TbBrandBlogger, TbReport } from "react-icons/tb";
 import Cookies from "js-cookie";
 import { useAuth } from "../../context/AuthContext";
 import {
@@ -33,6 +33,8 @@ import {
   MdOutlineFeed,
 } from "react-icons/md";
 import { LuMailQuestion } from "react-icons/lu";
+import { IoArrowBackSharp } from "react-icons/io5";
+import { IoMdArrowForward } from "react-icons/io";
 const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
   const { logout } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -145,8 +147,23 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
       ],
     },
 
-    { id: "Admin Users", label: "Roles", icon: <FaUserShield /> },
-
+    {
+      id: "WriteSpace",
+      label: "Write Space",
+      icon: <TfiWrite />,
+      children: [
+        {
+          id: "Blog",
+          label: "Blog",
+          icon: <TbBrandBlogger />,
+        },
+        {
+          id: "NewsLetter",
+          label: "News Letter",
+          icon: <FaRegNewspaper />,
+        },
+      ],
+    },
     {
       id: "SupportCenter",
       label: "Support Center",
@@ -165,6 +182,7 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
         { id: "Feedback", label: "Feedback Form", icon: <FaWpforms /> },
       ],
     },
+    { id: "Admin Users", label: "Roles", icon: <FaUserShield /> },
   ];
 
   return (
@@ -173,16 +191,15 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
         isCollapsed ? "w-20" : "min-w-64"
       } h-full min-h-[100vh] flex flex-col transition-width duration-300`}
     >
+      <div className="py-6 text-center pl-2 text-xl font-bold border-b border-purple-500">
+        <img className="w-[40px] mx-auto" src={MainLogo} alt="Evaga" />
+      </div>
       <button
         className="flex items-center justify-center p-4 hover:bg-purple-600 focus:outline-none"
         onClick={() => setIsCollapsed(!isCollapsed)}
       >
-        {isCollapsed ? <FaAngleRight /> : <FaAngleLeft />}
+        {isCollapsed ? <IoMdArrowForward /> : <IoArrowBackSharp />}
       </button>
-      {/* Logo */}
-      <div className="py-6 text-center pl-2 text-xl font-bold border-b border-purple-500">
-        <img className="w-[40px] mx-auto" src={MainLogo} alt="Evaga" />
-      </div>
 
       {/* Menu Items */}
       <nav className="flex flex-col flex-grow" ref={dropdownRef}>

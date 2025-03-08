@@ -41,7 +41,7 @@ const style1 = {
   outline: "none",
   borderRadius: "5px",
 };
-function AllVendorService() {
+function AllVendorService({ term }) {
   const [page, setPage] = useState(1);
   const [allService, setAllService] = useState([]);
   const [totalPages, setTotalPages] = useState(null);
@@ -49,6 +49,7 @@ function AllVendorService() {
     serviceId: "",
     packageId: "",
   });
+  const debounce = useDebounce(term);
   const GetAllVendorsPackageApi = useServices(
     adminActionsApi.GetAllVendorsPackage
   );
@@ -80,6 +81,9 @@ function AllVendorService() {
   const [open1, setOpen1] = React.useState(false);
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
+  const [open3, setOpen3] = React.useState(false);
+  const handleOpen3 = () => setOpen3(true);
+  const handleClose3 = () => setOpen3(false);
   const [packageCredentials, setpackageCredentials] = useState({
     serviceId: "",
     packageId: "",
@@ -111,8 +115,7 @@ function AllVendorService() {
       console.error("Error downloading CSV:", error);
     }
   };
-  
-  const debounce = useDebounce(searchTerm);
+
   const handlePageChange = (event, value) => {
     setPage(value);
   };
@@ -143,7 +146,7 @@ function AllVendorService() {
   };
   useEffect(() => {
     GetAllVendorsPackageApiHandle();
-  }, [page]);
+  }, [page, debounce]);
   const handleGetOneServiceWithId = async (serviceId) => {
     const response = await getOneServiceByid.callApi(serviceId);
     setServiceValue(response && response);
@@ -153,7 +156,7 @@ function AllVendorService() {
     });
     console.log(response, "response");
   };
-  const handleAccpetorRejectpackage = async (status,packageStatus) => {
+  const handleAccpetorRejectpackage = async (status, packageStatus) => {
     const formData = new FormData();
     formData.append("status", status);
     formData.append("packageStatus", packageStatus);
@@ -395,7 +398,7 @@ function AllVendorService() {
           <MdOutlineDelete
             className="text-3xl font-semibold cursor-pointer text-textGray"
             onClick={() => [
-              handleOpen(),
+              handleOpen3(),
               setModalType("delete"),
               setServiceAndPackageId({
                 ...serviceAndPackageId,
@@ -445,7 +448,7 @@ function AllVendorService() {
             <div className="flex items-center justify-center flex-col w-full p-4 gap-2">
               <span
                 className="w-full flex items-center justify-end text-textGray text-2xl cursor-pointer"
-                onClick={handleClose}
+                onClick={() => [handleClose2()]}
               >
                 <IoMdCloseCircleOutline className="float-right" />
               </span>
@@ -597,9 +600,8 @@ function AllVendorService() {
                       setpackageCredentials({
                         ...packageCredentials,
                         status: true,
-                      
                       }),
-                      handleAccpetorRejectpackage(true,"Verified"),
+                      handleAccpetorRejectpackage(true, "Verified"),
                     ]}
                   >
                     Accept
@@ -611,9 +613,8 @@ function AllVendorService() {
                       setpackageCredentials({
                         ...packageCredentials,
                         status: false,
-                  
                       }),
-                      handleAccpetorRejectpackage(false,"Rejected"),
+                      handleAccpetorRejectpackage(false, "Rejected"),
                     ]}
                   >
                     Reject
@@ -628,6 +629,16 @@ function AllVendorService() {
         open={open}
         onClose={handleClose}
         title={modalType === "delete" ? "Delete Service" : ""}
+      >
+        {modalType === "editService" && (
+          <EditVendorService serviceId={packageCredentials?.serviceId} />
+        )}
+      </ReusableModal>{" "}
+      <ReusableModal
+        open={open3}
+        onClose={handleClose3}
+        title={modalType === "delete" ? "Delete Service" : ""}
+        width={"50%"}
       >
         {modalType === "delete" && (
           <div className="flex items-center justify-center gap-3">
@@ -654,9 +665,6 @@ function AllVendorService() {
               Permanent Delete
             </button>
           </div>
-        )}
-        {modalType === "editService" && (
-          <EditVendorService serviceId={packageCredentials?.serviceId} />
         )}
       </ReusableModal>
     </div>
