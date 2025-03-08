@@ -200,8 +200,8 @@ const VendorTable = memo(
                     )}
                   </td>
                   <td className="  px-4 py-2">{vendor.phoneNumber}</td>
-                  <td className="  px-4 py-2">{vendor.numberOfServices}</td>
-                  <td className="  px-4 py-2">{vendor.verifiedPackages}</td>
+                  <td className="  px-4 py-2">{vendor?.numberOfServices}</td>
+                  <td className="  px-4 py-2">{vendor?.verifiedPackages}</td>
                   <td className="flex items-center gap-2  px-4 py-2">
                     <button
                       className="text-blue-600 hover:underline"
