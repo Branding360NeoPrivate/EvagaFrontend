@@ -57,13 +57,13 @@ function AdminDashBoardchart() {
   };
 
   const vendorAndUser = [
-    { title: "Total Signup Vendors ", value: dashboardData?.totalVendors },
+    { title: "Total Sign Up Vendors", value: dashboardData?.totalVendors },
     {
-      title: "Total Registered Vendors",
+      title: "Total Pending Vendors",
       value: dashboardData?.totalRegisteredVendors,
     },
     {
-      title: "Total Verified Vendors ",
+      title: "Total Approved Vendors ",
       value: dashboardData?.totalVerifiedRegisteredVendors,
     },
   ];
