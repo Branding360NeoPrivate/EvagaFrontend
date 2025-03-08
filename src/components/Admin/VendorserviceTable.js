@@ -491,6 +491,10 @@ function VendorserviceTable({
                   <h3 className="text-primary font-bold text-xl w-full flex items-center gap-1">
                     Package No:
                     <p className="text-textGray font-semibold">{index + 1}</p>
+                  </h3>{" "}
+                  <h3 className="text-primary font-bold text-xl w-full flex items-center gap-1">
+                    SKU CODE:
+                    <p className="text-textGray font-semibold">{service?.sku}</p>
                   </h3>
                   <div className="w-full flex items-start justify-start flex-col">
                     {/* {service?.values?.map((item)=>({item}))} */}

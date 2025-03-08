@@ -6,6 +6,7 @@ import useServices from "../../hooks/useServices";
 import commonApis from "../../services/commonApis";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import BackButton from "../../utils/globalBackButton";
 function VendorService() {
   const userId = Cookies.get("userId");
   const [activeTab, setActiveTab] = useState("faq");
@@ -122,11 +123,15 @@ function VendorService() {
   };
 
   return (
-    <div className="flex items-start justify-between px-[2%] py-[2%] w-full">
-      <div className="flex-[0.28] flex flex-col gap-2">
-        <h3 className="text-primary text-xl font-semibold">Evaga Support</h3>
-        <hr />
-        {/* <p
+    <>
+      <span className="flex items-start justify-start px-6 pt-4 ">
+        <BackButton />
+      </span>
+      <div className="flex flex-col md:flex-row items-start justify-between gap-5 px-5 py-5 md:px-[2%] md:py-[2%] w-full">
+        <div className="flex-[0.28] flex flex-col gap-2">
+          <h3 className="text-primary text-xl font-semibold">Evaga Support</h3>
+          <hr />
+          {/* <p
           className={
             activeTab === "orderRelQry"
               ? "text-primary cursor-pointer font-medium"
@@ -136,76 +141,76 @@ function VendorService() {
         >
           Order Related Query
         </p>{" "} */}
-        <p
-          className={"text-textGray cursor-pointer font-medium"}
-          // onClick={() => setActiveTab("orderRelQry")}
-        >
-          <Link
-            to={"https://whatsapp.com/channel/0029VaWXX585fM5adzGAzC1C"}
-            target="_blank"
+          <p
+            className={"text-textGray cursor-pointer font-medium"}
+            // onClick={() => setActiveTab("orderRelQry")}
           >
-            Whatsapp Support
-          </Link>
-        </p>{" "}
-        <p
-          className={"text-textGray cursor-pointer font-medium"}
-          onClick={() => window.open(gmailLink, "_blank")}
-        >
-          Email Support
-        </p>{" "}
-        <p
-          className={"text-textGray cursor-pointer font-medium"}
-          onClick={() => (window.location.href = "tel:+918296157611")}
-        >
-          Click To Call
-        </p>
-        <p
-          className={
-            activeTab === "nonOrderRelQry"
-              ? "text-primary cursor-pointer font-medium"
-              : "text-textGray cursor-pointer font-medium"
-          }
-          onClick={() => setActiveTab("nonOrderRelQry")}
-        >
-          Send Your Query
-        </p>
-       
-        <p
-          className={
-            activeTab === "faq"
-              ? "text-primary cursor-pointer font-medium"
-              : "text-textGray cursor-pointer font-medium"
-          }
-          onClick={() => setActiveTab("faq")}
-        >
-          Frequently Asked Questions(FAQs)
-        </p>
-        <p className={"text-textGray cursor-pointer font-medium"}>
-          Call Us : +91 82961 57611
-        </p>{" "}
-        <p className={"text-textGray cursor-pointer font-medium"}>
-          Email Us : info@evagaentertainment.com
-        </p>
-        <hr />
+            <Link
+              to={"https://whatsapp.com/channel/0029VaWXX585fM5adzGAzC1C"}
+              target="_blank"
+            >
+              Whatsapp Support
+            </Link>
+          </p>{" "}
+          <p
+            className={"text-textGray cursor-pointer font-medium"}
+            onClick={() => window.open(gmailLink, "_blank")}
+          >
+            Email Support
+          </p>{" "}
+          <p
+            className={"text-textGray cursor-pointer font-medium"}
+            onClick={() => (window.location.href = "tel:+918296157611")}
+          >
+            Click To Call
+          </p>
+          <p
+            className={
+              activeTab === "nonOrderRelQry"
+                ? "text-primary cursor-pointer font-medium"
+                : "text-textGray cursor-pointer font-medium"
+            }
+            onClick={() => setActiveTab("nonOrderRelQry")}
+          >
+            Send Your Query
+          </p>
+          <p
+            className={
+              activeTab === "faq"
+                ? "text-primary cursor-pointer font-medium"
+                : "text-textGray cursor-pointer font-medium"
+            }
+            onClick={() => setActiveTab("faq")}
+          >
+            Frequently Asked Questions(FAQs)
+          </p>
+          <p className={"text-textGray cursor-pointer font-medium"}>
+            Call Us : +91 82961 57611
+          </p>{" "}
+          <p className={"text-textGray cursor-pointer font-medium"}>
+            Email Us : info@evagaentertainment.com
+          </p>
+          <hr />
+        </div>
+        <div className="flex-[0.67]">
+          {activeTab === "nonOrderRelQry" && (
+            <NonOrderRelatedQuery saveForm={CreateQueryApiHandle} />
+          )}
+          {activeTab === "faq" &&
+            faqData?.map((item, index) => (
+              <AccordionCard
+                key={index}
+                title={item.question}
+                summary={item.answer}
+                isExpanded={expanded === index}
+                onToggle={handleChange(index)}
+                panelId={index}
+                sn={index + 1}
+              />
+            ))}
+        </div>
       </div>
-      <div className="flex-[0.67]">
-        {activeTab === "nonOrderRelQry" && (
-          <NonOrderRelatedQuery saveForm={CreateQueryApiHandle} />
-        )}
-        {activeTab === "faq" &&
-          faqData?.map((item, index) => (
-            <AccordionCard
-              key={index}
-              title={item.question}
-              summary={item.answer}
-              isExpanded={expanded === index}
-              onToggle={handleChange(index)}
-              panelId={index}
-              sn={index + 1}
-            />
-          ))}
-      </div>
-    </div>
+    </>
   );
 }
 

@@ -7,16 +7,15 @@ import ProfileFormGenerator from "../../components/Forms/ProfileFormGenerator";
 import generateDefaultValues from "../../utils/generateDefaultvalues";
 import { Modal, Box, Button } from "@mui/material";
 import formfields from "../../utils/formFields";
-import DocumentUploader from "../../components/Forms/DocumentUploader";
 import { FaRegEdit } from "react-icons/fa";
 import useServices from "../../hooks/useServices";
 import vendorApi from "../../services/vendorApi";
 import { toast } from "react-toastify";
 import { fetchCategories } from "../../context/redux/slices/categorySlice";
 import SearchableCategoryAndSubcategoryDropdown from "../../components/Inputs/SearchableCategoryAndSubcategoryDropdown";
-import { showLoader } from "../../context/redux/slices/loaderSlice";
 import TermsModal from "../../components/Modal/TermsModal ";
 import ReusableModal from "../../components/Modal/Modal";
+import BackButton from "../../utils/globalBackButton";
 const VendorProfile = () => {
   const dispatch = useDispatch();
   const { profile } = useSelector((state) => state.vendor);
@@ -367,6 +366,7 @@ const VendorProfile = () => {
     <div className="min-h-screen bg-backgroundOffWhite pt-10 text-primary">
       {vendorDetails && (
         <div className="container mx-auto w-[95%] md:max-w-[80%] rounded-lg space-y-6">
+          <BackButton/>
           {/* Header Section */}
           <div
             className="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 flex-wrap 

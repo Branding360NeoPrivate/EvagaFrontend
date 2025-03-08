@@ -65,7 +65,7 @@ function OrderVenderCard({
             {title ? title : "Hospitality Staff"}
           </h5>
           <p className="text-primary font-semibold">
-            Order ID:{orderId && orderId}
+            {orderId && orderId}
           </p>
         </div>
         <div className="grid grid-cols-2 gap-4">

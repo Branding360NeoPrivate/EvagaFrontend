@@ -10,6 +10,7 @@ import "./VerifyOtpModal.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { internalRoutes } from "../../utils/internalRoutes";
+import BackButton from "../../utils/globalBackButton";
 export default function VendorOrderPage() {
   const userId = Cookies.get("userId");
   const [allOrders, setAllOrders] = useState([]);
@@ -236,8 +237,12 @@ export default function VendorOrderPage() {
 
   return (
     <div className="flex items-center justify-center flex-col w-full gap-2">
+
       <div className="w-11/12 flex items-center justify-center flex-col gap-4 mt-4">
-        <span className="w-full border-b-2 border-[#75757566] flex items-center justify-start gap-2 pb-1">
+      <span className="flex items-start justify-start w-full ">
+        <BackButton />
+      </span>
+        <span className="w-full border-b-2 border-[#75757566] flex items-center justify-start gap-6 pb-1">
           <h6
             className={
               activeState == "New Order"
@@ -342,19 +347,19 @@ export default function VendorOrderPage() {
                     >
                       Accept Order
                     </button>,
-                        <button
-                        key="view"
-                        className="btn-primary px-2"
-                        onClick={() =>
-                          navigate(
-                            internalRoutes?.vendorOrderDeatil +
-                              `/${item?.orderId}` +
-                              `/${item?._id}`
-                          )
-                        }
-                      >
-                        View Order Summary
-                      </button>,
+                    <button
+                      key="view"
+                      className="btn-primary px-2"
+                      onClick={() =>
+                        navigate(
+                          internalRoutes?.vendorOrderDeatil +
+                            `/${item?.orderId}` +
+                            `/${item?._id}`
+                        )
+                      }
+                    >
+                      View Order Summary
+                    </button>,
                   ]}
                 />
               );
