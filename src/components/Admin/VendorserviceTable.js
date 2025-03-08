@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaFilter, FaSort } from "react-icons/fa";
-import AdminVendorTableModal from "./AdminVendorTableModal";
-import { fetchAllVendorsWithProfileStatusAndService } from "../../context/redux/slices/adminActionsSlice";
 import vendorApi from "../../services/vendorApi";
 import useServices from "../../hooks/useServices";
 import { Backdrop, Box, Fade, Modal, Typography } from "@mui/material";
-import parse from "html-react-parser";
 import apiClient from "../../services/apiClient";
 import { toast } from "react-toastify";
 import { CiEdit } from "react-icons/ci";
@@ -51,6 +48,7 @@ function VendorserviceTable({
     serviceId: "",
     packageId: "",
     status: false,
+    packageStatus: "Pending",
     remarks: "",
   });
   const [vendorAllService, setVendorAllService] = useState();
@@ -92,7 +90,7 @@ function VendorserviceTable({
   };
   const handleAccpetorRejectpackage = async (status, packageStatus) => {
     const formData = new FormData();
-    formData.append("status", status);
+    formData.append("status", Boolean(status));
     formData.append("packageStatus", packageStatus);
     formData.append("remarks", packageCredentials.remarks);
     try {
@@ -494,7 +492,9 @@ function VendorserviceTable({
                   </h3>{" "}
                   <h3 className="text-primary font-bold text-xl w-full flex items-center gap-1">
                     SKU CODE:
-                    <p className="text-textGray font-semibold">{service?.sku}</p>
+                    <p className="text-textGray font-semibold">
+                      {service?.sku}
+                    </p>
                   </h3>
                   <div className="w-full flex items-start justify-start flex-col">
                     {/* {service?.values?.map((item)=>({item}))} */}

@@ -7,6 +7,7 @@ import { Pagination, Stack } from "@mui/material";
 import useDebounce from "../../utils/useDebounce";
 import useServices from "../../hooks/useServices";
 import adminActionsApi from "../../services/adminActionsApi";
+import { CiEdit } from "react-icons/ci";
 
 const VendorTable = memo(
   ({ onMenuSelect, selectedVendor, setSelectedVendor, term }) => {
@@ -200,13 +201,15 @@ const VendorTable = memo(
                   </td>
                   <td className="  px-4 py-2">{vendor.phoneNumber}</td>
                   <td className="  px-4 py-2">{vendor.numberOfServices}</td>
-                  <td className="  px-4 py-2">
+                  <td className="  px-4 py-2">{vendor.verifiedPackages}</td>
+                  <td className="flex items-center gap-2  px-4 py-2">
                     <button
                       className="text-blue-600 hover:underline"
                       onClick={() => handleViewDetails(vendor)}
                     >
                       View
                     </button>
+                    <button><CiEdit /></button>
                   </td>
                 </tr>
               ))}

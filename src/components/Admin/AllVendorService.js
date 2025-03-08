@@ -84,6 +84,7 @@ function AllVendorService() {
     serviceId: "",
     packageId: "",
     status: false,
+    packageStatus: "",
     remarks: "",
   });
   const [sortvalue, setSortValue] = useState("asc");
@@ -152,9 +153,10 @@ function AllVendorService() {
     });
     console.log(response, "response");
   };
-  const handleAccpetorRejectpackage = async (status) => {
+  const handleAccpetorRejectpackage = async (status,packageStatus) => {
     const formData = new FormData();
     formData.append("status", status);
+    formData.append("packageStatus", packageStatus);
     formData.append("remarks", packageCredentials.remarks);
     try {
       const response = await apiClient.post(
@@ -595,8 +597,9 @@ function AllVendorService() {
                       setpackageCredentials({
                         ...packageCredentials,
                         status: true,
+                      
                       }),
-                      handleAccpetorRejectpackage(true),
+                      handleAccpetorRejectpackage(true,"Verified"),
                     ]}
                   >
                     Accept
@@ -608,8 +611,9 @@ function AllVendorService() {
                       setpackageCredentials({
                         ...packageCredentials,
                         status: false,
+                  
                       }),
-                      handleAccpetorRejectpackage(false),
+                      handleAccpetorRejectpackage(false,"Rejected"),
                     ]}
                   >
                     Reject
