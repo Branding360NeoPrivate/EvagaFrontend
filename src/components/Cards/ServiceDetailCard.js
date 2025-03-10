@@ -147,7 +147,10 @@ function ServiceDetailCard({
         if (Array.isArray(value) && value.length > 0) {
           // If value is an array, render as a list
           return (
-            <div className=" mt-4 flex gap-4 items-start justify-start" key={index}>
+            <div
+              className=" mt-4 flex gap-4 items-start justify-start"
+              key={index}
+            >
               <span className="bg-textLightGray p-2 rounded-[50%]">
                 <img
                   src={iconMapping[key]}
@@ -156,7 +159,7 @@ function ServiceDetailCard({
                 />
               </span>
               <div className="mb-4 w-full">
-              <h3 className="text-normal font-meduim text-primary">{key}</h3>
+                <h3 className="text-normal font-meduim text-primary">{key}</h3>
                 <hr style={{ margin: "0.3rem 0" }} />
                 <div className="flex gap-2 mt-1 flex-wrap">
                   {value?.map((item, idx) => (
@@ -176,7 +179,7 @@ function ServiceDetailCard({
           return (
             <div className="flex gap-4 items-start justify-start" key={index}>
               <div className="mb-4 w-full flex items-center">
-              <h3 className="text-normal font-meduim text-primary">{key}</h3>
+                <h3 className="text-normal font-meduim text-primary">{key}</h3>
 
                 <span className=" text-textGray text-normal px-3 py-1 rounded-md">
                   {value}
@@ -200,7 +203,13 @@ function ServiceDetailCard({
           </h3>
           <hr style={{ margin: "0.3rem 0" }} />
 
-          {tAndC && <div className="terms-conditions">{parse(tAndC)}</div>}
+          {tAndC ? (
+            <div className="terms-conditions">{parse(tAndC)}</div>
+          ) : (
+            <p className="text-sm text-gray-500">
+              No terms and conditions available.
+            </p>
+          )}
         </div>
       </div>
     </div>

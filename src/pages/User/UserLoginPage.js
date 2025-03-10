@@ -30,13 +30,16 @@ function UserLoginPage() {
   };
   const handleGoogleLogin = async (token) => {
     console.log("Token received:", token);
-    const response = await fetch(`${process.env.REACT_APP_API_BASE_URL+"user/auth/google"}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token }),
-    });
+    const response = await fetch(
+      `${process.env.REACT_APP_API_BASE_URL + "user/auth/google"}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      }
+    );
     return response.json();
   };
 
@@ -51,9 +54,12 @@ function UserLoginPage() {
       </div>
       <div className=" flex-1 flex justify-center items-center">
         <AuthBox>
-          <div className=" text-center">
-            <h4 className=" text-primary text-3xl">Login</h4>
-            <h4 className=" text-primary text-xl">Welcome to Evaga</h4>
+          <div className=" text-center flex items-center justify-center flex-col">
+            <h4 className=" text-primary text-xl">Welcome Back to Evaga!</h4>
+            <h4 className=" text-primary text-normal max-w-[18rem]">
+              Access your account to plan and manage unforgettable events
+              effortlessly
+            </h4>
           </div>
 
           <AuthForm
@@ -63,9 +69,9 @@ function UserLoginPage() {
             role="user"
           />
           <div className=" flex gap-2 font-semibold">
-            <h5>Forgot Password?</h5>
+            <h5>Forgot your password?</h5>
             <Link to={internalRoutes.userForgotPassword}>
-              <button className=" btn-transparent ">Reset Password!</button>
+              <button className=" btn-transparent ">Reset it here</button>
             </Link>
           </div>
           <div className=" flex gap-2 font-semibold">
