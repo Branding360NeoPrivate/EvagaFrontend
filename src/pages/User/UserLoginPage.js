@@ -75,9 +75,9 @@ function UserLoginPage() {
             </Link>
           </div>
           <div className=" flex gap-2 font-semibold">
-            <h5>Don't have an account?</h5>
+            <h5>New to Evaga?</h5>
             <Link to={internalRoutes.userSignup}>
-              <button className=" btn-transparent ">Sign Up</button>
+              <button className=" btn-transparent ">Create an account</button>
             </Link>
           </div>
 
