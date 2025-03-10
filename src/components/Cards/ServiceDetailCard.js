@@ -200,7 +200,7 @@ function ServiceDetailCard({
           </h3>
           <hr style={{ margin: "0.3rem 0" }} />
 
-          <div className="terms-conditions">{parse(tAndC ? tAndC : "")}</div>
+          {tAndC && <div className="terms-conditions">{parse(tAndC)}</div>}
         </div>
       </div>
     </div>
