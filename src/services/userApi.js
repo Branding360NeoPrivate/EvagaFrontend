@@ -71,6 +71,8 @@ const userApi = {
     apiService.post(apiEndpoints.user.addRecentView, formdata),
   SuggestSimilarServices: (formdata) =>
     apiService.post(apiEndpoints.user.suggestSimilarServices, formdata),
+  getAllBlog: () => apiService.post(apiEndpoints.user.getAllBlog),
+  getOneBlog: (blogId) => apiService.post(apiEndpoints.user.getOneBlog(blogId)),
 };
 
 export default userApi;

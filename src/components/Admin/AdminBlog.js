@@ -5,6 +5,8 @@ import TableComponetWithApi from "../../utils/TableComponetWithApi";
 import ReusableModal from "../Modal/Modal";
 import { useForm } from "react-hook-form";
 import ReactQuill from "react-quill";
+import useServices from "../../hooks/useServices";
+import adminActionsApi from "../../services/adminActionsApi";
 
 function AdminBlog() {
   const [page, setPage] = useState(1);
@@ -17,6 +19,9 @@ function AdminBlog() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const getAllBlogApi = useServices(adminActionsApi.getAllBlog);
+  const getOneBlog = useServices(adminActionsApi.getAllBlog);
+  const createOneBlog = useServices(adminActionsApi.getAllBlog);
   const {
     register,
     handleSubmit,

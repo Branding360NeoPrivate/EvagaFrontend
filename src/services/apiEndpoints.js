@@ -9,7 +9,7 @@ const apiEndpoints = {
     changePassword: (vendorId) => `vender/changeVenderPassword/${vendorId}`,
     deleteAccount: (vendorId) => `vender/deleteVenderProfile/${vendorId}`,
     getProfile: (vendorId) => `vender/getVenderProfileAllInOne/${vendorId}`,
-    updateVendorProfileStatus:  `vender/updateProfileStatus`,
+    updateVendorProfileStatus: `vender/updateProfileStatus`,
     updateProfile: (vendorId) => `vender/updateVender/${vendorId}`,
     updateBankDetails: (vendorId) =>
       `vender/updateVendorBankDetails/${vendorId}`,
@@ -88,6 +88,8 @@ const apiEndpoints = {
     getRecentViewpackage: (userId) => `recentView/get-recent-view/${userId}`,
     addRecentView: `recentView/add-recent-view`,
     suggestSimilarServices: `cart/suggestSimilarServices`,
+    getAllBlog: `blog/get-All-Blog`,
+    getOneBlog: (blogId) => `blog/get-one-blog/${blogId}`,
   },
   category: {
     add: "category",
@@ -170,6 +172,11 @@ const apiEndpoints = {
     getAdminDashboardDataHandle: `/adminAction/getAdminDashboardDataHandle`,
     downloadVendorListing: `/adminAction/downloadVendorListing`,
     downloadVendorsAsCSV: `/adminAction/downloadVendorsAsCSV`,
+    getAllBlog: `blog/get-All-Blog`,
+    getOneBlog: (blogId) => `blog/get-one-blog/${blogId}`,
+    createOneBlog: `blog/create-blog`,
+    updateOneBlog: (blogId) => `blog/update-one-blog/${blogId}`,
+    deleteOneBlog: (blogId) => `blog/delete-one-blog/${blogId}`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",

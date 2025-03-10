@@ -247,7 +247,7 @@ function VendorEditService() {
                 : [],
             };
           }
-          else if (field.type === "array") {
+          else if (field.key === "AddOns") {
             const userValues = service?.values?.[field.key];
             return {
               ...field,

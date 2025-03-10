@@ -130,6 +130,15 @@ const adminActionsApi = {
     apiService.get(apiEndpoints.adminActions.downloadVendorListing),
   downloadVendorsAsCSV: () =>
     apiService.get(apiEndpoints.adminActions.downloadVendorsAsCSV),
+  getAllBlog: () => apiService.get(apiEndpoints.adminActions.getAllBlog),
+  getOneBlog: (blogId) =>
+    apiService.get(apiEndpoints.adminActions.getOneBlog(blogId)),
+  createOneBlog: (formdata) =>
+    apiService.post(apiEndpoints.adminActions.createOneBlog, formdata),
+  updateOneBlog: (blogId, formdata) =>
+    apiService.post(apiEndpoints.adminActions.updateOneBlog(blogId), formdata),
+  deleteOneBlog: (blogId) =>
+    apiService.delete(apiEndpoints.adminActions.deleteOneBlog(blogId)),
 };
 
 export default adminActionsApi;
