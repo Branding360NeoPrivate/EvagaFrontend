@@ -222,38 +222,6 @@ function VendorEditService() {
     }
   }, [selectedCatgeory, selectedSubCatgeory]);
 
-  // useEffect(() => {
-  //   if (serviceValue?.services) {
-  //     const initialInstances = serviceValue.services.map((service) => ({
-  //       id: service._id,
-  //       data: formFeilds?.fields?.map((field) => {
-  //         if (field.type === "select") {
-  //           const selectedValue = service?.values?.[field.key];
-  //           return {
-  //             ...field,
-  //             items: Array.isArray(field.items)
-  //               ? [...new Set([selectedValue, ...field.items].filter(Boolean))]
-  //               : [],
-  //           };
-  //         } else if (field.type === "radio") {
-  //           const selectedValue = service?.values?.[field.key];
-
-  //           return {
-  //             ...field,
-  //             items: Array.isArray(field.items) ? field.items : [],
-  //           };
-  //         } else {
-  //           return {
-  //             ...field,
-  //             items: service?.values?.[field.key] || field.items || "",
-  //           };
-  //         }
-  //       }),
-  //       saved: false,
-  //     }));
-  //     setFormInstances(initialInstances);
-  //   }
-  // }, [serviceValue, formFeilds?.fields]);
   useEffect(() => {
     if (serviceValue?.services) {
       const initialInstances = serviceValue.services.map((service) => ({
@@ -274,11 +242,24 @@ function VendorEditService() {
               items: Array.isArray(field.items)
                 ? field.items.map((item) => ({
                     ...item,
-                    checked: item.value === selectedValue, // Mark as checked if the value matches
+                    checked: item.value === selectedValue,
                   }))
                 : [],
             };
-          } else {
+          }
+          else if (field.type === "array") {
+            const userValues = service?.values?.[field.key];
+            return {
+              ...field,
+              items: Array.isArray(userValues) && userValues.length > 0
+                ? userValues
+                : Array.isArray(field.items) && field.items.length > 0
+                ? field.items.map((item) => ({ ...item })) 
+                : [],
+            };
+          }
+           
+          else {
             return {
               ...field,
               items: service?.values?.[field.key] || field.items || "",

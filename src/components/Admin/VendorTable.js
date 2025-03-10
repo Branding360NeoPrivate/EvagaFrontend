@@ -457,7 +457,7 @@ const VendorTable = memo(
           {modalType === "delete" && (
             <DeleteForm
               onDelete={() => deleteAccountApiHandle(vendorId)}
-              deleteText="Delete Vendor"
+              deleteText="Vendor"
             />
           )}
         </ReusableModal>

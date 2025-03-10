@@ -87,7 +87,7 @@ function ServiceDetailCard({
       toast.info("You need to log in first to add items to the wishlist.");
     }
   };
-console.log(tAndC);
+  console.log(tAndC);
 
   return (
     <div className="  bg-white p-4 w-full max-w-3xl">
@@ -148,7 +148,10 @@ console.log(tAndC);
         if (Array.isArray(value) && value.length > 0) {
           // If value is an array, render as a list
           return (
-            <div className=" mt-4 flex gap-4 items-start justify-start" key={index}>
+            <div
+              className=" mt-4 flex gap-4 items-start justify-start"
+              key={index}
+            >
               <span className="bg-textLightGray p-2 rounded-[50%]">
                 <img
                   src={iconMapping[key]}
@@ -157,7 +160,7 @@ console.log(tAndC);
                 />
               </span>
               <div className="mb-4 w-full">
-              <h3 className="text-normal font-meduim text-primary">{key}</h3>
+                <h3 className="text-normal font-meduim text-primary">{key}</h3>
                 <hr style={{ margin: "0.3rem 0" }} />
                 <div className="flex gap-2 mt-1 flex-wrap">
                   {value?.map((item, idx) => (
@@ -177,7 +180,7 @@ console.log(tAndC);
           return (
             <div className="flex gap-4 items-start justify-start" key={index}>
               <div className="mb-4 w-full flex items-center">
-              <h3 className="text-normal font-meduim text-primary">{key}</h3>
+                <h3 className="text-normal font-meduim text-primary">{key}</h3>
 
                 <span className=" text-textGray text-normal px-3 py-1 rounded-md">
                   {value}
@@ -201,7 +204,7 @@ console.log(tAndC);
           </h3>
           <hr style={{ margin: "0.3rem 0" }} />
 
-          <div className="terms-conditions">{parse(tAndC?.length>0 ? tAndC : "")}</div>
+          <div className="terms-conditions">{tAndC=="" ?""  :  parse(tAndC)}</div>
         </div>
       </div>
     </div>
