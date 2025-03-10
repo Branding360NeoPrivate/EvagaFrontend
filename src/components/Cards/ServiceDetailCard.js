@@ -87,6 +87,7 @@ function ServiceDetailCard({
       toast.info("You need to log in first to add items to the wishlist.");
     }
   };
+console.log(tAndC);
 
   return (
     <div className="  bg-white p-4 w-full max-w-3xl">
