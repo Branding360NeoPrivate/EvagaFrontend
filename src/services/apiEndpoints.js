@@ -114,6 +114,9 @@ const apiEndpoints = {
     getvendorQuery: (userId) => `Query/vendor/${userId}`,
     getallquery: (role) => `Query/get-all-query/${role}`,
     getOneQueries: (queryId) => `Query/getOneQueries/${queryId}`,
+    getAllBlogs: `blog/get-all-blog-for-user`,
+    getOneBlog: (blogId) => `blog/get-one-blog-for-user/${blogId}`,
+    getAllPublishedUrls: `newsletter/getAllPublishedUrls`,
   },
   admin: {
     register: "admin/registerAdmin",
@@ -177,6 +180,13 @@ const apiEndpoints = {
     createOneBlog: `blog/create-blog`,
     updateOneBlog: (blogId) => `blog/update-one-blog/${blogId}`,
     deleteOneBlog: (blogId) => `blog/delete-one-blog/${blogId}`,
+    createOneNewsLetter: `newsletter/createOne`,
+    getAllNewsLetter: `newsletter/getAll`,
+    getOneNewsLetter: (newsletterId) => `newsletter/getone/${newsletterId}`,
+    updateOneNewsLetter: (newsletterId) =>
+      `newsletter/updateone/${newsletterId}`,
+    deleteOneNewsLetter: (newsletterId) =>
+      `newsletter/deleteone/${newsletterId}`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",

@@ -56,6 +56,9 @@ import VendorService from "./pages/Vendor/VendorService";
 import PrivacyAndPolicy from "./pages/PrivacyAndPolicy";
 import Careers from "./pages/Careers";
 import AdvertisewithUs from "./pages/AdvertisewithUs";
+import GlobalEventHandlers from "./utils/GlobalEventHandlers";
+import Blog from "./pages/Blog";
+import SingleBlogPage from "./pages/singleBlogPage";
 const AppContent = () => {
   const { auth } = useAuth();
   const dispatch = useDispatch();
@@ -86,7 +89,7 @@ const AppContent = () => {
   return (
     <>
       {!noNavbarPaths.includes(location.pathname) && <DynamicNav />}
-
+      <GlobalEventHandlers>
       <GlobalLoader />
       <ToastContainer
         position="top-right"
@@ -102,7 +105,6 @@ const AppContent = () => {
       />
       <GoToTop />
       <Routes>
-        {/* Public Routes */}
         <Route element={<AdminLoginPage />} path={internalRoutes.adminLogin} />
         <Route element={<UserLoginPage />} path={internalRoutes.userLogin} />
         <Route element={<UserSignupPage />} path={internalRoutes.userSignup} />
@@ -133,6 +135,8 @@ const AppContent = () => {
         />
         <Route element={<PressRelease />} path={internalRoutes.pressReleases} />
         <Route element={<AboutEvaga />} path={internalRoutes.aboutUs} />
+        <Route element={<Blog />} path={internalRoutes.blog} />
+        <Route element={<SingleBlogPage />} path={`${internalRoutes.singleBlog+"/:blogId" }`} />
         <Route
           element={<RefundAndCancellation />}
           path={internalRoutes.cancellationPolicy}
@@ -252,6 +256,7 @@ const AppContent = () => {
 /> */}
       </Routes>
       {!noNavbarPaths.includes(location.pathname) && <Footer />}
+      </GlobalEventHandlers>
     </>
   );
 };

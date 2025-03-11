@@ -454,21 +454,30 @@ const DynamicNav = () => {
                           <div className="mt-2 bg-white border rounded-md shadow-lg">
                             <Link
                               to={internalRoutes.profile}
-                              onClick={() => [setMobileDropdownOpen(false),closeMobileMenu()]}  // Close dropdown and redirect
+                              onClick={() => [
+                                setMobileDropdownOpen(false),
+                                closeMobileMenu(),
+                              ]} // Close dropdown and redirect
                               className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                             >
                               My Profile
                             </Link>
                             <Link
                               to={internalRoutes.checkout}
-                              onClick={() => [setMobileDropdownOpen(false),closeMobileMenu()]} // Close dropdown and redirect
+                              onClick={() => [
+                                setMobileDropdownOpen(false),
+                                closeMobileMenu(),
+                              ]} // Close dropdown and redirect
                               className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                             >
                               Cart
                             </Link>{" "}
                             <Link
                               to={internalRoutes.order}
-                              onClick={() => [setMobileDropdownOpen(false),closeMobileMenu()]} // Close dropdown and redirect
+                              onClick={() => [
+                                setMobileDropdownOpen(false),
+                                closeMobileMenu(),
+                              ]} // Close dropdown and redirect
                               className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                             >
                               Orders
@@ -541,7 +550,7 @@ const DynamicNav = () => {
             </Link>
           </motion.div> */}
 
-          {/* <motion.div
+          <motion.div
             className="py-1"
             initial="rest"
             whileHover="hover"
@@ -553,8 +562,8 @@ const DynamicNav = () => {
               padding: "4px",
             }}
           >
-            <Link to={"#"}>Blog</Link>
-          </motion.div> */}
+            <Link to={internalRoutes?.blog}>Blog</Link>
+          </motion.div>
 
           <motion.div
             className="py-1"

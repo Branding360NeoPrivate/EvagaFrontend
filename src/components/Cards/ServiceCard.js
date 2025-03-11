@@ -90,7 +90,7 @@ function ServiceCard({
 
         {price && (
           <strong className="text-2xl text-primary">
-            ₹ {price && formatCurrency(price)}
+             {price && formatCurrency(price)}
           </strong>
         )}
       </div>

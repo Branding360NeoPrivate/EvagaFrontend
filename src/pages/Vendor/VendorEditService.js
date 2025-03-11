@@ -77,14 +77,10 @@ function VendorEditService() {
       }
 
       setLoading(true);
-
-      // Initialize FormData
       const formData = new FormData();
       formData.append("formTemplateId", selectedFormId);
       formData.append("AbouttheService", abouttheService);
       formData.append("YearofExperience", yearofExperience);
-
-      // Prepare services structure
       const services = formInstances.map((service, serviceIndex) => {
         const correspondingCateringPackages =
           inHouseCateringPackageData[serviceIndex] || [];
@@ -99,10 +95,8 @@ function VendorEditService() {
         };
       });
 
-      // Append services JSON string
       formData.append("services", JSON.stringify(services));
 
-      // Helper function to process file-specific fields
       const processFileFields = (key, value, serviceIndex) => {
         if (Array.isArray(value)) {
           value.forEach((item, itemIndex) => {
@@ -119,7 +113,6 @@ function VendorEditService() {
         }
       };
 
-      // Process each service and append only file-related fields
       services.forEach((service, serviceIndex) => {
         const values = service.values;
 
@@ -136,7 +129,6 @@ function VendorEditService() {
 
             case "Portfolio":
               if (value.items && typeof value.items === "object") {
-                // Handle Portfolio photos
                 if (Array.isArray(value.items.photos)) {
                   value.items.photos.forEach((photo, photoIndex) => {
                     if (photo instanceof File) {
@@ -246,20 +238,29 @@ function VendorEditService() {
                   }))
                 : [],
             };
-          }
-          else if (field.key === "AddOns") {
+          } else if (field.key === "AddOns") {
             const userValues = service?.values?.[field.key];
             return {
               ...field,
-              items: Array.isArray(userValues) && userValues.length > 0
-                ? userValues
-                : Array.isArray(field.items) && field.items.length > 0
-                ? field.items.map((item) => ({ ...item })) 
-                : [],
+              items:
+                Array.isArray(userValues) && userValues.length > 0
+                  ? userValues
+                  : Array.isArray(field.items) && field.items.length > 0
+                  ? field.items.map((item) => ({ ...item }))
+                  : [],
             };
-          }
-           
-          else {
+          } else if (field.key === "Package") {
+            const userValues = service?.values?.[field.key];
+            return {
+              ...field,
+              items:
+                Array.isArray(userValues) && userValues.length > 0
+                  ? userValues
+                  : Array.isArray(field.items) && field.items.length > 0
+                  ? field.items.map((item) => ({ ...item }))
+                  : [],
+            };
+          } else {
             return {
               ...field,
               items: service?.values?.[field.key] || field.items || "",

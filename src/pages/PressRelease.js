@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PressReleaseCard from "../components/Cards/PressReleaseCard";
+import useServices from "../hooks/useServices";
+import commonApis from "../services/commonApis";
 
 function PressRelease() {
-  const links = [
-    "https://www.zeebiz.com/india/news-from-byju-s-avp-to-revolutionising-events-evaga-entertainment-redefines-the-industry-341631",
-  ];
+  const [links, setLinks] = useState([]);
+  const getAllPublishedUrlsApi = useServices(commonApis.getAllPublishedUrls);
+  const getAllPublishedUrlsHandle = async () => {
+    const response = await getAllPublishedUrlsApi.callApi();
+    setLinks(response ? response : []);
+  };
+  useEffect(() => {
+    getAllPublishedUrlsHandle();
+  }, []);
+
   return (
     <div className="w-full   px-[2%] py-[3%]">
       {links?.map((item) => (
-        <PressReleaseCard articleUrl={item} />
+        <PressReleaseCard articleUrl={item?.url} />
       ))}
     </div>
   );

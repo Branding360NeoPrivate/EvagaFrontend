@@ -35,6 +35,8 @@ export const internalRoutes = {
 
   aboutUs: "/about-us",
   careers: "/careers",
+  blog: "/blogs",
+  singleBlog: "/blogs/singleBlog",
   pressReleases: "/press-releases",
   advertiseWithUs: "/advertise-with-us",
   grievanceOfficer: "/grievance-officer",

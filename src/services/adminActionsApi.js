@@ -134,11 +134,36 @@ const adminActionsApi = {
   getOneBlog: (blogId) =>
     apiService.get(apiEndpoints.adminActions.getOneBlog(blogId)),
   createOneBlog: (formdata) =>
-    apiService.post(apiEndpoints.adminActions.createOneBlog, formdata),
+    apiService.post(apiEndpoints.adminActions.createOneBlog, formdata, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
   updateOneBlog: (blogId, formdata) =>
-    apiService.post(apiEndpoints.adminActions.updateOneBlog(blogId), formdata),
+    apiService.post(apiEndpoints.adminActions.updateOneBlog(blogId), formdata, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
   deleteOneBlog: (blogId) =>
     apiService.delete(apiEndpoints.adminActions.deleteOneBlog(blogId)),
+  getAllNewsLetter: () => apiService.get(apiEndpoints.adminActions.getAllNewsLetter),
+  getOneNewsLetter: (newsletterId) =>
+    apiService.get(apiEndpoints.adminActions.getOneNewsLetter(newsletterId)),
+  createOneNewsLetter: (formdata) =>
+    apiService.post(apiEndpoints.adminActions.createOneNewsLetter, formdata, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
+    updateOneNewsLetter: (newsletterId, formdata) =>
+    apiService.post(apiEndpoints.adminActions.updateOneNewsLetter(newsletterId), formdata, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }),
+    deleteOneNewsLetter: (newsletterId) =>
+    apiService.delete(apiEndpoints.adminActions.deleteOneNewsLetter(newsletterId)),
 };
 
 export default adminActionsApi;

@@ -505,9 +505,10 @@ const EditDynamicForm = ({
               return { ...prev, [field.key]: updatedCapacity };
             });
           };
+console.log(field?.items);
 
-          const selectedStaffData = field.items.find(
-            (item) => item.title !== ""
+          const selectedStaffData = field?.items?.find(
+            (item) => item?.title !== ""
           );
 
           return (
@@ -516,16 +517,15 @@ const EditDynamicForm = ({
                 {field.label}:
               </label>
               <div className="col-span-3 flex flex-col gap-4">
-                {selectedStaffData.staffDetails.map((staff, index) => (
+                {selectedStaffData?.staffDetails?.map((staff, index) => (
                   <div
                     key={index}
                     className="grid grid-cols-5 items-center justify-center gap-2"
                   >
                     <p className="text-lg text-primary font-semibold">
-                      {staff.type}
+                      {staff?.type}
                     </p>
                     <div className="col-span-4 flex gap-4">
-                      {/* Min Capacity */}
                       <div className="flex flex-col gap-1">
                         <label className="text-primary">Min</label>
                         <input
