@@ -15,7 +15,7 @@ function PressRelease() {
   }, []);
 
   return (
-    <div className="w-full   px-[2%] py-[3%]">
+    <div className="w-full flex items-center justify-center gap-3 flex-wrap  px-[2%] py-[3%]">
       {links?.map((item) => (
         <PressReleaseCard articleUrl={item?.url} />
       ))}

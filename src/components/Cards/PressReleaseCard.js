@@ -33,7 +33,7 @@ const PressReleaseCard = memo(({ articleUrl }) => {
 
   if (loading)
     return (
-      <div className="max-w-sm rounded-2xl overflow-hidden shadow-lg bg-gray-200 animate-pulse">
+      <div className="max-w-sm rounded-2xl overflow-hidden shadow-lg bg-gray-200 animate-pulse flex-shrink-0">
         <div className="relative h-48 bg-gray-300"></div>
         <div className="p-6">
           <div className="h-6 bg-gray-300 rounded-md mb-4"></div>
