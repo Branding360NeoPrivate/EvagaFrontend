@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import adminActionsApi from "../../services/adminActionsApi";
 import useServices from "../../hooks/useServices";
 import formatCurrency from "../../utils/formatCurrency";
+import DateRangePicker from "../../utils/DateRangePicker";
 
 function AdminDashBoardchart() {
   const [data, setData] = useState([
@@ -21,8 +22,12 @@ function AdminDashBoardchart() {
   const AddRecentViewApi = useServices(
     adminActionsApi.GetAdminDashboardDataHandle
   );
-  const AddRecentViewApiHandle = async () => {
-    const response = await AddRecentViewApi.callApi();
+  const AddRecentViewApiHandle = async (fromDate, toDate) => {
+    const queryParams = {
+      fromDate: fromDate || "",
+      toDate: toDate || "",
+    };
+    const response = await AddRecentViewApi.callApi(queryParams);
     setDashboardData({
       ...dashboardData,
       totalVendors: response?.totalVendors,
@@ -40,20 +45,19 @@ function AdminDashBoardchart() {
         "Total Ongoing Orders": "active",
         "Total Completed Orders": "completed",
       };
-
+    
       const matchingStatus = orderSummary.find(
         (status) => status.orderStatus === statusMapping[item.title]
       );
-
-      return matchingStatus
-        ? {
-            ...item,
-            count: matchingStatus.count,
-            total: matchingStatus.totalCombined.toFixed(2),
-          }
-        : item;
+    
+      return {
+        ...item,
+        count: matchingStatus ? matchingStatus.count : 0, // Reset count to 0 if no match
+        total: matchingStatus ? matchingStatus.totalCombined.toFixed(2) : "0.00", // Reset total to "0.00" if no match
+      };
     });
     setData(updatedData);
+    
   };
 
   const vendorAndUser = [
@@ -72,8 +76,14 @@ function AdminDashBoardchart() {
       title: "Total Services Listed ",
       value: dashboardData?.serviceSummary?.totalServices,
     },
-    { title: "Total Verified Services  ", value: dashboardData?.serviceSummary?.verifiedCount },
-    { title: "Total Pending Services  ", value: dashboardData?.serviceSummary?.pendingCount },
+    {
+      title: "Total Verified Services  ",
+      value: dashboardData?.serviceSummary?.verifiedCount,
+    },
+    {
+      title: "Total Pending Services  ",
+      value: dashboardData?.serviceSummary?.pendingCount,
+    },
     {
       title: "Total Rejected Services ",
       value: dashboardData?.serviceSummary?.rejectedCount,
@@ -84,9 +94,12 @@ function AdminDashBoardchart() {
   }, []);
   return (
     <div className="w-full flex items-center justify-center flex-col  gap-2">
-      <h2 className="text-2xl font-semibold w-full flex items-start justify-start text-primary">
-        Vendor & Customer
-      </h2>
+      <div className="flex items-center justify-between w-full">
+        <h2 className="text-2xl font-semibold w-full flex items-start justify-start text-primary">
+          Vendor & Customer
+        </h2>
+        <DateRangePicker onSearch={AddRecentViewApiHandle}/>
+      </div>
       <div className="flex items-center justify-start flex-wrap gap-4 w-full">
         {vendorAndUser.map((item, index) => (
           <div
