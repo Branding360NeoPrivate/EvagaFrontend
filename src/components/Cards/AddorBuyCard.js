@@ -203,48 +203,45 @@ function AddorBuyCard({
       });
     });
   }, []);
-  // console.log(selectedAddOns,);
 
   const handleAddTocart = async () => {
     const missingFields = [];
     if (!dateInput) missingFields.push("Date");
     if (!pincode) missingFields.push("Pin Code");
     if (!formattedTime) missingFields.push("Time");
-  
+
     if (missingFields.length > 0) {
       toast.warning(`${missingFields.join(", ")} is required.`);
       return false;
     }
-  
-    // Add default Add-On if basePrice and selectedAddOns are empty
     if (!basePrice && selectedAddOns.length === 0) {
       const defaultKey = keysToRender.find(
         (key) =>
           Array.isArray(renderPrice?.[key]) && renderPrice[key].length > 0
       );
-  
+
       if (!defaultKey || !renderPrice[defaultKey]?.length) {
         toast.warning("No default add-on is available.");
         return false;
       }
-  
+
       const defaultAddOn = renderPrice[defaultKey][0];
       const isPackage = defaultKey === "Package"; // Define isPackage here
-  
+
       // Add rateInfo and uom directly to defaultAddOn
       defaultAddOn.rateInfo = isPackage
         ? defaultAddOn.Rates
         : defaultAddOn.Amount || defaultAddOn?.Rates;
-  
+
       defaultAddOn.uom = isPackage
         ? defaultAddOn.days
         : defaultAddOn.Uom || defaultAddOn.UOM;
-  
+
       const minQty =
         defaultAddOn.MinQty && !isNaN(defaultAddOn.MinQty)
           ? parseInt(defaultAddOn.MinQty, 10)
           : 1;
-  
+
       await handleAddOnUpdate(
         { ...defaultAddOn, MinQty: minQty },
         "add",
@@ -284,12 +281,13 @@ function AddorBuyCard({
       );
       const currentPath = `${location.pathname}${location.search || ""}`;
       navigate(
-        `${internalRoutes.userLogin}?redirect=${encodeURIComponent(currentPath)}`
+        `${internalRoutes.userLogin}?redirect=${encodeURIComponent(
+          currentPath
+        )}`
       );
       return false;
     }
   };
-  
 
   const disablePastDates = ({ date }) => {
     const today = new Date();
@@ -397,7 +395,6 @@ function AddorBuyCard({
             </p>
           </div>
         </div>
-
         <div className="flex flex-col gap-4">
           <div className=" mb-4 relative" ref={calendarRef}>
             <label className="block text-primary mb-2">Date</label>
@@ -466,7 +463,6 @@ function AddorBuyCard({
             </div>
           </div>
         </div>
-
         <div className="my-4 flex flex-row gap-2 justify-between ">
           <div className=" text-primary text-xl font-semibold pt-2 flex items-center justify-center gap-1">
             <span className="bg-textLightGray rounded-[50%] p-2">
@@ -476,7 +472,9 @@ function AddorBuyCard({
                 className="h-[1.5rem] object-fit"
               />
             </span>
-            <p className="text-primary text-sm font-semibold text-normal">Event Location </p>
+            <p className="text-primary text-sm font-semibold text-normal">
+              Event Location{" "}
+            </p>
           </div>
           <div className="flex items-end justify-end w-[10rem]">
             <input
@@ -495,6 +493,16 @@ function AddorBuyCard({
             </p>
             <p className="text-textGray">
               {formatCurrency(Number(renderPrice?.SecurityDeposit))}
+            </p>
+          </span>
+        )}{" "}
+        {renderPrice?.SetupCost && (
+          <span className="flex items-center justify-between py-2">
+            <p className="text-primary text-sm font-semibold text-normal">
+            Setup Cost
+            </p>
+            <p className="text-textGray">
+              {formatCurrency(Number(renderPrice?.SetupCost))}
             </p>
           </span>
         )}
@@ -523,8 +531,6 @@ function AddorBuyCard({
                       ? item.Rates
                       : item.Amount || item?.Rates;
                     const uom = isPackage ? item.days : item.Uom || item.UOM;
-
-                    // Extract MinQty, fallback to 1 if not available
                     const minQuantity =
                       item.MinQty && !isNaN(item.MinQty)
                         ? parseInt(item.MinQty, 10)
@@ -567,7 +573,6 @@ function AddorBuyCard({
             }
           })}
         </div>
-
         <div className="space-y-3 mt-4">
           {!packageIncart ? (
             <button className="btn-primary" onClick={handleAddTocart}>

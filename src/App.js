@@ -86,167 +86,195 @@ const AppContent = () => {
       dispatch(fetchUserWishlist(userId));
     }
   }, [auth, allWishlist, userId, dispatch]);
+  useEffect(() => {
+    const handleWheel = (event) => {
+      if (event.deltaX !== 0) {
+        event.preventDefault();
+      }
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
   return (
     <>
       {!noNavbarPaths.includes(location.pathname) && <DynamicNav />}
       <GlobalEventHandlers>
-      <GlobalLoader />
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-      <GoToTop />
-      <Routes>
-        <Route element={<AdminLoginPage />} path={internalRoutes.adminLogin} />
-        <Route element={<UserLoginPage />} path={internalRoutes.userLogin} />
-        <Route element={<UserSignupPage />} path={internalRoutes.userSignup} />
-        <Route
-          element={
-            <ProtectedRoute allowedRoles={["user"]}>
-              <UserProfile />
-            </ProtectedRoute>
-          }
-          path={internalRoutes.profile}
+        <GlobalLoader />
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
         />
-        <Route
-          element={<UserForgotPassword />}
-          path={internalRoutes.userForgotPassword}
-        />
-        <Route element={<Home />} path={internalRoutes.home} />
-        <Route element={<InterestSelection />} path={internalRoutes.interest} />
-        <Route
-          element={<SearchResultPage />}
-          path={internalRoutes.searchresultPage}
-        />
-        <Route element={<Wishlist />} path={internalRoutes.wishlist} />
-        <Route element={<CheckOut />} path={internalRoutes.checkout} />
-        <Route element={<PaymentPage />} path={internalRoutes.payment} />
-        <Route
-          element={<OrderSucessPage />}
-          path={internalRoutes.orderStatus}
-        />
-        <Route element={<PressRelease />} path={internalRoutes.pressReleases} />
-        <Route element={<AboutEvaga />} path={internalRoutes.aboutUs} />
-        <Route element={<Blog />} path={internalRoutes.blog} />
-        <Route element={<SingleBlogPage />} path={`${internalRoutes.singleBlog+"/:blogId" }`} />
-        <Route
-          element={<RefundAndCancellation />}
-          path={internalRoutes.cancellationPolicy}
-        />
-        <Route
-          element={<TermsAndConditions />}
-          path={internalRoutes.TermsAndConditions}
-        />
-        <Route
-          element={<PrivacyAndPolicy />}
-          path={internalRoutes.privacyAndPolicy}
-        />
-        <Route element={<Careers />} path={internalRoutes.careers} />
-        <Route
-          element={<AdvertisewithUs />}
-          path={internalRoutes.advertiseWithUs}
-        />
-        <Route element={<FeedBack />} path={internalRoutes.feedbackForm} />
-        <Route
-          element={<CustomerService />}
-          path={internalRoutes.customerService}
-        />
-        <Route
-          element={<VendorService />}
-          path={internalRoutes.vendorSupport}
-        />
-        <Route element={<OrderPage />} path={internalRoutes.order} />
-        <Route
-          element={<UserOrderDetailPage />}
-          path={`${internalRoutes.orderDetail + "/:orderId/:itemId"}`}
-        />
-        <Route
-          element={<VendorOrderDetailPage />}
-          path={`${internalRoutes.vendorOrderDeatil + "/:orderId/:itemId"}`}
-        />
-        <Route
-          element={<SinglePackage />}
-          path={`${internalRoutes.SinglePackage + "/:serviceId/:packageId"}`}
-        />
-        <Route
-          element={<VendorSignUpPage />}
-          path={internalRoutes.vendorSignup}
-        />
-        <Route
-          element={<VendorLoginPage />}
-          path={internalRoutes.vendorLogin}
-        />
-        <Route
-          element={<VendorForgotPasswordPage />}
-          path={internalRoutes.vendorForgotPassword}
-        />
-        {/* Vendor Protected Routes */}
-        <Route
-          path={internalRoutes.vendorDashboard}
-          element={
-            <ProtectedRoute allowedRoles={["vendor"]}>
-              <VendorDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path={internalRoutes.vendorProfile}
-          element={
-            <ProtectedRoute allowedRoles={["vendor"]}>
-              <VendorProfile />
-            </ProtectedRoute>
-          }
-        />{" "}
-        <Route
-          path={internalRoutes.vendorCreateservice}
-          element={
-            <ProtectedRoute allowedRoles={["vendor"]}>
-              <VendorCreateService />
-            </ProtectedRoute>
-          }
-        />{" "}
-        <Route
-          path={`${internalRoutes.vendorEditservice}/:serviceId`}
-          element={
-            <ProtectedRoute allowedRoles={["vendor"]}>
-              <VendorEditService />
-            </ProtectedRoute>
-          }
-        />{" "}
-        <Route
-          path={internalRoutes.vendorOrders}
-          element={
-            <ProtectedRoute allowedRoles={["vendor"]}>
-              <VendorOrderPage />
-            </ProtectedRoute>
-          }
-        />{" "}
-        <Route
-          path={internalRoutes.vendorOrderDeatil}
-          element={
-            <ProtectedRoute allowedRoles={["vendor"]}>
-              <VendorOrderDetailPage />
-            </ProtectedRoute>
-          }
-        />
-        {/* Admin Protected Routes */}
-        <Route
-          path={internalRoutes.adminDashboard}
-          element={
-            <ProtectedRoute allowedRoles={["admin"]}>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
-        {/* <Route
+        <GoToTop />
+        <Routes>
+          <Route
+            element={<AdminLoginPage />}
+            path={internalRoutes.adminLogin}
+          />
+          <Route element={<UserLoginPage />} path={internalRoutes.userLogin} />
+          <Route
+            element={<UserSignupPage />}
+            path={internalRoutes.userSignup}
+          />
+          <Route
+            element={
+              <ProtectedRoute allowedRoles={["user"]}>
+                <UserProfile />
+              </ProtectedRoute>
+            }
+            path={internalRoutes.profile}
+          />
+          <Route
+            element={<UserForgotPassword />}
+            path={internalRoutes.userForgotPassword}
+          />
+          <Route element={<Home />} path={internalRoutes.home} />
+          <Route
+            element={<InterestSelection />}
+            path={internalRoutes.interest}
+          />
+          <Route
+            element={<SearchResultPage />}
+            path={internalRoutes.searchresultPage}
+          />
+          <Route element={<Wishlist />} path={internalRoutes.wishlist} />
+          <Route element={<CheckOut />} path={internalRoutes.checkout} />
+          <Route element={<PaymentPage />} path={internalRoutes.payment} />
+          <Route
+            element={<OrderSucessPage />}
+            path={internalRoutes.orderStatus}
+          />
+          <Route
+            element={<PressRelease />}
+            path={internalRoutes.pressReleases}
+          />
+          <Route element={<AboutEvaga />} path={internalRoutes.aboutUs} />
+          <Route element={<Blog />} path={internalRoutes.blog} />
+          <Route
+            element={<SingleBlogPage />}
+            path={`${internalRoutes.singleBlog + "/:blogId"}`}
+          />
+          <Route
+            element={<RefundAndCancellation />}
+            path={internalRoutes.cancellationPolicy}
+          />
+          <Route
+            element={<TermsAndConditions />}
+            path={internalRoutes.TermsAndConditions}
+          />
+          <Route
+            element={<PrivacyAndPolicy />}
+            path={internalRoutes.privacyAndPolicy}
+          />
+          <Route element={<Careers />} path={internalRoutes.careers} />
+          <Route
+            element={<AdvertisewithUs />}
+            path={internalRoutes.advertiseWithUs}
+          />
+          <Route element={<FeedBack />} path={internalRoutes.feedbackForm} />
+          <Route
+            element={<CustomerService />}
+            path={internalRoutes.customerService}
+          />
+          <Route
+            element={<VendorService />}
+            path={internalRoutes.vendorSupport}
+          />
+          <Route element={<OrderPage />} path={internalRoutes.order} />
+          <Route
+            element={<UserOrderDetailPage />}
+            path={`${internalRoutes.orderDetail + "/:orderId/:itemId"}`}
+          />
+          <Route
+            element={<VendorOrderDetailPage />}
+            path={`${internalRoutes.vendorOrderDeatil + "/:orderId/:itemId"}`}
+          />
+          <Route
+            element={<SinglePackage />}
+            path={`${internalRoutes.SinglePackage + "/:serviceId/:packageId"}`}
+          />
+          <Route
+            element={<VendorSignUpPage />}
+            path={internalRoutes.vendorSignup}
+          />
+          <Route
+            element={<VendorLoginPage />}
+            path={internalRoutes.vendorLogin}
+          />
+          <Route
+            element={<VendorForgotPasswordPage />}
+            path={internalRoutes.vendorForgotPassword}
+          />
+          {/* Vendor Protected Routes */}
+          <Route
+            path={internalRoutes.vendorDashboard}
+            element={
+              <ProtectedRoute allowedRoles={["vendor"]}>
+                <VendorDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={internalRoutes.vendorProfile}
+            element={
+              <ProtectedRoute allowedRoles={["vendor"]}>
+                <VendorProfile />
+              </ProtectedRoute>
+            }
+          />{" "}
+          <Route
+            path={internalRoutes.vendorCreateservice}
+            element={
+              <ProtectedRoute allowedRoles={["vendor"]}>
+                <VendorCreateService />
+              </ProtectedRoute>
+            }
+          />{" "}
+          <Route
+            path={`${internalRoutes.vendorEditservice}/:serviceId`}
+            element={
+              <ProtectedRoute allowedRoles={["vendor"]}>
+                <VendorEditService />
+              </ProtectedRoute>
+            }
+          />{" "}
+          <Route
+            path={internalRoutes.vendorOrders}
+            element={
+              <ProtectedRoute allowedRoles={["vendor"]}>
+                <VendorOrderPage />
+              </ProtectedRoute>
+            }
+          />{" "}
+          <Route
+            path={internalRoutes.vendorOrderDeatil}
+            element={
+              <ProtectedRoute allowedRoles={["vendor"]}>
+                <VendorOrderDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          {/* Admin Protected Routes */}
+          <Route
+            path={internalRoutes.adminDashboard}
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          {/* <Route
   path={internalRoutes.adminDashboard}
   element={
     <ProtectedRoute allowedRoles={["admin"]}>
@@ -254,8 +282,8 @@ const AppContent = () => {
     </ProtectedRoute>
   }
 /> */}
-      </Routes>
-      {!noNavbarPaths.includes(location.pathname) && <Footer />}
+        </Routes>
+        {!noNavbarPaths.includes(location.pathname) && <Footer />}
       </GlobalEventHandlers>
     </>
   );
