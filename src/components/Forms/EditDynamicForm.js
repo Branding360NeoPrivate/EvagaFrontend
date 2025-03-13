@@ -505,7 +505,7 @@ const EditDynamicForm = ({
               return { ...prev, [field.key]: updatedCapacity };
             });
           };
-console.log(field?.items);
+          console.log(field?.items);
 
           const selectedStaffData = field?.items?.find(
             (item) => item?.title !== ""
@@ -620,7 +620,11 @@ console.log(field?.items);
               <div className="bg-textLightGray col-span-3">
                 <ReactQuill
                   theme="snow"
-                  value={typeof formValues[field.key] === "string" ? formValues[field.key] : ""}
+                  value={
+                    typeof formValues[field.key] === "string"
+                      ? formValues[field.key]
+                      : ""
+                  }
                   onChange={(value) => handleChange(field.key, value)}
                   style={editorStyle}
                   required
@@ -1338,17 +1342,17 @@ console.log(field?.items);
                           {objectKey !== "Device Name" &&
                           objectKey !== "Name" &&
                           objectKey !== "Flavour/Variety" ? (
-                            <label className="text-textGray text-base text-wrap  ">
+                            <label className="text-textGray text-sm text-wrap  ">
                               {objectKey}
                             </label>
                           ) : (
-                            <label className="text-textGray text-base opacity-0">
+                            <label className="text-textGray text-sm opacity-0">
                               {objectKey}
                             </label>
                           )}
 
                           {objectKey === "Uom" ? (
-                            <p className="text-textGray text-base">
+                            <p className="text-textGray text-sm">
                               {item[objectKey]}
                             </p>
                           ) : (
@@ -1381,7 +1385,11 @@ console.log(field?.items);
                                     ? "border p-2 rounded outline-none border-2 w-[4rem] h-full"
                                     : "border p-2 rounded outline-none border-2 w-[7rem] h-full"
                                 }
-                                required
+                                required={
+                                  objectKey === "Servings per Batch"
+                                    ? false
+                                    : true
+                                }
                                 disabled={isEditing}
                               />
                             </div>

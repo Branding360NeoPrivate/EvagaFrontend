@@ -1416,17 +1416,17 @@ const DynamicForm = ({
                           {objectKey !== "Device Name" &&
                           objectKey !== "Name" &&
                           objectKey !== "Flavour/Variety" ? (
-                            <label className="text-textGray text-base text-wrap  ">
+                            <label className="text-textGray text-sm text-wrap  ">
                               {objectKey}
                             </label>
                           ) : (
-                            <label className="text-textGray text-base opacity-0">
+                            <label className="text-textGray text-sm opacity-0">
                               {objectKey}
                             </label>
                           )}
 
                           {objectKey === "Uom" ? (
-                            <p className="text-textGray text-base">
+                            <p className="text-textGray text-sm">
                               {item[objectKey]}
                             </p>
                           ) : (
@@ -1459,7 +1459,11 @@ const DynamicForm = ({
                                     ? "border p-2 rounded outline-none border-2 w-[4rem] h-full"
                                     : "border p-2 rounded outline-none border-2 w-[7rem] h-full"
                                 }
-                                required
+                                required={
+                                  objectKey === "Servings per Batch"
+                                    ? false
+                                    : true
+                                }
                                 disabled={isEditing}
                               />
                             </div>
