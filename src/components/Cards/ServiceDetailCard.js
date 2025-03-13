@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaRegShareFromSquare } from "react-icons/fa6";
 import { FcLike } from "react-icons/fc";
 import { IoBagOutline } from "react-icons/io5";
@@ -18,6 +18,10 @@ import { useDispatch } from "react-redux";
 import { fetchUserWishlist } from "../../context/redux/slices/wishlistSlice";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";
+import { ShareButton } from "../../utils/ShareButton";
+import { internalRoutes } from "../../utils/internalRoutes";
+import ReusableModal from "../Modal/Modal";
+import Reviews from "./Review";
 function ServiceDetailCard({
   title,
   category,
@@ -69,6 +73,13 @@ function ServiceDetailCard({
   const wishlist = useServices(userApi.toggleWishlist);
   const { auth } = useAuth();
   const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   const toggleWishlistHandle = async () => {
     if (auth?.isAuthenticated && auth?.role === "user") {
       const formdata = new FormData();
@@ -87,7 +98,6 @@ function ServiceDetailCard({
       toast.info("You need to log in first to add items to the wishlist.");
     }
   };
-  console.log(tAndC);
 
   return (
     <div className="  bg-white p-4 w-full max-w-3xl">
@@ -97,8 +107,11 @@ function ServiceDetailCard({
           <h2 className="text-xl font-semibold text-primary">{title}</h2>
           <p className="text-normal  text-textGray">{category}</p>
         </div>
-        <div className="w-[20%] text-right">
-          <div className="flex flex-col items-end justify-end gap-1">
+        <div className="w-[20%] text-right cursor-pointer"  onClick={() => handleOpen()}>
+          <div
+            className="flex flex-col items-end justify-end gap-1 "
+           
+          >
             <div className="flex flex-row">
               <span className="text-yellow-500 text-lg">★</span>
               <span className="text-gray-700 font-medium">{rating} </span>
@@ -121,8 +134,9 @@ function ServiceDetailCard({
           </p>
         </div>{" "}
         <div className="w-[10%] items-end">
-          <img src={share} alt="share" className="object-contain h-[2rem]" />
-          <p className="text-sm text-textGray font-medium">Share</p>
+          <ShareButton
+            url={`${window.location.origin}${internalRoutes.SinglePackage}/${serviceId}/${packageId}`}
+          />
         </div>
         <div className="w-[10%] items-end">
           <Wishlist
@@ -141,12 +155,10 @@ function ServiceDetailCard({
         </p>
       </div>
 
-      {/* Event */}
       {keysToRender?.map((key, index) => {
         const value = DataToRender?.[key];
 
         if (Array.isArray(value) && value.length > 0) {
-          // If value is an array, render as a list
           return (
             <div
               className=" mt-4 flex gap-4 items-start justify-start"
@@ -193,7 +205,6 @@ function ServiceDetailCard({
         return null; // Return nothing if the value is neither an array nor a string
       })}
 
-      {/* Terms & Conditions */}
       <div className="flex gap-4 items-start justify-start">
         <span className="bg-textLightGray p-2 rounded-[50%]">
           <img src={terms} alt="event" className="object-contain h-[1.5rem]" />
@@ -204,9 +215,14 @@ function ServiceDetailCard({
           </h3>
           <hr style={{ margin: "0.3rem 0" }} />
 
-          <div className="terms-conditions">{tAndC=="" ?""  :  parse(tAndC)}</div>
+          <div className="terms-conditions">
+            {tAndC == "" ? "" : parse(tAndC)}
+          </div>
         </div>
       </div>
+      <ReusableModal open={open} onClose={handleClose} width={"50%"}>
+        <Reviews serviceId={serviceId} packageId={packageId}/>
+      </ReusableModal>
     </div>
   );
 }

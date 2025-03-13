@@ -25,6 +25,12 @@ const commonApis = {
     apiService.get(apiEndpoints.common.getOneBlog(blogId)),
   getAllPublishedUrls: () =>
     apiService.get(apiEndpoints.common.getAllPublishedUrls),
+  getOnePackageReview: (serviceId, packageId) =>
+    apiService.get(
+      apiEndpoints.common.getOnePackageReview(serviceId, packageId)
+    ),
+  addReviewWithUserId: (formdata) =>
+    apiService.post(apiEndpoints.common.addReviewWithUserId, formdata),
 };
 
 export default commonApis;

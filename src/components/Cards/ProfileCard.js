@@ -27,7 +27,7 @@ function ProfileCard({
           <h2 className="text-2xl font-normal text-primary">
             {BusinessName ? BusinessName : "Geeta Pvt Ltd"}
           </h2>
-          <p className="text-textGray">{Category ? Category : "Catering"}</p>
+          <p className="text-textGray">{Category ? Category : ""}</p>
         </div>
       </div>
 

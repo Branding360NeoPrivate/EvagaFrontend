@@ -1,7 +1,6 @@
 // src/constants/apiEndpoints.js
 
 const apiEndpoints = {
-  // Vendor-related endpoints
   vendor: {
     register: "vender/registerVender",
     login: "vender/loginVender",
@@ -52,8 +51,6 @@ const apiEndpoints = {
     sendaadharotp: (vendorId) => `vender/sendaadharotp/${vendorId}`,
     verifyaadharotp: (vendorId) => `vender/verifyaadharotp/${vendorId}`,
   },
-
-  // User-related endpoints
   user: {
     register: "user/registerUser",
     login: "user/loginUser",
@@ -117,6 +114,9 @@ const apiEndpoints = {
     getAllBlogs: `blog/get-all-blog-for-user`,
     getOneBlog: (blogId) => `blog/get-one-blog-for-user/${blogId}`,
     getAllPublishedUrls: `newsletter/getAllPublishedUrls`,
+    getOnePackageReview: (serviceId, packageId) =>
+      `review/package/${serviceId}/${packageId}`,
+    addReviewWithUserId: `review/create-review`,
   },
   admin: {
     register: "admin/registerAdmin",

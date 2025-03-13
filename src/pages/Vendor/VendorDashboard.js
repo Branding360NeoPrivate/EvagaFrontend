@@ -76,8 +76,6 @@ const VendorDashboard = () => {
 
   useEffect(() => {
     if (!vendorBanner || vendorBanner.length === 0) {
-    
-
       dispatch(fetchVendorBanner());
     }
   }, [dispatch, vendorBanner]);
@@ -99,18 +97,16 @@ const VendorDashboard = () => {
     console.log("response in get monthly booked dates:", response);
     if (response && response.success && response.bookings) {
       setBookings(response.bookings);
-    
+
       const allDates = response.bookings.map((booking) => {
         const startDate = booking.startDate;
-        const endDate = booking.endDate || booking.startDate; 
+        const endDate = booking.endDate || booking.startDate;
         return extractDates(startDate, endDate);
       });
-    
-    
+
       const flattenedDates = allDates.flat();
       setBlockedDatesFromBackend(flattenedDates);
     }
-    
   };
 
   const blockedDates = blockedDatesFromBackend.map((date) => {
@@ -128,7 +124,6 @@ const VendorDashboard = () => {
     getMonthlyBookedDates();
   }, [activeMonth, activeYear]);
 
-
   if (status === "loading" || status === "failed") {
     return <ErrorView status={status} error={error} />;
   }
@@ -144,7 +139,10 @@ const VendorDashboard = () => {
             BusinessName={profile?.vendor?.name}
             profilePerccentage={profilePercentage?.profileCompletion}
             profilePic={profile?.vendor?.profilePicture}
-            Category={profile?.vendor?.areaOfInterest?.name}
+            Category={
+              profile?.vendor?.businessDetails?.categoriesOfServices?.[0]
+                ?.category?.name
+            }
           />
         </div>
       </div>
@@ -175,12 +173,15 @@ const VendorDashboard = () => {
           <div className="w-full flex items-center justfiy-center flex-col gap-4">
             {allService?.length > 0 ? (
               allService.map((item) => {
-              
-                const coverImage = Array.isArray(item?.services?.[0]?.values?.CoverImage)
+                const coverImage = Array.isArray(
+                  item?.services?.[0]?.values?.CoverImage
+                )
                   ? item?.services?.[0]?.values?.CoverImage[0]
                   : item?.services?.[0]?.values?.CoverImage;
 
-                const productImage = Array.isArray(item?.services?.[0]?.values?.ProductImage)
+                const productImage = Array.isArray(
+                  item?.services?.[0]?.values?.ProductImage
+                )
                   ? item?.services?.[0]?.values?.ProductImage[0]
                   : item?.services?.[0]?.values?.ProductImage;
                 return (

@@ -11,6 +11,7 @@ import ReusableModal from "../Modal/Modal";
 import EditVendorService from "./EditVendorService";
 import { IoMdArrowRoundBack, IoMdCloseCircleOutline } from "react-icons/io";
 import { formatDate } from "../../utils/formatDate";
+import AddVendorService from "./AddVendorService";
 function VendorserviceTable({
   onMenuSelect,
   selectedVendor,
@@ -71,6 +72,7 @@ function VendorserviceTable({
   const [open1, setOpen1] = React.useState(false);
   const handleOpen1 = () => setOpen1(true);
   const handleClose1 = () => setOpen1(false);
+  const [modalType, setModalType] = useState("add");
   const [openResuableModal, setOpenResuableModal] = useState(false);
   const handleOpenResuableModal = () => {
     setOpenResuableModal(true);
@@ -320,6 +322,13 @@ function VendorserviceTable({
           <button
             className="flex items-center gap-2 bg-primary
          text-white px-4 py-2 rounded-lg hover:bg-highlightYellowPrimary hover:text-primary"
+            onClick={() => [handleOpenResuableModal(), setModalType("add")]}
+          >
+            Add Service
+          </button>
+          <button
+            className="flex items-center gap-2 bg-primary
+         text-white px-4 py-2 rounded-lg hover:bg-highlightYellowPrimary hover:text-primary"
           >
             <FaFilter />
             Filter
@@ -384,6 +393,7 @@ function VendorserviceTable({
                         ...packageCredentials,
                         serviceId: vendor?._id,
                       }),
+                      setModalType("edit"),
                     ]}
                   />
                 </td>
@@ -597,9 +607,14 @@ function VendorserviceTable({
         open={openResuableModal}
         onClose={handleCloseResuableModal}
         width={"90%"}
-        title={"Edit Service"}
+        title={
+          modalType === "edit" ? "Edit Service" : "add" ? "Add Service" : ""
+        }
       >
-        <EditVendorService serviceId={packageCredentials?.serviceId} />
+        {modalType === "edit" && (
+          <EditVendorService serviceId={packageCredentials?.serviceId} />
+        )}
+        {modalType === "add" && <AddVendorService vendorId={vendorId} />}
       </ReusableModal>
     </div>
   );

@@ -11,7 +11,7 @@ import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 import { Box, Modal } from "@mui/material";
 import PrimaryButton from "../../components/buttons/PrimaryButton";
-function VendorCreateService() {
+function AddVendorService({ vendorId }) {
   const selectedCategoryForm = useServices(vendorApi.getSelectedcategoryForm);
   const [loading, setLoading] = useState(false);
   const [inhouseCategoringOrBoth, setInhouseCategoringOrBoth] = useState(false);
@@ -361,7 +361,7 @@ function VendorCreateService() {
         });
       });
 
-      const response = await addNewService.callApi(userId, formData);
+      const response = await addNewService.callApi(vendorId, formData);
       toast.success(response?.message);
       history("/vendor/dashboard");
       setLoading(false);
@@ -451,8 +451,6 @@ function VendorCreateService() {
     }
   };
   const handleAddPInHouseCateringPackage = (groupIndex) => {
- 
-
     setInHouseCateringPackageDataData((prev) => {
       // Ensure the group exists
       const newData = [...prev];
@@ -471,10 +469,9 @@ function VendorCreateService() {
   };
 
   const handleRemoveForm = (index) => {
- 
     setFormInstances((prev) => {
       const updated = prev.filter((_, i) => i !== index);
-   
+
       return updated;
     });
   };
@@ -503,7 +500,6 @@ function VendorCreateService() {
     ? formInstances.every((form) => form.saved) &&
       inHouseCateringPackageData.flat().every((form) => form.saved === true)
     : formInstances.every((form) => form.saved);
-
   return (
     <div className="w-full flex items-center justify-center flex-col gap-4 my-4 relative">
       <div className="w-11/12 flex items-start justify-start flex-col">
@@ -615,7 +611,7 @@ function VendorCreateService() {
                     data: formData,
                     saved: true,
                   };
-             
+
                   setFormInstances(updatedInstances);
                 }}
                 setOpenMasterVenueModal={setOpenMasterVenueModal}
@@ -698,11 +694,11 @@ function VendorCreateService() {
         {allFormsSaved && (
           <div className="flex items-center justify-end w-full gap-4 mt-4">
             {/* <button
-              className="btn-primary w-fit px-3 add-package-button"
-              onClick={handleAddPackage}
-            >
-              Add Package
-            </button> */}
+            className="btn-primary w-fit px-3 add-package-button"
+            onClick={handleAddPackage}
+          >
+            Add Package
+          </button> */}
             {!loading ? (
               <button
                 onClick={addNewServiceHandle}
@@ -790,4 +786,4 @@ function VendorCreateService() {
   );
 }
 
-export default VendorCreateService;
+export default AddVendorService;
