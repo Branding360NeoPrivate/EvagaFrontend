@@ -1,4 +1,3 @@
-// create a full fledged error page component with tailwind styling and colors from tailwind.config.js
 
 import React from "react";
 import { useNavigate } from "react-router-dom";

@@ -187,6 +187,8 @@ const apiEndpoints = {
       `newsletter/updateone/${newsletterId}`,
     deleteOneNewsLetter: (newsletterId) =>
       `newsletter/deleteone/${newsletterId}`,
+    getAllErrorLogs: `logerror/logs`,
+    getOneError:(id)=> `logerror/getOneError/${id}`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",

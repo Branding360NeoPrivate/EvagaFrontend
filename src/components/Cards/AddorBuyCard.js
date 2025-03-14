@@ -53,6 +53,12 @@ function AddorBuyCard({
   const [basePrice, setBasePrice] = useState(
     Number(renderPrice?.Price || renderPrice?.Pricing) || 0
   );
+  const [setupPrice, setSetupPrice] = useState(
+    Number(renderPrice?.SetupCost) || 0
+  );
+  const [securityAmount, setSecurityAmount] = useState(
+    Number(renderPrice?.SecurityDeposit) || 0
+  );
   const handleDateChange = (newDate) => {
     setDate(newDate);
     setDateInput(newDate.toLocaleDateString());
@@ -104,6 +110,8 @@ function AddorBuyCard({
   const calculatedPrice = useMemo(() => {
     const basePrice = Number(renderPrice?.Price || renderPrice?.Pricing) || 0;
     setBasePrice(basePrice);
+    setSetupPrice(Number(renderPrice?.SetupCost) || 0);
+    setSecurityAmount(Number(renderPrice?.SecurityDeposit) || 0);
     const addOnsPrice = selectedAddOns.reduce((total, addOn) => {
       if (addOn.type === "Package") {
         return total + Number(addOn.Rates || 0);
@@ -257,7 +265,9 @@ function AddorBuyCard({
           selectedAddOns,
           dateInput,
           formattedTime,
-          pincode
+          pincode,
+          securityAmount,
+          setupPrice
         );
         // toast.success("Item added to the cart successfully.");
         return true;
@@ -499,7 +509,7 @@ function AddorBuyCard({
         {renderPrice?.SetupCost && (
           <span className="flex items-center justify-between py-2">
             <p className="text-primary text-sm font-semibold text-normal">
-            Setup Cost
+              Setup Cost
             </p>
             <p className="text-textGray">
               {formatCurrency(Number(renderPrice?.SetupCost))}

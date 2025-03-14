@@ -13,15 +13,14 @@ import { TfiWrite } from "react-icons/tfi";
 import { RiCoupon3Line } from "react-icons/ri";
 import MainLogo from "../../assets/Temporary Images/Evaga Logo.png";
 import { TbBrandBlogger, TbReport } from "react-icons/tb";
-import Cookies from "js-cookie";
 import { useAuth } from "../../context/AuthContext";
+import { BiMessageAltError } from "react-icons/bi";
 import {
   FaChevronDown,
   FaChevronUp,
   FaFirstOrder,
   FaFirstOrderAlt,
   FaRegImage,
-  FaServicestack,
   FaWpforms,
 } from "react-icons/fa6";
 import { GrCompliance } from "react-icons/gr";
@@ -183,6 +182,7 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
       ],
     },
     { id: "Admin Users", label: "Roles", icon: <FaUserShield /> },
+    { id: "Error Logs", label: "Error Logs", icon: <BiMessageAltError  /> },
   ];
 
   return (

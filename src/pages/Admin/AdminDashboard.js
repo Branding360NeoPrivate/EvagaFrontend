@@ -41,6 +41,7 @@ import vendorApi from "../../services/vendorApi";
 import adminActionsApi from "../../services/adminActionsApi";
 import AdminBlog from "../../components/Admin/AdminBlog";
 import AdminNewsLetter from "../../components/Admin/AdminNewsLetter";
+import AdminErrorLogs from "../../components/Admin/AdminErrorLogs";
 
 const AdminDashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState("Home");
@@ -238,6 +239,7 @@ const AdminDashboard = () => {
         {selectedMenu === "Home" && <AdminDashBoardchart />}
         {selectedMenu === "Blog" && <AdminBlog />}
         {selectedMenu === "NewsLetter" && <AdminNewsLetter />}
+        {selectedMenu === "Error Logs" && <AdminErrorLogs />}
       </div>
     </div>
   );

@@ -5,6 +5,8 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import store from "./context/redux/store";
+import ErrorBoundary from "./components/Errors/ErrorBoundary";
+import "./components/Errors/globalErrorHandler";
 
 // src/index.js or equivalent
 window.onerror = (message, source, lineno, colno, error) => {
@@ -20,9 +22,11 @@ window.onunhandledrejection = (event) => {
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </ErrorBoundary>
   </React.StrictMode>
 );
 

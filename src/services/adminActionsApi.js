@@ -125,7 +125,10 @@ const adminActionsApi = {
   getAllUsersWithOrderDetails: () =>
     apiService.get(apiEndpoints.adminActions.getAllUsersWithOrderDetails),
   GetAdminDashboardDataHandle: (queryParams) =>
-    apiService.get(apiEndpoints.adminActions.getAdminDashboardDataHandle,queryParams),
+    apiService.get(
+      apiEndpoints.adminActions.getAdminDashboardDataHandle,
+      queryParams
+    ),
   downloadVendorListing: () =>
     apiService.get(apiEndpoints.adminActions.downloadVendorListing),
   downloadVendorsAsCSV: () =>
@@ -147,7 +150,8 @@ const adminActionsApi = {
     }),
   deleteOneBlog: (blogId) =>
     apiService.delete(apiEndpoints.adminActions.deleteOneBlog(blogId)),
-  getAllNewsLetter: () => apiService.get(apiEndpoints.adminActions.getAllNewsLetter),
+  getAllNewsLetter: () =>
+    apiService.get(apiEndpoints.adminActions.getAllNewsLetter),
   getOneNewsLetter: (newsletterId) =>
     apiService.get(apiEndpoints.adminActions.getOneNewsLetter(newsletterId)),
   createOneNewsLetter: (formdata) =>
@@ -156,14 +160,24 @@ const adminActionsApi = {
         "Content-Type": "multipart/form-data",
       },
     }),
-    updateOneNewsLetter: (newsletterId, formdata) =>
-    apiService.post(apiEndpoints.adminActions.updateOneNewsLetter(newsletterId), formdata, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }),
-    deleteOneNewsLetter: (newsletterId) =>
-    apiService.delete(apiEndpoints.adminActions.deleteOneNewsLetter(newsletterId)),
+  updateOneNewsLetter: (newsletterId, formdata) =>
+    apiService.post(
+      apiEndpoints.adminActions.updateOneNewsLetter(newsletterId),
+      formdata,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    ),
+  deleteOneNewsLetter: (newsletterId) =>
+    apiService.delete(
+      apiEndpoints.adminActions.deleteOneNewsLetter(newsletterId)
+    ),
+  getAllErrorLogs: (queryParams) =>
+    apiService.get(apiEndpoints.adminActions.getAllErrorLogs, queryParams),
+  getOneError: (id) =>
+    apiService.get(apiEndpoints.adminActions.getOneError(id)),
 };
 
 export default adminActionsApi;

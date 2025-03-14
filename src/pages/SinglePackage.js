@@ -126,7 +126,7 @@ function SinglePackage() {
     selectedsession,
     date,
     time,
-    pincode
+    pincode,securityAmount,setupPrice
   ) => {
     try {
       const formData = new FormData();
@@ -137,6 +137,8 @@ function SinglePackage() {
       formData.append("pincode", pincode);
       formData.append("vendorId", vendorProfile?.vendorId);
       formData.append("defaultPrice", Number(defaultPrice));
+      formData.append("setupCost", Number(setupPrice));
+      formData.append("security", Number(securityAmount));
       formData.append("selectedSessions", JSON.stringify(selectedsession));
 
       const response = await addToCartApi.callApi(userId, formData);
