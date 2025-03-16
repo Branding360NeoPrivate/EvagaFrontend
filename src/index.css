@@ -364,3 +364,12 @@ input[type="number"] {
   scrollbar-width: thin; /* Thin scrollbar for Firefox */
   scrollbar-color: #6a1b9a #f3f3f3; /* Thumb and track for Firefox */
 }
+.quill-container {
+  min-height: 100px; /* Minimum height */
+  max-height: 300px; /* Maximum height */
+  overflow-y: auto; /* Enable scrolling if content exceeds max-height */
+  margin-bottom: 1rem; /* Add margin to create space below */
+}
+.ql-editor{
+  background-color: #7575751A !important;
+}

@@ -1,6 +1,7 @@
 /* src/styles/components.css */
 .btn-primary {
-  @apply w-full py-2 bg-primary text-white rounded-md hover:bg-accent font-bold;
+  @apply w-full py-2 bg-primary text-white rounded-md cursor-pointer font-bold;
+  @apply hover:bg-accent hover:border-2 hover:border-[#CBAB00];
 }
 
 .btn-transparent {

@@ -24,7 +24,7 @@ function HomeSearchableCityDropdown() {
   //   console.log("selectedCity:", Cookies.get("selectedCity"));
   return (
     <div className="w-[200px] h-[45px] flex justify-start bg-gray-100 gap-2 items-center rounded-md text-primary cursor-pointer">
-      <CiLocationOn className="text-3xl h-full w-[40px] rounded-md bg-highlightYellow font-bold" />
+      <CiLocationOn className="text-3xl h-full w-[40px] rounded-md bg-highlightYellow font-bold hover:bg-[#CBAB00]" />
       {isLoading ? (
         <p>Loading...</p>
       ) : error ? (

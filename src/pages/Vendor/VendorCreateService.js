@@ -96,7 +96,7 @@ function VendorCreateService() {
           cateringValueInVenue: inHouseCateringMenuData,
           cateringPackageVenue: correspondingCateringPackages.map(
             (packageItem) => packageItem.data || []
-          ), // Keep each package's data as a separate array
+          ), 
         };
       });
 

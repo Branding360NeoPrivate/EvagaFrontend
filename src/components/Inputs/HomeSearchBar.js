@@ -132,7 +132,7 @@ function HomeSearchBar({ cities, value, onChange }) {
     >
       <div
         className="flex justify-between md:justify-center items-center h-full w-full md:w-auto text-nowrap px-2 
-        rounded-md bg-highlightYellow text-textPrimary font-bold cursor-pointer"
+        rounded-md bg-highlightYellow text-textPrimary font-bold cursor-pointer hover:bg-[#CBAB00]"
         onClick={toggleDropdown}
       >
         <span

@@ -30,6 +30,13 @@ window.addEventListener("unhandledrejection", (event) => {
 // Capture network errors (e.g., fetch errors)
 const originalFetch = window.fetch;
 window.fetch = async (...args) => {
+  const url = args[0];
+
+  // Skip logging for Google Analytics URLs
+  if (typeof url === "string" && url.includes("https://www.google-analytics.com")) {
+    return originalFetch(...args); // Skip logging and proceed with the original fetch
+  }
+
   try {
     const response = await originalFetch(...args);
     if (!response.ok) {

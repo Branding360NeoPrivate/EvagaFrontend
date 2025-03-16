@@ -79,14 +79,14 @@ const AddOnCounter = memo(
               ) : (
                 <>
                   <button
-                    className="bg-textYellow text-primary font-bold py-1 px-3 rounded hover:bg-gray-300 transition duration-200"
+                    className="bg-textYellow text-primary font-bold py-1 px-3 rounded hover:bg-[#CBAB00] transition duration-200"
                     onClick={handleDecrease}
                   >
                     -
                   </button>
                   <span className="mx-4 text-lg font-medium">{quantity}</span>
                   <button
-                    className="bg-textYellow text-primary font-bold py-1 px-3 rounded hover:bg-gray-300 transition duration-200"
+                    className="bg-textYellow text-primary font-bold py-1 px-3 rounded hover:bg-[#CBAB00] transition duration-200"
                     onClick={handleIncrease}
                     disabled={disableAdd}
                   >

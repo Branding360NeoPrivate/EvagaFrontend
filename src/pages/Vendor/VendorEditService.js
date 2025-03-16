@@ -98,6 +98,7 @@ function VendorEditService() {
       formData.append("services", JSON.stringify(services));
 
       const processFileFields = (key, value, serviceIndex) => {
+        console.log(key, value, serviceIndex);
         if (Array.isArray(value)) {
           value.forEach((item, itemIndex) => {
             if (item instanceof File) {
@@ -115,6 +116,7 @@ function VendorEditService() {
 
       services.forEach((service, serviceIndex) => {
         const values = service.values;
+
 
         values.forEach((value) => {
           switch (value.key) {
@@ -171,7 +173,6 @@ function VendorEditService() {
         });
       });
 
-      // Debugging FormData content
       for (let pair of formData.entries()) {
         console.log(`${pair[0]}:`, pair[1]);
       }

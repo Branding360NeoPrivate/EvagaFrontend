@@ -38,6 +38,24 @@ function AdminErrorLogs() {
   useEffect(() => {
     getAllErrorLogsApiHandle();
   }, [page]);
+  const renderTimestamp = (row) => {
+    // Check if the timestamp exists
+    if (!row?.timestamp) return "N/A"; // Fallback if timestamp is missing
+  
+    // Convert the timestamp to a human-readable format
+    const date = new Date(row.timestamp);
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZoneName: 'short'
+    };
+  
+    return date.toLocaleString('en-US', options);
+  };
   const columns = [
     { label: "No", key: "index", render: (_, i) => i + 1 },
     {
@@ -47,6 +65,11 @@ function AdminErrorLogs() {
     {
       label: "Message",
       key: "message",
+    },
+    {
+      label: "Date & Time",
+      key: "timestamp",
+      render:(row)=> renderTimestamp(row),
     },
 
     {
@@ -97,10 +120,7 @@ function AdminErrorLogs() {
               Error Logs
             </h1>
             <div className="space-y-4">
-              <div
-              
-                className="bg-white shadow-md rounded-lg p-4 border border-gray-200"
-              >
+              <div className="bg-white shadow-md rounded-lg p-4 border border-gray-200">
                 <h2 className="text-lg font-semibold text-gray-700">
                   {errorLogs?.type || "Unknown Error Type"}
                 </h2>
@@ -110,7 +130,8 @@ function AdminErrorLogs() {
                 </p>
                 {errorLogs?.source && (
                   <p className="text-sm text-gray-600">
-                    <span className="font-semibold">Source:</span> {errorLogs.source}
+                    <span className="font-semibold">Source:</span>{" "}
+                    {errorLogs.source}
                   </p>
                 )}
                 {(errorLogs?.lineno || errorLogs?.colno) && (

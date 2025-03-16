@@ -191,6 +191,15 @@ const EditDynamicForm = ({
     try {
       const transformedData = fields?.map((field) => {
         const items = [];
+        console.log(field, items);
+        if (field.key === "ProductImage") {
+          return {
+            label: field.label,
+            key: field.key,
+            type: field.type,
+            items: formValues[field.key], // Directly take the value for ProductImage
+          };
+        }
         Object?.keys(formValues)?.forEach((key) => {
           if (key?.startsWith(`${field.key}_`)) {
             items?.push(formValues[key]);
@@ -198,8 +207,6 @@ const EditDynamicForm = ({
         });
 
         if (field.type === "radio") {
-          console.log("inside the radio");
-
           return {
             label: field.label,
             key: field.key,
@@ -256,6 +263,7 @@ const EditDynamicForm = ({
       };
     });
   };
+  console.log(formValues);
 
   return (
     <form
@@ -312,7 +320,7 @@ const EditDynamicForm = ({
                       ? "col-span-1 border-2 w-[10rem] border-2 outline-none p-1 rounded-r-md text-textGray font-medium"
                       : "col-span-2 border-2 w-[25rem] border-2 outline-none p-1 rounded-md text-textGray font-medium "
                   }
-                  required
+                  required={field.key === "Brand" ? false : true}
                 />
                 {field.key === "MOQ" && (
                   <p className="text-sm text-textGray">*heads</p>
@@ -1235,7 +1243,7 @@ const EditDynamicForm = ({
               <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-3 flex items-center flex-col-reverse justify-start  gap-2">
+              <div className="col-span-3 flex items-center flex-col-reverse justify-start  gap-8">
                 <button
                   type="button"
                   className="text-primary px-4 py-2 rounded flex items-center justify-center gap-1 font-medium"
@@ -1246,7 +1254,10 @@ const EditDynamicForm = ({
                   <IoAddCircleOutline className="text-xl" /> {field.label}
                 </button>
                 {(formValues[field.key] || []).map((item, index) => (
-                  <div key={index} className="flex flex-wrap gap-4  w-full ">
+                  <div
+                    key={index}
+                    className="flex flex-wrap gap-4 h-fit mb-[5%] w-full"
+                  >
                     {Object.keys(item).map((objectKey, subIndex) => (
                       <div
                         key={subIndex}
@@ -1277,20 +1288,42 @@ const EditDynamicForm = ({
                               Per
                             </span>
                           )}
-                          <input
-                            type="text"
-                            value={item[objectKey] || ""}
-                            onChange={(e) =>
-                              handleObjectChange(
-                                field.key,
-                                index,
-                                objectKey,
-                                e.target.value
-                              )
-                            }
-                            className="border p-2 rounded outline-none border-2 w-[10rem] h-full "
-                            placeholder={objectKey}
-                          />
+                          {objectKey === "Details" ? (
+                            <div className=" h-fit">
+                              <ReactQuill
+                                theme="snow"
+                                value={item[objectKey] || ""}
+                                onChange={(value) =>
+                                  handleObjectChange(
+                                    field.key,
+                                    index,
+                                    objectKey,
+                                    value
+                                  )
+                                }
+                                style={editorStyle}
+                                required
+                                readOnly={isEditing}
+                                placeholder={objectKey}
+                                className="h-[5rem] overflow-y bg-textLightGray"
+                              />
+                            </div>
+                          ) : (
+                            <input
+                              type="text"
+                              value={item[objectKey] || ""}
+                              onChange={(e) =>
+                                handleObjectChange(
+                                  field.key,
+                                  index,
+                                  objectKey,
+                                  e.target.value
+                                )
+                              }
+                              className="border p-2 rounded outline-none border-2 w-[10rem] h-full "
+                              placeholder={objectKey}
+                            />
+                          )}
                         </div>
                       </div>
                     ))}

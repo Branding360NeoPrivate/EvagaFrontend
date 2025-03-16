@@ -387,7 +387,7 @@ const DynamicForm = ({
                       ? "col-span-1 border-2 w-[10rem] border-2 outline-none p-1 rounded-r-md text-textGray font-medium"
                       : "col-span-2 border-2 w-[25rem] border-2 outline-none p-1 rounded-md text-textGray font-medium "
                   }
-                  required
+                  required={field.key === "Brand" ? false : true}
                 />
                 {field.key === "MOQ" && (
                   <p className="text-sm text-textGray">*heads</p>
@@ -1309,7 +1309,7 @@ const DynamicForm = ({
               <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-3 flex items-center flex-col-reverse justify-start  gap-2">
+              <div className="col-span-3 flex items-center flex-col-reverse justify-start  gap-8">
                 <button
                   type="button"
                   className="text-primary px-4 py-2 rounded flex items-center justify-center gap-1 font-medium"
@@ -1320,7 +1320,7 @@ const DynamicForm = ({
                   <IoAddCircleOutline className="text-xl" /> {field.label}
                 </button>
                 {(formValues[field.key] || []).map((item, index) => (
-                  <div key={index} className="flex flex-wrap gap-4  w-full ">
+                  <div key={index}  className="flex flex-wrap gap-4 h-fit mb-[5%] w-full">
                     {Object.keys(item).map((objectKey, subIndex) => (
                       <div
                         key={subIndex}
@@ -1351,20 +1351,42 @@ const DynamicForm = ({
                               Per
                             </span>
                           )}
-                          <input
-                            type="text"
-                            value={item[objectKey] || ""}
-                            onChange={(e) =>
-                              handleObjectChange(
-                                field.key,
-                                index,
-                                objectKey,
-                                e.target.value
-                              )
-                            }
-                            className="border p-2 rounded outline-none border-2 w-[10rem] h-full "
-                            placeholder={objectKey}
-                          />
+                          {objectKey === "Details" ? (
+                            <div className=" h-fit">
+                              <ReactQuill
+                                theme="snow"
+                                value={item[objectKey] || ""}
+                                onChange={(value) =>
+                                  handleObjectChange(
+                                    field.key,
+                                    index,
+                                    objectKey,
+                                    value
+                                  )
+                                }
+                                style={editorStyle}
+                                required
+                                readOnly={isEditing}
+                                placeholder={objectKey}
+                                className="h-[5rem] overflow-y bg-textLightGray"
+                              />
+                            </div>
+                          ) : (
+                            <input
+                              type="text"
+                              value={item[objectKey] || ""}
+                              onChange={(e) =>
+                                handleObjectChange(
+                                  field.key,
+                                  index,
+                                  objectKey,
+                                  e.target.value
+                                )
+                              }
+                              className="border p-2 rounded outline-none border-2 w-[10rem] h-full "
+                              placeholder={objectKey}
+                            />
+                          )}
                         </div>
                       </div>
                     ))}

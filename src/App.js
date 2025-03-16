@@ -88,7 +88,7 @@ const AppContent = () => {
   }, [auth, allWishlist, userId, dispatch]);
   useEffect(() => {
     const handleWheel = (event) => {
-      if (event.deltaX !== 0) {
+      if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
         event.preventDefault();
       }
     };
