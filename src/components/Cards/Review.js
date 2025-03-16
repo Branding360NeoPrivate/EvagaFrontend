@@ -16,13 +16,13 @@ const reviewsData = {
     1: 0,
   },
   reviews: [
-    {
-      id: 1,
-      name: "Lorem Ipsum",
-      avatarImage: Avatar1,
-      rating: 4.2,
-      text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-    },
+    // {
+    //   id: 1,
+    //   name: "Lorem Ipsum",
+    //   avatarImage: Avatar1,
+    //   rating: 4.2,
+    //   text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    // },
   ],
 };
 
