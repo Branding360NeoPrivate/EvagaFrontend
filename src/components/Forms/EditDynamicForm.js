@@ -200,6 +200,14 @@ const EditDynamicForm = ({
             items: formValues[field.key], // Directly take the value for ProductImage
           };
         }
+        if (field.key === "CoverImage") {
+          return {
+            label: field.label,
+            key: field.key,
+            type: field.type,
+            items: formValues[field.key], 
+          };
+        }
         Object?.keys(formValues)?.forEach((key) => {
           if (key?.startsWith(`${field.key}_`)) {
             items?.push(formValues[key]);
