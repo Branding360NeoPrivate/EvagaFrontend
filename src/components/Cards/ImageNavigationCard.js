@@ -72,7 +72,6 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
                 <img
                   src={process.env.REACT_APP_API_Aws_Image_BASE_URL + url}
                   style={{ maxWidth: "unset" }}
-                  // src={dummyImg}
                   alt={`Thumbnail ${index + 1}`}
                   className="w-[80px] h-[60px] object-cover object-center rounded-md border-2 border-transparent hover:scale-110 hover:border-blue-500 transition-transform duration-200"
                   onClick={() => [onMediaClick(url), setIsModalOpen(true)]}
@@ -84,7 +83,6 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
                 >
                   <img
                     src={videoThumbnil}
-                    // src={dummyImg}
                     alt="Video Placeholder"
                     className="w-full h-full object-cover rounded-md"
                   />
@@ -94,13 +92,11 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
           ))}
         </div>
       </div>
-      {/* Main Media View */}
       <div className=" flex-shrink md:w-fit h-[400px] md:min-w-[350px] flex-1 flex items-center justify-center relative">
         {isImage(selectedUrl) ? (
           <div className="group relative w-full aspect-[4/5] h-full flex items-center justify-center">
             <img
               src={process.env.REACT_APP_API_Aws_Image_BASE_URL + selectedUrl}
-              // src={dummyImg}
               alt="Selected Media"
               className="w-[300px] md:w-[350px] lg:w-[450px] h-auto object-cover rounded-lg cursor-pointer aspect-[4/5]"
               onClick={() => setIsModalOpen(true)}
@@ -111,7 +107,7 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
             selectedUrl={
               process.env.REACT_APP_API_Aws_Image_BASE_URL + selectedUrl
             }
-            onClick={() => setIsModalOpen(true)}
+            
           />
         )}
       </div>

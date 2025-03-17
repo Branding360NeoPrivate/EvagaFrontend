@@ -328,7 +328,7 @@ const EditDynamicForm = ({
                       ? "col-span-1 border-2 w-[10rem] border-2 outline-none p-1 rounded-r-md text-textGray font-medium"
                       : "col-span-2 border-2 w-[25rem] border-2 outline-none p-1 rounded-md text-textGray font-medium "
                   }
-                  required={field.key === "Brand" ? false : true}
+                  required={field.key === "Brand" || field.key === "SetupCost"  ? false : true}
                 />
                 {field.key === "MOQ" && (
                   <p className="text-sm text-textGray">*heads</p>
