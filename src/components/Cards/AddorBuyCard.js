@@ -453,7 +453,7 @@ function AddorBuyCard({
                   onClick={() => handleTimeSelect("AM")}
                   className={`px-3 py-1 font-bold rounded ${
                     selectedTime === "AM"
-                       ? "bg-yellow-300 text-primary py-2 hover:bg-hoverYellow"
+                      ? "bg-yellow-300 text-primary py-2 hover:bg-hoverYellow"
                       : "bg-yellow-100 text-gray-600 py-2 hover:bg-hoverYellow"
                   }`}
                 >
@@ -517,71 +517,73 @@ function AddorBuyCard({
           </span>
         )}
         <div>
-          {keysToRender.map((key, index) => {
-            const value = renderPrice?.[key];
+          {keysToRender
+            .sort((a, b) => (a === "AddOns" ? 1 : b === "AddOns" ? -1 : 0)) // Move "AddOns" to the end
+            .map((key, index) => {
+              const value = renderPrice?.[key];
 
-            if (Array.isArray(value) && value.length > 0) {
-              return (
-                <div key={`heading-${key}`} className="">
-                  <div className="flex items-center justify-start gap-2">
-                    <span className="bg-textLightGray rounded-full p-2">
-                      <img
-                        src={iconMapping[key] ? iconMapping[key] : pkg}
-                        alt={key}
-                        className="h-[1.5rem] object-fit"
-                      />
-                    </span>
-                    <p className="text-primary text-sm font-semibold text-normal">
-                      {key === "AddOns" ? "Recommended Add-Ons " : key}
-                    </p>
+              if (Array.isArray(value) && value.length > 0) {
+                return (
+                  <div key={`heading-${key}`} className="">
+                    <div className="flex items-center justify-start gap-2">
+                      <span className="bg-textLightGray rounded-full p-2">
+                        <img
+                          src={iconMapping[key] ? iconMapping[key] : pkg}
+                          alt={key}
+                          className="h-[1.5rem] object-fit"
+                        />
+                      </span>
+                      <p className="text-primary text-sm font-semibold text-normal">
+                        {key === "AddOns" ? "Recommended Add-Ons" : key}
+                      </p>
+                    </div>
+                    {value.map((item, idx) => {
+                      const isPackage = key === "Package";
+                      const rateInfo = isPackage
+                        ? item.Rates
+                        : item.Amount || item?.Rates;
+                      const uom = isPackage ? item.days : item.Uom || item.UOM;
+                      const minQuantity =
+                        item.MinQty && !isNaN(item.MinQty)
+                          ? parseInt(item.MinQty, 10)
+                          : 1;
+
+                      return (
+                        <AddOnCounter
+                          key={`${key}-${idx}`}
+                          itemName={item.Particulars}
+                          rateInfo={rateInfo}
+                          uom={uom}
+                          note={item.Note || ""}
+                          minQuantity={minQuantity}
+                          type={isPackage ? "Package" : key}
+                          onAdd={() =>
+                            handleAddOnUpdate(
+                              { ...item, rateInfo, uom },
+                              "add",
+                              isPackage ? "Package" : key
+                            )
+                          }
+                          onRemove={() =>
+                            handleAddOnUpdate(
+                              { ...item, rateInfo, uom },
+                              "remove",
+                              isPackage ? "Package" : key
+                            )
+                          }
+                          disableAdd={
+                            isPackage &&
+                            selectedAddOns.some(
+                              (addon) => addon.type === "Package"
+                            )
+                          }
+                        />
+                      );
+                    })}
                   </div>
-                  {value.map((item, idx) => {
-                    const isPackage = key === "Package";
-                    const rateInfo = isPackage
-                      ? item.Rates
-                      : item.Amount || item?.Rates;
-                    const uom = isPackage ? item.days : item.Uom || item.UOM;
-                    const minQuantity =
-                      item.MinQty && !isNaN(item.MinQty)
-                        ? parseInt(item.MinQty, 10)
-                        : 1;
-
-                    return (
-                      <AddOnCounter
-                        key={`${key}-${idx}`}
-                        itemName={item.Particulars}
-                        rateInfo={rateInfo}
-                        uom={uom}
-                        note={item.Note || ""}
-                        minQuantity={minQuantity}
-                        type={isPackage ? "Package" : key}
-                        onAdd={() =>
-                          handleAddOnUpdate(
-                            { ...item, rateInfo, uom },
-                            "add",
-                            isPackage ? "Package" : key
-                          )
-                        }
-                        onRemove={() =>
-                          handleAddOnUpdate(
-                            { ...item, rateInfo, uom },
-                            "remove",
-                            isPackage ? "Package" : key
-                          )
-                        }
-                        disableAdd={
-                          isPackage &&
-                          selectedAddOns.some(
-                            (addon) => addon.type === "Package"
-                          )
-                        }
-                      />
-                    );
-                  })}
-                </div>
-              );
-            }
-          })}
+                );
+              }
+            })}
         </div>
         <div className="space-y-3 mt-4">
           {!packageIncart ? (
