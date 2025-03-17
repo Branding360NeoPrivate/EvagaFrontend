@@ -73,7 +73,7 @@ function CreateSubAdmin() {
 
     try {
       const response = await updateAdminApi.callApi(selectedAdminId, formdata);
-      if (response?.status === 200) {
+      if (response) {
         toast.success("Admin updated successfully!");
         getAllAdminApiHandle();
       } else {

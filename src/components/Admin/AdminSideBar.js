@@ -34,10 +34,12 @@ import {
 import { LuMailQuestion } from "react-icons/lu";
 import { IoArrowBackSharp } from "react-icons/io5";
 import { IoMdArrowForward } from "react-icons/io";
-const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
-  const { logout } = useAuth();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+import { useSelector } from "react-redux";
 
+const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
+  const { logout, auth } = useAuth();
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const { details } = useSelector((state) => state.admin);
   const [openDropdown, setOpenDropdown] = useState(null);
   const dropdownRef = useRef(null);
 
@@ -145,7 +147,6 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
         },
       ],
     },
-
     {
       id: "WriteSpace",
       label: "Write Space",
@@ -182,8 +183,53 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
       ],
     },
     { id: "Admin Users", label: "Roles", icon: <FaUserShield /> },
-    { id: "Error Logs", label: "Error Logs", icon: <BiMessageAltError  /> },
+    { id: "Error Logs", label: "Error Logs", icon: <BiMessageAltError /> },
   ];
+
+  const filterMenuItems = (role, permissions) => {
+    const parsedPermissions =
+      typeof permissions === "string" ? JSON.parse(permissions) : permissions;
+  
+    return menuItems.filter((item) => {
+      // Always exclude "Home" for sub_admin unless explicitly allowed
+      if (role === "sub_admin" && item.id === "Home") {
+        return false;
+      }
+  
+      if (role === "admin") {
+        return true; // Show all items for admin
+      }
+  
+      if (role === "sub_admin" && parsedPermissions.includes("superadmin")) {
+        return true; // Show all items for sub_admin with superadmin permission
+      }
+  
+      if (role === "sub_admin") {
+        if (parsedPermissions.includes("ContentModerator")) {
+          return (
+            item.id === "User Management" &&
+            item.children?.some((child) => child.id === "All Services")
+          );
+        }
+        if (parsedPermissions.includes("support")) {
+          return item.id === "SupportCenter";
+        }
+        if (parsedPermissions.includes("marketingandPromotions")) {
+          return item.id === "Website Management";
+        }
+        if (parsedPermissions.includes("vendorManager")) {
+          return item.id === "User Management";
+        }
+        if (parsedPermissions.includes("eventManager")) {
+          return item.id === "Orders";
+        }
+      }
+  
+      return false; 
+    });
+  };
+
+  const filteredMenuItems = filterMenuItems(details?.role, details?.permissions);
 
   return (
     <div
@@ -203,7 +249,7 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
 
       {/* Menu Items */}
       <nav className="flex flex-col flex-grow" ref={dropdownRef}>
-        {menuItems.map((item) =>
+        {filteredMenuItems.map((item) =>
           item.children ? (
             <div className="w-full" key={item.id}>
               <button
@@ -231,7 +277,7 @@ const AdminSideBar = ({ selectedMenu, onMenuSelect }) => {
               <AnimatePresence>
                 {openDropdown === item.id && (
                   <motion.div
-                    className="flex flex-col "
+                    className="flex flex-col"
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}

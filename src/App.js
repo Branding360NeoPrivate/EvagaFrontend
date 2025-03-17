@@ -86,19 +86,19 @@ const AppContent = () => {
       dispatch(fetchUserWishlist(userId));
     }
   }, [auth, allWishlist, userId, dispatch]);
-  useEffect(() => {
-    const handleWheel = (event) => {
-      if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
-        event.preventDefault();
-      }
-    };
+  // useEffect(() => {
+  //   const handleWheel = (event) => {
+  //     if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
+  //       event.preventDefault();
+  //     }
+  //   };
 
-    window.addEventListener("wheel", handleWheel, { passive: false });
+  //   window.addEventListener("wheel", handleWheel, { passive: false });
 
-    return () => {
-      window.removeEventListener("wheel", handleWheel);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("wheel", handleWheel);
+  //   };
+  // }, []);
   return (
     <>
       {!noNavbarPaths.includes(location.pathname) && <DynamicNav />}

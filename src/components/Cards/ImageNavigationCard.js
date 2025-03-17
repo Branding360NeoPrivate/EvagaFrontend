@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ModernVideoPlayer from "../../utils/ModernVideoPlayer ";
 import { motion, AnimatePresence } from "framer-motion";
 import videoThumbnil from "../../assets/Temporary Images/Original.jpg";
@@ -36,6 +36,23 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
     if (e.key === "ArrowLeft") prevImage(e);
     if (e.key === "Escape") setIsModalOpen(false);
   };
+  const modalRef = useRef(null); 
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        setIsModalOpen(false);
+      }
+    };
+
+    if (isModalOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isModalOpen, setIsModalOpen]);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
@@ -94,25 +111,26 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
             selectedUrl={
               process.env.REACT_APP_API_Aws_Image_BASE_URL + selectedUrl
             }
+            onClick={() => setIsModalOpen(true)}
           />
         )}
       </div>
-      {/* Modal for Zoomed Image */}
       <AnimatePresence>
         {isModalOpen && (
           <motion.div
-            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50"
+            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50 h-[100%]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setIsModalOpen(false)}
           >
             <motion.div
-              className="relative"
+              className="relative h-[90%]"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
+              ref={modalRef}
+              // onClick={() => setIsModalOpen(false)}
             >
               {isImage(mediaUrls[currentIndex]) ? (
                 <img
@@ -120,10 +138,9 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
                     process.env.REACT_APP_API_Aws_Image_BASE_URL +
                     mediaUrls[currentIndex]
                   }
-                  // src={dummyImg}
                   alt="Zoomed Media"
                   className="max-w-[90vw] max-h-[90vh] rounded-md"
-                  onClick={(e) => e.stopPropagation()} // Prevent closing when clicking on the image
+                  onClick={(e) => e.stopPropagation()} 
                 />
               ) : (
                 <ModernVideoPlayer
@@ -131,11 +148,8 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
                     process.env.REACT_APP_API_Aws_Image_BASE_URL +
                     mediaUrls[currentIndex]
                   }
-                  // selectedUrl={dummyImg}
                 />
               )}
-
-              {/* Navigation Arrows */}
               <button
                 className="absolute top-1/2 left-3 transform -translate-y-1/2 bg-white text-black px-3 py-1 rounded-full text-lg font-bold"
                 onClick={prevImage}
@@ -148,8 +162,6 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
               >
                 ▶
               </button>
-
-              {/* Close Button */}
               <button
                 className="absolute top-2 right-2 bg-white text-black px-3 py-1 rounded-full text-lg font-bold"
                 onClick={() => setIsModalOpen(false)}

@@ -40,7 +40,7 @@ const userApi = {
   Wishlist: (userId) => apiService.get(apiEndpoints.user.wishlist(userId)),
   toggleWishlist: (userId, formData) =>
     apiService.post(apiEndpoints.user.toggelewishlist(userId), formData),
-  getTotalUser: () => apiService.get(apiEndpoints.admin.getTotalUser),
+  getTotalUser: (queryParams) => apiService.get(apiEndpoints.admin.getTotalUser,queryParams),
   getUserProfile: (userId) =>
     apiService.get(apiEndpoints.user.getUserprofile(userId)),
   addUserAdress: (userId, formData) =>

@@ -1,22 +1,28 @@
 import axios from "axios";
 
-// Function to send logs to the server
 const logErrorToServer = (logData) => {
+  const enhancedLogData = {
+    ...logData,
+    timestamp: new Date().toISOString(),
+    userAgent: navigator.userAgent,
+    platform: navigator.platform,
+    language: navigator.language,
+    url: window.location.href,
+  };
+
   axios
-    .post(`${process.env.REACT_APP_API_BASE_URL}logerror/log-error`, logData)
+    .post(`${process.env.REACT_APP_API_BASE_URL}logerror/log-error`, enhancedLogData)
     .catch((err) => {
       console.error("Error logging failed:", err);
     });
 };
 
-// Helper function to check if the error is from Google Analytics
 const isGoogleAnalyticsError = (url) => {
   return (
     typeof url === "string" && url.includes("https://www.google-analytics.com")
   );
 };
 
-// Capture global errors
 window.onerror = function (message, source, lineno, colno, error) {
   if (isGoogleAnalyticsError(source)) {
     return; // Skip logging for Google Analytics errors
@@ -29,24 +35,25 @@ window.onerror = function (message, source, lineno, colno, error) {
     lineno,
     colno,
     error: error ? error.toString() : null,
+    stackTrace: error ? error.stack : null,
   });
 };
 
-// Capture unhandled promise rejections
 window.addEventListener("unhandledrejection", (event) => {
   const url = event.reason?.config?.url || event.reason?.request?.responseURL;
 
   if (isGoogleAnalyticsError(url)) {
-    return; // Skip logging for Google Analytics errors
+    return; 
   }
 
   logErrorToServer({
     type: "Unhandled Rejection",
     message: event.reason ? event.reason.toString() : "Unhandled rejection",
+    stackTrace: event.reason ? event.reason.stack : null,
   });
 });
 
-// Capture network errors (e.g., fetch errors)
+
 const originalFetch = window.fetch;
 window.fetch = async (...args) => {
   const url = args[0];
@@ -63,6 +70,8 @@ window.fetch = async (...args) => {
         type: "Network Error",
         message: `Fetch failed with status: ${response.status}`,
         url: args[0],
+        status: response.status,
+        statusText: response.statusText,
       });
     }
     return response;
@@ -71,6 +80,7 @@ window.fetch = async (...args) => {
       type: "Network Error",
       message: error.toString(),
       url: args[0],
+      stackTrace: error.stack,
     });
     throw error; // Re-throw to avoid altering behavior
   }

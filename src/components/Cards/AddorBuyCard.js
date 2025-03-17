@@ -453,8 +453,8 @@ function AddorBuyCard({
                   onClick={() => handleTimeSelect("AM")}
                   className={`px-3 py-1 font-bold rounded ${
                     selectedTime === "AM"
-                      ? "bg-yellow-300 text-primary py-2"
-                      : "bg-gray-200 text-gray-600 py-2"
+                       ? "bg-yellow-300 text-primary py-2 hover:bg-hoverYellow"
+                      : "bg-yellow-100 text-gray-600 py-2 hover:bg-hoverYellow"
                   }`}
                 >
                   AM
@@ -463,8 +463,8 @@ function AddorBuyCard({
                   onClick={() => handleTimeSelect("PM")}
                   className={`px-3 py-1 font-bold rounded ${
                     selectedTime === "PM"
-                      ? "bg-yellow-300 text-primary py-2"
-                      : "bg-gray-200 text-gray-600 py-2"
+                      ? "bg-yellow-300 text-primary py-2 hover:bg-hoverYellow"
+                      : "bg-yellow-100 text-gray-600 py-2 hover:bg-hoverYellow"
                   }`}
                 >
                   PM

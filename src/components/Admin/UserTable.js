@@ -1,36 +1,46 @@
 import React, { useEffect, useState } from "react";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { FaFilter, FaSort } from "react-icons/fa";
 import { Pagination, Stack } from "@mui/material";
+import useServices from "../../hooks/useServices";
+import userApi from "../../services/userApi";
+import useDebounce from "../../utils/useDebounce";
+import TableComponetWithApi from "../../utils/TableComponetWithApi";
 
-const UserTable = ({ onMenuSelect, selectedVendor, setSelectedVendor }) => {
+const UserTable = ({
+  onMenuSelect,
+  selectedVendor,
+  setSelectedVendor,
+  term,
+}) => {
   const style = {
     "& .Mui-selected": {
       backgroundColor: "#6A1B9A !important",
       color: "white",
     },
   };
-  const { users, totalNumberOfUser, status, error } = useSelector(
-    (state) => state.adminActions
-  );
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-
-
-  // Open modal with vendor details
-  const handleViewDetails = (vendor) => {
-    setSelectedVendor(vendor);
-    setIsModalOpen(true);
-  };
-
-  // Close modal
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedVendor(null);
-  };
+  const [users, setusers] = useState([]);
+  const debounce = useDebounce(term);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalUser, setTotalUser] = useState(0);
   const itemsPerPage = 10;
+  const getUserData = useServices(userApi.getTotalUser);
+  const handleGetAllUser = async () => {
+    const queryParams = {
+      search: debounce || "",
+      page: page || 1,
+      // sortOrder: sortvalue || "asc",
+    };
+    const response = await getUserData.callApi(queryParams);
+    setusers(response ? response?.data : []);
+    setTotalPages(response ? response?.totalPages : 1);
+    setTotalUser(response ? response?.totalUsers : 0);
+  };
+  useEffect(() => {
+    handleGetAllUser();
+  }, [page, debounce]);
 
   useEffect(() => {
     setCount(Math.ceil(users?.length / itemsPerPage));
@@ -38,16 +48,55 @@ const UserTable = ({ onMenuSelect, selectedVendor, setSelectedVendor }) => {
   const handlePageChange = (event, value) => {
     setPage(value);
   };
+  const columns = [
+    { label: "No", key: "index", render: (_, i) => i + 1 },
+    {
+      label: "Name of Client",
+      key: "name",
+    },
+    {
+      label: "Email ID",
+      key: "email",
+    },
+    {
+      label: "Phone Number",
+      key: "phoneNumber",
+    },
+    { label: "City", key: "forType" },
 
-  if (status === "loading") {
-    return <div className="text-center py-10">Loading vendor data...</div>;
-  }
-
-  if (status === "failed") {
-    return <div className="text-center py-10">Error: {error}</div>;
-  }
+    {
+      label: "Interests",
+      key: "packageStatus",
+      render: (row) =>
+        row.interestId?.interests && row.interestId.interests.length > 0
+          ? `${row.interestId.interests[0]}${
+              row.interestId.interests.length > 1
+                ? ` +${row.interestId.interests.length - 1}`
+                : ""
+            }`
+          : "No Interest",
+    },
+  ];
   return (
     <div className="w-full px-6 py-4 bg-white shadow-md rounded-lg">
+           <div className="grid grid-cols-2 gap-6 mb-6">
+              <div className="p-4 bg-white shadow rounded-lg text-center">
+                <h4 className="text-sm font-medium text-gray-500">
+                  Total No. of User
+                </h4>
+                <p className="text-3xl font-bold text-gray-800">
+                  {totalUser}
+                </p>
+              </div>
+              <div className="p-4 bg-white shadow rounded-lg text-center">
+                <h4 className="text-sm font-medium text-gray-500">
+                  Active User
+                </h4>
+                <p className="text-3xl font-bold text-gray-800">
+                {totalUser}
+                </p>
+              </div>
+            </div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-bold">Vendors</h2>
         <div className="flex gap-4 items-center">
@@ -65,54 +114,14 @@ const UserTable = ({ onMenuSelect, selectedVendor, setSelectedVendor }) => {
         </div>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="table-auto w-full ">
-          <thead className="  ">
-            <tr className="bg-primary text-white">
-              <th className=" font-normal  px-4 py-2 rounded-s-md">No</th>
-              <th className="font-normal px-4 py-2">Name of Client</th>
-              <th className="font-normal px-4 py-2">Email ID</th>
-              <th className="font-normal px-4 py-2">Phone Number</th>
-              <th className="font-normal px-4 py-2">City</th>
-              <th className="font-normal px-4 py-2">Interests</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users
-              ?.slice((page - 1) * 10, (page - 1) * 10 + 10)
-              .map((user, index) => (
-                <tr key={index} className="text-center">
-                  <td className="  px-4 py-2">{index + 1}</td>
-                  <td className="  px-4 py-2">{user.name}</td>
-                  <td className="  px-4 py-2">{user.email}</td>
-                  <td className="  px-4 py-2">{user.phoneNumber}</td>
-                  <td className="  px-4 py-2">N/A</td>
-                  <td className="px-4 py-2">
-                    {user.interestId?.interests &&
-                    user.interestId.interests.length > 0
-                      ? `${user.interestId.interests[0]}${
-                          user.interestId.interests.length > 1
-                            ? ` +${user.interestId.interests.length - 1}`
-                            : ""
-                        }`
-                      : "No Interest"}
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-        <div className="flex items-center justify-center w-full py-3">
-          <Stack spacing={2}>
-            <Pagination
-              count={count}
-              page={page}
-              onChange={handlePageChange}
-              sx={style}
-            />
-          </Stack>
-        </div>
-      </div>
+      <TableComponetWithApi
+        columns={columns}
+        data={users}
+        page={page}
+        itemsPerPage={10}
+        onPageChange={handlePageChange}
+        totalPages={totalPages}
+      />
     </div>
   );
 };
