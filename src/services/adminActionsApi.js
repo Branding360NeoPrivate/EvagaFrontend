@@ -129,10 +129,13 @@ const adminActionsApi = {
       apiEndpoints.adminActions.getAdminDashboardDataHandle,
       queryParams
     ),
-  downloadVendorListing: () =>
-    apiService.get(apiEndpoints.adminActions.downloadVendorListing),
-  downloadVendorsAsCSV: () =>
-    apiService.get(apiEndpoints.adminActions.downloadVendorsAsCSV),
+  downloadVendorListing: (queryParams) =>
+    apiService.get(
+      apiEndpoints.adminActions.downloadVendorListing,
+      queryParams
+    ),
+  downloadVendorsAsCSV: (queryParams) =>
+    apiService.get(apiEndpoints.adminActions.downloadVendorsAsCSV, queryParams),
   getAllBlog: () => apiService.get(apiEndpoints.adminActions.getAllBlog),
   getOneBlog: (blogId) =>
     apiService.get(apiEndpoints.adminActions.getOneBlog(blogId)),

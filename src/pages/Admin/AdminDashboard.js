@@ -282,7 +282,7 @@ const AdminDashboard = () => {
         )}
         {selectedMenu === "Gst by Category" && <GstTable />}
         {selectedMenu === "Feedback" && <FeedbackTable />}
-        {selectedMenu === "Waitlist" && <WaitlistTable />}
+        {selectedMenu === "Waitlist" && <WaitlistTable term={term}/>}
         {selectedMenu === "New Orders" && <NewOrdertable />}
         {selectedMenu === "Confirmed Orders" && <ConfirmOrder />}
         {selectedMenu === "Ongoing Orders" && <OngoingOrder />}

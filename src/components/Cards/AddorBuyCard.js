@@ -20,6 +20,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { internalRoutes } from "../../utils/internalRoutes";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
+import { pascalToNormal } from "../../utils/PascalToNormalConverter";
 
 function AddorBuyCard({
   bio,
@@ -518,7 +519,7 @@ function AddorBuyCard({
         )}
         <div>
           {keysToRender
-            .sort((a, b) => (a === "AddOns" ? 1 : b === "AddOns" ? -1 : 0)) // Move "AddOns" to the end
+            .sort((a, b) => (a === "AddOns" ? 1 : b === "AddOns" ? -1 : 0)) 
             .map((key, index) => {
               const value = renderPrice?.[key];
 
@@ -534,7 +535,7 @@ function AddorBuyCard({
                         />
                       </span>
                       <p className="text-primary text-sm font-semibold text-normal">
-                        {key === "AddOns" ? "Recommended Add-Ons" : key}
+                        {key === "AddOns" ? "Recommended Add-Ons" : pascalToNormal(key)}
                       </p>
                     </div>
                     {value.map((item, idx) => {

@@ -96,6 +96,11 @@ const orderApis = {
         },
       }
     ),
+    downloadOrdersCSV: (orderStatus, queryParams) =>
+    apiService.get(
+      apiEndpoints.order.downloadOrdersCSV(orderStatus),
+      queryParams
+    ),
 };
 
 export default orderApis;

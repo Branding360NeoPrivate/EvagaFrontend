@@ -8,12 +8,14 @@ import orderApis from "../../services/orderApis";
 import formatCurrency from "../../utils/formatCurrency";
 import ReusableModal from "../Modal/Modal";
 import PriceBreakdown from "./PriceBreakdownTable";
+import DateRangePicker from "../../utils/DateRangePicker";
 
 const gatewayFeeRate = 0.02;
 function NewOrdertable() {
   const [page, setPage] = useState(1);
   const [allOrder, setAllOrder] = useState([]);
   const getAllNewOrderApi = useServices(orderApis.getAllNewOrder);
+  const downloadOrdersCSVApi = useServices(orderApis.downloadOrdersCSV);
   const [oneOrder, setOneOrder] = useState([]);
   const getOneOrderDetailsadminApi = useServices(
     orderApis.GetOneOrderDetailsAdmin
@@ -44,7 +46,30 @@ function NewOrdertable() {
     setOneOrder(response?.order);
     console.log(response);
   };
+  const downloadOrdersCSVApiHandle = async(fromDate, toDate) => {
+    const queryParams = {
+      fromDate: fromDate || "",
+      toDate: toDate || "",
+      // sortOrder: sortvalue || "asc",
+    };
+    try {
+      const response =await downloadOrdersCSVApi.callApi("new", queryParams);
 
+      if (response && response) {
+        const blob = new Blob([response], { type: "text/csv" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "newOrder.csv"; 
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } else {
+        console.error("No data received for CSV download");
+      }
+    } catch (error) {
+      console.error("Error downloading CSV:", error);
+    }
+  };
   useEffect(() => {
     getAllNewOrderHandle();
   }, []);
@@ -120,7 +145,12 @@ function NewOrdertable() {
 
   return (
     <div>
-      {" "}
+      <button
+        onClick={() => [handleOpenModal(), setModalType("download")]}
+        className="float-right btn-primary w-fit px-2 mb-2"
+      >
+        Download
+      </button>
       <TableComponet
         columns={columns}
         data={allOrder}
@@ -253,15 +283,14 @@ function NewOrdertable() {
             />
           </>
         )}
+        {modalType === "download" && (
+          <div className="w-full flex items-center justify-center">
+            <DateRangePicker onSearch={downloadOrdersCSVApiHandle} />
+          </div>
+        )}
       </ReusableModal>
     </div>
   );
 }
 
-// totalPrice, // Base price for the user
-// gstAmount, // GST amount paid by the user
-// gstPercentage, // GST percentage for calculations
-// platformFee, // Platform fee for the user
-// platformGstAmount, // GST on the platform fee
-// gatewayFeeRate, // Gateway fee rate for calculations
 export default NewOrdertable;

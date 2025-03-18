@@ -8,6 +8,7 @@ import orderApis from "../../services/orderApis";
 import formatCurrency from "../../utils/formatCurrency";
 import PriceBreakdown from "./PriceBreakdownTable";
 import ReusableModal from "../Modal/Modal";
+import DateRangePicker from "../../utils/DateRangePicker";
 const gatewayFeeRate = 0.02;
 function OngoingOrder() {
   const [page, setPage] = useState(1);
@@ -17,6 +18,7 @@ function OngoingOrder() {
   const getOneOrderDetailsadminApi = useServices(
     orderApis.GetOneOrderDetailsAdmin
   );
+  const downloadOrdersCSVApi = useServices(orderApis.downloadOrdersCSV);
   const [openModal, setOpenModal] = useState(false);
   const [modalType, setModalType] = useState("viewOrder");
   const handleOpenModal = () => {
@@ -43,7 +45,30 @@ function OngoingOrder() {
     setOneOrder(response?.order);
     console.log(response);
   };
+  const downloadOrdersCSVApiHandle = async(fromDate, toDate) => {
+    const queryParams = {
+      fromDate: fromDate || "",
+      toDate: toDate || "",
+      // sortOrder: sortvalue || "asc",
+    };
+    try {
+      const response =await downloadOrdersCSVApi.callApi("active", queryParams);
 
+      if (response && response) {
+        const blob = new Blob([response], { type: "text/csv" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "activeOrder.csv"; 
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } else {
+        console.error("No data received for CSV download");
+      }
+    } catch (error) {
+      console.error("Error downloading CSV:", error);
+    }
+  };
   useEffect(() => {
     getAllNewOrderHandle();
   }, []);
@@ -119,6 +144,12 @@ function OngoingOrder() {
 
   return (
     <div>
+      <button
+        onClick={() => [handleOpenModal(), setModalType("download")]}
+        className="float-right btn-primary w-fit px-2 mb-2"
+      >
+        Download
+      </button>
     <TableComponet
       columns={columns}
       data={allOrder}
@@ -252,6 +283,11 @@ function OngoingOrder() {
         />
         </>
       )}
+          {modalType === "download" && (
+          <div className="w-full flex items-center justify-center">
+            <DateRangePicker onSearch={downloadOrdersCSVApiHandle} />
+          </div>
+        )}
     </ReusableModal>
   </div>
   );

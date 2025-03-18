@@ -13,6 +13,7 @@ import ReusableModal from "../Modal/Modal";
 import vendorApi from "../../services/vendorApi";
 import { toast } from "react-toastify";
 import DeleteForm from "./DeleteForm";
+import DateRangePicker from "../../utils/DateRangePicker";
 
 const VendorTable = memo(
   ({ onMenuSelect, selectedVendor, setSelectedVendor, term }) => {
@@ -81,9 +82,13 @@ const VendorTable = memo(
     const downloadVendorsAsCSV = useServices(
       adminActionsApi.downloadVendorsAsCSV
     );
-    const downloadVendorsAsCSVhandle = async () => {
+    const downloadVendorsAsCSVhandle = async (fromDate, toDate) => {
+      const queryParams = {
+        fromDate: fromDate || "",
+        toDate: toDate || "",
+      };
       try {
-        const response = await downloadVendorsAsCSV.callApi(); // Adjust to your actual API call method
+        const response = await downloadVendorsAsCSV.callApi(queryParams);
         if (response && response) {
           const blob = new Blob([response], { type: "text/csv" });
           const url = window.URL.createObjectURL(blob);
@@ -194,15 +199,13 @@ const VendorTable = memo(
               Sort By
             </button>{" "}
             <button
-              onClick={downloadVendorsAsCSVhandle}
+              onClick={() => [handleOpen(), setModalType("download")]}
               className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-highlightYellowPrimary hover:text-primary"
             >
               Download
             </button>
           </div>
         </div>
-
-        {/* Table */}
         <div className="overflow-x-auto">
           <table className="table-auto w-full ">
             <thead className="  ">
@@ -293,7 +296,6 @@ const VendorTable = memo(
           </div>
         </div>
 
-        {/* CustomModal for Viewing Vendor Details */}
         <AdminVendorTableModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
@@ -328,8 +330,10 @@ const VendorTable = memo(
           title={
             modalType === "edit"
               ? "Edit Vendor Status"
-              : "delete"
+              : modalType === "delete"
               ? "Delete Vendor"
+              : modalType === "download"
+              ? "Download Report"
               : ""
           }
           width={"50%"}
@@ -459,6 +463,11 @@ const VendorTable = memo(
               onDelete={() => deleteAccountApiHandle(vendorId)}
               deleteText="Vendor"
             />
+          )}
+          {modalType === "download" && (
+            <div className="w-full flex items-center justify-center">
+              <DateRangePicker onSearch={downloadVendorsAsCSVhandle} />
+            </div>
           )}
         </ReusableModal>
       </div>

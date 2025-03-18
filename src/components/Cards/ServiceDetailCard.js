@@ -22,6 +22,7 @@ import { ShareButton } from "../../utils/ShareButton";
 import { internalRoutes } from "../../utils/internalRoutes";
 import ReusableModal from "../Modal/Modal";
 import Reviews from "./Review";
+import { pascalToNormal } from "../../utils/PascalToNormalConverter";
 function ServiceDetailCard({
   title,
   category,
@@ -172,7 +173,7 @@ function ServiceDetailCard({
                 />
               </span>
               <div className="mb-4 w-full">
-                <h3 className="text-normal font-meduim text-primary">{key}</h3>
+                <h3 className="text-normal font-meduim text-primary">{pascalToNormal(key)}</h3>
                 <hr style={{ margin: "0.3rem 0" }} />
                 <div className="flex gap-2 mt-1 flex-wrap">
                   {value?.map((item, idx) => (
@@ -188,7 +189,6 @@ function ServiceDetailCard({
             </div>
           );
         } else if (typeof value === "string") {
-          // If value is a string, render directly
           return (
             <div className="flex gap-4 items-start justify-start" key={index}>
               <div className="mb-4 w-full flex items-center">
@@ -202,7 +202,7 @@ function ServiceDetailCard({
           );
         }
 
-        return null; // Return nothing if the value is neither an array nor a string
+        return null;
       })}
 
       <div className="flex gap-4 items-start justify-start">

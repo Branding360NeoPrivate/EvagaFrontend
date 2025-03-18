@@ -8,11 +8,13 @@ import orderApis from "../../services/orderApis";
 import formatCurrency from "../../utils/formatCurrency";
 import PriceBreakdown from "./PriceBreakdownTable";
 import ReusableModal from "../Modal/Modal";
+import DateRangePicker from "../../utils/DateRangePicker";
 const gatewayFeeRate = 0.02;
 function CancelledOrder() {
   const [page, setPage] = useState(1);
   const [allOrder, setAllOrder] = useState([]);
-  const getAllNewOrderApi=useServices(orderApis.getAllCancelledOrder)
+  const getAllNewOrderApi = useServices(orderApis.getAllCancelledOrder);
+  const downloadOrdersCSVApi = useServices(orderApis.downloadOrdersCSV);
   const [oneOrder, setOneOrder] = useState([]);
   const getOneOrderDetailsadminApi = useServices(
     orderApis.GetOneOrderDetailsAdmin
@@ -49,6 +51,30 @@ function CancelledOrder() {
   }, []);
   const handlePageChange = (event, value) => {
     setPage(value);
+  };
+  const downloadOrdersCSVApiHandle = async (fromDate, toDate) => {
+    const queryParams = {
+      fromDate: fromDate || "",
+      toDate: toDate || "",
+      // sortOrder: sortvalue || "asc",
+    };
+    try {
+      const response = await downloadOrdersCSVApi.callApi("cancelled", queryParams);
+
+      if (response && response) {
+        const blob = new Blob([response], { type: "text/csv" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "cancelledOrder.csv";
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } else {
+        console.error("No data received for CSV download");
+      }
+    } catch (error) {
+      console.error("Error downloading CSV:", error);
+    }
   };
   const columns = [
     { label: "No", key: "index", render: (_, i) => i + 1 },
@@ -119,22 +145,27 @@ function CancelledOrder() {
 
   return (
     <div>
-    <TableComponet
-      columns={columns}
-      data={allOrder}
-      page={page}
-      itemsPerPage={10}
-      onPageChange={handlePageChange}
-    />
-    <ReusableModal
-      open={openModal}
-      onClose={handleCloseModal}
-      title={modalType === "viewOrder" ? "View Order" : ""}
-    >
-      {modalType === "viewOrder" && (
-        <>
-        
-        <div className="w-full mx-auto p-6 bg-white ">
+      <button
+        onClick={() => [handleOpenModal(), setModalType("download")]}
+        className="float-right btn-primary w-fit px-2 mb-2"
+      >
+        Download
+      </button>
+      <TableComponet
+        columns={columns}
+        data={allOrder}
+        page={page}
+        itemsPerPage={10}
+        onPageChange={handlePageChange}
+      />
+      <ReusableModal
+        open={openModal}
+        onClose={handleCloseModal}
+        title={modalType === "viewOrder" ? "View Order" : ""}
+      >
+        {modalType === "viewOrder" && (
+          <>
+            <div className="w-full mx-auto p-6 bg-white ">
               <h2 className="text-2xl font-bold mb-4 text-primary">
                 Order Details
               </h2>
@@ -241,19 +272,24 @@ function CancelledOrder() {
                 </p>
               </div>
             </div>
-        <PriceBreakdown
-          totalPrice={oneOrder.totalPrice}
-          gstAmount={oneOrder?.gstAmount}
-          gstPercentage={oneOrder?.gstPercentage}
-          platformFee={oneOrder?.platformFee}
-          platformGstAmount={oneOrder?.platformGstAmount}
-          gatewayFeeRate={gatewayFeeRate}
-          feesPercentage={oneOrder?.feesPercentage || 12}
-        />
-        </>
-      )}
-    </ReusableModal>
-  </div>
+            <PriceBreakdown
+              totalPrice={oneOrder.totalPrice}
+              gstAmount={oneOrder?.gstAmount}
+              gstPercentage={oneOrder?.gstPercentage}
+              platformFee={oneOrder?.platformFee}
+              platformGstAmount={oneOrder?.platformGstAmount}
+              gatewayFeeRate={gatewayFeeRate}
+              feesPercentage={oneOrder?.feesPercentage || 12}
+            />
+          </>
+        )}
+        {modalType === "download" && (
+          <div className="w-full flex items-center justify-center">
+            <DateRangePicker onSearch={downloadOrdersCSVApiHandle} />
+          </div>
+        )}
+      </ReusableModal>
+    </div>
   );
 }
 

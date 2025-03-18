@@ -10,7 +10,8 @@ const commonApis = {
   addFeedBack: (formdata) =>
     apiService.post(apiEndpoints.common.addfeedback, formdata),
   getAllFeedBack: () => apiService.get(apiEndpoints.common.getallfeedback),
-  getAllAaitlist: () => apiService.get(apiEndpoints.common.getallwaitlist),
+  getAllAaitlist: (queryParams) =>
+    apiService.get(apiEndpoints.common.getallwaitlist, queryParams),
   CreateQuery: (formdata) =>
     apiService.post(apiEndpoints.common.createQuery, formdata),
   GetuserQuery: (userId) =>

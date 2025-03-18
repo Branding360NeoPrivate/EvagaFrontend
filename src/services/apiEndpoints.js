@@ -188,7 +188,7 @@ const apiEndpoints = {
     deleteOneNewsLetter: (newsletterId) =>
       `newsletter/deleteone/${newsletterId}`,
     getAllErrorLogs: `logerror/logs`,
-    getOneError:(id)=> `logerror/getOneError/${id}`,
+    getOneError: (id) => `logerror/getOneError/${id}`,
   },
   packages: {
     getAllPackages: () => "packages/get-all-packages",
@@ -245,6 +245,8 @@ const apiEndpoints = {
     getOneOrderDetails: `vendorOrder/getOneOrderDetails`,
     getOneOrderDetailsadmin: (OrderId, itemId) =>
       `order/getOneOrderDetail/${OrderId}/${itemId}`,
+    downloadOrdersCSV: (orderStatus) =>
+      `order/downloadOrdersCSV/${orderStatus}`,
   },
 };
 

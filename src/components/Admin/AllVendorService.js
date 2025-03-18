@@ -15,6 +15,7 @@ import { Backdrop, Box, Fade, Modal, Typography } from "@mui/material";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { formatDate } from "../../utils/formatDate";
 import EditVendorService from "./EditVendorService";
+import DateRangePicker from "../../utils/DateRangePicker";
 const style = {
   position: "absolute",
   top: "50%",
@@ -97,9 +98,13 @@ function AllVendorService({ term }) {
   const downloadVendorListing = useServices(
     adminActionsApi.downloadVendorListing
   );
-  const downloadVendorListinghandle = async () => {
+  const downloadVendorListinghandle = async (fromDate, toDate) => {
+    const queryParams = {
+      fromDate: fromDate || "",
+      toDate: toDate || "",
+    };
     try {
-      const response = await downloadVendorListing.callApi(); // Adjust to your actual API call method
+      const response = await downloadVendorListing.callApi(queryParams); 
       if (response && response) {
         const blob = new Blob([response], { type: "text/csv" });
         const url = window.URL.createObjectURL(blob);
@@ -416,7 +421,7 @@ function AllVendorService({ term }) {
       {" "}
       <div className="flex gap-4 items-center justify-end">
         <button
-          onClick={downloadVendorListinghandle}
+          onClick={() => [handleOpen3(), setModalType("download")]}
           className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-highlightYellowPrimary hover:text-primary"
         >
           Download
@@ -637,7 +642,7 @@ function AllVendorService({ term }) {
       <ReusableModal
         open={open3}
         onClose={handleClose3}
-        title={modalType === "delete" ? "Delete Service" : ""}
+        title={modalType === "delete" ? "Delete Service" : "Download Report"}
         width={"50%"}
       >
         {modalType === "delete" && (
@@ -664,6 +669,11 @@ function AllVendorService({ term }) {
             >
               Permanent Delete
             </button>
+          </div>
+        )}
+        {modalType === "download" && (
+          <div className="w-full flex items-center justify-center">
+            <DateRangePicker onSearch={downloadVendorListinghandle} />
           </div>
         )}
       </ReusableModal>
