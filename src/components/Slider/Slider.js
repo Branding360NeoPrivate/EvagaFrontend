@@ -2,8 +2,9 @@ import React from "react";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import Banner from "../Banner/Banner";
+import BannerSkeleton from "../Banner/BannerSkeleton";
 
-function Slider({ bannerData,height }) {
+function Slider({ bannerData, height, isLoading }) {
   const responsive = {
     0: {
       items: 1,
@@ -25,14 +26,18 @@ function Slider({ bannerData,height }) {
       paddingRight={0}
       paddingLeft={0}
     >
-      {bannerData?.map((item) => (
-        <Banner
-          key={item?.BannerId}
-          image={item?.BannerUrl}
-          category={item?.categoryId}
-          height={height}
-        />
-      ))}
+      {isLoading
+        ? Array.from({ length: 3 }).map((_, index) => (
+            <BannerSkeleton key={index} height={height} />
+          ))
+        : bannerData?.map((item) => (
+            <Banner
+              key={item?.BannerId}
+              image={item?.BannerUrl}
+              category={item?.categoryId}
+              height={height}
+            />
+          ))}
     </AliceCarousel>
   );
 }

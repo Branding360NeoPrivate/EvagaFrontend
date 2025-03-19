@@ -6,6 +6,7 @@ const initialState = {
   userBanner: [],
   vendorBanner: [],
   error: null,
+  status: "idle",
 };
 
 export const fetchBanner = createAsyncThunk(

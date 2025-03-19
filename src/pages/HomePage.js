@@ -19,13 +19,18 @@ import { useAuth } from "../context/AuthContext";
 import userApi from "../services/userApi";
 import RecentlyViewedCard from "../components/Cards/RecentlyViewedCard";
 import SkeletonProductCard from "../components/Cards/SkeletonProductCard";
+import CategorySkeleton from "../components/Cards/CategorySkeleton";
 function Home() {
-  const { userBanner } = useSelector((state) => state.banner);
   const dispatch = useDispatch();
-  const { categories } = useSelector((state) => state.category);
+  const {
+    banner: { userBanner, status: bannerStatus },
+    category: { categories, status: categoryStatus },
+  } = useSelector((state) => ({
+    banner: state.banner,
+    category: state.category,
+  }));
   const { allPackages } = useSelector((state) => state.package);
   const isLoading = useSelector((state) => state.package.isLoading);
-  const globalLoading = useSelector((state) => state.loader.isLoading);
   const getAllPackages = useServices(packageApis.getAllPackage);
   const userIntereststatus = useServices(userApi.userIntereststatus);
   const GetRecentViewpackageApi = useServices(userApi.GetRecentViewpackage);
@@ -119,20 +124,28 @@ function Home() {
       }}
     >
       <div className="flex justify-center items-center contain-content w-[100%]">
-        <Slider bannerData={userBanner} height={"16em"} />
+        <Slider
+          bannerData={userBanner}
+          height={"16em"}
+          isLoading={bannerStatus === "loading"}
+        />
       </div>
       <div className="w-[95%]  mx-12 gap-4">
         <h2 className="sub_heading">Browse by Category</h2>
         <div className="flex flex-row gap-5 overflow-x-scroll no-scrollbar box-border">
           <HorizontalScroll speed={1} className="flex flex-row gap-1">
-            {categories?.map((item, index) => (
-              <CategoryDisplayCard
-                key={index}
-                image={item.icon}
-                text={item.name}
-                catId={item?._id}
-              />
-            ))}
+            {categoryStatus === "loading"
+              ? Array.from({ length: 8 }).map((_, index) => (
+                  <CategorySkeleton key={index} />
+                ))
+              : categories?.map((item,index) => (
+                  <CategoryDisplayCard
+                  key={index}
+                  image={item.icon}
+                  text={item.name}
+                  catId={item?._id}
+                  />
+                ))}
           </HorizontalScroll>
         </div>
       </div>
