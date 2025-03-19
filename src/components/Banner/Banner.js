@@ -24,7 +24,6 @@ function Banner({ image, height, category }) {
             ? `object-fill w-full w-full sm:h-[14rem] md:h-[18rem]`
             : "object-fill w-full "
         }
-        loading="lazy"
         decoding="async"
         onClick={category ? () => handleSearch() : undefined}
       />

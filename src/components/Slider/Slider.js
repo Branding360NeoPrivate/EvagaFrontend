@@ -15,6 +15,7 @@ function Slider({ bannerData, height, isLoading }) {
     },
   };
 
+
   return (
     <AliceCarousel
       mouseTracking
@@ -26,9 +27,9 @@ function Slider({ bannerData, height, isLoading }) {
       paddingRight={0}
       paddingLeft={0}
     >
-      {isLoading
+      {isLoading==="loading"
         ? Array.from({ length: 3 }).map((_, index) => (
-            <BannerSkeleton key={index} height={height} />
+            <BannerSkeleton key={index} height={'16rem'} />
           ))
         : bannerData?.map((item) => (
             <Banner
