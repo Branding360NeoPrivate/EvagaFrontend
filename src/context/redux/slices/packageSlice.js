@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   error: null,
-
+  isLoading: false,
   allPackages: [],
 };
 
@@ -12,9 +12,13 @@ const PackageSlice = createSlice({
   reducers: {
     addPackage: (state, action) => {
       state.allPackages = action.payload;
+      state.isLoading = false;
+    },
+    setLoading: (state, action) => {
+      state.isLoading = action.payload;
     },
   },
 });
 
-export const { addPackage } = PackageSlice.actions;
+export const { addPackage, setLoading } = PackageSlice.actions;
 export default PackageSlice.reducer;

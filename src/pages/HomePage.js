@@ -7,7 +7,7 @@ import ProductCard from "../components/Cards/ProductCard";
 import { fetchCategories } from "../context/redux/slices/categorySlice";
 import packageApis from "../services/packageApis";
 import useServices from "../hooks/useServices";
-import { addPackage } from "../context/redux/slices/packageSlice";
+import { addPackage, setLoading } from "../context/redux/slices/packageSlice";
 import HorizontalScroll from "../utils/HorizontalScroll";
 import { useNavigate } from "react-router-dom";
 import { internalRoutes } from "../utils/internalRoutes";
@@ -18,11 +18,14 @@ import { addWishlist } from "../context/redux/slices/wishlistSlice";
 import { useAuth } from "../context/AuthContext";
 import userApi from "../services/userApi";
 import RecentlyViewedCard from "../components/Cards/RecentlyViewedCard";
+import SkeletonProductCard from "../components/Cards/SkeletonProductCard";
 function Home() {
   const { userBanner } = useSelector((state) => state.banner);
   const dispatch = useDispatch();
   const { categories } = useSelector((state) => state.category);
   const { allPackages } = useSelector((state) => state.package);
+  const isLoading = useSelector((state) => state.package.isLoading);
+  const globalLoading = useSelector((state) => state.loader.isLoading);
   const getAllPackages = useServices(packageApis.getAllPackage);
   const userIntereststatus = useServices(userApi.userIntereststatus);
   const GetRecentViewpackageApi = useServices(userApi.GetRecentViewpackage);
@@ -35,8 +38,15 @@ function Home() {
   const wishlist = useServices(userApi.Wishlist);
 
   const handleGetAllPackages = async () => {
-    const response = await getAllPackages.callApi();
-    dispatch(addPackage(response?.data));
+    dispatch(setLoading(true));
+    try {
+      const response = await getAllPackages.callApi();
+      dispatch(addPackage(response?.data));
+    } catch (error) {
+      console.error("Error fetching packages:", error);
+    } finally {
+      dispatch(setLoading(false));
+    }
   };
   // const SuggestSimilarServicesApiHandle = async () => {
   //   const formdata = new FormData();
@@ -93,8 +103,6 @@ function Home() {
 
   useEffect(() => {
     if (!userBanner || userBanner.length === 0) {
-      console.log("banner");
-
       dispatch(fetchUserBanner());
     }
   }, [dispatch, userBanner]);
@@ -140,63 +148,70 @@ function Home() {
         </span>
         <div className="flex flex-row gap-5 overflow-x-scroll no-scrollbar box-border">
           <HorizontalScroll speed={1} className="flex flex-row gap-8">
-            {allPackages.map((service, index) => {
-              const imageUrl =
-                (Array.isArray(service.serviceDetails?.values?.CoverImage)
-                  ? service.serviceDetails?.values?.CoverImage[0]
-                  : service.serviceDetails?.values?.CoverImage) ||
-                (Array.isArray(service.serviceDetails?.values?.ProductImage)
-                  ? service.serviceDetails?.values?.ProductImage[0]
-                  : service.serviceDetails?.values?.ProductImage);
+            {isLoading
+              ? Array.from({ length: 6 }).map((_, index) => (
+                  <SkeletonProductCard key={index} />
+                ))
+              : allPackages?.map((service, index) => {
+                  const imageUrl =
+                    (Array.isArray(service.serviceDetails?.values?.CoverImage)
+                      ? service.serviceDetails?.values?.CoverImage[0]
+                      : service.serviceDetails?.values?.CoverImage) ||
+                    (Array.isArray(service.serviceDetails?.values?.ProductImage)
+                      ? service.serviceDetails?.values?.ProductImage[0]
+                      : service.serviceDetails?.values?.ProductImage);
 
-              const popularimage = imageUrl?.startsWith("service/")
-                ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
-                : imageUrl;
+                  const popularimage = imageUrl?.startsWith("service/")
+                    ? process.env.REACT_APP_API_Aws_Image_BASE_URL + imageUrl
+                    : imageUrl;
 
-              return (
-                <ProductCard
-                  key={service?.serviceDetails?._id}
-                  popularimage={popularimage}
-                  title={
-                    service.serviceDetails?.values?.Title ||
-                    service.serviceDetails?.values?.VenueName ||
-                    service.serviceDetails?.values?.FoodTruckName
-                  }
-                  category={service?.categoryName}
-                  price={
-                    service.serviceDetails?.values?.price ||
-                    service.serviceDetails?.values?.Pricing ||
-                    service.serviceDetails?.values?.Price ||
-                    service.serviceDetails?.values?.Package?.[0]?.Rates ||
-                    service.serviceDetails?.values?.[
-                      "OrderQuantity&Pricing"
-                    ]?.[0]?.Rates ||
-                    service.serviceDetails?.values?.["Duration&Pricing"]?.[0]
-                      ?.Amount ||
-                    service.serviceDetails?.values?.["SessionLength"]?.[0]
-                      ?.Amount ||
-                    service.serviceDetails?.values?.[
-                      "SessionLength&Pricing"
-                    ]?.[0]?.Amount ||
-                    service.serviceDetails?.values?.["QtyPricing"]?.[0]?.Rates
-                  }
-                  rating={0}
-                  reviews={0}
-                  serviceId={service?._id}
-                  packageId={service?.serviceDetails?._id}
-                  onClick={() =>
-                    history(
-                      `${internalRoutes.SinglePackage}/${service?._id}/${service?.serviceDetails?._id}`
-                    )
-                  }
-                  isFavourite={allWishlist?.some(
-                    (item) =>
-                      item._id === service?._id &&
-                      item.packageDetails?._id === service?.serviceDetails?._id
-                  )}
-                />
-              );
-            })}
+                  return (
+                    <ProductCard
+                      key={service?.serviceDetails?._id}
+                      popularimage={popularimage}
+                      title={
+                        service.serviceDetails?.values?.Title ||
+                        service.serviceDetails?.values?.VenueName ||
+                        service.serviceDetails?.values?.FoodTruckName
+                      }
+                      category={service?.categoryName}
+                      price={
+                        service.serviceDetails?.values?.price ||
+                        service.serviceDetails?.values?.Pricing ||
+                        service.serviceDetails?.values?.Price ||
+                        service.serviceDetails?.values?.Package?.[0]?.Rates ||
+                        service.serviceDetails?.values?.[
+                          "OrderQuantity&Pricing"
+                        ]?.[0]?.Rates ||
+                        service.serviceDetails?.values?.[
+                          "Duration&Pricing"
+                        ]?.[0]?.Amount ||
+                        service.serviceDetails?.values?.["SessionLength"]?.[0]
+                          ?.Amount ||
+                        service.serviceDetails?.values?.[
+                          "SessionLength&Pricing"
+                        ]?.[0]?.Amount ||
+                        service.serviceDetails?.values?.["QtyPricing"]?.[0]
+                          ?.Rates
+                      }
+                      rating={0}
+                      reviews={0}
+                      serviceId={service?._id}
+                      packageId={service?.serviceDetails?._id}
+                      onClick={() =>
+                        history(
+                          `${internalRoutes.SinglePackage}/${service?._id}/${service?.serviceDetails?._id}`
+                        )
+                      }
+                      isFavourite={allWishlist?.some(
+                        (item) =>
+                          item._id === service?._id &&
+                          item.packageDetails?._id ===
+                            service?.serviceDetails?._id
+                      )}
+                    />
+                  );
+                })}
           </HorizontalScroll>
         </div>
       </div>
