@@ -211,7 +211,6 @@ function EditVendorService({ serviceId }) {
       );
     }
   }, [selectedCatgeory, selectedSubCatgeory]);
-
   useEffect(() => {
     if (serviceValue?.services) {
       const initialInstances = serviceValue.services.map((service) => ({
@@ -232,9 +231,42 @@ function EditVendorService({ serviceId }) {
               items: Array.isArray(field.items)
                 ? field.items.map((item) => ({
                     ...item,
-                    checked: item.value === selectedValue, 
+                    checked: item.value === selectedValue,
                   }))
                 : [],
+            };
+          } else if (field.key === "AddOns") {
+            const userValues = service?.values?.[field.key];
+            return {
+              ...field,
+              items:
+                Array.isArray(userValues) && userValues.length > 0
+                  ? userValues
+                  : Array.isArray(field.items) && field.items.length > 0
+                  ? field.items.map((item) => ({ ...item }))
+                  : [],
+            };
+          } else if (field.key === "Package") {
+            const userValues = service?.values?.[field.key];
+            return {
+              ...field,
+              items:
+                Array.isArray(userValues) && userValues.length > 0
+                  ? userValues
+                  : Array.isArray(field.items) && field.items.length > 0
+                  ? field.items.map((item) => ({ ...item }))
+                  : [],
+            };
+          } else if (field.key === "VehicleTarrifs") {
+            const userValues = service?.values?.[field.key];
+            return {
+              ...field,
+              items:
+                Array.isArray(userValues) && userValues.length > 0
+                  ? userValues
+                  : Array.isArray(field.items) && field.items.length > 0
+                  ? field.items.map((item) => ({ ...item }))
+                  : [],
             };
           } else {
             return {

@@ -85,6 +85,7 @@ function AddorBuyCard({
     "Prices & Duration",
     "Price && MOQ",
     "QtyPricing",
+    "SizeAndDimension",
   ];
   const iconMapping = {
     AddOns: Recommended,
@@ -519,7 +520,7 @@ function AddorBuyCard({
         )}
         <div>
           {keysToRender
-            .sort((a, b) => (a === "AddOns" ? 1 : b === "AddOns" ? -1 : 0)) 
+            .sort((a, b) => (a === "AddOns" ? 1 : b === "AddOns" ? -1 : 0))
             .map((key, index) => {
               const value = renderPrice?.[key];
 
@@ -535,10 +536,14 @@ function AddorBuyCard({
                         />
                       </span>
                       <p className="text-primary text-sm font-semibold text-normal">
-                        {key === "AddOns" ? "Recommended Add-Ons" : pascalToNormal(key)}
+                        {key === "AddOns"
+                          ? "Recommended Add-Ons"
+                          : pascalToNormal(key)}
                       </p>
                     </div>
                     {value.map((item, idx) => {
+                      console.log(item, "item");
+
                       const isPackage = key === "Package";
                       const rateInfo = isPackage
                         ? item.Rates
@@ -548,13 +553,15 @@ function AddorBuyCard({
                         item.MinQty && !isNaN(item.MinQty)
                           ? parseInt(item.MinQty, 10)
                           : 1;
-
+                      const Particulars = item?.Particulars || item?.['Flavour/Variety'];
+                      const size=item?.['Serving Size']
                       return (
                         <AddOnCounter
                           key={`${key}-${idx}`}
-                          itemName={item.Particulars}
+                          itemName={Particulars}
                           rateInfo={rateInfo}
                           uom={uom}
+                          size={size}
                           note={item.Note || ""}
                           minQuantity={minQuantity}
                           type={isPackage ? "Package" : key}

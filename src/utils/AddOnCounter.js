@@ -9,7 +9,9 @@ const AddOnCounter = memo(
     minQuantity = 1,
     onAdd,
     onRemove,
-    extraData,disableAdd
+    extraData,
+    disableAdd,
+    size,
   }) => {
     const [quantity, setQuantity] = useState(0);
     const [showCounter, setShowCounter] = useState(false);
@@ -21,7 +23,7 @@ const AddOnCounter = memo(
     };
 
     const handleIncrease = () => {
-      console.log('it should increase the quantity')
+      console.log("it should increase the quantity");
       setQuantity((prev) => prev + 1);
       onAdd();
     };
@@ -37,23 +39,29 @@ const AddOnCounter = memo(
       }
     };
 
-
     return (
       <div className="w-full flex items-start justify-between flex-col  bg-white">
         <div className="w-full flex items-start justify-between py-3">
           <div className="flex flex-col w-full">
             <span className="flex items-center justify-between w-full pr-4">
               {itemName && (
-                <h3 className="text-base font-medium text-gray-800 text-primary break-words">
-                  {itemName}
-                </h3>
+                <div div className="flex items-start justify-start flex-col">
+                  <h3 className="text-normal font-normal text-gray-800 text-primary break-words">
+                    {itemName}
+                  </h3>
+                  {size && (
+                    <p className="text-textGray text-esm ">
+                      {size} {uom}
+                    </p>
+                  )}
+                </div>
               )}
-              
+
               <p
                 className={
                   type === "Package"
-                    ? "text-xl font-medium text-primary"
-                    : "text-[14px] font-semibold text-gray-500"
+                    ? "text-sm font-medium text-primary"
+                    : "text-sm font-medium text-gray-500"
                 }
               >
                 {type === "Package"
@@ -66,7 +74,6 @@ const AddOnCounter = memo(
             <button
               className="bg-textYellow text-primary font-medium py-2 px-4 rounded hover:bg-yellow-500 transition duration-200"
               onClick={handleAdd}
-              
             >
               Add
             </button>
@@ -75,7 +82,7 @@ const AddOnCounter = memo(
               {type === "package" ? (
                 <span className="text-lg font-medium">
                   {extraData.packageDetails}
-                </span> // Custom element
+                </span>
               ) : (
                 <>
                   <button

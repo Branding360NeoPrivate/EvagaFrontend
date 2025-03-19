@@ -66,7 +66,7 @@ const DynamicForm = ({
 
       return {
         ...prev,
-        [key]: value, // Dynamically updates any key, including file uploads
+        [key]: value,
       };
     });
   };
@@ -74,7 +74,7 @@ const DynamicForm = ({
   const handleImageChange = (key, value) => {
     setFormValues((prev) => ({
       ...prev,
-      [`${key}_${index}`]: value, // Add the form index to uniquely scope the key
+      [`${key}_${index}`]: value,
     }));
   };
   useEffect(() => {
@@ -189,88 +189,7 @@ const DynamicForm = ({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // for (let field of fields) {
-    //   if (
-    //     field.key === "CoverImage" &&
-    //     (formValues.CoverImage_0 == "" || formValues.CoverImage_0 == null)
-    //   ) {
-    //     toast.error("Cover Image is required");
-    //     return;
-    //   }
-    //   if (
-    //     field.key === "Portfolio" &&
-    //     (formValues.Portfolio_0?.photos == "" || formValues.Portfolio_0?.photos == null)
-    //   ) {
-    //     toast.error("Portfolio Image is required");
-    //     return;
-    //   }
-    //   if (
-    //     field.key === "Portfolio" &&
-    //     (formValues.Portfolio_0?.videos == "" || formValues.Portfolio_0?.videos == null)
-    //   ) {
-    //     toast.error("Portfolio video is required");
-    //     return;
-    //   }
-    //   if (
-    //     field.key === "ProductImage" &&
-    //     (formValues.ProductImage == "" || formValues.ProductImage == null)
-    //   ) {
-    //     toast.error("Product Image  is required");
-    //     return;
-    //   }
-    //    if (
-    //     field.key === "RecceReport" &&
-    //     (formValues.RecceReport_0 == "" || formValues.RecceReport_0 == null)
-    //   ) {
-    //     toast.error("RecceReport is required");
-    //     return;
-    //   }
-    //   if (
-    //     field.key === "FloorPlan" &&
-    //     (formValues.FloorPlan_0 == "" || formValues.FloorPlan_0 == null)
-    //   ) {
-    //     toast.error("FloorPlan is required");
-    //     return;
-    //   }
-    //   if (
-    //     field.key === "3DTour" &&
-    //     (formValues["3DTour"] === "" || formValues["3DTour"] === null)
-    //   ) {
-    //     toast.error("3DTour is required");
-    //     return;
-    //   }
-    // }
     const transformedData = fields.map((field) => {
-      // if (field.key === "Portfolio") {
-      //   // Transform Portfolio structure
-      //   const portfolioData = {};
-
-      //   // Collect all indexed keys for Portfolio
-      //   Object.keys(formValues).forEach((key) => {
-      //     if (key.startsWith("Portfolio_")) {
-      //       const index = key.split("_")[1]; // Extract index
-      //       portfolioData[`Portfolio_${index}`] = formValues[key];
-      //     }
-      //   });
-
-      //   // Combine into desired Portfolio format
-      //   const portfolioItems = Object.keys(portfolioData).map(
-      //     (portfolioKey) => {
-      //       const { photos = [], videos = [] } = portfolioData[portfolioKey];
-      //       return { photos, videos };
-      //     }
-      //   );
-      //   console.log(portfolioItems);
-
-      //   return {
-      //     label: field.label,
-      //     key: field.key,
-      //     type: field.type,
-      //     items: portfolioItems, // items array contains {photos, videos}
-      //   };
-      // }
-
-      // Default behavior for other fields
       const items = [];
       Object.keys(formValues).forEach((key) => {
         if (key.startsWith(`${field.key}_`)) {
@@ -387,7 +306,11 @@ const DynamicForm = ({
                       ? "col-span-1 border-2 w-[10rem] border-2 outline-none p-1 rounded-r-md text-textGray font-medium"
                       : "col-span-2 border-2 w-[25rem] border-2 outline-none p-1 rounded-md text-textGray font-medium "
                   }
-                  required={field.key === "Brand" || field.key === "SetupCost" ? false : true}
+                  required={
+                    field.key === "Brand" || field.key === "SetupCost"
+                      ? false
+                      : true
+                  }
                 />
                 {field.key === "MOQ" && (
                   <p className="text-sm text-textGray">*heads</p>
@@ -1183,7 +1106,8 @@ const DynamicForm = ({
           (field.key === "SizePricing" ||
             field.key === "Size&Pricing" ||
             field.key === "GuestCapacity" ||
-            field.key === "Size&Dimensions")
+            field.key === "Size&Dimensions" ||
+            field.key === "SizeAndDimension")
         ) {
           const items = Array.isArray(field.items) ? field.items : [];
 
@@ -1192,33 +1116,53 @@ const DynamicForm = ({
               <label className="text-primary text-base font-semibold">
                 {field.label}:
               </label>
-              <div className="col-span-3">
+              <div className="col-span-3 ">
                 {items.map((item, index) => (
-                  <div key={index} className="grid grid-cols-5 gap-4">
+                  <div key={index} className="grid grid-cols-5 gap-4 mb-2">
                     {Object.keys(item).map((key) => {
                       if (key !== "Uom") {
                         return (
-                          <div key={key} className="flex flex-col gap-2">
+                          <div
+                            key={key}
+                            className="flex flex-col items-center gap-2"
+                          >
                             <label className="text-textGray font-medium">
                               {key}
                             </label>
-                            <input
-                              type="text"
-                              value={
-                                formValues[field.key]?.[index]?.[key] || ""
-                              }
-                              onChange={(e) =>
-                                handleObjectChange(
-                                  field.key,
-                                  index,
-                                  key,
-                                  e.target.value
-                                )
-                              }
-                              className="border-2 p-1 rounded-md text-textGray font-medium w-[5rem] h-full outline-none"
-                              disabled={isEditing}
-                              required
-                            />
+                            {
+                              <div className="flex items-center justify-center">
+                                {key === "Price" && (
+                                  <span className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
+                                    ₹
+                                  </span>
+                                )}
+                                <input
+                                  type="text"
+                                  value={
+                                    formValues[field.key]?.[index]?.[key] || ""
+                                  }
+                                  onChange={(e) =>
+                                    handleObjectChange(
+                                      field.key,
+                                      index,
+                                      key,
+                                      e.target.value
+                                    )
+                                  }
+                                  className={
+                                    key === "Price"
+                                      ? "border-2 p-1 rounded-r-md text-textGray font-medium w-[5rem] h-full outline-none"
+                                      : "border-2 p-1 rounded-md text-textGray font-medium w-[5rem] h-full outline-none"
+                                  }
+                                  disabled={isEditing}
+                                  required={
+                                    field.key == "SizeAndDimension"
+                                      ? false
+                                      : true
+                                  }
+                                />
+                              </div>
+                            }
                           </div>
                         );
                       }
@@ -1226,16 +1170,17 @@ const DynamicForm = ({
                     })}
 
                     {/* UOM */}
-                    {field.key !== "Size&Dimensions" && (
-                      <div className="flex flex-col gap-2">
-                        <label className="text-textGray font-medium">
-                          UOM:
-                        </label>
-                        <p className="text-textGray">
-                          {item["Uom"] || "extra per hour"}
-                        </p>
-                      </div>
-                    )}
+                    {field.key !== "Size&Dimensions" ||
+                      (field.key !== "SizeAndDimension" && (
+                        <div className="flex flex-col gap-2">
+                          <label className="text-textGray font-medium">
+                            UOM:
+                          </label>
+                          <p className="text-textGray">
+                            {item["Uom"] || "extra per hour"}
+                          </p>
+                        </div>
+                      ))}
                   </div>
                 ))}
               </div>
@@ -1320,7 +1265,10 @@ const DynamicForm = ({
                   <IoAddCircleOutline className="text-xl" /> {field.label}
                 </button>
                 {(formValues[field.key] || []).map((item, index) => (
-                  <div key={index}  className="flex flex-wrap gap-4 h-fit mb-[5%] w-full">
+                  <div
+                    key={index}
+                    className="flex flex-wrap gap-4 h-fit mb-[5%] w-full"
+                  >
                     {Object.keys(item).map((objectKey, subIndex) => (
                       <div
                         key={subIndex}

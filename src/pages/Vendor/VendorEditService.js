@@ -117,7 +117,6 @@ function VendorEditService() {
       services.forEach((service, serviceIndex) => {
         const values = service.values;
 
-
         values.forEach((value) => {
           switch (value.key) {
             case "CoverImage":
@@ -251,6 +250,17 @@ function VendorEditService() {
                   : [],
             };
           } else if (field.key === "Package") {
+            const userValues = service?.values?.[field.key];
+            return {
+              ...field,
+              items:
+                Array.isArray(userValues) && userValues.length > 0
+                  ? userValues
+                  : Array.isArray(field.items) && field.items.length > 0
+                  ? field.items.map((item) => ({ ...item }))
+                  : [],
+            };
+          } else if (field.key === "VehicleTarrifs") {
             const userValues = service?.values?.[field.key];
             return {
               ...field,

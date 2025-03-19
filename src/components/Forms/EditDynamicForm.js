@@ -145,8 +145,8 @@ const EditDynamicForm = ({
     setFormValues((prev) => {
       const updatedArray = Array.isArray(prev[fieldKey])
         ? [...prev[fieldKey]]
-        : []; // Ensure it's an array
-      updatedArray.push({ ...templateObject }); // Add new object
+        : [];
+      updatedArray.push({ ...templateObject });
       return {
         ...prev,
         [fieldKey]: updatedArray,
@@ -191,13 +191,12 @@ const EditDynamicForm = ({
     try {
       const transformedData = fields?.map((field) => {
         const items = [];
-        console.log(field, items);
         if (field.key === "ProductImage") {
           return {
             label: field.label,
             key: field.key,
             type: field.type,
-            items: formValues[field.key], // Directly take the value for ProductImage
+            items: formValues[field.key],
           };
         }
         if (field.key === "CoverImage") {
@@ -205,8 +204,23 @@ const EditDynamicForm = ({
             label: field.label,
             key: field.key,
             type: field.type,
-            items: formValues[field.key], 
+            items: formValues[field.key],
           };
+        }
+        if (field.key === "CustomThemeRequest") {
+          const selectedOption = formValues[field.key]; // This will be either "Yes" or "No"
+        
+          // Update the items array to include the `checked` property
+          field.items = field.items.map((item) => ({
+            ...item,
+            checked: item.key === selectedOption // Set `checked: true` for the selected option
+          }));
+        
+          // Log the updated field object
+          console.log(field);
+        
+          // Return the updated field object if needed
+          return field;
         }
         Object?.keys(formValues)?.forEach((key) => {
           if (key?.startsWith(`${field.key}_`)) {
@@ -271,7 +285,7 @@ const EditDynamicForm = ({
       };
     });
   };
-  console.log(formValues);
+  // console.log(formValues);
 
   return (
     <form
@@ -328,7 +342,11 @@ const EditDynamicForm = ({
                       ? "col-span-1 border-2 w-[10rem] border-2 outline-none p-1 rounded-r-md text-textGray font-medium"
                       : "col-span-2 border-2 w-[25rem] border-2 outline-none p-1 rounded-md text-textGray font-medium "
                   }
-                  required={field.key === "Brand" || field.key === "SetupCost"  ? false : true}
+                  required={
+                    field.key === "Brand" || field.key === "SetupCost"
+                      ? false
+                      : true
+                  }
                 />
                 {field.key === "MOQ" && (
                   <p className="text-sm text-textGray">*heads</p>
@@ -1125,7 +1143,8 @@ const EditDynamicForm = ({
           (field.key === "SizePricing" ||
             field.key === "Size&Pricing" ||
             field.key === "GuestCapacity" ||
-            field.key === "Size&Dimensions")
+            field.key === "Size&Dimensions" ||
+            field.key === "SizeAndDimension")
         ) {
           const items = Array.isArray(field.items) ? field.items : [];
 
@@ -1136,31 +1155,51 @@ const EditDynamicForm = ({
               </label>
               <div className="col-span-3">
                 {items.map((item, index) => (
-                  <div key={index} className="grid grid-cols-5 gap-4">
+                  <div key={index} className="grid grid-cols-5 gap-4 mb-2">
                     {Object.keys(item).map((key) => {
                       if (key !== "Uom") {
                         return (
-                          <div key={key} className="flex flex-col gap-2">
+                          <div
+                            key={key}
+                            className="flex flex-col items-center gap-2"
+                          >
                             <label className="text-textGray font-medium">
                               {key}
                             </label>
-                            <input
-                              type="text"
-                              value={
-                                formValues[field.key]?.[index]?.[key] || ""
-                              }
-                              onChange={(e) =>
-                                handleObjectChange(
-                                  field.key,
-                                  index,
-                                  key,
-                                  e.target.value
-                                )
-                              }
-                              className="border-2 p-1 rounded-md text-textGray font-medium w-[5rem] h-full outline-none"
-                              disabled={isEditing}
-                              required
-                            />
+                            {
+                              <div className="flex items-center justify-center">
+                                {key === "Price" && (
+                                  <span className="bg-textYellow px-3 py-1 h-full rounded-l-md font-medium text-primary">
+                                    ₹
+                                  </span>
+                                )}
+                                <input
+                                  type="text"
+                                  value={
+                                    formValues[field.key]?.[index]?.[key] || ""
+                                  }
+                                  onChange={(e) =>
+                                    handleObjectChange(
+                                      field.key,
+                                      index,
+                                      key,
+                                      e.target.value
+                                    )
+                                  }
+                                  className={
+                                    key === "Price"
+                                      ? "border-2 p-1 rounded-r-md text-textGray font-medium w-[5rem] h-full outline-none"
+                                      : "border-2 p-1 rounded-md text-textGray font-medium w-[5rem] h-full outline-none"
+                                  }
+                                  disabled={isEditing}
+                                  required={
+                                    field.key == "SizeAndDimension"
+                                      ? false
+                                      : true
+                                  }
+                                />
+                              </div>
+                            }
                           </div>
                         );
                       }
@@ -1168,16 +1207,17 @@ const EditDynamicForm = ({
                     })}
 
                     {/* UOM */}
-                    {field.key !== "Size&Dimensions" && (
-                      <div className="flex flex-col gap-2">
-                        <label className="text-textGray font-medium">
-                          UOM:
-                        </label>
-                        <p className="text-textGray">
-                          {item["Uom"] || "extra per hour"}
-                        </p>
-                      </div>
-                    )}
+                    {field.key !== "Size&Dimensions" ||
+                      (field.key !== "SizeAndDimension" && (
+                        <div className="flex flex-col gap-2">
+                          <label className="text-textGray font-medium">
+                            UOM:
+                          </label>
+                          <p className="text-textGray">
+                            {item["Uom"] || "extra per hour"}
+                          </p>
+                        </div>
+                      ))}
                   </div>
                 ))}
               </div>
@@ -1452,7 +1492,6 @@ const EditDynamicForm = ({
             );
           }
 
-          // Skip rendering if "BookforIngredients" is present but not "yes"
           return null;
         } else if (field.type === "array" && field.key === "VehicleTarrifs") {
           return (
@@ -1478,7 +1517,7 @@ const EditDynamicForm = ({
                         key={subIndex}
                         className="flex items-center justify-center flex-col gap-1 items-center"
                       >
-                        <label>{objectKey}</label>
+                        <label className="text-sm">{objectKey}</label>
                         <input
                           type="text"
                           value={item[objectKey] || ""}
@@ -1490,7 +1529,7 @@ const EditDynamicForm = ({
                               e.target.value
                             )
                           }
-                          className="border p-2 rounded outline-none border-2 w-[7rem]"
+                          className="border p-2 rounded outline-none border-2 w-[6rem]"
                           required
                           disabled={isEditing}
                         />
@@ -2119,7 +2158,7 @@ const EditDynamicForm = ({
                 {field.label}:
               </label>
               <div className="col-span-3 flex items-start justify-start flex-row gap-2">
-                {(field.items || []).map((item, index) => (
+                {(field?.items || [])?.map((item, index) => (
                   <div key={index} className="flex items-start flex-col gap-4">
                     <div className="flex items-center justify-start gap-1">
                       <input
@@ -2132,10 +2171,8 @@ const EditDynamicForm = ({
                           setFormValues((prev) => {
                             const updatedValues = {
                               ...prev,
-                              [field.key]: item.key, // Update the selected radio option
+                              [field.key]: item.key,
                             };
-
-                            // Clear text and sub-item fields if "No" is selected
                             if (item.key === "NoOption") {
                               Object.keys(prev).forEach((key) => {
                                 if (key.startsWith(`${field.key}_Yes`)) {
@@ -2144,7 +2181,6 @@ const EditDynamicForm = ({
                               });
                             }
 
-                            // Reset the additional text input
                             if (item.key !== "YesOption") {
                               updatedValues[`${field.key}_text`] = "";
                             }
