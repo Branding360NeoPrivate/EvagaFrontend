@@ -12,52 +12,16 @@ import ErrorHandler from "./components/Errors/ErrorHandler";
 import { ErrorProvider } from "./context/ErrorContext";
 import "react-toastify/dist/ReactToastify.css";
 import ReactGA from "react-ga4";
-// import Home from "./pages/HomePage";
-// import SinglePackage from "./pages/SinglePackage";
-// import UserLoginPage from "./pages/User/UserLoginPage";
-// import VendorDashboard from "./pages/Vendor/VendorDashboard";
-// import VendorSignUpPage from "./pages/Vendor/VendorSignUpPage";
-// import VendorLoginPage from "./pages/Vendor/VendorLoginPage";
 import DynamicNav from "./components/navbar/DynamicNav";
-// import VendorProfile from "./pages/Vendor/VendorProfilePage";
-// import VendorCreateService from "./pages/Vendor/VendorCreateService";
-// import VendorOrderPage from "./pages/Vendor/VendorOrderPage";
-// import VendorOrderDetailPage from "./pages/Vendor/VendorOrderDetailPage";
 import Footer from "./components/Footer/Footer";
-// import VendorForgotPasswordPage from "./pages/Vendor/VendorForgotPasswordPage";
-// import AdminLoginPage from "./pages/Admin/AdminLoginPage";
-// import AdminDashboard from "./pages/Admin/AdminDashboard";
 import GlobalLoader from "./components/Loaders/GlobalLoader";
-// import VendorEditService from "./pages/Vendor/VendorEditService";
 import { lazy, Suspense, useEffect } from "react";
 import GoToTop from "./GoToTop";
-// import SearchResultPage from "./pages/SearchResultPage ";
-// import UserSignupPage from "./pages/User/UserSignupPage";
-// import Wishlist from "./pages/Wishlist";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserWishlist } from "./context/redux/slices/wishlistSlice";
 import Cookies from "js-cookie";
-// import UserForgotPassword from "./pages/User/UserForgotPassword";
-// import InterestSelection from "./pages/InterestSelection";
-// import UserProfile from "./pages/User/UserProfile";
-// import PressRelease from "./pages/PressRelease";
-// import CheckOut from "./pages/CheckOut";
-// import AboutEvaga from "./pages/AboutEvaga";
-// import RefundAndCancellation from "./pages/RefundAndCancellation";
-// import TermsAndConditions from "./pages/TermsAndConditions";
-// import FeedBack from "./pages/FeedBack";
-// import CustomerService from "./pages/CustomerService";
-// import PaymentPage from "./pages/PaymentPage";
-// import OrderSucessPage from "./pages/OrderSucessPage";
-// import OrderPage from "./pages/OrderPage";
-// import UserOrderDetailPage from "./pages/userOrderDetailPage";
-// import VendorService from "./pages/Vendor/VendorService";
-// import PrivacyAndPolicy from "./pages/PrivacyAndPolicy";
-// import Careers from "./pages/Careers";
-// import AdvertisewithUs from "./pages/AdvertisewithUs";
 import GlobalEventHandlers from "./utils/GlobalEventHandlers";
-// import Blog from "./pages/Blog";
-// import SingleBlogPage from "./pages/singleBlogPage";
+import Loader from "./components/Loaders/Loader";
 const Home = lazy(() => import("./pages/HomePage"));
 const SinglePackage = lazy(() => import("./pages/SinglePackage"));
 const UserLoginPage = lazy(() => import("./pages/User/UserLoginPage"));
@@ -168,7 +132,7 @@ const AppContent = () => {
         <Routes>
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <AdminLoginPage />
               </Suspense>
             }
@@ -176,7 +140,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <UserLoginPage />
               </Suspense>
             }
@@ -184,7 +148,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <UserSignupPage />
               </Suspense>
             }
@@ -192,7 +156,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <ProtectedRoute allowedRoles={["user"]}>
                   <UserProfile />
                 </ProtectedRoute>
@@ -202,7 +166,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <UserForgotPassword />
               </Suspense>
             }
@@ -210,19 +174,16 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <Home />
               </Suspense>
             }
             path={internalRoutes.home}
           />
-          <Route
-            element={<InterestSelection />}
-            path={internalRoutes.interest}
-          />
+          <Route element={<Loader />} path={internalRoutes.interest} />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <SearchResultPage />
               </Suspense>
             }
@@ -230,7 +191,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <Wishlist />
               </Suspense>
             }
@@ -238,7 +199,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <CheckOut />
               </Suspense>
             }
@@ -246,7 +207,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <PaymentPage />
               </Suspense>
             }
@@ -254,7 +215,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <OrderSucessPage />
               </Suspense>
             }
@@ -262,7 +223,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <PressRelease />
               </Suspense>
             }
@@ -270,7 +231,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <AboutEvaga />
               </Suspense>
             }
@@ -278,7 +239,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <Blog />
               </Suspense>
             }
@@ -286,7 +247,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <SingleBlogPage />
               </Suspense>
             }
@@ -294,7 +255,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <RefundAndCancellation />
               </Suspense>
             }
@@ -302,7 +263,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <TermsAndConditions />
               </Suspense>
             }
@@ -310,7 +271,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <PrivacyAndPolicy />
               </Suspense>
             }
@@ -318,7 +279,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <Careers />
               </Suspense>
             }
@@ -326,7 +287,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <AdvertisewithUs />
               </Suspense>
             }
@@ -334,7 +295,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <FeedBack />
               </Suspense>
             }
@@ -342,7 +303,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <CustomerService />
               </Suspense>
             }
@@ -350,7 +311,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <VendorService />
               </Suspense>
             }
@@ -358,7 +319,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <OrderPage />
               </Suspense>
             }
@@ -366,7 +327,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <UserOrderDetailPage />
               </Suspense>
             }
@@ -374,7 +335,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <VendorOrderDetailPage />
               </Suspense>
             }
@@ -382,7 +343,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <SinglePackage />
               </Suspense>
             }
@@ -390,7 +351,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <VendorSignUpPage />
               </Suspense>
             }
@@ -398,7 +359,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <VendorLoginPage />
               </Suspense>
             }
@@ -406,7 +367,7 @@ const AppContent = () => {
           />
           <Route
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <VendorForgotPasswordPage />
               </Suspense>
             }
@@ -416,7 +377,7 @@ const AppContent = () => {
           <Route
             path={internalRoutes.vendorDashboard}
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <ProtectedRoute allowedRoles={["vendor"]}>
                   <VendorDashboard />
                 </ProtectedRoute>
@@ -426,7 +387,7 @@ const AppContent = () => {
           <Route
             path={internalRoutes.vendorProfile}
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <ProtectedRoute allowedRoles={["vendor"]}>
                   <VendorProfile />
                 </ProtectedRoute>
@@ -436,7 +397,7 @@ const AppContent = () => {
           <Route
             path={internalRoutes.vendorCreateservice}
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <ProtectedRoute allowedRoles={["vendor"]}>
                   <VendorCreateService />
                 </ProtectedRoute>
@@ -446,7 +407,7 @@ const AppContent = () => {
           <Route
             path={`${internalRoutes.vendorEditservice}/:serviceId`}
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <ProtectedRoute allowedRoles={["vendor"]}>
                   <VendorEditService />
                 </ProtectedRoute>
@@ -456,7 +417,7 @@ const AppContent = () => {
           <Route
             path={internalRoutes.vendorOrders}
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <ProtectedRoute allowedRoles={["vendor"]}>
                   <VendorOrderPage />
                 </ProtectedRoute>
@@ -466,7 +427,7 @@ const AppContent = () => {
           <Route
             path={internalRoutes.vendorOrderDeatil}
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <ProtectedRoute allowedRoles={["vendor"]}>
                   <VendorOrderDetailPage />
                 </ProtectedRoute>
@@ -477,7 +438,7 @@ const AppContent = () => {
           <Route
             path={internalRoutes.adminDashboard}
             element={
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={<Loader />}>
                 <ProtectedRoute allowedRoles={["admin"]}>
                   <AdminDashboard />
                 </ProtectedRoute>

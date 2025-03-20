@@ -43,6 +43,8 @@ function ServiceDetailCard({
     "TypesofFlavours",
     "Inclusions",
     "Deliverables",
+    "Genre",
+    "TechnicalRiders",
     "MealType",
     "MealTime",
     "Cuisines",
@@ -50,11 +52,23 @@ function ServiceDetailCard({
     "Description",
     "DurationofStall",
     "Languages",
+    "Type",
+    "FlowerType",
+    "BouquetType",
+    "CenterpieceType",
+    "FloralInstallationType",
+    "FlowerWallsType",
+    "FloralArcheType",
+    "Size&Dimensions",
+    "Dimensions",
+    "TypesofYoga",
+    "TypesofMeditation",
     "LocationType",
     "LocationTypePreferred",
     "AudienceInteraction",
     "StageRequired",
     "MultipleSets",
+    "TravelCharges",
   ];
   const iconMapping = {
     "Event Type": event,
@@ -63,6 +77,8 @@ function ServiceDetailCard({
     Inclusions: inclusion,
     Languages: inclusion,
     Deliverables: deliverable,
+    Genre: deliverable,
+    TechnicalRiders: deliverable,
     MealType: "",
     MealTime: "",
     Cuisines: "",
@@ -102,17 +118,16 @@ function ServiceDetailCard({
 
   return (
     <div className="  bg-white p-4 w-full max-w-3xl">
-      {/* Header */}
       <div className=" w-full flex flex-row items-center mb-4">
         <div className="w-[80%] ">
           <h2 className="text-xl font-semibold text-primary">{title}</h2>
           <p className="text-normal  text-textGray">{category}</p>
         </div>
-        <div className="w-[20%] text-right cursor-pointer"  onClick={() => handleOpen()}>
-          <div
-            className="flex flex-col items-end justify-end gap-1 "
-           
-          >
+        <div
+          className="w-[20%] text-right cursor-pointer"
+          onClick={() => handleOpen()}
+        >
+          <div className="flex flex-col items-end justify-end gap-1 ">
             <div className="flex flex-row">
               <span className="text-yellow-500 text-lg">★</span>
               <span className="text-gray-700 font-medium">{rating} </span>
@@ -159,42 +174,64 @@ function ServiceDetailCard({
       {keysToRender?.map((key, index) => {
         const value = DataToRender?.[key];
 
+        if (value === "") {
+          return null;
+        }
+
         if (Array.isArray(value) && value.length > 0) {
           return (
             <div
-              className=" mt-4 flex gap-4 items-start justify-start"
+              className="mt-4 flex gap-4 items-start justify-start"
               key={index}
             >
               <span className="bg-textLightGray p-2 rounded-[50%]">
                 <img
-                  src={iconMapping[key]}
+                  src={iconMapping[key] ?? deliverable}
                   alt="event"
                   className="object-contain h-[1.5rem]"
                 />
               </span>
               <div className="mb-4 w-full">
-                <h3 className="text-normal font-meduim text-primary">{pascalToNormal(key)}</h3>
+                <h3 className="text-normal font-meduim text-primary">
+                  {pascalToNormal(key)}
+                </h3>
                 <hr style={{ margin: "0.3rem 0" }} />
                 <div className="flex gap-2 mt-1 flex-wrap">
-                  {value?.map((item, idx) => (
-                    <span
-                      key={idx}
-                      className="bg-gray-200 text-textGray text-sm px-3 py-1 rounded-md"
-                    >
-                      {item}
-                    </span>
-                  ))}
+                  {value?.map((item, idx) => {
+                    if (typeof item === "object" && item !== null) {
+                      return (
+                        <div key={idx} className="flex gap-2 flex-wrap">
+                          {Object.entries(item).map(([subKey, subValue]) => (
+                            <span
+                              key={subKey}
+                              className="bg-gray-200 text-textGray text-sm px-3 py-1 rounded-md"
+                            >
+                              {subKey}: {subValue}
+                            </span>
+                          ))}
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <span
+                          key={idx}
+                          className="bg-gray-200 text-textGray text-sm px-3 py-1 rounded-md"
+                        >
+                          {item}
+                        </span>
+                      );
+                    }
+                  })}
                 </div>
               </div>
             </div>
           );
-        } else if (typeof value === "string") {
+        } else if (typeof value === "string" && value !== "") {
           return (
             <div className="flex gap-4 items-start justify-start" key={index}>
               <div className="mb-4 w-full flex items-center">
                 <h3 className="text-normal font-meduim text-primary">{key}</h3>
-
-                <span className=" text-textGray text-normal px-3 py-1 rounded-md">
+                <span className="text-textGray text-normal px-3 py-1 rounded-md">
                   {value}
                 </span>
               </div>
@@ -204,7 +241,6 @@ function ServiceDetailCard({
 
         return null;
       })}
-
       <div className="flex gap-4 items-start justify-start">
         <span className="bg-textLightGray p-2 rounded-[50%]">
           <img src={terms} alt="event" className="object-contain h-[1.5rem]" />
@@ -221,7 +257,7 @@ function ServiceDetailCard({
         </div>
       </div>
       <ReusableModal open={open} onClose={handleClose} width={"50%"}>
-        <Reviews serviceId={serviceId} packageId={packageId}/>
+        <Reviews serviceId={serviceId} packageId={packageId} />
       </ReusableModal>
     </div>
   );

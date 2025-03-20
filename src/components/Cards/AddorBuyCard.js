@@ -6,15 +6,15 @@ import React, {
   useState,
 } from "react";
 import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css"; // Default styles for React Calendar
-import { FaCalendarAlt } from "react-icons/fa"; // Import calendar icon
-import { CiLocationOn } from "react-icons/ci";
+import "react-calendar/dist/Calendar.css";
+import { FaCalendarAlt } from "react-icons/fa";
 import AddOnCounter from "../../utils/AddOnCounter";
 import locationImg from "../../assets/Temporary Images/marker (1) 2.png";
 import Recommended from "../../assets/Temporary Images/cursor-plus.png";
 import session from "../../assets/Temporary Images/stopwatch 1.png";
 import order from "../../assets/Temporary Images/order.png";
 import pkg from "../../assets/Temporary Images/package.png";
+import colorPalette from "../../assets/Temporary Images/paint-roller 1.png";
 import formatCurrency from "../../utils/formatCurrency";
 import { useLocation, useNavigate } from "react-router-dom";
 import { internalRoutes } from "../../utils/internalRoutes";
@@ -48,6 +48,7 @@ function AddorBuyCard({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [date, setDate] = useState(new Date());
   const [showCalendar, setShowCalendar] = useState(false);
   const [dateInput, setDateInput] = useState("");
@@ -386,6 +387,7 @@ function AddorBuyCard({
       setFormattedTime(formatted24Hour);
     }
   };
+  console.log(renderPrice, renderPrice?.["ColourPalate "]);
 
   if (!renderPrice || Object.keys(renderPrice).length === 0) {
     return <div>Loading...</div>;
@@ -518,6 +520,20 @@ function AddorBuyCard({
             </p>
           </span>
         )}
+        {renderPrice?.["ColourPalate "] &&
+          renderPrice?.["ColourPalate "]?.map((item, index) => (
+            <button
+              key={index}
+              onClick={() => setSelectedItem(item)}
+              className={
+                selectedItem === item
+                  ? "bg-textYellow text-textGray border-textYellow py-2 px-4  rounded border mr-2 mb-1"
+                  : "bg-white text-textGray border-gray-300 border-textYellow py-2 px-4 rounded border mr-2"
+              }
+            >
+              {item}
+            </button>
+          ))}
         <div>
           {keysToRender
             .sort((a, b) => (a === "AddOns" ? 1 : b === "AddOns" ? -1 : 0))
@@ -553,8 +569,9 @@ function AddorBuyCard({
                         item.MinQty && !isNaN(item.MinQty)
                           ? parseInt(item.MinQty, 10)
                           : 1;
-                      const Particulars = item?.Particulars || item?.['Flavour/Variety'];
-                      const size=item?.['Serving Size']
+                      const Particulars =
+                        item?.Particulars || item?.["Flavour/Variety"];
+                      const size = item?.["Serving Size"];
                       return (
                         <AddOnCounter
                           key={`${key}-${idx}`}

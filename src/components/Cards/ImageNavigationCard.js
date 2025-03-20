@@ -73,6 +73,7 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
                   src={process.env.REACT_APP_API_Aws_Image_BASE_URL + url}
                   style={{ maxWidth: "unset" }}
                   alt={`Thumbnail ${index + 1}`}
+                   decoding="async"
                   className="w-[80px] h-[60px] object-cover object-center rounded-md border-2 border-transparent hover:scale-110 hover:border-blue-500 transition-transform duration-200"
                   onClick={() => [onMediaClick(url), setIsModalOpen(true)]}
                 />
@@ -98,6 +99,7 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
             <img
               src={process.env.REACT_APP_API_Aws_Image_BASE_URL + selectedUrl}
               alt="Selected Media"
+               decoding="async"
               className="w-[300px] md:w-[350px] lg:w-[450px] h-auto object-cover rounded-lg cursor-pointer aspect-[4/5]"
               onClick={() => setIsModalOpen(true)}
             />

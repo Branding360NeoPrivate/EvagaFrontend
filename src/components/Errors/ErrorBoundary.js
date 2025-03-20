@@ -14,7 +14,6 @@ class ErrorBoundary extends React.Component {
   componentDidCatch(error, errorInfo) {
     this.setState({ error, errorInfo });
 
-    // Send error details to the server
     axios.post(`${process.env.REACT_APP_API_BASE_URL}/logerror/log-error`, {
       error: error.toString(),
       errorInfo: errorInfo?.componentStack,
@@ -28,7 +27,14 @@ class ErrorBoundary extends React.Component {
       return (
         <div className="flex flex-col items-center justify-center h-screen bg-primary text-secondaryWhite">
           <h1 className="text-6xl mb-4">Oops! Something went wrong.</h1>
-          <p className="text-xl mb-8">{error?.toString()}</p>
+          <button
+            onClick={() => {
+              this.setState({ hasError: false, error: null, errorInfo: null });
+            }}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+          >
+            Try Again
+          </button>
         </div>
       );
     }

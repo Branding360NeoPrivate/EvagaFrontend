@@ -138,12 +138,12 @@ function Home() {
               ? Array.from({ length: 8 }).map((_, index) => (
                   <CategorySkeleton key={index} />
                 ))
-              : categories?.map((item,index) => (
+              : categories?.map((item, index) => (
                   <CategoryDisplayCard
-                  key={index}
-                  image={item.icon}
-                  text={item.name}
-                  catId={item?._id}
+                    key={index}
+                    image={item.icon}
+                    text={item.name}
+                    catId={item?._id}
                   />
                 ))}
           </HorizontalScroll>
@@ -290,6 +290,7 @@ function Home() {
           </div>
         </div>
       )}
+   
     </motion.div>
   );
 }
