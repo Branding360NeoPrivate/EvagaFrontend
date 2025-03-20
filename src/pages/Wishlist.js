@@ -65,7 +65,7 @@ function Wishlist() {
       }}
     >
       <h2 className="text-primary font-semibold text-xl">My Wishlist</h2>
-      <div className="flex items-center justify-start flex-wrap gap-8 pl-[2%]">
+      <div className="flex items-center justify-start flex-wrap gap-8 pl-[2%] min-h-[50vh]">
         {allWishlist?.map((service, index) => {
           const imageUrl =
             (Array.isArray(service.packageDetails?.values?.CoverImage)
