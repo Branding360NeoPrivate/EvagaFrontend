@@ -246,15 +246,14 @@ function VendorserviceTable({
     }
 
     if (typeof value === "object" && value !== null) {
-      console.log(value, "value");
-
+      console.log("Processing object:", key, value);
       return (
         <div key={key} className="text-primary">
           <Typography variant="h6" component="div">
             <strong>{key}:</strong>
           </Typography>
           <div className="pl-4">
-            {Object?.entries(value)?.map(([subKey, subValue]) => (
+            {Object.entries(value).map(([subKey, subValue]) => (
               <div
                 key={subKey}
                 style={{ marginBottom: "10px" }}
@@ -519,11 +518,10 @@ function VendorserviceTable({
                     </p>
                   </h3>
                   <div className="w-full flex items-start justify-start flex-col">
-                    {/* {service?.values?.map((item)=>({item}))} */}
-
-                    {Object.entries(service?.values).map(([key, value]) =>
-                      renderValue(key, value)
-                    )}
+                    {Object.entries(service?.values).map(([key, value]) => {
+                      console.log("Key:", key, "Value:", value); // Add this log
+                      return renderValue(key, value);
+                    })}
                   </div>
                   {service?.status === false ? (
                     <div className="flex items-center justify-center w-full gap-2">
