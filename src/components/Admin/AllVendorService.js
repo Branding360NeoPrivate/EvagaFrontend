@@ -248,7 +248,6 @@ function AllVendorService({ term }) {
       );
     }
 
-    // Handle arrays
     if (Array.isArray(value)) {
       return (
         <div key={key}>
@@ -261,10 +260,10 @@ function AllVendorService({ term }) {
               <strong className="text-primary text-xl">{key}:</strong>
             </Typography>
           )}
-          <ul className="list-disc pl-6 flex items-center justify-center  gap-8">
+          <ul className="list-disc pl-6 flex items-center justify-center gap-8">
             {value.map((item, index) => (
               <li key={index}>
-                {imageKeys.includes(key) && typeof item === "string" ? (
+                {imageKeys?.includes(key) && typeof item === "string" ? (
                   <img
                     src={process.env.REACT_APP_API_Aws_Image_BASE_URL + item}
                     alt={`${key} ${index + 1}`}
@@ -275,7 +274,7 @@ function AllVendorService({ term }) {
                     }}
                     loading="lazy"
                   />
-                ) : videoKeys.includes(key) && typeof item === "string" ? (
+                ) : videoKeys?.includes(key) && typeof item === "string" ? (
                   <video
                     controls
                     src={process.env.REACT_APP_API_Aws_Image_BASE_URL + item}
@@ -284,7 +283,7 @@ function AllVendorService({ term }) {
                     loading="lazy"
                   />
                 ) : typeof item === "object" && item !== null ? (
-                  Object.entries(item).map(([subKey, subValue]) =>
+                  Object?.entries(item)?.map(([subKey, subValue]) =>
                     renderValue(subKey, subValue)
                   )
                 ) : (
@@ -299,19 +298,32 @@ function AllVendorService({ term }) {
       );
     }
 
-    // Handle objects
     if (typeof value === "object" && value !== null) {
+      console.log("Processing object:", key, value);
       return (
-        <div key={key}>
+        <div key={key} className="text-primary">
           <Typography variant="h6" component="div">
             <strong>{key}:</strong>
           </Typography>
           <div className="pl-4">
             {Object.entries(value).map(([subKey, subValue]) => (
-              <div key={subKey} style={{ marginBottom: "10px" }}>
-                <Typography variant="body2" component="div">
-                  <strong>{subKey}:</strong> {subValue}
-                </Typography>
+              <div
+                key={subKey}
+                style={{ marginBottom: "10px" }}
+                className="text-primary"
+              >
+                {typeof subValue === "object" && subValue !== null ? (
+                  renderValue(subKey, subValue)
+                ) : (
+                  <Typography
+                    variant="body2"
+                    component="div"
+                    className="text-textGray"
+                  >
+                    <strong className="text-primary">{subKey}:</strong>{" "}
+                    {subValue}
+                  </Typography>
+                )}
               </div>
             ))}
           </div>
@@ -319,8 +331,7 @@ function AllVendorService({ term }) {
       );
     }
 
-    // Handle single values
-    return imageKeys.includes(key) ? (
+    return imageKeys?.includes(key) ? (
       <img
         src={process.env.REACT_APP_API_Aws_Image_BASE_URL + value}
         alt={key}
