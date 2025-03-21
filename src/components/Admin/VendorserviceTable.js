@@ -126,7 +126,11 @@ function VendorserviceTable({
     setIsModalOpen(false);
     setSelectedVendor(null);
   };
+  console.log(serviceValue);
+  
   const renderValue = (key, value) => {
+    console.log(key, value);
+    
     const imageKeys = [
       "CoverImage",
       "RecceReport",
