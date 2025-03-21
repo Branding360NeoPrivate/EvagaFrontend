@@ -63,6 +63,9 @@ function ServiceDetailCard({
     "Dimensions",
     "TypesofYoga",
     "TypesofMeditation",
+    "SafetyConsiderations",
+    "SetupRequirements",
+    "DurationOfEffect",
     "LocationType",
     "LocationTypePreferred",
     "AudienceInteraction",
@@ -137,8 +140,6 @@ function ServiceDetailCard({
           <p className="text-sm text-gray-500">Reviews</p>
         </div>
       </div>
-
-      {/* Company Name */}
       <div className="w-full flex flex-row  items-center justify-between">
         <div className=" text-lg font-semibold text-primary mb-4">
           <h3 className="text-normal font-semibold ">{companyName}</h3>
@@ -162,8 +163,6 @@ function ServiceDetailCard({
         </div>
       </div>
       <hr style={{ margin: "0.2rem 0" }} />
-
-      {/* Price */}
       <div className="flex flex-row items-center">
         <p className="text-lg font-medium text-primary pt-2 pr-2">Price</p>
         <p className="text-xl font-bold text-primary ">
@@ -206,7 +205,7 @@ function ServiceDetailCard({
                               key={subKey}
                               className="bg-gray-200 text-textGray text-sm px-3 py-1 rounded-md"
                             >
-                              {subKey}: {subValue}
+                              {pascalToNormal(subKey)}: {subValue}
                             </span>
                           ))}
                         </div>
@@ -230,7 +229,9 @@ function ServiceDetailCard({
           return (
             <div className="flex gap-4 items-start justify-start" key={index}>
               <div className="mb-4 w-full flex items-center">
-                <h3 className="text-normal font-meduim text-primary">{key}</h3>
+                <h3 className="text-normal font-meduim text-primary">
+                  {pascalToNormal(key)}
+                </h3>
                 <span className="text-textGray text-normal px-3 py-1 rounded-md">
                   {value}
                 </span>

@@ -209,16 +209,16 @@ const EditDynamicForm = ({
         }
         if (field.key === "CustomThemeRequest") {
           const selectedOption = formValues[field.key]; // This will be either "Yes" or "No"
-        
+
           // Update the items array to include the `checked` property
           field.items = field.items.map((item) => ({
             ...item,
-            checked: item.key === selectedOption // Set `checked: true` for the selected option
+            checked: item.key === selectedOption, // Set `checked: true` for the selected option
           }));
-        
+
           // Log the updated field object
           console.log(field);
-        
+
           // Return the updated field object if needed
           return field;
         }
@@ -539,11 +539,11 @@ const EditDynamicForm = ({
               return { ...prev, [field.key]: updatedCapacity };
             });
           };
-          console.log(field?.items);
 
-          const selectedStaffData = field?.items?.find(
-            (item) => item?.title !== ""
-          );
+          // Check if field.items is an array (with staffType) or an object (without staffType)
+          const isArrayWithStaffType = Array.isArray(field.items);
+          const isObjectWithoutStaffType =
+            typeof field.items === "object" && !Array.isArray(field.items);
 
           return (
             <div key={field._id} className="col-span-2 grid grid-cols-4 gap-4">
@@ -551,97 +551,195 @@ const EditDynamicForm = ({
                 {field.label}:
               </label>
               <div className="col-span-3 flex flex-col gap-4">
-                {selectedStaffData?.staffDetails?.map((staff, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-5 items-center justify-center gap-2"
-                  >
-                    <p className="text-lg text-primary font-semibold">
-                      {staff?.type}
-                    </p>
-                    <div className="col-span-4 flex gap-4">
-                      <div className="flex flex-col gap-1">
-                        <label className="text-primary">Min</label>
-                        <input
-                          type="number"
-                          value={
-                            formValues[field.key]?.[staff.type]?.minCapacity ||
-                            staff.minCapacity
-                          }
-                          onChange={(e) =>
-                            handleCapacityChange(
-                              staff.type,
-                              "minCapacity",
-                              e.target.value
-                            )
-                          }
-                          className="border p-2 rounded-md w-[5rem] outline-none"
-                          required
-                        />
-                      </div>
+                {/* Case 1: field.items is an array with staffType */}
+                {isArrayWithStaffType &&
+                  field.items?.map((staff, index) => (
+                    <div
+                      key={index}
+                      className="grid grid-cols-5 items-center justify-center gap-2"
+                    >
+                      <p className="text-lg text-primary font-semibold">
+                        {staff?.type}
+                      </p>
+                      <div className="col-span-4 flex gap-4">
+                        <div className="flex flex-col gap-1">
+                          <label className="text-primary">Min</label>
+                          <input
+                            type="number"
+                            value={
+                              formValues[field.key]?.[staff.type]
+                                ?.minCapacity || staff.minCapacity
+                            }
+                            onChange={(e) =>
+                              handleCapacityChange(
+                                staff.type,
+                                "minCapacity",
+                                e.target.value
+                              )
+                            }
+                            className="border p-2 rounded-md w-[5rem] outline-none"
+                            required
+                          />
+                        </div>
 
-                      <div className="flex flex-col gap-1">
-                        <label className="text-primary">Max</label>
-                        <input
-                          type="number"
-                          value={
-                            formValues[field.key]?.[staff.type]?.maxCapacity ||
-                            staff.maxCapacity
-                          }
-                          onChange={(e) =>
-                            handleCapacityChange(
-                              staff.type,
-                              "maxCapacity",
-                              e.target.value
-                            )
-                          }
-                          className="border p-2 rounded-md w-[5rem] outline-none"
-                          required
-                        />
-                      </div>
+                        <div className="flex flex-col gap-1">
+                          <label className="text-primary">Max</label>
+                          <input
+                            type="number"
+                            value={
+                              formValues[field.key]?.[staff.type]
+                                ?.maxCapacity || staff.maxCapacity
+                            }
+                            onChange={(e) =>
+                              handleCapacityChange(
+                                staff.type,
+                                "maxCapacity",
+                                e.target.value
+                              )
+                            }
+                            className="border p-2 rounded-md w-[5rem] outline-none"
+                            required
+                          />
+                        </div>
 
-                      <div className="flex flex-col gap-1">
-                        <label className="text-primary">Pricing</label>
-                        <input
-                          type="number"
-                          value={
-                            formValues[field.key]?.[staff.type]?.pricing ||
-                            staff.pricing
-                          }
-                          onChange={(e) =>
-                            handleCapacityChange(
-                              staff.type,
-                              "pricing",
-                              e.target.value
-                            )
-                          }
-                          className="border p-2 rounded-md w-[6rem] outline-none"
-                          required
-                        />
-                      </div>
-                      {/* UOM */}
-                      <div className="flex flex-col gap-1">
-                        <label className="text-primary">UOM</label>
-                        <input
-                          type="text"
-                          value={
-                            formValues[field.key]?.[staff.type]?.UOM ||
-                            staff.UOM
-                          }
-                          onChange={(e) =>
-                            handleCapacityChange(
-                              staff.type,
-                              "UOM",
-                              e.target.value
-                            )
-                          }
-                          className="border p-2 rounded-md w-[5rem] outline-none"
-                          disabled
-                        />
+                        <div className="flex flex-col gap-1">
+                          <label className="text-primary">Pricing</label>
+                          <input
+                            type="number"
+                            value={
+                              formValues[field.key]?.[staff.type]?.pricing ||
+                              staff.pricing
+                            }
+                            onChange={(e) =>
+                              handleCapacityChange(
+                                staff.type,
+                                "pricing",
+                                e.target.value
+                              )
+                            }
+                            className="border p-2 rounded-md w-[6rem] outline-none"
+                            required
+                          />
+                        </div>
+
+                        <div className="flex flex-col gap-1">
+                          <label className="text-primary">UOM</label>
+                          <input
+                            type="text"
+                            value={
+                              formValues[field.key]?.[staff.type]?.UOM ||
+                              staff.UOM
+                            }
+                            onChange={(e) =>
+                              handleCapacityChange(
+                                staff.type,
+                                "UOM",
+                                e.target.value
+                              )
+                            }
+                            className="border p-2 rounded-md w-[5rem] outline-none"
+                            disabled
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+
+                {/* Case 2: field.items is an object without staffType */}
+                {isObjectWithoutStaffType &&
+                  Object.entries(field.items).map(
+                    ([staffType, details], index) => (
+                      <div
+                        key={index}
+                        className="grid grid-cols-5 items-center justify-center gap-2"
+                      >
+                        <p className="text-lg text-primary font-semibold">
+                          {staffType}
+                        </p>
+                        <div className="col-span-4 flex gap-4">
+                          <div className="flex flex-col gap-1">
+                            <label className="text-primary">Min</label>
+                            <input
+                              type="number"
+                              value={
+                                formValues[field.key]?.[staffType]
+                                  ?.minCapacity || details.minCapacity
+                              }
+                              onChange={(e) =>
+                                handleCapacityChange(
+                                  staffType,
+                                  "minCapacity",
+                                  e.target.value
+                                )
+                              }
+                              className="border p-2 rounded-md w-[5rem] outline-none"
+                              required
+                            />
+                          </div>
+
+                          <div className="flex flex-col gap-1">
+                            <label className="text-primary">Max</label>
+                            <input
+                              type="number"
+                              value={
+                                formValues[field.key]?.[staffType]
+                                  ?.maxCapacity || details.maxCapacity
+                              }
+                              onChange={(e) =>
+                                handleCapacityChange(
+                                  staffType,
+                                  "maxCapacity",
+                                  e.target.value
+                                )
+                              }
+                              className="border p-2 rounded-md w-[5rem] outline-none"
+                              required
+                            />
+                          </div>
+
+                          <div className="flex flex-col gap-1">
+                            <label className="text-primary">Pricing</label>
+                            <input
+                              type="number"
+                              value={
+                                formValues[field.key]?.[staffType]?.pricing ||
+                                details.pricing
+                              }
+                              onChange={(e) =>
+                                handleCapacityChange(
+                                  staffType,
+                                  "pricing",
+                                  e.target.value
+                                )
+                              }
+                              className="border p-2 rounded-md w-[6rem] outline-none"
+                              required
+                            />
+                          </div>
+
+                          <div className="flex flex-col gap-1">
+                            <label className="text-primary">UOM</label>
+                            <input
+                              type="text"
+                              value={
+                                formValues[field.key]?.[staffType]?.UOM ||
+                                details.UOM || "Per Person"
+                              }
+                              onChange={(e) =>
+                                handleCapacityChange(
+                                  staffType,
+                                  "UOM",
+                                  e.target.value
+                                )
+                              }
+                              className="border p-2 rounded-md w-[5rem] outline-none"
+                              disabled
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  )}
               </div>
             </div>
           );

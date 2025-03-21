@@ -26,8 +26,6 @@ function Wishlist() {
       handleGetWishList(userId);
     }
   }, [auth.isAuthenticated, auth.role, userId]);
-  console.log(allWishlist);
-
   if (!auth?.isAuthenticated || auth?.role !== "user") {
     return (
       <motion.div

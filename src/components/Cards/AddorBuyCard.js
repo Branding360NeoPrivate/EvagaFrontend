@@ -520,20 +520,66 @@ function AddorBuyCard({
             </p>
           </span>
         )}
-        {renderPrice?.["ColourPalate "] &&
-          renderPrice?.["ColourPalate "]?.map((item, index) => (
-            <button
-              key={index}
-              onClick={() => setSelectedItem(item)}
-              className={
-                selectedItem === item
-                  ? "bg-textYellow text-textGray border-textYellow py-2 px-4  rounded border mr-2 mb-1"
-                  : "bg-white text-textGray border-gray-300 border-textYellow py-2 px-4 rounded border mr-2"
-              }
-            >
-              {item}
-            </button>
-          ))}
+        {renderPrice?.["ColourPalate "] && (
+          <div>
+            <p className="text-primary text-normal font-semibold text-normal my-2">
+              Colour Palette
+            </p>
+            {renderPrice?.["ColourPalate "]?.map((item, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedItem(item)}
+                className={
+                  selectedItem === item
+                    ? "bg-textYellow text-textGray border-textYellow py-2 px-4  rounded border mr-2 mb-1"
+                    : "bg-white text-textGray border-gray-300 border-textYellow py-2 px-4 rounded border mr-2"
+                }
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        )}{" "}
+        {renderPrice?.["FabricType"] && (
+          <div>
+            <p className="text-primary text-normal font-semibold text-normal my-2">
+              Fabric
+            </p>
+            {renderPrice?.["FabricType"]?.map((item, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedItem(item)}
+                className={
+                  selectedItem === item
+                    ? "bg-textYellow text-textGray border-textYellow py-2 px-4 rounded border mr-2 mb-1"
+                    : "bg-white text-textGray border-gray-300 border-textYellow py-2 px-4 rounded border mr-2 mb-1"
+                }
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        )}{" "}
+        {renderPrice?.["EffectType"] && (
+          <div>
+            <p className="text-primary text-normal font-semibold text-normal my-2">
+            Effect Type
+            </p>
+            {renderPrice?.["EffectType"]?.map((item, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedItem(item)}
+                className={
+                  selectedItem === item
+                    ? "bg-textYellow text-textGray border-textYellow py-2 px-4 rounded border mr-2 mb-1"
+                    : "bg-white text-textGray border-gray-300 border-textYellow py-2 px-4 rounded border mr-2 mb-1"
+                }
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        )}
         <div>
           {keysToRender
             .sort((a, b) => (a === "AddOns" ? 1 : b === "AddOns" ? -1 : 0))

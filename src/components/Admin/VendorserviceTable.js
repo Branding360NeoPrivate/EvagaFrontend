@@ -136,15 +136,11 @@ function VendorserviceTable({
       "photos",
     ];
     const videoKeys = ["3DTour", "videos"];
-
+  
     if (key === "Portfolio" && typeof value === "object" && value !== null) {
       return (
         <div key={key}>
-          <Typography
-            variant="h6"
-            component="div"
-            style={{ marginTop: "20px" }}
-          >
+          <Typography variant="h6" component="div" style={{ marginTop: "20px" }}>
             <strong className="text-primary text-xl">{key}:</strong>
           </Typography>
           <div className="pl-4">
@@ -194,21 +190,16 @@ function VendorserviceTable({
         </div>
       );
     }
-
-    // Handle arrays
+  
     if (Array.isArray(value)) {
       return (
         <div key={key}>
           {key && (
-            <Typography
-              variant="h6"
-              component="div"
-              style={{ marginTop: "20px" }}
-            >
+            <Typography variant="h6" component="div" style={{ marginTop: "20px" }}>
               <strong className="text-primary text-xl">{key}:</strong>
             </Typography>
           )}
-          <ul className="list-disc pl-6 flex items-center justify-center  gap-8">
+          <ul className="list-disc pl-6 flex items-center justify-center gap-8">
             {value.map((item, index) => (
               <li key={index}>
                 {imageKeys.includes(key) && typeof item === "string" ? (
@@ -245,28 +236,30 @@ function VendorserviceTable({
         </div>
       );
     }
-
-    // Handle objects
+  
     if (typeof value === "object" && value !== null) {
       return (
-        <div key={key}>
+        <div key={key} className="text-primary">
           <Typography variant="h6" component="div">
             <strong>{key}:</strong>
           </Typography>
-          <div className="pl-4">
+          <div className="pl-4" >
             {Object.entries(value).map(([subKey, subValue]) => (
-              <div key={subKey} style={{ marginBottom: "10px" }}>
-                <Typography variant="body2" component="div">
-                  <strong>{subKey}:</strong> {subValue}
-                </Typography>
+              <div key={subKey} style={{ marginBottom: "10px" }} className="text-primary">
+                {typeof subValue === "object" && subValue !== null ? (
+                  renderValue(subKey, subValue)
+                ) : (
+                  <Typography variant="body2" component="div"  className="text-textGray">
+                    <strong  className="text-primary">{subKey}:</strong> {subValue}
+                  </Typography>
+                )}
               </div>
             ))}
           </div>
         </div>
       );
     }
-
-    // Handle single values
+  
     return imageKeys.includes(key) ? (
       <img
         src={process.env.REACT_APP_API_Aws_Image_BASE_URL + value}
