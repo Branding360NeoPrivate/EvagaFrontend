@@ -43,6 +43,8 @@ import AdminErrorLogs from "../../components/Admin/AdminErrorLogs";
 import { FaChevronDown, FaChevronUp, FaEye, FaEyeSlash } from "react-icons/fa";
 import ReusableModal from "../../components/Modal/Modal";
 import { useForm } from "react-hook-form";
+import adminApi from "../../services/adminApi";
+import { toast } from "react-toastify";
 const inputStyles =
   "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent";
 const buttonStyles =
@@ -51,6 +53,7 @@ const AdminDashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState("Home");
   const [selectedVendor, setSelectedVendor] = useState(null);
   const getUserData = useServices(userApi.getTotalUser);
+  const changeAdminPasswordApi = useServices(adminApi.changePassword);
 
   const { auth } = useAuth();
   const dispatch = useDispatch();
@@ -112,13 +115,30 @@ const AdminDashboard = () => {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
 
-  // Handle form submission
-  const onSubmit = (data) => {
-    console.log("Form Data:", data);
-    // Add your password change logic here
+  const onSubmit = async (data) => {
+    try {
+      const formdata = new FormData();
+      formdata.append("oldPassword", data?.oldPassword);
+      formdata.append("newPassword", data?.newPassword);
+
+      const response = await changeAdminPasswordApi.callApi(
+        auth.userId,
+        formdata
+      );
+
+      handleClose();
+
+      toast.success(response?.message);
+      reset();
+    } catch (error) {
+      console.error("Error changing password:", error);
+
+      toast.error("Failed to change password. Please try again.");
+    }
   };
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -126,7 +146,6 @@ const AdminDashboard = () => {
   const oldPassword = watch("oldPassword");
   const newPassword = watch("newPassword");
 
-  // Custom validation for password complexity
   const validatePassword = (value) => {
     const hasAlphabet = /[a-zA-Z]/.test(value);
     const hasNumber = /\d/.test(value);
@@ -282,7 +301,7 @@ const AdminDashboard = () => {
         )}
         {selectedMenu === "Gst by Category" && <GstTable />}
         {selectedMenu === "Feedback" && <FeedbackTable />}
-        {selectedMenu === "Waitlist" && <WaitlistTable term={term}/>}
+        {selectedMenu === "Waitlist" && <WaitlistTable term={term} />}
         {selectedMenu === "New Orders" && <NewOrdertable />}
         {selectedMenu === "Confirmed Orders" && <ConfirmOrder />}
         {selectedMenu === "Ongoing Orders" && <OngoingOrder />}
@@ -304,80 +323,100 @@ const AdminDashboard = () => {
         {selectedMenu === "Error Logs" && <AdminErrorLogs />}
       </div>
       <ReusableModal open={open} onClose={handleClose} width={"50%"}>
-      <div className="max-w-ld mx-auto  p-6 bg-white rounded-lg ">
-      <h2 className="text-2xl font-semibold text-primary mb-6">Change Password</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-      
-        <div className="mb-4">
-          <label htmlFor="oldPassword" className="block text-sm font-medium text-gray-700">
-            Old Password
-          </label>
-          <div className="relative">
-            <input
-              type={showOldPassword ? "text" : "password"}
-              id="oldPassword"
-              {...register("oldPassword", {
-                required: "Old Password is required.",
-              })}
-              className={inputStyles}
-              placeholder="Enter your old password"
-            />
-            <button
-              type="button"
-              onClick={() => setShowOldPassword(!showOldPassword)}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-            >
-              {showOldPassword ? <FaEyeSlash className="text-gray-500" /> : <FaEye className="text-gray-500" />}
-            </button>
-          </div>
-          {errors.oldPassword && (
-            <p className="text-sm text-red-500 mt-1">{errors.oldPassword.message}</p>
-          )}
-        </div>
+        <div className="max-w-ld mx-auto  p-6 bg-white rounded-lg ">
+          <h2 className="text-2xl font-semibold text-primary mb-6">
+            Change Password
+          </h2>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="mb-4">
+              <label
+                htmlFor="oldPassword"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Old Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showOldPassword ? "text" : "password"}
+                  id="oldPassword"
+                  {...register("oldPassword", {
+                    required: "Old Password is required.",
+                  })}
+                  className={inputStyles}
+                  placeholder="Enter your old password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowOldPassword(!showOldPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                >
+                  {showOldPassword ? (
+                    <FaEyeSlash className="text-gray-500" />
+                  ) : (
+                    <FaEye className="text-gray-500" />
+                  )}
+                </button>
+              </div>
+              {errors.oldPassword && (
+                <p className="text-sm text-red-500 mt-1">
+                  {errors.oldPassword.message}
+                </p>
+              )}
+            </div>
 
-        {/* New Password Field */}
-        <div className="mb-6">
-          <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700">
-            New Password
-          </label>
-          <div className="relative">
-            <input
-              type={showNewPassword ? "text" : "password"}
-              id="newPassword"
-              {...register("newPassword", {
-                required: "New Password is required.",
-                minLength: {
-                  value: 6,
-                  message: "Password must be at least 6 characters long.",
-                },
-                validate: {
-                  passwordComplexity: validatePassword,
-                  notSameAsOld: (value) =>
-                    value !== oldPassword || "New password must not be the same as the old password.",
-                },
-              })}
-              className={inputStyles}
-              placeholder="Enter your new password"
-            />
-            <button
-              type="button"
-              onClick={() => setShowNewPassword(!showNewPassword)}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-            >
-              {showNewPassword ? <FaEyeSlash className="text-gray-500" /> : <FaEye className="text-gray-500" />}
-            </button>
-          </div>
-          {errors.newPassword && (
-            <p className="text-sm text-red-500 mt-1">{errors.newPassword.message}</p>
-          )}
-        </div>
+            {/* New Password Field */}
+            <div className="mb-6">
+              <label
+                htmlFor="newPassword"
+                className="block text-sm font-medium text-gray-700"
+              >
+                New Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showNewPassword ? "text" : "password"}
+                  id="newPassword"
+                  {...register("newPassword", {
+                    required: "New Password is required.",
+                    minLength: {
+                      value: 6,
+                      message: "Password must be at least 6 characters long.",
+                    },
+                    validate: {
+                      passwordComplexity: validatePassword,
+                      notSameAsOld: (value) =>
+                        value !== oldPassword ||
+                        "New password must not be the same as the old password.",
+                    },
+                  })}
+                  className={inputStyles}
+                  placeholder="Enter your new password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                >
+                  {showNewPassword ? (
+                    <FaEyeSlash className="text-gray-500" />
+                  ) : (
+                    <FaEye className="text-gray-500" />
+                  )}
+                </button>
+              </div>
+              {errors.newPassword && (
+                <p className="text-sm text-red-500 mt-1">
+                  {errors.newPassword.message}
+                </p>
+              )}
+            </div>
 
-        {/* Submit Button */}
-        <button type="submit" className={buttonStyles}>
-          Change Password
-        </button>
-      </form>
-    </div>
+            {/* Submit Button */}
+            <button type="submit" className={buttonStyles}>
+              Change Password
+            </button>
+          </form>
+        </div>
       </ReusableModal>
     </div>
   );
