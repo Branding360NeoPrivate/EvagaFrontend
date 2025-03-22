@@ -6,7 +6,7 @@ import useFetchCities from "../../hooks/useFetchCities";
 import Cookies from "js-cookie";
 
 function HomeSearchableCityDropdown() {
-  const { data: cities, isLoading, error } = useFetchCities([]);
+  // const { data: cities, isLoading, error } = useFetchCities([]);
   const [selectedCity, setSelectedCity] = useState("");
 
   useEffect(() => {
@@ -24,7 +24,7 @@ function HomeSearchableCityDropdown() {
   return (
     <div className="w-[200px] h-[45px] flex justify-start bg-gray-100 gap-2 items-center rounded-md text-primary cursor-pointer">
       <CiLocationOn className="text-3xl h-full w-[40px] rounded-md bg-highlightYellow font-bold hover:bg-[#CBAB00]" />
-      {isLoading ? (
+      {/* {isLoading ? (
         <p>Loading...</p>
       ) : error ? (
         <p>loading cities</p>
@@ -37,7 +37,8 @@ function HomeSearchableCityDropdown() {
         //   placeholder="Select a city"
         // />
         <p>Bengaluru</p>
-      )}
+      )} */}
+         <p>Bengaluru</p>
       {/* <MdKeyboardArrowDown className="text-textPrimary" /> */}
     </div>
   );

@@ -21,7 +21,7 @@ function SingleBlogPage() {
   return (
     <Box
       sx={{
-        maxWidth: "800px",
+        maxWidth: "1000px",
         margin: "auto",
         padding: { xs: 2, md: 4 },
         backgroundColor: "background.paper",

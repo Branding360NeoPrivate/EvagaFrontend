@@ -28,7 +28,7 @@ const AuthForm = ({ stages, formType, handleFormSubmit, role }) => {
   const [formData, setFormData] = useState({});
   const [categories, setCategories] = useState(null);
   const [verificationStatus, setVerificationStatus] = useState(null);
-  const { data: citiesList } = useFetchCities(null);
+  const { data: citiesList } = useFetchCities([]);
   const { loading, error, callApi } = useServices(categoryApi.getCategories);
   const sendVendorOtp = useServices(vendorApi.forgortVendorpasswords);
   const sendUserOtp = useServices(userApi.sendUserOtp);
@@ -397,11 +397,10 @@ const AuthForm = ({ stages, formType, handleFormSubmit, role }) => {
       </div>
     );
   };
+  console.log(citiesList);
 
   return (
     <>
-      {/* Recaptcha container */}
-
       <form onSubmit={handleSubmit(onNext)} className="space-y-6 text-gray-500">
         <div id="recaptcha-container"></div>
         {otpSentResponse && <p className="text-green-500">{otpSentResponse}</p>}
