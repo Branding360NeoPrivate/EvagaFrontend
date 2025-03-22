@@ -29,7 +29,7 @@ function BlogCard({ blog }) {
       <CardMedia
         component="img"
         height="200"
-        image={process.env.REACT_APP_API_Image_BASE_URL + blog?.coverImage}
+        image={process.env.REACT_APP_API_Aws_Image_BASE_URL + blog?.coverImage}
         alt={blog?.title}
         sx={{
           objectFit: "cover",

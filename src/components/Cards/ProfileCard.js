@@ -16,7 +16,7 @@ function ProfileCard({
           <img
             src={
               profilePic
-                ? process.env.REACT_APP_API_Image_BASE_URL + profilePic
+                ? process.env.REACT_APP_API_Aws_Image_BASE_URL + profilePic
                 : image
             }
             alt="GH Catering Logo"

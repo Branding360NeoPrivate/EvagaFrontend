@@ -60,7 +60,7 @@ function AddBannerForm({ onSubmit }) {
         <img
           src={URL?.createObjectURL(image)}
           alt="Preview"
-          className="w-full h-32 object-cover mb-4"
+          className="w-full h-32 object-conatin mb-4"
         />
       )}
 

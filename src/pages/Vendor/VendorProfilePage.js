@@ -36,7 +36,7 @@ const VendorProfile = () => {
   const handleCloseReuseableModal = () => {
     setOpenReuseableModal(false);
   };
-  const imagesBaseUrl = process.env.REACT_APP_API_Image_BASE_URL;
+  const imagesBaseUrl = process.env.REACT_APP_API_Aws_Image_BASE_URL;
 
   const [vendorDetails, setVendorDetails] = useState(null);
   const [openModal, setOpenModal] = useState(false);
@@ -56,7 +56,7 @@ const VendorProfile = () => {
       setTimer((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
-          setCanResend(true); // Enable resend after timer ends
+          setCanResend(true); 
           return 0;
         }
         return prev - 1;

@@ -384,7 +384,7 @@ function AdminBlog() {
                   src={
                     image
                       ? URL?.createObjectURL(image)
-                      : `${process.env.REACT_APP_API_Image_BASE_URL}${blogImage}`
+                      : `${process.env.REACT_APP_API_Aws_Image_BASE_URL}${blogImage}`
                   }
                   alt="Preview"
                   className=" h-[15rem] object-cover mb-4"

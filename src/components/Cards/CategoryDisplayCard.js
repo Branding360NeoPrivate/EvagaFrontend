@@ -19,7 +19,7 @@ function CategoryDisplayCard({ image, text, onClick, catId }) {
     >
       <div className="w-full  rounded-lg object-contain flex items-center justify-center">
         <img
-          src={image && process.env.REACT_APP_API_Image_BASE_URL + image}
+          src={image && process.env.REACT_APP_API_Aws_Image_BASE_URL + image}
           alt="Category"
           className="w-[70%] object-fit "
         />

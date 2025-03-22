@@ -53,7 +53,7 @@ const VendorDashboard = () => {
     (state) => state.vendor
   );
 
-  const { banner, vendorBanner } = useSelector((state) => state.banner);
+  const {  vendorBanner } = useSelector((state) => state.banner);
   const dispatch = useDispatch();
   const getAllVendorServiceHandle = useCallback(async () => {
     const response = await getAllVendorService.callApi(userId);
@@ -75,15 +75,20 @@ const VendorDashboard = () => {
   }, [dispatch, profile, profilePercentage]);
 
   useEffect(() => {
+    // Check if vendorBanner is null, undefined, or an empty array
     if (!vendorBanner || vendorBanner.length === 0) {
-      dispatch(fetchVendorBanner());
+      // Only dispatch if vendorBanner is null or undefined (initial state)
+      // or if it's an empty array but hasn't been fetched yet
+      if (vendorBanner === null || vendorBanner === undefined) {
+        dispatch(fetchVendorBanner());
+      }
     }
   }, [dispatch, vendorBanner]);
 
   const [activeState, setActivestate] = useState("Services Provided");
 
   const [blockedDatesFromBackend, setBlockedDatesFromBackend] = useState([]);
-  const [bookings, setBookings] = useState([]); // Add state to store bookings
+  const [bookings, setBookings] = useState([]); 
 
   const monthlyBookingCalender = useServices(vendorApi.getMonthlyBooking);
 

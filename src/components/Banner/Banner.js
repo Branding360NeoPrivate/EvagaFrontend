@@ -16,7 +16,7 @@ function Banner({ image, height, category }) {
     <div className="w-full">
       <img
         src={
-          image ? process.env.REACT_APP_API_Image_BASE_URL + image : BannerImg
+          image ? process.env.REACT_APP_API_Aws_Image_BASE_URL + image : BannerImg
         }
         alt="Banner"
         className={

@@ -26,7 +26,7 @@ const AdminVendorProfileViewer = ({ vendorId, onMenuSelect }) => {
     (state) => state.category
   );
 
-  const imagesBaseUrl = process.env.REACT_APP_API_Image_BASE_URL;
+  const imagesBaseUrl = process.env.REACT_APP_API_Aws_Image_BASE_URL;
 
   const [vendorDetails, setVendorDetails] = useState(null);
   const [openModal, setOpenModal] = useState(false);

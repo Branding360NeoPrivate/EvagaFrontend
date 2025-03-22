@@ -72,7 +72,7 @@ function SingleBlogPage() {
 
       <Box
         component="img"
-        src={`${process.env.REACT_APP_API_Image_BASE_URL + blog?.coverImage}`}
+        src={`${process.env.REACT_APP_API_Aws_Image_BASE_URL + blog?.coverImage}`}
         alt={blog?.title}
         sx={{
           width: "100%",
