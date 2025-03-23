@@ -14,7 +14,6 @@ import Recommended from "../../assets/Temporary Images/cursor-plus.png";
 import session from "../../assets/Temporary Images/stopwatch 1.png";
 import order from "../../assets/Temporary Images/order.png";
 import pkg from "../../assets/Temporary Images/package.png";
-import colorPalette from "../../assets/Temporary Images/paint-roller 1.png";
 import formatCurrency from "../../utils/formatCurrency";
 import { useLocation, useNavigate } from "react-router-dom";
 import { internalRoutes } from "../../utils/internalRoutes";
@@ -129,20 +128,19 @@ function AddorBuyCard({
     setQuantity(newQuantity);
   }, []);
   const handleAddOnUpdate = useCallback((addOn, operation, type) => {
-    console.log(addOn, "addOn", operation, type);
     return new Promise((resolve) => {
       setSelectedAddOns((prevAddOns) => {
         console.log("Current Add-Ons:", prevAddOns);
         const index = prevAddOns.findIndex(
           (item) => item.Particulars === addOn.Particulars
         );
-        console.log("Index found:", index);
+        console.log("Index found:", index, addOn);
 
-        const minQty =
-          addOn.MinQty && !isNaN(addOn.MinQty) ? parseInt(addOn.MinQty, 10) : 1;
+        const minQty = Math.max(
+          1,
+          parseInt(addOn.MinQty || addOn["Min servings"], 10) || 1
+        );
         const basePrice = parseFloat(addOn.Rates || addOn.rateInfo) || 0;
-
-        console.log("Type:", type, "Operation:", operation);
 
         if (type === "Package") {
           if (operation === "add") {
@@ -387,7 +385,7 @@ function AddorBuyCard({
       setFormattedTime(formatted24Hour);
     }
   };
-  console.log(renderPrice, renderPrice?.["ColourPalate "]);
+console.log(renderPrice);
 
   if (!renderPrice || Object.keys(renderPrice).length === 0) {
     return <div>Loading...</div>;
@@ -563,7 +561,7 @@ function AddorBuyCard({
         {renderPrice?.["EffectType"] && (
           <div>
             <p className="text-primary text-normal font-semibold text-normal my-2">
-            Effect Type
+              Effect Type
             </p>
             {renderPrice?.["EffectType"]?.map((item, index) => (
               <button
@@ -604,17 +602,15 @@ function AddorBuyCard({
                       </p>
                     </div>
                     {value.map((item, idx) => {
-                      console.log(item, "item");
-
                       const isPackage = key === "Package";
                       const rateInfo = isPackage
                         ? item.Rates
                         : item.Amount || item?.Rates;
                       const uom = isPackage ? item.days : item.Uom || item.UOM;
-                      const minQuantity =
-                        item.MinQty && !isNaN(item.MinQty)
-                          ? parseInt(item.MinQty, 10)
-                          : 1;
+                      const minQuantity = Math.max(
+                        1,
+                        parseInt(item.MinQty || item["Min servings"], 10) || 1
+                      );
                       const Particulars =
                         item?.Particulars || item?.["Flavour/Variety"];
                       const size = item?.["Serving Size"];

@@ -92,25 +92,23 @@ function Home() {
       handleGetWishList(userId);
     }
   }, [auth.isAuthenticated, auth.role, userId]);
+  const fetchedRef = useRef(false);
   useEffect(() => {
     if (!categories || categories.length === 0) {
       dispatch(fetchCategories());
     }
-  }, [dispatch, categories]);
-  const fetchedRef = useRef(false);
-
+  
+    if (!userBanner || userBanner.length === 0) {
+      dispatch(fetchUserBanner());
+    }
+  }, [dispatch, categories, userBanner]);
+  
   useEffect(() => {
     if (!fetchedRef.current && (!allPackages || allPackages.length === 0)) {
       handleGetAllPackages();
       fetchedRef.current = true;
     }
-  }, [allPackages]);
-
-  useEffect(() => {
-    if (!userBanner || userBanner.length === 0) {
-      dispatch(fetchUserBanner());
-    }
-  }, [dispatch, userBanner]);
+  }, [allPackages, handleGetAllPackages]);
 
   return (
     <motion.div
@@ -135,7 +133,7 @@ function Home() {
         <div className="flex flex-row gap-5 overflow-x-scroll no-scrollbar box-border">
           <HorizontalScroll speed={1} className="flex flex-row gap-1">
             {categoryStatus === "loading"
-              ? Array.from({ length: 8 }).map((_, index) => (
+              ? Array.from({ length: 14 }).map((_, index) => (
                   <CategorySkeleton key={index} />
                 ))
               : categories?.map((item, index) => (
