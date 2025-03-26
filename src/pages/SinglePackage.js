@@ -171,7 +171,7 @@ function SinglePackage() {
 
   return (
     <motion.div
-      className="w-full flex lg:flex-row flex-col  pb-4 items-start justify-between px-5 lg:px-6 py-4"
+      className="w-full min-h-[70vh] flex flex-col md:flex-row md:flex-wrap md:w-[90%] lg:w-full gap-2  pb-4 items-start justify-center md:justify-between px-5 lg:px-6 py-4"
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
@@ -181,8 +181,8 @@ function SinglePackage() {
       }}
     >
       <div
-        className=" flex justify-start items-start flex-col min-w-[300px]"
-        style={{ flex: "0.35" }}
+        className=" flex justify-center md:justify-start items-start flex-col w-full flex-1 2xl:w-[40%] min-w-[300px]"
+        // style={{ flex: "0.35" }}
       >
         <BackButton />
         <ImageNavigationCard
@@ -201,8 +201,8 @@ function SinglePackage() {
       </div>
 
       <div
-        className="flex flex-col items-center justify-center lg:p-4 mb-10 lg:mb-0"
-        style={{ flex: "0.32" }}
+        className="flex flex-col items-center justify-center md:justify-center md:min-w-[330px] w-full flex-1 lg:p-4 mb-10 lg:mb-0"
+        // style={{ flex: "0.32" }}
       >
         <ServiceDetailCard
           title={
@@ -250,8 +250,8 @@ function SinglePackage() {
       </div>
 
       <div
-        className="flex justify-center items-center"
-        style={{ flex: "0.28" }}
+        className="flex justify-center md:justify-center items-center w-full flex-1"
+        // style={{ flex: "0.28" }}
       >
         <AddorBuyCard
           key={"index"}
