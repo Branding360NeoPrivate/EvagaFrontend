@@ -65,7 +65,8 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
    rounded-md overflow-hidden bg-white"
     >
       <div className="w-fit h-auto">
-        <div className=" w-[350px] md:w-[400px] xl:w-auto xl:min-w-[80px] xl:h-[400px] flex xl:flex-col justify-start items-start overflow-x-scroll xl:overflow-x-hidden xl:overflow-y-scroll no-scrollbar gap-5 p-2 custom-scrollbar">
+        <div className=" md:w-[350px] xl:w-auto xl:min-w-[80px] xl:h-[400px] flex xl:flex-col justify-start items-start 
+        overflow-x-scroll xl:overflow-x-hidden xl:overflow-y-scroll no-scrollbar gap-5 p-2 custom-scrollbar">
           {mediaUrls.map((url, index) => (
             <div key={index} className=" w-[80px] cursor-pointer">
               {isImage(url) ? (
@@ -93,7 +94,7 @@ function ImageNavigationCard({ mediaUrls, selectedUrl, onMediaClick }) {
           ))}
         </div>
       </div>
-      <div className=" flex-shrink md:w-fit h-[400px] md:min-w-[350px] flex-1 flex items-center justify-center relative">
+      <div className=" lg:w-full flex-shrink h-[400px] md:min-w-[350px] xl:flex-1 flex items-center justify-center relative">
         {isImage(selectedUrl) ? (
           <div className="group relative w-full aspect-[4/5] h-full flex items-center justify-center">
             <img
